@@ -169,6 +169,27 @@
 
       <!-- ================= MELEE COMBAT ================= -->
       <div v-else-if="activeCategory === 'melee'" class="category-panel">
+        <!-- Turn Sequence -->
+        <section v-if="filteredMeleeSequence.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Tactical Flow</span>
+            Turn Sequence & Actions
+          </h2>
+          <div class="sequence-grid">
+            <div
+              v-for="step in filteredMeleeSequence"
+              :key="step.step"
+              class="step-card"
+            >
+              <div class="step-header">
+                <span class="step-num">Step {{ step.step }}</span>
+                <h3 class="step-name">{{ step.name }}</h3>
+              </div>
+              <p class="step-desc">{{ step.description }}</p>
+            </div>
+          </div>
+        </section>
+
         <!-- Formula Callout Banner -->
         <div v-if="showMeleeFormula" class="formula-banner">
           <div class="formula-icon">⚔️</div>
@@ -391,6 +412,9 @@ const filteredRangedArmor = computed(() =>
 );
 
 // Filtered Melee Combat items
+const filteredMeleeSequence = computed(() =>
+  (MELEE_COMBAT_REF.sequenceOfPlay || []).filter((item) => matchesQuery(item, searchQuery.value))
+);
 const showMeleeFormula = computed(() => {
   if (!searchQuery.value.trim()) return true;
   const q = searchQuery.value.trim().toLowerCase();
@@ -427,6 +451,7 @@ const noResults = computed(() => {
   }
   if (activeCategory.value === 'melee') {
     return (
+      filteredMeleeSequence.value.length === 0 &&
       !showMeleeFormula.value &&
       filteredMeleeUnarmed.value.length === 0 &&
       filteredMeleeWeapons.value.length === 0 &&

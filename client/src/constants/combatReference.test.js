@@ -70,12 +70,30 @@ describe('combatReference', () => {
     it('exports comprehensive melee combat reference structure', () => {
       expect(MELEE_COMBAT_REF.attackBaseFormula).toBeDefined();
       expect(typeof MELEE_COMBAT_REF.attackBaseFormula).toBe('string');
+      expect(Array.isArray(MELEE_COMBAT_REF.sequenceOfPlay)).toBe(true);
+      expect(MELEE_COMBAT_REF.sequenceOfPlay.length).toBe(6);
       expect(Array.isArray(MELEE_COMBAT_REF.unarmedDamage)).toBe(true);
       expect(MELEE_COMBAT_REF.unarmedDamage.length).toBeGreaterThanOrEqual(5);
       expect(Array.isArray(MELEE_COMBAT_REF.weapons)).toBe(true);
       expect(MELEE_COMBAT_REF.weapons.length).toBeGreaterThanOrEqual(10);
       expect(Array.isArray(MELEE_COMBAT_REF.modifiers)).toBe(true);
       expect(MELEE_COMBAT_REF.modifiers.length).toBeGreaterThanOrEqual(5);
+    });
+
+    it('contains melee tactical flow sequence with valid schema', () => {
+      MELEE_COMBAT_REF.sequenceOfPlay.forEach((step) => {
+        expect(step).toHaveProperty('step');
+        expect(step).toHaveProperty('name');
+        expect(step).toHaveProperty('description');
+      });
+
+      const stepNames = MELEE_COMBAT_REF.sequenceOfPlay.map((s) => s.name);
+      expect(stepNames).toContain('Initiative');
+      expect(stepNames).toContain('Close Distance & Position');
+      expect(stepNames).toContain('Declare Melee Attack & Maneuver');
+      expect(stepNames).toContain('Resolve Melee Attack Roll');
+      expect(stepNames).toContain('Apply Damage, STR Mod & Armor DR');
+      expect(stepNames).toContain('Reactions, Parry & Opportunity Attacks');
     });
 
     it('verifies unarmed damage brackets and fantasy melee weapons', () => {

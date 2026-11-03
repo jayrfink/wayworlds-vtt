@@ -215,6 +215,15 @@ export const MELEE_COMBAT_REF = {
   baseRule:
     'Base Hit Chance = 1/2 STR (or 1/2 DEX for Finesse weapons, rounded up) + (10 x Melee Weapons Skill Rank) + Weapon Accuracy Bonus. Add STR Damage Modifier (+1 per 10 full STR above 40; -1 per 10 below 40).',
 
+  sequenceOfPlay: [
+    { step: 1, name: 'Initiative', description: 'Roll 1d10 + IM (floor(RS / 10)). Highest acts first; ties go to higher RS.' },
+    { step: 2, name: 'Close Distance & Position', description: 'Spend Movement (Walk / Dash in ft) to enter melee reach (5 ft, or 10 ft for polearms/reach). Check charging (>= 20 ft straight line) or flanking.' },
+    { step: 3, name: 'Declare Melee Attack & Maneuver', description: 'Name target within melee reach, select weapon grip (One-Handed vs Versatile Two-Handed), or declare a Grapple, Shove, or Disarm maneuver.' },
+    { step: 4, name: 'Resolve Melee Attack Roll', description: 'Compute Modified Hit Chance (Base 1/2 STR or 1/2 DEX for Finesse + 10 x Skill Rank + Weapon Accuracy + High Ground/Flanking/Charge modifiers), then roll d100.' },
+    { step: 5, name: 'Apply Damage, STR Mod & Armor DR', description: 'Roll weapon damage dice + STR Damage Modifier. Target subtracts Armor DR (or halves damage if wearing matching Medium/Heavy armor). Remaining damage reduces STA.' },
+    { step: 6, name: 'Reactions, Parry & Opportunity Attacks', description: 'Target may spend 1 Reaction to Parry with weapon or Shield Block (-10% or more). Moving out of an engaged enemy\'s reach provokes an Opportunity Attack.' },
+  ],
+
   unarmedDamage: [
     { strBracket: '01 - 29', punchDamage: '1d5 - 2 (min 1)', kickDamage: '1d5 - 1 (min 1)' },
     { strBracket: '30 - 39', punchDamage: '1d5 - 1 (min 1)', kickDamage: '1d5' },

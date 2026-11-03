@@ -50,8 +50,14 @@ describe('QuickReferenceTables.vue', () => {
   });
 
   describe('Melee Combat Tab', () => {
-    it('renders base hit formula banner, unarmed combat, weapons, and modifiers', async () => {
+    it('renders turn sequence, base hit formula banner, unarmed combat, weapons, and modifiers', async () => {
       const html = await renderComponent({ initialCategory: 'melee' });
+
+      // Turn sequence
+      expect(html).toContain('Turn Sequence');
+      expect(html).toContain('Tactical Flow');
+      expect(html).toContain('Close Distance &amp; Position');
+      expect(html).toContain('Declare Melee Attack &amp; Maneuver');
 
       // Formula callout
       expect(html).toContain('1/2 STR');
