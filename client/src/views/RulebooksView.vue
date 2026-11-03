@@ -569,10 +569,10 @@ onMounted(() => {
 
 .mode-btn.active {
   background-color: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
-  box-shadow: 0 0 8px rgba(127, 255, 212, 0.3);
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
+  box-shadow: 0 0 8px rgba(208, 208, 208, 0.3);
 }
 
 .view-status {

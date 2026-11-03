@@ -583,23 +583,23 @@ export default {
 
 .btn-primary-action {
   background-color: #021a1e;
-  border: 1px solid aquamarine;
-  color: aquamarine;
+  border: 1px solid #d0d0d0;
+  color: #d0d0d0;
   padding: 6px 14px;
   border-radius: 4px;
   font-weight: 600;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.15s ease-in-out;
-  box-shadow: 0 0 8px rgba(127, 255, 212, 0.2);
+  box-shadow: 0 0 8px rgba(208, 208, 208, 0.2);
   white-space: nowrap;
 }
 
 .btn-primary-action:hover:not(:disabled) {
   background-color: #04272d;
-  border-color: #a8ffea;
-  color: #a8ffea;
-  box-shadow: 0 0 14px rgba(127, 255, 212, 0.4);
+  border-color: #d0d0d0;
+  color: #d0d0d0;
+  box-shadow: 0 0 14px rgba(208, 208, 208, 0.4);
 }
 
 .btn-primary-action:disabled {
@@ -855,22 +855,22 @@ export default {
 
 .btn-footer-use {
   background-color: #021a1e;
-  border: 1px solid aquamarine;
-  color: aquamarine;
+  border: 1px solid #d0d0d0;
+  color: #d0d0d0;
   padding: 6px 16px;
   border-radius: 4px;
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.25);
+  box-shadow: 0 0 10px rgba(208, 208, 208, 0.25);
   transition: all 0.15s ease-in-out;
 }
 
 .btn-footer-use:hover:not(:disabled) {
   background-color: #04272d;
-  border-color: #a8ffea;
-  color: #a8ffea;
-  box-shadow: 0 0 16px rgba(127, 255, 212, 0.5);
+  border-color: #d0d0d0;
+  color: #d0d0d0;
+  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
 }
 
 .btn-footer-use:disabled {

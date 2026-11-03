@@ -436,11 +436,11 @@ const noResults = computed(() => {
 
 .tab-button.active {
   background-color: #021a1e !important;
-  border-color: aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
+  border-color: #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
   font-weight: 600;
-  box-shadow: 0 0 8px rgba(127, 255, 212, 0.3);
+  box-shadow: 0 0 8px rgba(208, 208, 208, 0.3);
 }
 
 .tab-icon {

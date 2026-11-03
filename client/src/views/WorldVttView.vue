@@ -1985,8 +1985,8 @@ onBeforeUnmount(() => {
 
 .btn-add-token {
   background-color: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
   font-weight: 700;
 }
 

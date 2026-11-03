@@ -2784,11 +2784,11 @@ onBeforeUnmount(() => {
 .btn-add-token {
   background-color: #021a1e !important;
   background: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
   font-weight: 700;
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.25);
+  box-shadow: 0 0 10px rgba(208, 208, 208, 0.25);
   letter-spacing: 0.3px;
   text-shadow: none;
   transition: all 0.15s ease-in-out;
@@ -2797,10 +2797,10 @@ onBeforeUnmount(() => {
 .btn-add-token:hover {
   background-color: #04272d !important;
   background: #04272d !important;
-  border-color: #a8ffea !important;
-  color: #a8ffea !important;
-  -webkit-text-fill-color: #a8ffea;
-  box-shadow: 0 0 16px rgba(127, 255, 212, 0.5);
+  border-color: #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
+  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
 }
 
 .btn-add-token:active {
@@ -3728,28 +3728,28 @@ onBeforeUnmount(() => {
 .btn-add-token-submit {
   background-color: #021a1e !important;
   background: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
   font-weight: 700;
   padding: 8px 16px;
   border-radius: var(--radius);
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.25);
+  box-shadow: 0 0 10px rgba(208, 208, 208, 0.25);
   transition: all 0.15s ease-in-out;
 }
 
 .btn-add-token-submit:hover:not(:disabled) {
   background-color: #04272d !important;
   background: #04272d !important;
-  border-color: #a8ffea !important;
-  color: #a8ffea !important;
-  -webkit-text-fill-color: #a8ffea;
-  box-shadow: 0 0 16px rgba(127, 255, 212, 0.5);
+  border-color: #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
+  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
 }
 
 .btn-add-token-submit:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(127, 255, 212, 0.4);
+  box-shadow: 0 0 6px rgba(208, 208, 208, 0.4);
 }
 
 .full-width {

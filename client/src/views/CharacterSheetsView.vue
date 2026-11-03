@@ -3668,24 +3668,24 @@ export default {
 .btn-new-character {
   background-color: #021a1e !important;
   background: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
   padding: 6px 14px;
   border-radius: 4px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.25);
+  box-shadow: 0 0 10px rgba(208, 208, 208, 0.25);
   letter-spacing: 0.3px;
   transition: all 0.15s ease-in-out;
 }
 .btn-new-character:hover {
   background-color: #04272d !important;
   background: #04272d !important;
-  border-color: #a8ffea !important;
-  color: #a8ffea !important;
-  -webkit-text-fill-color: #a8ffea;
-  box-shadow: 0 0 16px rgba(127, 255, 212, 0.5);
+  border-color: #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
+  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
 }
 .btn-new-character:active {
   transform: translateY(1px);
@@ -3873,30 +3873,30 @@ export default {
 .modal-card .btn-modal-create {
   background-color: #021a1e !important;
   background: #021a1e !important;
-  border: 1px solid aquamarine !important;
-  color: aquamarine !important;
-  -webkit-text-fill-color: aquamarine;
+  border: 1px solid #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
   padding: 6px 16px;
   border-radius: var(--radius, 4px);
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
-  box-shadow: 0 0 10px rgba(127, 255, 212, 0.25);
+  box-shadow: 0 0 10px rgba(208, 208, 208, 0.25);
   letter-spacing: 0.3px;
   transition: all 0.15s ease-in-out;
 }
 
 .modal-card .btn-modal-create:hover:not(:disabled) {
   background-color: #04272d !important;
-  border-color: #a8ffea !important;
-  color: #a8ffea !important;
-  -webkit-text-fill-color: #a8ffea;
-  box-shadow: 0 0 16px rgba(127, 255, 212, 0.5);
+  border-color: #d0d0d0 !important;
+  color: #d0d0d0 !important;
+  -webkit-text-fill-color: #d0d0d0;
+  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
 }
 
 .modal-card .btn-modal-create:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(127, 255, 212, 0.4);
+  box-shadow: 0 0 6px rgba(208, 208, 208, 0.4);
 }
 
 .modal-card .btn-modal-create:disabled {
