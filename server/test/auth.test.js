@@ -855,6 +855,45 @@ describe('Auth API', () => {
           fs.rmSync(tmpDir, { recursive: true, force: true });
         }
       });
+
+      it('does NOT purge disk sessions.db when running in :memory: mode', async () => {
+        const tmpDir = path.join(os.tmpdir(), `ww-sess-mem-${Date.now()}-${Math.random().toString(36).substring(7)}`);
+        fs.mkdirSync(tmpDir, { recursive: true });
+        const sessDbPath = path.join(tmpDir, 'sessions.db');
+        const prevDataDir = process.env.DATA_DIR;
+        process.env.DATA_DIR = tmpDir;
+
+        try {
+          const sdb = new Database(sessDbPath);
+          sdb.prepare(`
+            CREATE TABLE IF NOT EXISTS sessions (
+              sid TEXT PRIMARY KEY,
+              expired INTEGER,
+              sess TEXT
+            )
+          `).run();
+          sdb.prepare('INSERT OR REPLACE INTO sessions (sid, expired, sess) VALUES (?, ?, ?)')
+            .run('live-gm-sess', Date.now() + 60000, JSON.stringify({ cookie: {}, userId: 1, role: 'GameMaster' }));
+          sdb.close();
+
+          const gmAgent = request.agent(app);
+          await gmAgent.post('/api/auth/register').send({ username: 'gmMem', password: 'password123' });
+          await gmAgent.post('/api/auth/login').send({ username: 'gmMem', password: 'password123' });
+          await gmAgent.put('/api/auth/users/1/password').send({ password: 'newpassword123' });
+
+          const verifyDb = new Database(sessDbPath);
+          const gmSess = verifyDb.prepare('SELECT * FROM sessions WHERE sid = ?').get('live-gm-sess');
+          verifyDb.close();
+          expect(gmSess).toBeDefined();
+        } finally {
+          if (prevDataDir === undefined) {
+            delete process.env.DATA_DIR;
+          } else {
+            process.env.DATA_DIR = prevDataDir;
+          }
+          fs.rmSync(tmpDir, { recursive: true, force: true });
+        }
+      });
     });
 
     // Bug 3: CORS origin validation

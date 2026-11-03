@@ -75,21 +75,23 @@ export function purgeUserSessions(req, userId, db, excludeSessionId) {
     purgeFromDb(req.sessionStore.db);
   }
 
-  // 2. Invalidate active sessions in sessions.db file on disk (if it exists)
+  // 2. Invalidate active sessions in sessions.db file on disk (if it exists and not in-memory mode)
   try {
     const sessionDir = req.app?.locals?.sessionDir;
-    const sessionDbPath = sessionDir && sessionDir !== ':memory:'
-      ? path.join(sessionDir, 'sessions.db')
-      : (process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'sessions.db') : path.resolve(__dirname, '../../data/sessions.db'));
-    
-    if (fs.existsSync(sessionDbPath)) {
-      const storeDbName = req.sessionStore?.db?.name;
-      if (!storeDbName || path.resolve(storeDbName) !== path.resolve(sessionDbPath)) {
-        const sessDb = new Database(sessionDbPath);
-        try {
-          purgeFromDb(sessDb);
-        } finally {
-          sessDb.close();
+    if (sessionDir !== ':memory:') {
+      const sessionDbPath = sessionDir
+        ? path.join(sessionDir, 'sessions.db')
+        : (process.env.DATA_DIR ? path.join(process.env.DATA_DIR, 'sessions.db') : path.resolve(__dirname, '../../data/sessions.db'));
+      
+      if (fs.existsSync(sessionDbPath)) {
+        const storeDbName = req.sessionStore?.db?.name;
+        if (!storeDbName || path.resolve(storeDbName) !== path.resolve(sessionDbPath)) {
+          const sessDb = new Database(sessionDbPath);
+          try {
+            purgeFromDb(sessDb);
+          } finally {
+            sessDb.close();
+          }
         }
       }
     }
@@ -225,7 +227,17 @@ export function createAuthRouter(db) {
             return res.status(500).json({ error: 'Login failed' });
           }
           req.session.userId = user.id;
-          res.json({ id: user.id, username: user.username, role: user.role });
+          if (typeof req.session.save === 'function') {
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                console.error('Session save error:', saveErr);
+                return res.status(500).json({ error: 'Login failed' });
+              }
+              res.json({ id: user.id, username: user.username, role: user.role });
+            });
+          } else {
+            res.json({ id: user.id, username: user.username, role: user.role });
+          }
         });
       } else {
         if (req.session) {
