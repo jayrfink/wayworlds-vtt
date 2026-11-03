@@ -3081,10 +3081,11 @@ export default {
   align-items: center;
   flex-wrap: wrap;
   font-size: 0.9rem;
+  font-size: 0.855rem;
 }
 
 .header-sub-row label {
-  font-size: 0.9rem;
+  font-size: 0.855rem;
 }
 
 .input-name {
@@ -3107,7 +3108,7 @@ export default {
   align-items: center;
   gap: 8px;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.855rem;
 }
 
 .select-race,
@@ -3117,27 +3118,34 @@ export default {
 .select-psa option,
 .select-player option {
   background-color: #000000 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  color: #c9c9c9 !important;
+  -webkit-text-fill-color: #c9c9c9;
   background-image: none !important;
 }
 
 .select-race,
 .select-psa,
 .select-player {
-  border: 1px solid rgba(0, 255, 255, 0.4) !important;
+  border: 1px solid rgba(201, 201, 201, 0.4) !important;
   border-radius: 4px;
-  padding: 6px 28px 6px 10px !important;
-  padding-right: 28px !important;
-  font-size: 0.9rem;
+  padding: 5px 26px 5px 9px !important;
+  padding-right: 26px !important;
+  font-size: 0.855rem;
+}
+
+.select-race:hover:not(:disabled),
+.select-psa:hover:not(:disabled),
+.select-player:hover:not(:disabled) {
+  border-color: #c9c9c9 !important;
+  box-shadow: 0 0 6px rgba(201, 201, 201, 0.35);
 }
 
 .select-race:focus,
 .select-psa:focus,
 .select-player:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+  border-color: #c9c9c9 !important;
+  box-shadow: 0 0 8px rgba(201, 201, 201, 0.5);
 }
 
 .player-badge-wrap {
@@ -3146,13 +3154,13 @@ export default {
 }
 
 .badge-player {
-  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.4));
-  color: var(--theme-bright, #45acba);
-  background: var(--theme-surface-active, rgba(69, 172, 186, 0.12));
-  box-shadow: var(--theme-glow-subtle);
+  border: 1px solid rgba(201, 201, 201, 0.4);
+  color: #c9c9c9;
+  background: rgba(201, 201, 201, 0.1);
+  box-shadow: 0 0 6px rgba(201, 201, 201, 0.25);
   border-radius: 4px;
   padding: 3px 7px;
-  font-size: 0.77rem;
+  font-size: 0.73rem;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -3161,11 +3169,11 @@ export default {
 
 .input-custom-race {
   background: var(--bg-surface-2, #1f293d);
-  color: #cecece;
-  border: 1px solid var(--border-color, #2b3954);
+  color: #c9c9c9;
+  border: 1px solid rgba(201, 201, 201, 0.4);
   padding: 5px 8px;
   border-radius: 4px;
-  font-size: 0.85rem;
+  font-size: 0.81rem;
   margin-left: 6px;
   min-width: 140px;
   box-sizing: border-box;
@@ -3513,16 +3521,22 @@ export default {
   color: #ff8585;
   box-shadow: 0 0 8px rgba(248, 81, 73, 0.5);
 }
-.btn-add {
+.btn-add,
+.btn-sta.btn-add,
+.btn-ess.btn-add,
+.btn-delta.btn-add {
   background: #000000;
-  color: var(--theme-bright, #3fb950);
-  border: 1px solid var(--theme-bright, rgba(63, 185, 80, 0.4));
+  color: #86efac !important;
+  border: 1px solid rgba(134, 239, 172, 0.45) !important;
 }
-.btn-add:hover {
+.btn-add:hover:not(:disabled),
+.btn-sta.btn-add:hover:not(:disabled),
+.btn-ess.btn-add:hover:not(:disabled),
+.btn-delta.btn-add:hover:not(:disabled) {
   background: #000000;
-  color: var(--theme-bright-hover, var(--theme-bright, #3fb950));
-  border-color: var(--theme-bright-hover, var(--theme-bright, #3fb950));
-  box-shadow: var(--theme-glow-hover, var(--sci-glow-green));
+  color: #bbf7d0 !important;
+  border-color: #86efac !important;
+  box-shadow: 0 0 8px rgba(134, 239, 172, 0.55) !important;
 }
 
 /* Primary Stats Grid (2x2) */
