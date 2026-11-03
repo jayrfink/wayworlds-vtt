@@ -232,10 +232,10 @@
   --theme-btn-color: #38bdf8;
   --theme-secondary-btn-border: #347b93;
   --theme-secondary-btn-color: #38bdf8;
-  --theme-stepper-arrow: #38bdf8;
-  --theme-stepper-filter: sepia(100%) saturate(350%) hue-rotate(185deg) brightness(1.2);
-  --theme-stepper-filter-hover: sepia(100%) saturate(600%) hue-rotate(185deg) brightness(1.5) drop-shadow(0 0 3px #38bdf8);
-  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
+  --theme-stepper-arrow: #67e8f9;
+  --theme-stepper-filter: sepia(100%) saturate(350%) hue-rotate(145deg) brightness(1.2);
+  --theme-stepper-filter-hover: sepia(100%) saturate(600%) hue-rotate(145deg) brightness(1.5) drop-shadow(0 0 3px #67e8f9);
+  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%2367e8f9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
   --theme-sta-color: #38bdf8;
   --theme-sta-glow: 0 0 12px rgba(56, 189, 248, 0.7);
   --theme-ess-color: #67e8f9;
