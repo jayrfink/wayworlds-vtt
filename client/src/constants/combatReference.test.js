@@ -14,20 +14,20 @@ describe('combatReference', () => {
       expect(RANGED_COMBAT_REF.armor.length).toBeGreaterThanOrEqual(4);
     });
 
-    it('contains small arms, heavy weapons, and grenades with valid schema', () => {
+    it('contains bows, crossbows, and thrown weapons with valid schema', () => {
       const weaponNames = RANGED_COMBAT_REF.weapons.map((w) => w.name);
-      expect(weaponNames).toContain('Laser Pistol');
-      expect(weaponNames).toContain('Laser Rifle');
-      expect(weaponNames).toContain('Electrostunner');
-      expect(weaponNames).toContain('Automatic Pistol');
-      expect(weaponNames).toContain('Automatic Rifle');
-      expect(weaponNames).toContain('Gyrojet Pistol');
-      expect(weaponNames).toContain('Gyrojet Rifle');
-      expect(weaponNames).toContain('Needler');
-      expect(weaponNames).toContain('Frag Grenade');
-      expect(weaponNames).toContain('Doze Grenade');
-      expect(weaponNames).toContain('Smoke Grenade');
-      expect(weaponNames).toContain('Tangler Grenade');
+      expect(weaponNames).toContain('Shortbow');
+      expect(weaponNames).toContain('Longbow');
+      expect(weaponNames).toContain('Composite Bow');
+      expect(weaponNames).toContain('Light Crossbow');
+      expect(weaponNames).toContain('Heavy Crossbow');
+      expect(weaponNames).toContain('Hand Crossbow');
+      expect(weaponNames).toContain('Sling');
+      expect(weaponNames).toContain('Javelin');
+      expect(weaponNames).toContain('Throwing Axe');
+      expect(weaponNames).toContain('Thrown Dagger / Kunai');
+      expect(weaponNames).toContain('Dart');
+      expect(weaponNames).toContain('Bolas / Entangling Net');
 
       RANGED_COMBAT_REF.weapons.forEach((w) => {
         expect(w).toHaveProperty('name');
@@ -49,11 +49,12 @@ describe('combatReference', () => {
         expect(m).toHaveProperty('notes');
       });
 
-      const armorNames = RANGED_COMBAT_REF.armor.map((a) => a.name);
-      expect(armorNames).toContain('Skeinsuit');
-      expect(armorNames).toContain('Albedo Suit');
-      expect(armorNames).toContain('Albedo Screen');
-      expect(armorNames).toContain('Inertia Screen');
+      const armorTypes = RANGED_COMBAT_REF.armor.map((a) => a.type);
+      expect(armorTypes).toContain('Light Armor');
+      expect(armorTypes).toContain('Medium Armor');
+      expect(armorTypes).toContain('Heavy Armor');
+      expect(armorTypes).toContain('Shield');
+      expect(armorTypes).toContain('Supernatural Ward');
 
       RANGED_COMBAT_REF.armor.forEach((a) => {
         expect(a).toHaveProperty('name');
@@ -69,20 +70,18 @@ describe('combatReference', () => {
       expect(MELEE_COMBAT_REF.attackBaseFormula).toBeDefined();
       expect(typeof MELEE_COMBAT_REF.attackBaseFormula).toBe('string');
       expect(Array.isArray(MELEE_COMBAT_REF.unarmedDamage)).toBe(true);
-      expect(MELEE_COMBAT_REF.unarmedDamage.length).toBe(5);
+      expect(MELEE_COMBAT_REF.unarmedDamage.length).toBeGreaterThanOrEqual(5);
       expect(Array.isArray(MELEE_COMBAT_REF.weapons)).toBe(true);
-      expect(MELEE_COMBAT_REF.weapons.length).toBeGreaterThanOrEqual(6);
+      expect(MELEE_COMBAT_REF.weapons.length).toBeGreaterThanOrEqual(10);
       expect(Array.isArray(MELEE_COMBAT_REF.modifiers)).toBe(true);
       expect(MELEE_COMBAT_REF.modifiers.length).toBeGreaterThanOrEqual(5);
     });
 
-    it('verifies unarmed damage brackets and melee weapons', () => {
+    it('verifies unarmed damage brackets and fantasy melee weapons', () => {
       const brackets = MELEE_COMBAT_REF.unarmedDamage.map((b) => b.strBracket);
-      expect(brackets).toContain('STR 1-20');
-      expect(brackets).toContain('STR 21-40');
-      expect(brackets).toContain('STR 41-60');
-      expect(brackets).toContain('STR 61-80');
-      expect(brackets).toContain('STR 81+');
+      expect(brackets.some((b) => b.includes('40 - 49'))).toBe(true);
+      expect(brackets.some((b) => b.includes('50 - 59'))).toBe(true);
+      expect(brackets).toContain('80+');
 
       MELEE_COMBAT_REF.unarmedDamage.forEach((u) => {
         expect(u).toHaveProperty('strBracket');
@@ -91,12 +90,13 @@ describe('combatReference', () => {
       });
 
       const meleeNames = MELEE_COMBAT_REF.weapons.map((w) => w.name);
-      expect(meleeNames).toContain('Knife');
-      expect(meleeNames).toContain('Vibroknife');
-      expect(meleeNames).toContain('Stun Baton');
-      expect(meleeNames.some((n) => n.includes('Club'))).toBe(true);
-      expect(meleeNames.some((n) => n.includes('Sword'))).toBe(true);
-      expect(meleeNames).toContain('Axe');
+      expect(meleeNames).toContain('Dagger / Kunai');
+      expect(meleeNames).toContain('Shortsword / Scimitar');
+      expect(meleeNames).toContain('Rapier');
+      expect(meleeNames).toContain('Broadsword / Longsword');
+      expect(meleeNames).toContain('Battleaxe / Warhammer / Flail');
+      expect(meleeNames).toContain('Greatsword / Greataxe / Maul');
+      expect(meleeNames).toContain('Halberd / Glaive / Pike');
 
       MELEE_COMBAT_REF.weapons.forEach((w) => {
         expect(w).toHaveProperty('name');

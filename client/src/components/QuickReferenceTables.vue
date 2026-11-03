@@ -41,7 +41,7 @@
     <main class="ref-content">
       <!-- Empty State -->
       <div v-if="noResults" class="empty-state">
-        <div class="empty-icon">🛰️</div>
+        <div class="empty-icon">📜</div>
         <h3>No matching rules or tables found</h3>
         <p>No results found matching "{{ searchQuery }}" in {{ currentTabLabel }}.</p>
         <button type="button" class="clear-filter-btn" @click="searchQuery = ''">Clear Filter</button>
@@ -138,11 +138,11 @@
           </div>
         </section>
 
-        <!-- Armor & Screens Table -->
+        <!-- Armor & Wards Table -->
         <section v-if="filteredRangedArmor.length > 0" class="ref-section">
           <h2 class="section-title">
             <span class="title-badge">Defense</span>
-            Armor & Screens
+            Armor, Shields & Wards
           </h2>
           <div class="table-responsive">
             <table class="ref-table">
@@ -286,7 +286,7 @@ const props = defineProps({
 });
 
 const tabs = [
-  { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🔫' },
+  { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
   { id: 'melee', label: 'Melee Combat', icon: '⚔️' }
 ];
 

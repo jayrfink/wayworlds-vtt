@@ -1,353 +1,314 @@
 /**
- * Wayworlds Combat Quick Reference Constants
- * Derived from Wayworlds d100 core combat rules.
+ * Wayworlds d100 Combat Quick Reference Data
+ *
+ * Pure data constants for the Quick Reference Drawer component.
+ * Covers Ranged Weapon Combat (Bows, Crossbows, Thrown) and Melee Combat
+ * tables, modifiers, sequence of play, and armor/shields per Wayworlds d100 Core Spec.
  */
 
 export const RANGED_COMBAT_REF = {
+  title: 'Ranged Weapon Combat',
+  baseRule:
+    'Base Hit Chance = 1/2 DEX (rounded up) + (10 x Ranged Weapons Skill Rank). Roll d100 <= Modified Hit Chance to hit. Doubles <= hit target score a Critical Hit; doubles > hit target or 99-00 trigger a Fumble.',
+
   sequenceOfPlay: [
-    {
-      step: 1,
-      name: 'Initiative',
-      description: 'Compare Reaction Speed (IM = ceil(RS / 10)). Highest initiative acts first.'
-    },
-    {
-      step: 2,
-      name: 'Movement',
-      description: 'Characters may walk up to their walking speed or sprint up to running speed in meters.'
-    },
-    {
-      step: 3,
-      name: 'Actions',
-      description: 'Perform combat actions: Aim (+10%), Shoot/Fire weapon, Reload clip/battery, Throw grenade, or change stance.'
-    },
-    {
-      step: 4,
-      name: 'Damage & Effects',
-      description: 'Roll weapon damage, deduct armor/screens absorption, and apply remaining damage to Stamina.'
-    }
+    { step: 1, name: 'Initiative', description: 'Roll 1d10 + IM (floor(RS / 10)). Highest acts first; ties go to higher RS.' },
+    { step: 2, name: 'Movement & Action Economy', description: 'Spend Movement (Walk / Dash in ft) and up to 2 Actions (or 1 Full-Round Action) on your turn.' },
+    { step: 3, name: 'Declare Ranged Attack', description: 'Name target, verify Line of Sight, measure range band, and check ammunition/loading state.' },
+    { step: 4, name: 'Resolve Ranged Attacks', description: 'Compute Modified Hit Chance (Base + range, cover, aim, and movement modifiers), then roll d100.' },
+    { step: 5, name: 'Apply Damage & Armor DR', description: 'Roll weapon damage dice and subtract target Armor Soak (DR). Remaining damage reduces STA.' },
+    { step: 6, name: 'Reactions & End of Turn', description: 'Resolve Shield Block or Dodge reactions (up to 2 Reactions per round) and track spent arrows/bolts.' },
   ],
 
   weapons: [
     {
-      name: 'Laser Pistol',
-      category: 'Beam Weapon',
-      damage: '1d10 to 10d10 (dial)',
-      rof: 1,
-      shortRange: '10m',
-      medRange: '25m',
-      longRange: '50m',
-      ammo: '20 ESS clip',
-      notes: 'Dial setting determines ESS drained and damage dice rolled'
-    },
-    {
-      name: 'Laser Rifle',
-      category: 'Beam Weapon',
-      damage: '1d10 to 20d10 (dial)',
-      rof: 1,
-      shortRange: '30m',
-      medRange: '75m',
-      longRange: '150m',
-      ammo: '20 ESS clip or Backpack (100 ESS)',
-      notes: 'High-power dialable beam weapon'
-    },
-    {
-      name: 'Electrostunner',
-      category: 'Energy Weapon',
-      damage: 'Stun',
-      rof: 1,
-      shortRange: '5m',
-      medRange: '15m',
-      longRange: '30m',
-      ammo: '20 ESS clip',
-      notes: 'Non-lethal electrical discharge; causes unconsciousness on failed STA check'
-    },
-    {
-      name: 'Automatic Pistol',
-      category: 'Projectile Weapon',
+      name: 'Shortbow',
+      category: 'Bow',
       damage: '1d10',
-      rof: 2,
-      shortRange: '10m',
-      medRange: '25m',
-      longRange: '50m',
-      ammo: '20 bullets',
-      notes: 'Semi-automatic slug thrower'
+      rof: '1 / Action',
+      shortRange: '0-80ft',
+      medRange: '81-160ft',
+      longRange: '161-320ft',
+      ammo: 'Quiver (20)',
+      notes: 'Two-Handed; nimble hunting and skirmish bow',
     },
     {
-      name: 'Automatic Rifle',
-      category: 'Projectile Weapon',
+      name: 'Longbow',
+      category: 'Bow',
+      damage: '2d10',
+      rof: '1 / Action',
+      shortRange: '0-150ft',
+      medRange: '151-300ft',
+      longRange: '301-600ft',
+      ammo: 'Quiver (20)',
+      notes: 'Two-Handed, Heavy (Min STR 50); war bow',
+    },
+    {
+      name: 'Composite Bow',
+      category: 'Bow',
+      damage: '2d10+2',
+      rof: '1 / Action',
+      shortRange: '0-120ft',
+      medRange: '121-240ft',
+      longRange: '241-480ft',
+      ammo: 'Quiver (20)',
+      notes: 'Two-Handed, Heavy (Min STR 55); recurve horn-and-sinew bow; usable mounted',
+    },
+    {
+      name: 'Light Crossbow',
+      category: 'Crossbow',
+      damage: '2d10',
+      rof: '1 / Reload (1 Action)',
+      shortRange: '0-80ft',
+      medRange: '81-160ft',
+      longRange: '161-320ft',
+      ammo: 'Case (20)',
+      notes: 'Two-Handed, Loading (1 Action to reload)',
+    },
+    {
+      name: 'Heavy Crossbow',
+      category: 'Crossbow',
+      damage: '3d10',
+      rof: '1 / Full Reload',
+      shortRange: '0-100ft',
+      medRange: '101-200ft',
+      longRange: '201-400ft',
+      ammo: 'Case (20)',
+      notes: 'Two-Handed, Heavy, Loading (Full Round), Armor Piercing (ignores 2 DR)',
+    },
+    {
+      name: 'Hand Crossbow',
+      category: 'Crossbow',
       damage: '1d10',
-      rof: 3,
-      shortRange: '30m',
-      medRange: '75m',
-      longRange: '150m',
-      ammo: '20 bullets',
-      notes: 'Burst fire: +10% to hit, +1d10 damage (expends 3 rounds)'
+      rof: '1 / Reload (1 Action)',
+      shortRange: '0-30ft',
+      medRange: '31-60ft',
+      longRange: '61-120ft',
+      ammo: 'Case (20)',
+      notes: 'One-Handed, Light, Loading (1 Action to reload)',
     },
     {
-      name: 'Gyrojet Pistol',
-      category: 'Gyrojet Weapon',
-      damage: '1d10',
-      rof: 2,
-      shortRange: '10m',
-      medRange: '25m',
-      longRange: '50m',
-      ammo: '10 rockets',
-      notes: 'Micro-rocket launcher pistol; low recoil'
+      name: 'Sling',
+      category: 'Sling',
+      damage: '1d10-1',
+      rof: '1 / Action',
+      shortRange: '0-30ft',
+      medRange: '31-60ft',
+      longRange: '61-120ft',
+      ammo: 'Pouch (20)',
+      notes: 'One-Handed, Blunt; hurls lead bullets or smooth stones',
     },
     {
-      name: 'Gyrojet Rifle',
-      category: 'Gyrojet Weapon',
-      damage: '1d10',
-      rof: 2,
-      shortRange: '30m',
-      medRange: '75m',
-      longRange: '150m',
-      ammo: '10 rockets',
-      notes: 'Micro-rocket long rifle with extended range'
+      name: 'Javelin',
+      category: 'Thrown',
+      damage: '1d10 + STR Mod',
+      rof: '1 / Thrown',
+      shortRange: '0-30ft',
+      medRange: '31-60ft',
+      longRange: '61-120ft',
+      ammo: '1 (Thrown)',
+      notes: 'Thrown or Melee; adds melee STR Damage Modifier',
     },
     {
-      name: 'Needler',
-      category: 'Special Weapon',
-      damage: 'Poison / Sleep',
-      rof: 3,
-      shortRange: '5m',
-      medRange: '15m',
-      longRange: '30m',
-      ammo: '10 needles',
-      notes: 'Silent flechette weapon loaded with tranquilizer or toxin'
+      name: 'Throwing Axe',
+      category: 'Thrown',
+      damage: '1d10 + STR Mod',
+      rof: '1 / Thrown',
+      shortRange: '0-20ft',
+      medRange: '21-40ft',
+      longRange: '41-60ft',
+      ammo: '1 (Thrown)',
+      notes: 'One-Handed, Light, Thrown; adds melee STR Damage Modifier',
     },
     {
-      name: 'Frag Grenade',
-      category: 'Grenade',
-      damage: '5d10',
-      rof: 1,
-      shortRange: 'STR / 2 meters',
-      medRange: '-',
-      longRange: '-',
-      ammo: '1 grenade',
-      notes: 'Blast radius 5m; halved damage outside 2m radius'
+      name: 'Thrown Dagger / Kunai',
+      category: 'Thrown',
+      damage: '1d10-2 + STR Mod',
+      rof: '1 / Thrown',
+      shortRange: '0-20ft',
+      medRange: '21-40ft',
+      longRange: '41-60ft',
+      ammo: '1 (Thrown)',
+      notes: 'One-Handed, Light, Finesse, Concealable',
     },
     {
-      name: 'Doze Grenade',
-      category: 'Grenade',
-      damage: 'Sleep Gas',
-      rof: 1,
-      shortRange: 'STR / 2 meters',
-      medRange: '-',
-      longRange: '-',
-      ammo: '1 grenade',
-      notes: 'Blast radius 5m; produces sleep-inducing gas cloud'
+      name: 'Dart',
+      category: 'Thrown',
+      damage: '1d5 + STR Mod',
+      rof: '1 / Thrown',
+      shortRange: '0-20ft',
+      medRange: '21-40ft',
+      longRange: '41-60ft',
+      ammo: '1 (Thrown)',
+      notes: 'One-Handed, Light, Finesse; weighted throwing dart',
     },
     {
-      name: 'Smoke Grenade',
-      category: 'Grenade',
-      damage: 'Obscuration',
-      rof: 1,
-      shortRange: 'STR / 2 meters',
-      medRange: '-',
-      longRange: '-',
-      ammo: '1 grenade',
-      notes: 'Blast radius 10m; blocks vision and laser lines of sight'
+      name: 'Bolas / Entangling Net',
+      category: 'Thrown',
+      damage: '1d5 (Snare)',
+      rof: '1 / Thrown',
+      shortRange: '0-15ft',
+      medRange: '16-30ft',
+      longRange: '31-45ft',
+      ammo: '1 (Thrown)',
+      notes: 'Entangling; on hit, target is Restrained until freed (1 Action STR/DEX check)',
     },
-    {
-      name: 'Tangler Grenade',
-      category: 'Grenade',
-      damage: 'Restraining fibers',
-      rof: 1,
-      shortRange: 'STR / 2 meters',
-      medRange: '-',
-      longRange: '-',
-      ammo: '1 grenade',
-      notes: 'Blast radius 3m; immobilizes targets caught in strong polymer threads'
-    }
   ],
 
   modifiers: [
-    {
-      condition: 'Point Blank range',
-      modifier: '+20%',
-      notes: 'Target within 2 meters'
-    },
-    {
-      condition: 'Short range',
-      modifier: '0%',
-      notes: 'Standard base weapon range'
-    },
-    {
-      condition: 'Medium range',
-      modifier: '-10%',
-      notes: 'Beyond short range up to medium range limit'
-    },
-    {
-      condition: 'Long range',
-      modifier: '-20%',
-      notes: 'Beyond medium range up to long range limit'
-    },
-    {
-      condition: 'Extreme range',
-      modifier: '-30%',
-      notes: 'Beyond long range limit up to maximum effective weapon range'
-    },
-    {
-      condition: 'Target moving fast / running',
-      modifier: '-10%',
-      notes: 'Target is sprinting or executing evasive dash'
-    },
-    {
-      condition: 'Target in soft cover',
-      modifier: '-10%',
-      notes: 'Foliage, light furniture, translucent barriers'
-    },
-    {
-      condition: 'Target in hard cover',
-      modifier: '-20%',
-      notes: 'Stone walls, metal bulkheads, armor plates'
-    },
-    {
-      condition: 'Partial darkness / smoke',
-      modifier: '-15%',
-      notes: 'Dim lighting, mist, light smoke screens'
-    },
-    {
-      condition: 'Total darkness / blind',
-      modifier: '-30%',
-      notes: 'Zero-visibility environments'
-    },
-    {
-      condition: 'Careful Aim (1 turn)',
-      modifier: '+10%',
-      notes: 'Spend full turn aiming without moving (max +20% for 2 turns)'
-    },
-    {
-      condition: 'Target Prone',
-      modifier: '+10% within 10m, -10% at distance',
-      notes: 'Easier to hit up close, harder to silhouette at long distance'
-    }
+    { condition: 'Point Blank range (within 10 ft, unengaged)', modifier: '+10%', notes: 'Clear close-quarters shot when no enemy is within 5 ft' },
+    { condition: 'Short range', modifier: '+0%', notes: 'Within weapon short range increment' },
+    { condition: 'Medium range', modifier: '-10%', notes: 'Within weapon medium range increment' },
+    { condition: 'Long range', modifier: '-25%', notes: 'Within weapon long range increment' },
+    { condition: 'Extreme range (up to 1.5x Long Range, bows only)', modifier: '-40%', notes: 'High-arc volley shot; bows and heavy crossbows only' },
+    { condition: 'Careful Aim (1 Action spent aiming)', modifier: '+15%', notes: 'Must have Line of Sight and not Dash this turn' },
+    { condition: 'Attacker Moved / Walked this turn', modifier: '-10%', notes: 'Shooting on the move' },
+    { condition: 'Target Running / Dashing or Evading', modifier: '-15%', notes: 'Fast-moving or actively dodging target' },
+    { condition: 'Shooting while Engaged in Melee (within 5 ft)', modifier: '-20%', notes: 'Provokes Opportunity Attack unless using Hand Crossbow or Thrown Dagger' },
+    { condition: 'Target in Soft Cover (foliage, crates, allies)', modifier: '-15%', notes: 'Partial obstruction' },
+    { condition: 'Target in Hard Cover (stone wall, battlements)', modifier: '-30%', notes: 'Three-quarters cover; arrow slits grant -40%' },
+    { condition: 'Dim Light / Heavy Fog / Rain', modifier: '-15%', notes: 'Dawn/Dusk/Twilight Elves and Dwarves ignore dim light penalty' },
+    { condition: 'Total Darkness / Blinded', modifier: '-40%', notes: 'Requires Athletics & Perception hearing check to locate square' },
+    { condition: 'Target Prone (at Ranged > 10 ft)', modifier: '-15%', notes: 'Smaller silhouette against ranged fire' },
+    { condition: 'Target Size: Small (Whisperling, Goblin)', modifier: '-10%', notes: 'Smaller target profile' },
+    { condition: 'Target Size: Large or Huge (Ogre, Giant, Minotaur)', modifier: '+10% / +20%', notes: '+10% vs Large (2x2), +20% vs Huge (3x3)' },
   ],
 
   armor: [
     {
-      name: 'Skeinsuit',
-      type: 'Ballistic Cloth',
-      protection: 'Halves projectile, bullet, and blast damage',
-      notes: 'Flexible lightweight weave; no effect on laser or energy weapons'
+      name: 'Light Armor (Padded, Leather, Studded Leather, Hide)',
+      type: 'Light Armor',
+      protection: '2 - 4 DR per hit',
+      notes: 'Padded (2 DR), Leather (3 DR), Studded Leather / Hide (4 DR). Full movement; no stealth or casting penalty.',
     },
     {
-      name: 'Albedo Suit',
-      type: 'Ablative Suit',
-      protection: 'Absorbs up to 20 pts of laser damage before degradation',
-      notes: 'Reflective surface; ineffective against bullets or kinetic trauma'
+      name: 'Medium Armor (Chain Shirt, Scale Mail, Chainmail, Brigandine)',
+      type: 'Medium Armor',
+      protection: '5 - 7 DR per hit',
+      notes: 'Chain Shirt (5 DR), Scale Mail / Breastplate (6 DR), Chainmail / Brigandine (7 DR). -10% Stealth on heavy chain/scale.',
     },
     {
-      name: 'Albedo Screen',
-      type: 'Energy Shield',
-      protection: 'Absorbs laser damage (1 ESS per 2 pts absorbed)',
-      notes: 'Belt-mounted powered field; protects against laser and beam attacks'
+      name: 'Heavy Armor (Splint, Half-Plate, Full Plate, Runeforged)',
+      type: 'Heavy Armor',
+      protection: '8 - 12 DR per hit',
+      notes: 'Splint (8 DR), Half-Plate (9 DR), Full Plate (10 DR), Dwarven Stone-Plate (11 DR), Runeforged Plate (12 DR). Min STR 55-65.',
     },
     {
-      name: 'Inertia Screen',
-      type: 'Kinetic Shield',
-      protection: 'Absorbs kinetic and blast damage',
-      notes: 'Belt-mounted force field; cushions against bullets, shrapnel, and falls'
-    }
-  ]
+      name: 'Shields (Buckler, Wooden, Iron Heater, Tower, Runeforged)',
+      type: 'Shield',
+      protection: '+1 to +3 DR & Shield Block',
+      notes: 'Buckler (+1 DR, +5% Block), Wooden/Iron Shield (+2 DR, +10% Block), Tower Shield (+3 DR, +15% Block vs ranged).',
+    },
+    {
+      name: 'Magical Wards (Arcane Shield, Barkskin, Blood Aegis)',
+      type: 'Supernatural Ward',
+      protection: '+2 to +6 Ward DR',
+      notes: 'Stacks with physical armor unless tradition rules specify otherwise; absorbs physical and elemental damage.',
+    },
+  ],
 };
 
 export const MELEE_COMBAT_REF = {
-  attackBaseFormula: 'Higher of ceil(STR / 2) or ceil(DEX / 2) + (Melee Weapons skill level * 10%)',
+  title: 'Melee Combat',
+  attackBaseFormula:
+    'Base Hit Chance = 1/2 STR (or 1/2 DEX for Finesse weapons, rounded up) + (10 x Melee Weapons Skill Rank) + Weapon Accuracy Bonus. Add STR Damage Modifier (+1 per 10 full STR above 40; -1 per 10 below 40).',
+  baseRule:
+    'Base Hit Chance = 1/2 STR (or 1/2 DEX for Finesse weapons, rounded up) + (10 x Melee Weapons Skill Rank) + Weapon Accuracy Bonus. Add STR Damage Modifier (+1 per 10 full STR above 40; -1 per 10 below 40).',
 
   unarmedDamage: [
-    {
-      strBracket: 'STR 1-20',
-      punchDamage: '1 pt punch',
-      kickDamage: '1d10/2 kick'
-    },
-    {
-      strBracket: 'STR 21-40',
-      punchDamage: '2 pts punch',
-      kickDamage: '1d10 kick'
-    },
-    {
-      strBracket: 'STR 41-60',
-      punchDamage: '3 pts punch',
-      kickDamage: '1d10+1 kick'
-    },
-    {
-      strBracket: 'STR 61-80',
-      punchDamage: '4 pts punch',
-      kickDamage: '1d10+2 kick'
-    },
-    {
-      strBracket: 'STR 81+',
-      punchDamage: '5 pts punch',
-      kickDamage: '1d10+3 kick'
-    }
+    { strBracket: '01 - 29', punchDamage: '1d5 - 2 (min 1)', kickDamage: '1d5 - 1 (min 1)' },
+    { strBracket: '30 - 39', punchDamage: '1d5 - 1 (min 1)', kickDamage: '1d5' },
+    { strBracket: '40 - 49 (Baseline)', punchDamage: '1d5', kickDamage: '1d5 + 1' },
+    { strBracket: '50 - 59 (Baseline)', punchDamage: '1d5 + 1', kickDamage: '1d5 + 2' },
+    { strBracket: '60 - 69', punchDamage: '1d5 + 2', kickDamage: '1d5 + 3' },
+    { strBracket: '70 - 79', punchDamage: '1d5 + 3', kickDamage: '1d10' },
+    { strBracket: '80+', punchDamage: '1d10 + 1', kickDamage: '1d10 + 3' },
   ],
 
   weapons: [
     {
-      name: 'Knife',
-      damage: '1d10 / 2',
-      weight: '0.5 kg',
-      special: 'Can be thrown (short range 5m)'
+      name: 'Unarmed Strike / Brawling / Grapple',
+      damage: '1d5 + STR Mod',
+      weight: '0 lbs',
+      special: 'Natural weapon; Ki adepts and Minotaur Horns (1d10) deal lethal damage without penalty',
     },
     {
-      name: 'Vibroknife',
-      damage: '1d10',
-      weight: '1 kg',
-      special: 'Powered blade (1 ESS per minute of combat)'
+      name: 'Dagger / Kunai',
+      damage: '1d10-2 + STR Mod',
+      weight: '1 lb',
+      special: 'One-Handed, Light, Finesse (may use DEX), Thrown (20/40/60ft), +5% Hit Bonus',
     },
     {
-      name: 'Stun Baton',
-      damage: 'Stun damage',
-      weight: '1 kg',
-      special: 'Non-lethal electrical shock (uses 2 ESS per hit)'
+      name: 'Shortsword / Scimitar',
+      damage: '1d10 + STR Mod',
+      weight: '2-3 lbs',
+      special: 'One-Handed, Light, Finesse (may use DEX), +5% Hit Bonus; ideal for dual-wielding',
     },
     {
-      name: 'Club / Staff',
-      damage: '1d10 / 2',
-      weight: '1-2 kg',
-      special: 'Simple bludgeoning weapon; can parry'
+      name: 'Rapier',
+      damage: '1d10 + STR Mod',
+      weight: '2 lbs',
+      special: 'One-Handed, Finesse (may use DEX), Defensive (+5% Parry), +5% Hit Bonus',
     },
     {
-      name: 'Sword / Machete',
-      damage: '1d10',
-      weight: '2 kg',
-      special: 'Edged blade; standard one-handed weapon'
+      name: 'Handaxe / Light Hammer / Sickle',
+      damage: '1d10 + STR Mod',
+      weight: '2 lbs',
+      special: 'One-Handed, Light, Thrown (20/40/60ft)',
     },
     {
-      name: 'Axe',
-      damage: '1d10+1',
-      weight: '2.5 kg',
-      special: 'Heavy cleaving weapon'
-    }
+      name: 'Club / Mace / Quarterstaff',
+      damage: '1d10 + STR Mod',
+      weight: '3-4 lbs',
+      special: 'Blunt; Quarterstaff is Versatile (1d10+2 Two-Handed) and Defensive (+5% Parry)',
+    },
+    {
+      name: 'Spear',
+      damage: '1d10 + STR Mod',
+      weight: '3 lbs',
+      special: 'Versatile (1d10+2 Two-Handed), Reach (10ft when Two-Handed), Thrown (20/40/60ft)',
+    },
+    {
+      name: 'Broadsword / Longsword',
+      damage: '1d10+2 + STR Mod',
+      weight: '3 lbs',
+      special: 'One-Handed, Versatile (2d10-2 Two-Handed), +5% Hit Bonus',
+    },
+    {
+      name: 'Battleaxe / Warhammer / Flail',
+      damage: '1d10+3 + STR Mod',
+      weight: '4 lbs',
+      special: 'One-Handed; Warhammer ignores 1 DR vs Heavy Armor; Flail ignores Shield bonus',
+    },
+    {
+      name: 'Bastard Sword',
+      damage: '2d10-1 + STR Mod',
+      weight: '5 lbs',
+      special: 'Versatile (One-Handed if STR >= 55; Two-Handed otherwise), +5% Hit Bonus',
+    },
+    {
+      name: 'Greatsword / Greataxe / Maul',
+      damage: '2d10+2 + STR Mod',
+      weight: '6-10 lbs',
+      special: 'Two-Handed, Heavy (Min STR 55), Cleave; Maul ignores 2 DR vs Heavy Armor',
+    },
+    {
+      name: 'Halberd / Glaive / Pike',
+      damage: '2d10 + STR Mod',
+      weight: '6-8 lbs',
+      special: 'Two-Handed, Heavy (Min STR 55), Reach (10ft), Brace vs Charge (+2d10 damage)',
+    },
   ],
 
   modifiers: [
-    {
-      situation: 'Charging into melee',
-      modifier: '+10%',
-      notes: '+10% to hit, but opponent attacks first'
-    },
-    {
-      situation: 'Defending / dodging',
-      modifier: '-10%',
-      notes: '-10% to attacker\'s hit chance; defender forfeit own attack'
-    },
-    {
-      situation: 'Multiple attackers',
-      modifier: '+5% per additional attacker',
-      notes: 'Applies up to maximum of +20%'
-    },
-    {
-      situation: 'Target prone / pinned',
-      modifier: '+20%',
-      notes: 'Target cannot dodge effectively while on ground or held'
-    },
-    {
-      situation: 'Yazirian Battle Rage',
-      modifier: '+20%',
-      notes: '+20% to hit in melee; enraged Yazirians fight without fear'
-    }
-  ]
+    { situation: 'Charging Attack (move >= 20 ft in straight line)', modifier: '+10% Hit, +1d5 Dmg', notes: 'Grants -10% to attacker Defense until next turn' },
+    { situation: 'Flanking / Rear Attack (ally opposite target)', modifier: '+15%', notes: 'Requires an active ally threatening the opposite side of target' },
+    { situation: 'High Ground Advantage (elevated terrain / mounted)', modifier: '+10%', notes: 'Attacker on higher elevation or mounted vs infantry' },
+    { situation: 'Target Prone (vs Melee Attack)', modifier: '+20%', notes: 'Standing up from Prone costs half of base Walk speed' },
+    { situation: 'Target Stunned, Restrained, or Blinded', modifier: '+20%', notes: 'Target cannot take Opportunity Attacks while Stunned/Blinded' },
+    { situation: 'Defensive Stance / Fighting Defensively', modifier: '-15% Hit', notes: 'Grants +15% to Parry and Dodge reactions until start of next turn' },
+    { situation: 'Dual-Wielding (Two Light Melee Weapons)', modifier: '-10% / -15%', notes: 'Allows 1 bonus off-hand attack; reduced by 5% at Melee Rank 3+' },
+    { situation: 'Parry or Shield Block Reaction', modifier: '-10% to -(10 x Rank)%', notes: 'Spends 1 Reaction to impose penalty on incoming melee attack' },
+    { situation: 'Improvised Melee Weapon (torch, chair, rock)', modifier: '-15%', notes: 'Base 1d5 + STR Mod damage; breaks on Fumble' },
+  ],
 };

@@ -66,34 +66,34 @@ describe('Adversary Math Engine & Validator', () => {
   });
 
   describe('Threat Tier NPC Generator', () => {
-    it('generates Tier 2 Sathar Trooper adhering to Threat Tier benchmarks', () => {
+    it('generates Tier 2 Frost Urkai Raider adhering to Threat Tier benchmarks', () => {
       const template = generateNpcStats(2, {
-        name: 'Sathar Shock Trooper',
-        race: 'Sathar',
-        weapon: 'Laser Rifle',
-        armor: 'Skein Suit',
+        name: 'Frost Urkai Raider',
+        race: 'Frost Urkai',
+        weapon: 'Broadsword',
+        armor: 'Chainmail (7 DR)',
       });
 
       expect(template.threat_tier).toBe(2);
       expect(template.category).toBe('npc');
       expect(template.hp_max).toBe(50);
-      expect(template.defense_summary).toContain('Skein Suit');
+      expect(template.defense_summary).toContain('Chainmail');
       expect(template.actions.length).toBeGreaterThan(0);
 
       const mainAction = template.actions[0];
-      expect(mainAction.name).toBe('Laser Rifle');
+      expect(mainAction.name).toBe('Broadsword');
       // DEX 50 (25%) + Skill 2 (20%) = 45%
       expect(mainAction.target_pct).toBe(45);
-      expect(mainAction.damage).toBe('1d10 to 5d10');
-      expect(mainAction.ess_cost).toBe(1);
+      expect(mainAction.damage).toBe('1d10+2');
+      expect(mainAction.ess_cost).toBe(0);
 
       expect(template.system_data.str).toBe(50);
-      expect(template.system_data.skills['Beam Weapons']).toBe(2);
+      expect(template.system_data.skills['Melee Weapons']).toBe(2);
     });
 
     it('enforces tier boundaries across Tiers 1 through 5', () => {
-      const t1 = generateNpcStats(1, { weapon: 'Laser Pistol' });
-      const t5 = generateNpcStats(5, { weapon: 'Heavy Laser' });
+      const t1 = generateNpcStats(1, { weapon: 'Shortsword' });
+      const t5 = generateNpcStats(5, { weapon: 'Runeforged Greataxe' });
 
       expect(t1.hp_max).toBeLessThan(t5.hp_max);
       expect(t1.actions[0].target_pct).toBeLessThan(t5.actions[0].target_pct);

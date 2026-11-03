@@ -127,7 +127,7 @@ describe('CharacterSheetsView - Custom Race', () => {
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.isCustomRace('Saurian')).toBe(true);
     expect(wrapper.vm.isCustomRace('Human')).toBe(false);
-    expect(wrapper.vm.movementRates).toEqual({ walk: 2, run: 6, glide: 0 });
+    expect(wrapper.vm.movementRates).toEqual({ walk: 30, run: 60, glide: 0 });
     expect(wrapper.find('.input-custom-race').exists()).toBe(true);
   });
 
@@ -161,20 +161,20 @@ describe('CharacterSheetsView - Custom Race', () => {
     wrapper.vm.updateCharacter = vi.fn();
     wrapper.vm.selectedChar = {
       id: 50,
-      name: 'VruskHero',
-      race: 'Vrusk',
+      name: 'ElfHero',
+      race: 'Dawn Elves',
     };
 
-    expect(wrapper.vm.selectedRaceCategory).toBe('Vrusk');
+    expect(wrapper.vm.selectedRaceCategory).toBe('Dawn Elves');
 
     // Switch to Custom
     wrapper.vm.selectedRaceCategory = 'Custom';
     expect(wrapper.vm.selectedChar.race).toBe('Custom');
     expect(wrapper.vm.updateCharacter).toHaveBeenCalled();
 
-    // Switch to Dralasite
-    wrapper.vm.selectedRaceCategory = 'Dralasite';
-    expect(wrapper.vm.selectedChar.race).toBe('Dralasite');
+    // Switch to Frost Urkai
+    wrapper.vm.selectedRaceCategory = 'Frost Urkai';
+    expect(wrapper.vm.selectedChar.race).toBe('Frost Urkai');
   });
 
   it('preserves Custom category when race is empty string mid-editing', () => {

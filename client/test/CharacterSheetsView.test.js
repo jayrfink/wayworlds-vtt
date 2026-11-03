@@ -145,12 +145,12 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         selectedChar: { psa: 'Military' },
       };
 
-      // Computer is Technological PSA (base cost 4)
-      const costInPSA = CharacterSheetsView.methods.getXPCost.call(vmTech, 'Computer', 2);
-      expect(costInPSA).toBe(8); // 2 * 4
+      // Lore & Arcana is Technological PSA (base cost 3 * level = 6)
+      const costInPSA = CharacterSheetsView.methods.getXPCost.call(vmTech, 'Lore & Arcana', 2);
+      expect(costInPSA).toBe(6); // 2 * 3
 
-      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmMil, 'Computer', 2);
-      expect(costOutOfPSA).toBe(16); // 2 * (4 * 2)
+      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmMil, 'Lore & Arcana', 2);
+      expect(costOutOfPSA).toBe(12); // 2 * (3 * 2)
     });
   });
 
@@ -1475,8 +1475,8 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
             ok: true,
             json: () => Promise.resolve([{
               id: 1,
-              name: 'Vrusk Tech',
-              race: 'Vrusk',
+              name: 'Dawn Elf Mage',
+              race: 'Dawn Elves',
               skills: [],
               inventory: [],
             }]),
@@ -1502,12 +1502,11 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         const badge = banner.find('.traits-badge');
         expect(badge.exists()).toBe(true);
         expect(badge.text()).toContain('Species Traits & Abilities');
-        expect(badge.text()).toContain('Vrusk');
+        expect(badge.text()).toContain('Dawn Elves');
 
         const ruleText = banner.find('.traits-rule-text');
         expect(ruleText.exists()).toBe(true);
-        expect(ruleText.text()).toContain('Ambidexterity:');
-        expect(ruleText.text()).toContain('Comprehension:');
+        expect(ruleText.text()).toContain('Solar & Arcane Attunement:');
 
         // Verify non-mutable presentation (no input or select fields inside banner)
         expect(banner.find('input').exists()).toBe(false);

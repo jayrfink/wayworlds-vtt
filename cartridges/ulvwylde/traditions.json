@@ -1,0 +1,102 @@
+[
+  {
+    "tradition_id": "trad_arcane",
+    "name": "Arcane",
+    "base_stat": "int",
+    "base_stat_label": "INT",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Scholarly & Elemental Manipulation",
+    "special_rules": "Raw elemental manipulation (Fire, Frost, Lightning), telekinesis, force wards, and scholarly enchantments."
+  },
+  {
+    "tradition_id": "trad_blood",
+    "name": "Blood",
+    "base_stat": "per",
+    "base_stat_label": "WIL",
+    "fuel": "sta",
+    "fuel_label": "STA",
+    "domain": "Hemomancy & Crimson Vitality",
+    "special_rules": "Pays casting costs directly from Stamina (STA) instead of Essence (ESS); powers hemomancy, crimson curses, and vitality transfer."
+  },
+  {
+    "tradition_id": "trad_shadow",
+    "name": "Shadow",
+    "base_stat": "int_or_dex",
+    "base_stat_label": "INT or DEX",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Gloaming Illusions & Umbral Strikes",
+    "special_rules": "Shadow-stepping, darkness generation, illusions, invisibility, and umbral strikes."
+  },
+  {
+    "tradition_id": "trad_demonology",
+    "name": "Demonology",
+    "base_stat": "per_or_ldr",
+    "base_stat_label": "WIL or PRE",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Infernal Pacts & Hellfire",
+    "special_rules": "Can sacrifice 2 STA per 1 ESS to fuel or upcast spells; Fumbles (96–00) trigger immediate backlash or fiendish rebellion."
+  },
+  {
+    "tradition_id": "trad_necromancy",
+    "name": "Necromancy",
+    "base_stat": "int_or_log",
+    "base_stat_label": "INT or HIST/REL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Death Magic & Undead Raising",
+    "special_rules": "Soul-draining, bone armor, raising undead thralls, and necrotic decay."
+  },
+  {
+    "tradition_id": "trad_druidic",
+    "name": "Druidic",
+    "base_stat": "per",
+    "base_stat_label": "WIL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Primal Weather & Wild Growth",
+    "special_rules": "Primal weather, entangling roots, stone-shaping, thorn-barriers, and natural regeneration."
+  },
+  {
+    "tradition_id": "trad_spiritual",
+    "name": "Spiritual",
+    "base_stat": "log_or_per",
+    "base_stat_label": "HIST/REL or WIL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Ancestral Invocation & Radiant Wards",
+    "special_rules": "Ancestral/divine invocation, spirit-warding, radiant smiting, exorcism, and soul-mending."
+  },
+  {
+    "tradition_id": "trad_ki",
+    "name": "Ki",
+    "base_stat": "sta_or_per",
+    "base_stat_label": "STA or WIL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Internal Martial Energy",
+    "special_rules": "Enhances unarmed/melee strikes, iron-body deflection, blinding speed bursts, and pressure-point strikes."
+  },
+  {
+    "tradition_id": "trad_warg",
+    "name": "Warg",
+    "base_stat": "per",
+    "base_stat_label": "WIL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Skin-Changing & Beast Bonding",
+    "special_rules": "Lineage-gated to Sylvan Elves, Wilder Elves, Wendhya, and Weirgoth Dwarves. Bonds with beasts, projects senses into animal companions, or shifts into primal beast forms."
+  },
+  {
+    "tradition_id": "trad_witchcraft",
+    "name": "Witchcraft",
+    "base_stat": "int_or_per",
+    "base_stat_label": "INT or WIL",
+    "fuel": "ess",
+    "fuel_label": "ESS",
+    "domain": "Hexes, Brews & Folk Charms",
+    "special_rules": "Hexes, evil-eye curses, fate-twisting, poultices/brews, and folk charms."
+  }
+]

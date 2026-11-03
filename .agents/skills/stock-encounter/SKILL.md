@@ -12,7 +12,7 @@ This skill allows Game Masters to populate the active tactical battle map direct
 When stocking an encounter, follow the 4-step pipeline:
 
 ```
-[Prompt: "Create 3 Tier 2 Sathar Troopers..."]
+[Prompt: "Create 3 Tier 2 Frost Urkai Raiders..."]
        │
        ▼
  1. Parse Threat Tier, Category, Weapon/Armor/Attacks
@@ -38,21 +38,21 @@ You can stock encounters directly using the workspace script `scripts/stock-enco
 ```bash
 # Sentient NPC Example
 node scripts/stock-encounter.js \
-  --name "Sathar Shock Trooper" \
+  --name "Frost Urkai Raider" \
   --tier 2 \
   --category npc \
-  --species Sathar \
-  --weapon "Laser Rifle" \
-  --armor "Skein Suit" \
+  --species "Frost Urkai" \
+  --weapon "Battleaxe" \
+  --armor "Chainmail" \
   --count 3
 
-# Alien Creature Example
+# Creature / Monster Example
 node scripts/stock-encounter.js \
-  --name "Rift Stalker-Beast" \
+  --name "Dire Wolf Alpha" \
   --tier 3 \
   --category creature \
-  --attacks "Claw, Acid Spit" \
-  --traits "Ambush Predator, Acid Spit" \
+  --attacks "Bite, Claws" \
+  --traits "Pack Tactics, Knockdown" \
   --diet Carnivore \
   --size Large \
   --count 2
@@ -62,14 +62,14 @@ node scripts/stock-encounter.js \
 
 | Flag | Description | Default |
 |------|-------------|---------|
-| `--name <string>` | Name of the adversary or creature | `"Trooper"` / `"Alien Creature"` |
+| `--name <string>` | Name of the adversary or creature | `"Raider"` / `"Creature"` |
 | `--tier <1-5>` | Threat Tier benchmark (1 to 5) | `2` |
 | `--category <npc\|creature>` | Whether to use NPC skill math or creature attack matrices | `'npc'` |
 | `--count <number>` | Number of tokens to spawn | `1` |
-| `--species <string>` | NPC species (Human, Sathar, Vrusk, Dralasite, Yazirian, etc.) | `'Human'` |
-| `--weapon <string>` | NPC primary weapon (Laser Rifle, Auto Rifle, Gyrojet Pistol, etc.) | Tier default |
-| `--armor <string>` | NPC armor or screen defense (Skein Suit, Albedo Suit, etc.) | Tier default |
-| `--attacks <string>` | Comma-separated list of creature natural attacks (Bite, Claws, Acid Spit) | `'Bite, Claws'` |
+| `--species <string>` | NPC lineage (Frost Urkai, Orcish, Dawn Elves, Weirgoth Dwarves, Human, etc.) | `'Frost Urkai'` |
+| `--weapon <string>` | NPC primary weapon (Broadsword, Battleaxe, Longbow, Greatsword, etc.) | Tier default |
+| `--armor <string>` | NPC armor or shield defense (Leather Armor, Chainmail, Full Plate, etc.) | Tier default |
+| `--attacks <string>` | Comma-separated list of creature natural attacks (Bite, Claws, Gore) | `'Bite, Claws'` |
 | `--traits <string>` | Comma-separated special traits or predatory skills | Pre-set |
 | `--diet <string>` | Carnivore, Omnivore, Herbivore, Scavenger | `'Carnivore'` |
 | `--size <string>` | Small, Medium, Large, Very Large | Tier default |
@@ -81,11 +81,11 @@ node scripts/stock-encounter.js \
 ## Threat Tier Scaling Benchmark (Quick Reference)
 
 ### Path A: Sentient NPCs
-- **Tier 1 (Green):** Stats 35–45, Skill Level 0–1 (+10%), STA 30–40, Basic Weapons.
-- **Tier 2 (Regular / Blue):** Stats 45–55, Skill Level 2 (+20%), STA 45–55, Skein Suit, Military Weapons.
-- **Tier 3 (Veteran / Purple):** Stats 55–65, Skill Level 3–4 (+30–40%), STA 60–75, Albedo/Inertia screens, Heavy weapons.
-- **Tier 4 (Elite / Gold):** Stats 65–75, Skill Level 4–5 (+40–50%), STA 80–100, Powered/Security Armor.
-- **Tier 5 (Boss / Crimson):** Stats 75–85+, Skill Level 5–6 (+50–60%), STA 100–130+, Top-tier screens.
+- **Tier 1 (Green):** Stats 35–45, Skill Rank 1 (+10%), STA 30–40, Leather Armor (3 DR), Basic Weapons.
+- **Tier 2 (Regular / Blue):** Stats 45–55, Skill Rank 2 (+20%), STA 45–55, Chainmail (7 DR), Martial Weapons.
+- **Tier 3 (Veteran / Purple):** Stats 55–65, Skill Rank 3 (+30%), STA 60–75, Half-Plate & Shield (11 DR), Heavy/Masterwork Weapons.
+- **Tier 4 (Elite / Gold):** Stats 65–75, Skill Rank 4 (+40%), STA 80–100, Full Plate + Magical Ward.
+- **Tier 5 (Boss / Crimson):** Stats 75–85+, Skill Rank 5 (+50%), STA 100–130+, Runeforged Plate & Wards.
 
 ### Path B: Alien Creatures & Beasts
 - **Tier 1:** Attack 35–45%, STA 15–35, 1 attack (1d10 to 2d6).

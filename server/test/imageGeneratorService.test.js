@@ -4,30 +4,30 @@ import { buildTokenPrompt } from '../src/imageGeneratorService.js';
 describe('imageGeneratorService', () => {
   it('builds prompt from explicit user visual description', () => {
     const prompt = buildTokenPrompt({
-      prompt: 'A four-armed Yazirian pirate with a thermal dagger and dark battle goggles',
-      name: 'Yazirian Pirate Captain',
-      species: 'Yazirian',
+      prompt: 'A scarred Frost Urkai raider with a notched greataxe and wolf-pelt cloak',
+      name: 'Frost Urkai Berserker',
+      species: 'Frost Urkai',
       category: 'npc',
-      weapon: 'Thermal Dagger',
+      weapon: 'Greataxe',
     });
 
-    expect(prompt).toContain('A four-armed Yazirian pirate with a thermal dagger');
-    expect(prompt).toContain('Cinematic sci-fi character portrait');
+    expect(prompt).toContain('A scarred Frost Urkai raider with a notched greataxe');
+    expect(prompt).toContain('Cinematic dark fantasy character portrait');
     expect(prompt).toContain('centered composition for circular tabletop battle token');
   });
 
   it('builds prompt for NPC when no description is provided', () => {
     const prompt = buildTokenPrompt({
-      name: 'Sathar Sniper',
-      species: 'Sathar',
+      name: 'Dusk Elf Ranger',
+      species: 'Dusk Elves',
       category: 'npc',
-      weapon: 'Heavy Laser Rifle',
-      armor: 'Skein Suit',
+      weapon: 'Longbow',
+      armor: 'Leather Armor',
     });
 
-    expect(prompt).toContain('Wayworlds Sathar warrior');
-    expect(prompt).toContain('Heavy Laser Rifle');
-    expect(prompt).toContain('Skein Suit');
+    expect(prompt).toContain('Wayworlds Dusk Elves warrior');
+    expect(prompt).toContain('Longbow');
+    expect(prompt).toContain('Leather Armor');
   });
 
   it('builds prompt for Creature when no description is provided', () => {
@@ -36,7 +36,7 @@ describe('imageGeneratorService', () => {
       category: 'creature',
       attacks: 'Venomous Stinger, Mandibles',
     });
-    expect(prompt).toContain('alien predatory beast called Sand Burrower');
+    expect(prompt).toContain('predatory beast called Sand Burrower');
     expect(prompt).toContain('Venomous Stinger, Mandibles');
   });
 

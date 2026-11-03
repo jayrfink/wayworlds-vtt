@@ -1,5 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
+  RACES_DATA,
+  CARTRIDGE_LINEAGE_GROUPS,
+  getLineageBaselineStats,
   OFFICIAL_SKILLS,
   MAGIC_TRADITIONS,
   UNIVERSAL_MAGNITUDE_TABLE,
@@ -23,9 +26,9 @@ import {
 
 describe('Skill XP Costs in characterRules.js', () => {
   it('calculates standard PSA costs for ground skills', () => {
-    // Beam Weapons (Military): in-PSA = nextLevel * 3, out-of-PSA = nextLevel * 6
-    expect(calcXPCost('Beam Weapons', 2, 'Military')).toBe(6);
-    expect(calcXPCost('Beam Weapons', 2, 'Technological')).toBe(12);
+    // Ranged Weapons (Military): in-PSA = nextLevel * 3, out-of-PSA = nextLevel * 6
+    expect(calcXPCost('Ranged Weapons', 2, 'Military')).toBe(6);
+    expect(calcXPCost('Ranged Weapons', 2, 'Technological')).toBe(12);
   });
 
   it('calculates custom skill XP cost with out-of-PSA penalty (Bug 35)', () => {
@@ -35,7 +38,63 @@ describe('Skill XP Costs in characterRules.js', () => {
     expect(calcXPCost('Hacking', 2, 'Technological', 'Technological')).toBe(6);
     // Custom skill with out-of-PSA skillPSA: double penalty nextLevel * 3 * 2
     expect(calcXPCost('Hacking', 2, 'Military', 'Technological')).toBe(12);
-    expect(calcXPCost('Alien Biology', 3, 'Military', 'Biosocial')).toBe(18); // 3 * 3 * 2
+    expect(calcXPCost('Ancient Runes', 3, 'Military', 'Biosocial')).toBe(18); // 3 * 3 * 2
+  });
+});
+
+describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
+  it('includes all UlvWylde cartridge lineages and excludes legacy sci-fi species', () => {
+    expect(RACES_DATA['Dawn Elves']).toBeDefined();
+    expect(RACES_DATA['Dusk Elves']).toBeDefined();
+    expect(RACES_DATA['Sylvan Elves']).toBeDefined();
+    expect(RACES_DATA['Wilder Elves']).toBeDefined();
+    expect(RACES_DATA['Twilight Elves']).toBeDefined();
+    expect(RACES_DATA['Wendhya']).toBeDefined();
+    expect(RACES_DATA['Weirgoth Dwarves']).toBeDefined();
+    expect(RACES_DATA['Vanir Dwarves']).toBeDefined();
+    expect(RACES_DATA['Frost Urkai']).toBeDefined();
+    expect(RACES_DATA['Ash Urkai']).toBeDefined();
+    expect(RACES_DATA['Forest Urkai']).toBeDefined();
+    expect(RACES_DATA['Stone Urkai']).toBeDefined();
+    expect(RACES_DATA['Orcish']).toBeDefined();
+    expect(RACES_DATA['Hobgoblins']).toBeDefined();
+    expect(RACES_DATA['Goblins']).toBeDefined();
+    expect(RACES_DATA['True Giants']).toBeDefined();
+    expect(RACES_DATA['Giantken / Goliath']).toBeDefined();
+    expect(RACES_DATA['Trollkin']).toBeDefined();
+    expect(RACES_DATA['Ogre']).toBeDefined();
+    expect(RACES_DATA['Minotaur / Nord Minotaur']).toBeDefined();
+    expect(RACES_DATA['Whisperlings']).toBeDefined();
+    expect(RACES_DATA['Mixlanders']).toBeDefined();
+    expect(RACES_DATA['Human']).toBeDefined();
+
+    // Legacy Star Frontiers species must be removed
+    expect(RACES_DATA['Dralasite']).toBeUndefined();
+    expect(RACES_DATA['Vrusk']).toBeUndefined();
+    expect(RACES_DATA['Yazirian']).toBeUndefined();
+    expect(CARTRIDGE_LINEAGE_GROUPS.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('computes 50-baseline stat adjustments accurately via getLineageBaselineStats', () => {
+    const dawn = getLineageBaselineStats('Dawn Elves');
+    expect(dawn.int).toBe(55);
+    expect(dawn.log).toBe(55);
+    expect(dawn.sta).toBe(45);
+    expect(dawn.max_stamina).toBe(45);
+    expect(dawn.max_ess).toBe(55);
+
+    const stoneUrkai = getLineageBaselineStats('Stone Urkai');
+    expect(stoneUrkai.str).toBe(55);
+    expect(stoneUrkai.sta).toBe(60);
+    expect(stoneUrkai.dex).toBe(45);
+    expect(stoneUrkai.log).toBe(45);
+    expect(stoneUrkai.max_stamina).toBe(60);
+
+    const goblin = getLineageBaselineStats('Goblins');
+    expect(goblin.dex).toBe(60);
+    expect(goblin.rs).toBe(55);
+    expect(goblin.str).toBe(40);
+    expect(goblin.sta).toBe(45);
   });
 });
 
@@ -69,14 +128,14 @@ describe('characterRules.js Math Helpers with Nullish Coalescing (0-safe)', () =
     expect(calcMeleeHit(undefined, undefined)).toBe(25);
   });
 
-  it('calcMaxCarry correctly handles 0 kg carry limit', () => {
+  it('calcMaxCarry correctly handles 0 carry limit', () => {
     expect(calcMaxCarry(0)).toBe(0);
     expect(calcMaxCarry(75)).toBe(75);
     expect(calcMaxCarry(undefined)).toBe(50);
     expect(calcMaxCarry(null)).toBe(50);
   });
 
-  it('calcUnencumberedMax correctly handles 0 kg unencumbered limit and rounds up (Bug 34)', () => {
+  it('calcUnencumberedMax correctly handles 0 unencumbered limit and rounds up (Bug 34)', () => {
     expect(calcUnencumberedMax(0)).toBe(0);
     // 75 / 2 = 37.5 -> Math.ceil = 38 (Wayworlds round fractions up rule)
     expect(calcUnencumberedMax(75)).toBe(38);

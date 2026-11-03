@@ -106,10 +106,37 @@
                 <div class="race-select-wrap">
                   <label>Species:</label>
                   <select v-model="selectedRaceCategory" class="select-race">
-                    <option value="Human">Human</option>
-                    <option value="Dralasite">Dralasite</option>
-                    <option value="Vrusk">Vrusk</option>
-                    <option value="Yazirian">Yazirian</option>
+                    <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
+                      <option value="Dawn Elves">Dawn Elves</option>
+                      <option value="Dusk Elves">Dusk Elves</option>
+                      <option value="Sylvan Elves">Sylvan Elves</option>
+                      <option value="Wilder Elves">Wilder Elves</option>
+                      <option value="Twilight Elves">Twilight Elves</option>
+                      <option value="Wendhya">Wendhya</option>
+                      <option value="Weirgoth Dwarves">Weirgoth Dwarves</option>
+                      <option value="Vanir Dwarves">Vanir Dwarves</option>
+                    </optgroup>
+                    <optgroup label="The Urkai & Goblinoid Clans">
+                      <option value="Frost Urkai">Frost Urkai</option>
+                      <option value="Ash Urkai">Ash Urkai</option>
+                      <option value="Forest Urkai">Forest Urkai</option>
+                      <option value="Stone Urkai">Stone Urkai</option>
+                      <option value="Orcish">Orcish</option>
+                      <option value="Hobgoblins">Hobgoblins</option>
+                      <option value="Goblins">Goblins</option>
+                    </optgroup>
+                    <optgroup label="The Giants & Primordial Kin">
+                      <option value="True Giants">True Giants</option>
+                      <option value="Giantken / Goliath">Giantken / Goliath</option>
+                      <option value="Trollkin">Trollkin</option>
+                      <option value="Ogre">Ogre</option>
+                      <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur</option>
+                    </optgroup>
+                    <optgroup label="Hybrid & Foundation Folk">
+                      <option value="Whisperlings">Whisperlings</option>
+                      <option value="Mixlanders">Mixlanders</option>
+                      <option value="Human">Human</option>
+                    </optgroup>
                     <option value="Custom">Custom</option>
                   </select>
                   <input
@@ -158,13 +185,13 @@
             <span class="tactical-value">{{ derivedMeleeHit }}%</span>
           </div>
           <div class="tactical-stat">
-            <span class="tactical-label">Movement (Walk/Run/Glide)</span>
+            <span class="tactical-label">Movement (Walk / Dash)</span>
             <span class="tactical-value">
-              {{ movementRates.walk }} / {{ movementRates.run }} / {{ movementRates.glide }} m/s
+              {{ movementRates.walk }} / {{ movementRates.run }} ft
             </span>
           </div>
           <div class="tactical-stat encumbrance-stat">
-            <span class="tactical-label">Encumbrance ({{ totalInventoryWeight }} / {{ unencumberedMaxWeight }} kg)</span>
+            <span class="tactical-label">Encumbrance ({{ totalInventoryWeight }} / {{ unencumberedMaxWeight }} lbs)</span>
             <div class="encumbrance-bar-bg">
               <div
                 class="encumbrance-bar-fill"
@@ -172,7 +199,7 @@
               ></div>
             </div>
             <span class="encumbrance-sub" :class="{ 'over-limit': isOverloaded }">
-              Max Carry: {{ maxCarryWeight }} kg
+              Max Carry: {{ maxCarryWeight }} lbs
             </span>
           </div>
         </section>
@@ -397,10 +424,10 @@
               </div>
               <div class="ess-controls">
                 <div class="stepper-group">
-                  <button class="btn-ess btn-sub" @click="adjustEss(-5)" title="Heavy Laser / Screen Turn (-5 ESS)">-5</button>
-                  <button class="btn-ess btn-sub" @click="adjustEss(-1)" title="Fire Laser Pistol / Stunner (-1 ESS)">-1</button>
-                  <button class="btn-ess btn-add" @click="adjustEss(+1)" title="Recharge / Add 1 ESS (+1 ESS)">+1</button>
-                  <button class="btn-ess btn-add" @click="adjustEss(+5)" title="Recharge / Add 5 ESS (+5 ESS)">+5</button>
+                  <button class="btn-ess btn-sub" @click="adjustEss(-5)" title="Channel High-Tier Spell (-5 ESS)">-5</button>
+                  <button class="btn-ess btn-sub" @click="adjustEss(-1)" title="Channel Essence (-1 ESS)">-1</button>
+                  <button class="btn-ess btn-add" @click="adjustEss(+1)" title="Recover 1 ESS (+1 ESS)">+1</button>
+                  <button class="btn-ess btn-add" @click="adjustEss(+5)" title="Recover 5 ESS (+5 ESS)">+5</button>
                 </div>
                 <div class="freeform-delta-group">
                   <input
@@ -446,23 +473,17 @@
         <!-- Detailed Species Abilities Panel -->
         <section class="card racial-panel species-traits-banner">
           <span class="traits-badge">🧬 Species Traits &amp; Abilities &bull; {{ selectedChar.race }}</span>
-          <div v-if="selectedChar.race === 'Human'" class="traits-rule-text">
-            <span><strong>Human Adaptability:</strong> Versatile species. Receives a <strong>+5 bonus</strong> to any single ability score during creation.</span>
-          </div>
-          <div v-else-if="selectedChar.race === 'Dralasite'" class="traits-rule-text">
-            <span><strong>Elasticity:</strong> Can sprout up to <strong>{{ dralasiteLimbsLimit }}</strong> limbs (DEX / 10).</span>
-            <span><strong>Lie Detection:</strong> <strong>{{ lieDetectionChance }}%</strong> base chance (5% base + 5% per level if skill used).</span>
-          </div>
-          <div v-else-if="selectedChar.race === 'Vrusk'" class="traits-rule-text">
-            <span><strong>Ambidexterity:</strong> Can use either hand without off-hand penalty.</span>
-            <span><strong>Comprehension:</strong> <strong>{{ comprehensionChance }}%</strong> base chance to understand unknown machinery/technology.</span>
-          </div>
-          <div v-else-if="selectedChar.race === 'Yazirian'" class="traits-rule-text">
-            <span><strong>Gliding:</strong> Can glide using skin membranes (Glide movement: <strong>4 m/s</strong>).</span>
-            <span><strong>Battle Rage:</strong> <strong>{{ battleRageChance }}%</strong> base chance. When enraged, gains <strong>+20 bonus</strong> to hit in melee.</span>
+          <div v-if="racesData[selectedChar.race]" class="traits-rule-text">
+            <span>
+              <strong>{{ racesData[selectedChar.race].trait_name || selectedChar.race }}:</strong>
+              {{ racesData[selectedChar.race].abilities }}
+            </span>
+            <span v-if="racesData[selectedChar.race].modSummary" class="traits-mod-summary">
+              <strong>Baseline Modifiers:</strong> {{ racesData[selectedChar.race].modSummary }}
+            </span>
           </div>
           <div v-else class="traits-rule-text">
-            <span><strong>Custom Species:</strong> Custom species without standard core species traits.</span>
+            <span><strong>Custom Species:</strong> Custom lineage without preset cartridge traits.</span>
           </div>
         </section>
 
@@ -901,14 +922,53 @@
             </div>
           </div>
           <div class="form-group">
-            <label>Species</label>
-            <select v-model="newCharForm.race" class="char-create-select">
-              <option value="Human">Human (+5 XP bonus / adaptable)</option>
-              <option value="Dralasite">Dralasite (Lie Detection & Elasticity)</option>
-              <option value="Vrusk">Vrusk (Ambidexterity & Comprehensive)</option>
-              <option value="Yazirian">Yazirian (Battle Rage & Gliding)</option>
+            <label>Species / Lineage</label>
+            <select v-model="newCharForm.race" @change="onCreateRaceChange" class="char-create-select">
+              <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
+                <option value="Dawn Elves">Dawn Elves (+5 INT, +5 HIST/REL, -5 STA)</option>
+                <option value="Dusk Elves">Dusk Elves (+5 INT, +5 DEX, -5 STA)</option>
+                <option value="Sylvan Elves">Sylvan Elves (+5 DEX, +5 RS, -5 STR)</option>
+                <option value="Wilder Elves">Wilder Elves (+5 DEX, +5 WIL, -5 HIST/REL)</option>
+                <option value="Twilight Elves">Twilight Elves (+5 DEX, +5 WIL, -5 STR)</option>
+                <option value="Wendhya">Wendhya (+5 WIL, +5 RS, -5 STR)</option>
+                <option value="Weirgoth Dwarves">Weirgoth Dwarves (+5 STA, +5 WIL, -5 DEX)</option>
+                <option value="Vanir Dwarves">Vanir Dwarves (+5 STR, +5 STA, -5 RS)</option>
+              </optgroup>
+              <optgroup label="The Urkai & Goblinoid Clans">
+                <option value="Frost Urkai">Frost Urkai (+5 STR, +5 STA, -5 HIST/REL)</option>
+                <option value="Ash Urkai">Ash Urkai (+5 STR, +5 STA, -5 HIST/REL)</option>
+                <option value="Forest Urkai">Forest Urkai (+5 STR, +5 DEX, -5 HIST/REL)</option>
+                <option value="Stone Urkai">Stone Urkai (+5 STR, +10 STA, -5 DEX, -5 HIST/REL)</option>
+                <option value="Orcish">Orcish (+5 STR, +5 STA, -5 INT)</option>
+                <option value="Hobgoblins">Hobgoblins (+5 STR, +5 PRE, -5 WIL)</option>
+                <option value="Goblins">Goblins (+10 DEX, +5 RS, -10 STR, -5 STA)</option>
+              </optgroup>
+              <optgroup label="The Giants & Primordial Kin">
+                <option value="True Giants">True Giants (+20 STR, +20 STA)</option>
+                <option value="Giantken / Goliath">Giantken / Goliath (+10 STR, +10 STA, -10 DEX, -5 HIST/REL)</option>
+                <option value="Trollkin">Trollkin (+10 STR, +10 STA, -10 INT, -5 PRE)</option>
+                <option value="Ogre">Ogre (+15 STR, +15 STA, -15 INT, -10 DEX)</option>
+                <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur (+10 STR, +5 STA, -5 INT)</option>
+              </optgroup>
+              <optgroup label="Hybrid & Foundation Folk">
+                <option value="Whisperlings">Whisperlings (+5 DEX, +5 WIL, -5 STR)</option>
+                <option value="Mixlanders">Mixlanders (+5 DEX, +5 INT, -5 STA)</option>
+                <option value="Human">Human (+5 INT, +5 PRE)</option>
+              </optgroup>
               <option value="Custom">Custom</option>
             </select>
+          </div>
+          <div v-if="racesData[newCharForm.race]" class="form-group lineage-preview-box">
+            <div class="lineage-preview-trait">
+              <strong>{{ racesData[newCharForm.race].trait_name }}:</strong> {{ racesData[newCharForm.race].abilities }}
+            </div>
+            <div class="lineage-preview-stats">
+              <strong>Lineage Adjusted Baseline (from 50):</strong>
+              STR {{ newCharForm.str }} / STA {{ newCharForm.sta }} &bull;
+              DEX {{ newCharForm.dex }} / RS {{ newCharForm.rs }} &bull;
+              INT {{ newCharForm.int }} / LOG {{ newCharForm.log }} &bull;
+              PER {{ newCharForm.per }} / LDR {{ newCharForm.ldr }}
+            </div>
           </div>
           <div v-if="newCharForm.race === 'Custom'" class="form-group custom-race-input-group">
             <label>Custom Species Name</label>
@@ -937,22 +997,38 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>STR / STA</label>
-              <input type="number" v-model.number="newCharForm.str_sta" min="1" max="100" />
+              <label>STR</label>
+              <input type="number" v-model.number="newCharForm.str" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>DEX / RS</label>
-              <input type="number" v-model.number="newCharForm.dex_rs" min="1" max="100" />
+              <label>STA</label>
+              <input type="number" v-model.number="newCharForm.sta" min="1" max="100" />
+            </div>
+            <div class="form-group">
+              <label>DEX</label>
+              <input type="number" v-model.number="newCharForm.dex" min="1" max="100" />
+            </div>
+            <div class="form-group">
+              <label>RS</label>
+              <input type="number" v-model.number="newCharForm.rs" min="1" max="100" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>INT / LOG</label>
-              <input type="number" v-model.number="newCharForm.int_log" min="1" max="100" />
+              <label>INT</label>
+              <input type="number" v-model.number="newCharForm.int" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>PER / LDR</label>
-              <input type="number" v-model.number="newCharForm.per_ldr" min="1" max="100" />
+              <label>LOG (HIST/REL)</label>
+              <input type="number" v-model.number="newCharForm.log" min="1" max="100" />
+            </div>
+            <div class="form-group">
+              <label>PER (WIL)</label>
+              <input type="number" v-model.number="newCharForm.per" min="1" max="100" />
+            </div>
+            <div class="form-group">
+              <label>LDR (PRE)</label>
+              <input type="number" v-model.number="newCharForm.ldr" min="1" max="100" />
             </div>
           </div>
           <div class="modal-actions">
@@ -1012,10 +1088,10 @@
             </div>
             <div class="eq-details">
               <span class="eq-tag">{{ item.category }}</span>
-              <span class="eq-cost">{{ item.cost }} Cr</span>
-              <span class="eq-weight">{{ item.weight }} kg</span>
+              <span v-if="item.cost !== undefined" class="eq-cost">{{ item.cost }} gp</span>
+              <span class="eq-weight">{{ item.weight ?? item.weight_lbs ?? 0 }} lbs</span>
             </div>
-            <div class="eq-capabilities">{{ item.capabilities }}</div>
+            <div class="eq-capabilities">{{ item.capabilities || item.properties || '' }}</div>
           </div>
         </div>
         <div class="modal-actions">
@@ -1177,6 +1253,7 @@ import { socket } from '../services/socket.js';
 import { useAuthStore } from '../stores/auth.js';
 import {
   RACES_DATA,
+  getLineageBaselineStats,
   OFFICIAL_SKILLS,
   MAGIC_TRADITIONS,
   UNIVERSAL_MAGNITUDE_TABLE,
@@ -1265,17 +1342,25 @@ export default {
       registeredUsers: [],
       newCharForm: {
         name: '',
-        race: 'Human',
+        race: 'Dawn Elves',
         customRaceName: '',
         psa: 'Military',
         avatar_url: '',
         user_id: null,
+        str: 50,
+        sta: 45,
+        dex: 50,
+        rs: 50,
+        int: 55,
+        log: 55,
+        per: 50,
+        ldr: 50,
         str_sta: 50,
         dex_rs: 50,
         int_log: 50,
         per_ldr: 50,
-        max_stamina: 50,
-        current_stamina: 50,
+        max_stamina: 45,
+        current_stamina: 45,
         current_xp: 0,
       },
       staminaDelta: null,
@@ -1342,7 +1427,8 @@ export default {
       return list.filter(item => 
         (item.name && item.name.toLowerCase().includes(q)) || 
         (item.category && item.category.toLowerCase().includes(q)) || 
-        (item.capabilities && item.capabilities.toLowerCase().includes(q))
+        (item.capabilities && item.capabilities.toLowerCase().includes(q)) ||
+        (item.properties && item.properties.toLowerCase().includes(q))
       );
     },
     filteredInventory() {
@@ -1413,7 +1499,7 @@ export default {
     },
     selectedRaceCategory: {
       get() {
-        if (!this.selectedChar) return 'Human';
+        if (!this.selectedChar) return 'Dawn Elves';
         if (!this.selectedChar.race) return 'Custom';
         return this.isCustomRace(this.selectedChar.race) ? 'Custom' : this.selectedChar.race;
       },
@@ -1426,28 +1512,16 @@ export default {
           }
         } else {
           this.selectedChar.race = val;
+          this.applyLineageStatsToCharacter(this.selectedChar, val);
           this.updateCharacter();
         }
       },
     },
     movementRates() {
       if (!this.selectedChar || !RACES_DATA[this.selectedChar.race]) {
-        return { walk: 2, run: 6, glide: 0 };
+        return { walk: 30, run: 60, glide: 0 };
       }
       return RACES_DATA[this.selectedChar.race].movement;
-    },
-    dralasiteLimbsLimit() {
-      if (!this.selectedChar) return 5;
-      return Math.floor((this.selectedChar.dex ?? 50) / 10);
-    },
-    lieDetectionChance() {
-      return 5;
-    },
-    comprehensionChance() {
-      return 15;
-    },
-    battleRageChance() {
-      return 5;
     },
   },
   mounted() {
@@ -1593,7 +1667,53 @@ export default {
       }
     },
     isCustomRace(race) {
-      return !['Human', 'Dralasite', 'Vrusk', 'Yazirian'].includes(race);
+      return !Object.prototype.hasOwnProperty.call(RACES_DATA, race);
+    },
+    applyLineageStatsToCharacter(targetChar, lineageName) {
+      if (!targetChar || !RACES_DATA[lineageName]) return;
+      const base = getLineageBaselineStats(lineageName);
+      targetChar.str = base.str;
+      targetChar.sta = base.sta;
+      targetChar.dex = base.dex;
+      targetChar.rs = base.rs;
+      targetChar.int = base.int;
+      targetChar.log = base.log;
+      targetChar.int_stat = base.int;
+      targetChar.log_stat = base.log;
+      targetChar.per = base.per;
+      targetChar.ldr = base.ldr;
+      targetChar.max_stamina = base.max_stamina;
+      targetChar.current_stamina = base.current_stamina;
+      targetChar.max_ess = base.max_ess;
+      targetChar.current_ess = base.current_ess;
+    },
+    onCreateRaceChange() {
+      if (!this.newCharForm) return;
+      const race = this.newCharForm.race;
+      if (RACES_DATA[race]) {
+        const base = getLineageBaselineStats(race);
+        this.newCharForm.str = base.str;
+        this.newCharForm.sta = base.sta;
+        this.newCharForm.dex = base.dex;
+        this.newCharForm.rs = base.rs;
+        this.newCharForm.int = base.int;
+        this.newCharForm.log = base.log;
+        this.newCharForm.per = base.per;
+        this.newCharForm.ldr = base.ldr;
+        this.newCharForm.max_stamina = base.max_stamina;
+        this.newCharForm.current_stamina = base.current_stamina;
+      } else {
+        this.newCharForm.str = 50;
+        this.newCharForm.sta = 50;
+        this.newCharForm.dex = 50;
+        this.newCharForm.rs = 50;
+        this.newCharForm.int = 50;
+        this.newCharForm.log = 50;
+        this.newCharForm.per = 50;
+        this.newCharForm.ldr = 50;
+        this.newCharForm.max_stamina = 50;
+        this.newCharForm.current_stamina = 50;
+      }
     },
     onCustomRaceChange() {
       if (!this.selectedChar) return;
@@ -1619,19 +1739,29 @@ export default {
       } catch {
         defaultUserId = this.registeredUsers?.[0]?.id ?? null;
       }
+      const defaultLineage = 'Dawn Elves';
+      const base = getLineageBaselineStats(defaultLineage);
       this.newCharForm = {
         name: '',
-        race: 'Human',
+        race: defaultLineage,
         customRaceName: '',
         psa: 'Military',
         avatar_url: '',
         user_id: defaultUserId,
+        str: base.str,
+        sta: base.sta,
+        dex: base.dex,
+        rs: base.rs,
+        int: base.int,
+        log: base.log,
+        per: base.per,
+        ldr: base.ldr,
         str_sta: 50,
         dex_rs: 50,
         int_log: 50,
         per_ldr: 50,
-        max_stamina: 50,
-        current_stamina: 50,
+        max_stamina: base.max_stamina,
+        current_stamina: base.current_stamina,
         current_xp: 0,
       };
       this.showCreateModal = true;
@@ -1658,27 +1788,17 @@ export default {
         const effectiveRace = this.newCharForm.race === 'Custom'
           ? (this.newCharForm.customRaceName?.trim() || 'Custom')
           : this.newCharForm.race;
-        const raceMods = RACES_DATA[this.newCharForm.race]?.modifiers || RACES_DATA[effectiveRace]?.modifiers || {
-          str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0
-        };
+        const base = getLineageBaselineStats(effectiveRace);
 
-        const rawStr = this.newCharForm.str ?? this.newCharForm.str_sta ?? 50;
-        const rawSta = this.newCharForm.sta ?? this.newCharForm.str_sta ?? 50;
-        const rawDex = this.newCharForm.dex ?? this.newCharForm.dex_rs ?? 50;
-        const rawRs = this.newCharForm.rs ?? this.newCharForm.dex_rs ?? 50;
-        const rawInt = this.newCharForm.int ?? this.newCharForm.int_stat ?? this.newCharForm.int_log ?? 50;
-        const rawLog = this.newCharForm.log ?? this.newCharForm.log_stat ?? this.newCharForm.int_log ?? 50;
-        const rawPer = this.newCharForm.per ?? this.newCharForm.per_ldr ?? 50;
-        const rawLdr = this.newCharForm.ldr ?? this.newCharForm.per_ldr ?? 50;
-
-        const finalStr = rawStr + (raceMods.str ?? 0);
-        const finalSta = rawSta + (raceMods.sta ?? 0);
-        const finalDex = rawDex + (raceMods.dex ?? 0);
-        const finalRs = rawRs + (raceMods.rs ?? 0);
-        const finalInt = rawInt + (raceMods.int ?? 0);
-        const finalLog = rawLog + (raceMods.log ?? 0);
-        const finalPer = rawPer + (raceMods.per ?? 0);
-        const finalLdr = rawLdr + (raceMods.ldr ?? 0);
+        const finalStr = Number(this.newCharForm.str ?? base.str);
+        const finalSta = Number(this.newCharForm.sta ?? base.sta);
+        const finalDex = Number(this.newCharForm.dex ?? base.dex);
+        const finalRs = Number(this.newCharForm.rs ?? base.rs);
+        const finalInt = Number(this.newCharForm.int ?? this.newCharForm.int_stat ?? base.int);
+        const finalLog = Number(this.newCharForm.log ?? this.newCharForm.log_stat ?? base.log);
+        const finalPer = Number(this.newCharForm.per ?? base.per);
+        const finalLdr = Number(this.newCharForm.ldr ?? base.ldr);
+        const finalMaxEss = Math.max(finalPer, finalLog, finalSta);
 
         const payload = {
           ...this.newCharForm,
@@ -1697,8 +1817,8 @@ export default {
           ldr: finalLdr,
           max_stamina: finalSta,
           current_stamina: finalSta,
-          max_ess: 50,
-          current_ess: 50,
+          max_ess: finalMaxEss,
+          current_ess: finalMaxEss,
           current_xp: Number(this.newCharForm.current_xp || 0),
           skills: [],
           inventory: [],
@@ -2016,6 +2136,8 @@ export default {
           baseVal = Math.ceil((this.selectedChar.dex ?? 50) / 2);
         } else if (offSk.baseChance === 'Reaction Speed') {
           baseVal = Math.ceil((this.selectedChar.rs ?? 50) / 2);
+        } else if (offSk.baseChance === 'Stamina') {
+          baseVal = Math.ceil((this.selectedChar.sta ?? 50) / 2);
         } else if (offSk.baseChance === 'Logic') {
           baseVal = Math.ceil((this.selectedChar.log ?? 50) / 2);
         } else if (offSk.baseChance === 'Intuition') {
@@ -2075,8 +2197,8 @@ export default {
       this.selectedChar.inventory.push({
         name: item.name,
         quantity: 1,
-        weight: Number(item.weight) || 0,
-        notes: item.capabilities || ''
+        weight: Number(item.weight ?? item.weight_lbs) || 0,
+        notes: item.capabilities || item.properties || ''
       });
       this.updateCharacter();
       this.recentlyAddedMap = { ...this.recentlyAddedMap, [item.name]: true };
@@ -2495,7 +2617,7 @@ export default {
 
       const check = validateForgedItem(form, rank, this.isGm);
       if (!check.valid) {
-        this.forgeError = check.error;
+        this.forgeError = check.error || (check.errors && check.errors[0]) || 'Invalid forged item parameters.';
         return null;
       }
 

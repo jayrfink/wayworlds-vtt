@@ -2,7 +2,6 @@
  * @vitest-environment happy-dom
  */
 import { describe, it, expect } from 'vitest';
-import { mount } from '@vue/test-utils';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import QuickReferenceTables from '../src/components/QuickReferenceTables.vue';
@@ -14,7 +13,7 @@ describe('QuickReferenceTables.vue', () => {
     return html;
   }
 
-  it('renders all three category tabs and search input', async () => {
+  it('renders both category tabs and search input', async () => {
     const html = await renderComponent();
     expect(html).toContain('Ranged Weapon Combat');
     expect(html).toContain('Melee Combat');
@@ -22,30 +21,30 @@ describe('QuickReferenceTables.vue', () => {
   });
 
   describe('Ranged Combat Tab', () => {
-    it('renders turn sequence, weapons, modifiers, and armor', async () => {
+    it('renders turn sequence, fantasy ranged weapons, modifiers, and armor/shields', async () => {
       const html = await renderComponent({ initialCategory: 'ranged' });
 
       // Turn sequence
       expect(html).toContain('Turn Sequence');
-      expect(html).toContain('Reaction Speed');
+      expect(html).toContain('Initiative');
 
       // Ranged weapons
       expect(html).toContain('Ranged Weapons');
-      expect(html).toContain('Laser Pistol');
-      expect(html).toContain('Automatic Rifle');
-      expect(html).toContain('Frag Grenade');
+      expect(html).toContain('Shortbow');
+      expect(html).toContain('Longbow');
+      expect(html).toContain('Heavy Crossbow');
       expect(html).toContain('RoF');
 
       // Modifiers
       expect(html).toContain('To-Hit Modifiers');
       expect(html).toContain('Point Blank range');
-      expect(html).toContain('+20%');
+      expect(html).toContain('+10%');
       expect(html).toContain('Careful Aim');
 
-      // Armor & Screens
-      expect(html).toMatch(/Armor &(amp;)? Screens/);
-      expect(html).toContain('Skeinsuit');
-      expect(html).toContain('Albedo Screen');
+      // Armor, Shields & Wards
+      expect(html).toMatch(/Armor, Shields &(amp;)? Wards/);
+      expect(html).toContain('Light Armor');
+      expect(html).toContain('Full Plate');
     });
   });
 
@@ -54,25 +53,26 @@ describe('QuickReferenceTables.vue', () => {
       const html = await renderComponent({ initialCategory: 'melee' });
 
       // Formula callout
-      expect(html).toContain('Higher of ceil(STR / 2)');
+      expect(html).toContain('1/2 STR');
+      expect(html).toContain('Melee Weapons Skill Rank');
 
       // Unarmed combat table
       expect(html).toContain('Unarmed Combat');
-      expect(html).toContain('STR 1-20');
-      expect(html).toContain('STR 81+');
+      expect(html).toContain('40 - 49 (Baseline)');
+      expect(html).toContain('80+');
       expect(html).toContain('Punch Damage');
       expect(html).toContain('Kick Damage');
 
       // Melee weapons
       expect(html).toContain('Melee Weapons');
-      expect(html).toContain('Vibroknife');
-      expect(html).toContain('Stun Baton');
+      expect(html).toContain('Broadsword / Longsword');
+      expect(html).toContain('Greatsword / Greataxe / Maul');
       expect(html).toContain('Special Properties');
 
       // Melee modifiers
       expect(html).toContain('Melee Modifiers');
-      expect(html).toContain('Charging into melee');
-      expect(html).toContain('Yazirian Battle Rage');
+      expect(html).toContain('Charging Attack');
+      expect(html).toContain('Flanking / Rear Attack');
     });
   });
 
@@ -80,11 +80,11 @@ describe('QuickReferenceTables.vue', () => {
     it('filters tables based on search query', async () => {
       const html = await renderComponent({
         initialCategory: 'ranged',
-        initialSearch: 'Gyrojet'
+        initialSearch: 'Crossbow'
       });
 
-      expect(html).toContain('Gyrojet');
-      expect(html).not.toContain('Needler');
+      expect(html).toContain('Crossbow');
+      expect(html).not.toContain('Shortbow');
     });
 
     it('shows no-results state when search yields no matches', async () => {

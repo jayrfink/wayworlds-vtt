@@ -168,7 +168,7 @@
             <input
               type="text"
               v-model="customForm.name"
-              placeholder="e.g. Sathar Shock Trooper, Sand Viper, Pirate Boarder"
+              placeholder="e.g. Frost Urkai Raider, Dire Wolf, Dusk Elf Assassin"
               required
             />
           </div>
@@ -191,7 +191,7 @@
                 :class="{ active: customForm.category === 'creature' }"
                 @click="customForm.category = 'creature'"
               >
-                🐾 Alien Creature / Beast
+                🐾 Creature / Beast / Monster
               </button>
             </div>
           </div>
@@ -219,14 +219,41 @@
           <div v-if="customForm.category === 'npc'" class="type-fields-box">
             <div class="form-row">
               <div class="form-group">
-                <label>Species / Race</label>
+                <label>Lineage / Species</label>
                 <select v-model="customForm.species" class="custom-select">
-                  <option value="Sathar">Sathar</option>
-                  <option value="Human">Human</option>
-                  <option value="Vrusk">Vrusk</option>
-                  <option value="Dralasite">Dralasite</option>
-                  <option value="Yazirian">Yazirian</option>
-                  <option value="Mechanon">Mechanon</option>
+                  <optgroup label="Urkai & Goblinoids">
+                    <option value="Frost Urkai">Frost Urkai</option>
+                    <option value="Ash Urkai">Ash Urkai</option>
+                    <option value="Forest Urkai">Forest Urkai</option>
+                    <option value="Stone Urkai">Stone Urkai</option>
+                    <option value="Orcish">Orcish</option>
+                    <option value="Hobgoblins">Hobgoblins</option>
+                    <option value="Goblins">Goblins</option>
+                  </optgroup>
+                  <optgroup label="Elven Lineages">
+                    <option value="Dawn Elves">Dawn Elves</option>
+                    <option value="Dusk Elves">Dusk Elves</option>
+                    <option value="Sylvan Elves">Sylvan Elves</option>
+                    <option value="Wilder Elves">Wilder Elves</option>
+                    <option value="Twilight Elves">Twilight Elves</option>
+                    <option value="Wendhya">Wendhya</option>
+                  </optgroup>
+                  <optgroup label="Dwarven Lineages">
+                    <option value="Weirgoth Dwarves">Weirgoth Dwarves</option>
+                    <option value="Vanir Dwarves">Vanir Dwarves</option>
+                  </optgroup>
+                  <optgroup label="Giant-Kin & Monstrous">
+                    <option value="True Giants">True Giants</option>
+                    <option value="Giantken / Goliath">Giantken / Goliath</option>
+                    <option value="Trollkin">Trollkin</option>
+                    <option value="Ogre">Ogre</option>
+                    <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur</option>
+                  </optgroup>
+                  <optgroup label="Mortal & Folk Lineages">
+                    <option value="Human">Human</option>
+                    <option value="Mixlanders">Mixlanders</option>
+                    <option value="Whisperlings">Whisperlings</option>
+                  </optgroup>
                 </select>
               </div>
               <div class="form-group">
@@ -234,16 +261,16 @@
                 <input
                   type="text"
                   v-model="customForm.weapon"
-                  placeholder="e.g. Laser Rifle, Auto Rifle, Vibroknife"
+                  placeholder="e.g. Broadsword, Battleaxe, Longbow"
                 />
               </div>
             </div>
             <div class="form-group">
-              <label>Armor / Defense Screen</label>
+              <label>Armor / Shield / Ward</label>
               <input
                 type="text"
                 v-model="customForm.armor"
-                placeholder="e.g. Skein Suit, Albedo Suit, Powered Armor"
+                placeholder="e.g. Leather Armor, Chainmail, Full Plate & Shield"
               />
             </div>
           </div>
@@ -256,7 +283,7 @@
                 <input
                   type="text"
                   v-model="customForm.attacks"
-                  placeholder="e.g. Claw, Bite, Acid Spit"
+                  placeholder="e.g. Claw, Bite, Gore, Acid Breath"
                 />
               </div>
               <div class="form-group">
@@ -265,7 +292,7 @@
                   <option value="Small">Small (1x1)</option>
                   <option value="Medium">Medium (1x1)</option>
                   <option value="Large">Large (2x2)</option>
-                  <option value="Very Large">Very Large (3x3)</option>
+                  <option value="Very Large">Huge / Gargantuan (3x3)</option>
                 </select>
               </div>
             </div>
@@ -274,7 +301,7 @@
               <input
                 type="text"
                 v-model="customForm.traits"
-                placeholder="e.g. Ambush Predator, Poisonous, Chitin Armor"
+                placeholder="e.g. Pack Tactics, Regeneration, Venomous Bite, Thick Hide"
               />
             </div>
           </div>
@@ -286,7 +313,7 @@
               v-model="customForm.description"
               rows="2"
               class="custom-textarea"
-              placeholder="Describe appearance, combat gear, weapons, posture, etc. (e.g. four-armed Yazirian with twin thermal daggers and battle goggles)..."
+              placeholder="Describe appearance, armor, weapons, posture, etc. (e.g. scarred Frost Urkai berserker in wolf-pelt cloak wielding a notched greataxe)..."
             ></textarea>
           </div>
 
@@ -447,15 +474,15 @@ export default {
       artCooldownTimer: null,
       errorMessage: null,
       customForm: {
-        name: 'Sathar Shock Trooper',
+        name: 'Frost Urkai Raider',
         description: '',
         category: 'npc',
         threat_tier: 2,
-        species: 'Sathar',
-        weapon: 'Laser Rifle',
-        armor: 'Skein Suit',
+        species: 'Frost Urkai',
+        weapon: 'Battleaxe',
+        armor: 'Chainmail',
         attacks: 'Claw, Bite',
-        traits: 'Ambush Predator',
+        traits: 'Pack Tactics',
         diet: 'Carnivore',
         size: 'Medium',
         source_image_url: '',

@@ -8,22 +8,22 @@ const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(__dirname, '../../data');
 
 /**
- * Builds an enhanced image generation prompt for sci-fi tokens
+ * Builds an enhanced image generation prompt for Wayworlds fantasy tokens
  */
 export function buildTokenPrompt({ prompt, name, species, category, weapon, armor, attacks }) {
   const parts = [];
   if (prompt && prompt.trim()) {
     parts.push(prompt.trim());
   } else if (category === 'creature') {
-    parts.push(`A vicious alien predatory beast called ${name || 'Alien Stalker'}`);
+    parts.push(`A vicious predatory beast called ${name || 'Wilderness Stalker'}`);
     if (attacks) parts.push(`with natural attacks: ${attacks}`);
   } else {
-    parts.push(`A Wayworlds ${species || 'humanoid'} warrior called ${name || 'Trooper'}`);
+    parts.push(`A Wayworlds ${species || 'humanoid'} warrior called ${name || 'Raider'}`);
     if (weapon) parts.push(`armed with ${weapon}`);
     if (armor) parts.push(`wearing ${armor}`);
   }
 
-  return `${parts.join(', ')}. Cinematic sci-fi character portrait, high contrast, centered composition for circular tabletop battle token, dark dramatic lighting.`;
+  return `${parts.join(', ')}. Cinematic dark fantasy character portrait, high contrast, centered composition for circular tabletop battle token, dark dramatic lighting.`;
 }
 
 /**

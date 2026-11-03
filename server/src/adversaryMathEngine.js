@@ -53,61 +53,61 @@ export function parseHpDelta(currentHp, maxHp, deltaStr) {
   return Math.min(max, Math.max(0, direct));
 }
 
-// Threat Tier Preset Configurations
+// Threat Tier Preset Configurations (Wayworlds d100 Core Spec Section 12B)
 const NPC_TIER_CONFIGS = {
   1: {
     statRange: [35, 45],
     defaultStat: 40,
     skillLevel: 1,
     sta: 35,
-    armor: 'Unarmored (0 DR)',
-    defaultWeapon: 'Laser Pistol',
+    armor: 'Leather Armor (3 DR)',
+    defaultWeapon: 'Shortsword',
     damage: '1d10',
-    range: '50m',
-    ess: 1,
+    range: 'Melee (5ft)',
+    ess: 0,
   },
   2: {
     statRange: [45, 55],
     defaultStat: 50,
     skillLevel: 2,
     sta: 50,
-    armor: 'Skein Suit (half kinetic damage)',
-    defaultWeapon: 'Laser Rifle',
-    damage: '1d10 to 5d10',
-    range: '100m',
-    ess: 1,
+    armor: 'Chainmail (7 DR)',
+    defaultWeapon: 'Broadsword',
+    damage: '1d10+2',
+    range: 'Melee (5ft)',
+    ess: 0,
   },
   3: {
     statRange: [55, 65],
     defaultStat: 60,
     skillLevel: 3,
     sta: 70,
-    armor: 'Albedo Screen (40 ESS) + Skein Suit',
-    defaultWeapon: 'Heavy Laser',
-    damage: '2d10 to 10d10',
-    range: '150m',
-    ess: 2,
+    armor: 'Half-Plate & Shield (11 DR)',
+    defaultWeapon: 'Longbow',
+    damage: '2d10+2',
+    range: '150ft / 300ft',
+    ess: 0,
   },
   4: {
     statRange: [65, 75],
     defaultStat: 70,
     skillLevel: 4,
-    sta: 90,
-    armor: 'Powered Combat Armor (-20 DR)',
-    defaultWeapon: 'Gyrojet Rifle',
+    sta: 95,
+    armor: 'Full Plate Armor (10 DR) + Magical Ward (+3 DR)',
+    defaultWeapon: 'Greatsword',
     damage: '3d10',
-    range: '200m',
+    range: 'Melee (5ft)',
     ess: 0,
   },
   5: {
     statRange: [75, 85],
     defaultStat: 80,
     skillLevel: 5,
-    sta: 120,
-    armor: 'Dual Deflection Screens + Powered Battle Armor',
-    defaultWeapon: 'Particle Cannon',
-    damage: '5d10',
-    range: '300m',
+    sta: 130,
+    armor: 'Runeforged Plate & Ward (15 DR)',
+    defaultWeapon: 'Runeforged Greataxe',
+    damage: '4d10+4',
+    range: 'Melee (10ft)',
     ess: 5,
   },
 };
@@ -157,8 +157,8 @@ export function generateNpcStats(tier, options = {}) {
   const safeTier = Math.min(5, Math.max(1, parseInt(tier, 10) || 1));
   const cfg = NPC_TIER_CONFIGS[safeTier];
 
-  const race = options.race || 'Sathar';
-  const name = options.name || `${race} Trooper (T${safeTier})`;
+  const race = options.race || 'Frost Urkai';
+  const name = options.name || `${race} Raider (T${safeTier})`;
   const baseStat = options.stat || cfg.defaultStat;
   const weapon = options.weapon || cfg.defaultWeapon;
   const armor = options.armor || cfg.armor;
@@ -166,15 +166,17 @@ export function generateNpcStats(tier, options = {}) {
   const hitPct = calculateNpcHitChance(baseStat, cfg.skillLevel, options.equipMod || 0);
   const im = calculateInitiativeMod(baseStat);
 
+  const isRanged = /bow|crossbow|sling|javelin|thrown|dart/i.test(weapon);
+
   const actions = [
     {
       name: weapon,
-      type: weapon.toLowerCase().includes('laser') ? 'beam' : 'projectile',
+      type: isRanged ? 'ranged' : 'melee',
       target_pct: hitPct,
       damage: options.damage || cfg.damage,
-      range: options.range || cfg.range,
+      range: options.range || (isRanged ? '80ft / 160ft' : cfg.range),
       ess_cost: cfg.ess,
-      description: `Primary combat armament, Skill Level ${cfg.skillLevel}`,
+      description: `Primary combat armament, Skill Rank ${cfg.skillLevel}`,
     },
   ];
 
@@ -187,11 +189,11 @@ export function generateNpcStats(tier, options = {}) {
     token_size: 1,
     hp_max: options.sta || cfg.sta,
     defense_summary: armor,
-    movement: options.movement || '12 m/s (Walk: 2 / Run: 6)',
+    movement: options.movement || '30 ft (Walk: 30ft / Dash: 60ft)',
     initiative_mod: im,
     actions,
     traits: options.traits || [
-      { name: 'Tactical Coordination', description: 'Coordinated fire with allied squad members.' },
+      { name: 'Martial Discipline', description: 'Coordinated strikes with allied warband members.' },
     ],
     system_data: {
       race,
@@ -204,8 +206,9 @@ export function generateNpcStats(tier, options = {}) {
       per: Math.max(30, baseStat - 10),
       ldr: Math.max(30, baseStat - 10),
       skills: {
-        'Beam Weapons': cfg.skillLevel,
-        'Technician': 1,
+        'Melee Weapons': cfg.skillLevel,
+        'Ranged Weapons': cfg.skillLevel,
+        'Athletics & Perception': 1,
       },
       ess_max: 50,
     },
@@ -219,7 +222,7 @@ export function generateCreatureStats(tier, options = {}) {
   const safeTier = Math.min(5, Math.max(1, parseInt(tier, 10) || 1));
   const cfg = CREATURE_TIER_CONFIGS[safeTier];
 
-  const name = options.name || `Frontier Predator (T${safeTier})`;
+  const name = options.name || `Wilderness Predator (T${safeTier})`;
   const diet = options.diet || 'Carnivore';
   const size = options.size || cfg.size;
   const attackPct = options.attackPct || cfg.attackPct;
@@ -231,10 +234,10 @@ export function generateCreatureStats(tier, options = {}) {
   attacksList.forEach((atkName) => {
     actions.push({
       name: atkName,
-      type: atkName.toLowerCase().includes('spit') || atkName.toLowerCase().includes('acid') ? 'special' : 'natural',
+      type: atkName.toLowerCase().includes('spit') || atkName.toLowerCase().includes('acid') || atkName.toLowerCase().includes('breath') ? 'special' : 'natural',
       target_pct: attackPct,
       damage: options.damage || cfg.damage,
-      range: atkName.toLowerCase().includes('spit') ? '20m' : 'Melee',
+      range: atkName.toLowerCase().includes('spit') || atkName.toLowerCase().includes('breath') ? '30ft' : 'Melee (5ft)',
       ess_cost: 0,
       description: `Natural predatory attack.`,
     });
@@ -248,8 +251,8 @@ export function generateCreatureStats(tier, options = {}) {
     token_image_path: options.token_image_path || `/uploads/tokens/${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.png`,
     token_size: size === 'Large' ? 2 : size === 'Very Large' ? 3 : 1,
     hp_max: sta,
-    defense_summary: options.defense || (safeTier >= 4 ? 'Chitinous Plating (-10 damage)' : 'Natural Hide (0 DR)'),
-    movement: options.movement || '15 m/s (Gallop: 8)',
+    defense_summary: options.defense || (safeTier >= 4 ? 'Thick Armored Hide (8 DR)' : 'Natural Hide (2 DR)'),
+    movement: options.movement || '40 ft (Dash: 80ft)',
     initiative_mod: 4 + safeTier,
     actions,
     traits: options.traits || [

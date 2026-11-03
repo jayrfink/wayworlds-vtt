@@ -1,435 +1,778 @@
+/**
+ * UlvWylde Setting Cartridge Lineages & Wayworlds D100 Character Rules
+ * Baseline ability score for all 8 attributes is 50.
+ * Selecting a lineage automatically applies its modifiers to the 50 baseline.
+ */
 export const RACES_DATA = {
-  Human: {
-    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
-    movement: { walk: 2, run: 6, glide: 0 },
-    abilitiesDescription: 'Versatile species. Receives a +5 bonus to any single ability score during creation.'
+  'Dawn Elves': {
+    category: 'The Norn',
+    modifiers: { str: 0, sta: -5, dex: 0, rs: 0, int: 5, log: 5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Solar & Arcane Attunement',
+    abilities: 'Solar & Arcane Attunement: +5% to Arcane or Spiritual channeling; immune to dazzling/blinding light (30 ft base move).',
+    modSummary: '+5 INT (55), +5 HIST/REL (55), -5 STA (45)',
   },
-  Dralasite: {
-    modifiers: { str: 5, sta: 5, dex: -5, rs: -5, int: 0, log: 0, per: 0, ldr: 0 },
-    movement: { walk: 1, run: 4, glide: 0 },
-    abilitiesDescription: 'Elasticity (grows limbs up to DEX/10), Lie Detection (5% base).'
+  'Dusk Elves': {
+    category: 'The Norn',
+    modifiers: { str: 0, sta: -5, dex: 5, rs: 0, int: 5, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Gloaming Attunement',
+    abilities: 'Gloaming Attunement: +5% to Shadow or Witchcraft casting; darkvision up to 60 ft (no penalty in dim/dark terrain).',
+    modSummary: '+5 INT (55), +5 DEX (55), -5 STA (45)',
   },
-  Vrusk: {
-    modifiers: { str: -5, sta: -5, dex: 5, rs: 5, int: 0, log: 0, per: 0, ldr: 0 },
-    movement: { walk: 3, run: 7, glide: 0 },
-    abilitiesDescription: 'Comprehension (15% base), Ambidexterity.'
+  'Sylvan Elves': {
+    category: 'The Norn',
+    modifiers: { str: -5, sta: 0, dex: 5, rs: 5, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 35, run: 70, glide: 0 },
+    movement_ft: 35,
+    size: 'Medium',
+    warg_eligible: true,
+    trait_name: 'Woodland Stride & Warg Bloodline',
+    abilities: 'Woodland Stride & Warg Bloodline: Eligible for the Warg skill; 35 ft base movement speed and +10% Stealth & Secrecy / Wilderness in forests.',
+    modSummary: '+5 DEX (55), +5 RS (55), -5 STR (45)',
   },
-  Yazirian: {
-    modifiers: { str: -10, sta: -10, dex: 5, rs: 5, int: 5, log: 5, per: 0, ldr: 0 },
-    movement: { walk: 2, run: 6, glide: 4 },
-    abilitiesDescription: 'Battle Rage (5% base, +20 to hit in melee), Gliding, Night Vision.'
-  }
+  'Wilder Elves': {
+    category: 'The Norn',
+    modifiers: { str: 0, sta: 0, dex: 5, rs: 0, int: 0, log: -5, per: 5, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: true,
+    trait_name: 'Feral Instinct & Warg Bloodline',
+    abilities: 'Feral Instinct & Warg Bloodline: Eligible for the Warg skill; +1 Initiative Modifier (IM) and +5% melee accuracy.',
+    modSummary: '+5 DEX (55), +5 WIL (55), -5 HIST/REL (45)',
+  },
+  'Twilight Elves': {
+    category: 'The Norn',
+    modifiers: { str: -5, sta: 0, dex: 5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Veil Sight',
+    abilities: 'Veil Sight: Sees invisible/shadow-melded spirits within 60 ft; +10% to resist Hexing, illusions, and mental domination.',
+    modSummary: '+5 DEX (55), +5 WIL (55), -5 STR (45)',
+  },
+  'Wendhya': {
+    category: 'The Norn',
+    modifiers: { str: -5, sta: 0, dex: 0, rs: 5, int: 0, log: 0, per: 5, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: true,
+    trait_name: 'Spirit-Kin & Warg Bloodline',
+    abilities: 'Spirit-Kin & Warg Bloodline: Eligible for the Warg skill; can sense nearby spirits, undead, or demonic taint within 30 ft automatically.',
+    modSummary: '+5 WIL (55), +5 RS (55), -5 STR (45)',
+  },
+  'Weirgoth Dwarves': {
+    category: 'The Norn',
+    modifiers: { str: 0, sta: 5, dex: -5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
+    movement: { walk: 25, run: 50, glide: 0 },
+    movement_ft: 25,
+    size: 'Medium',
+    warg_eligible: true,
+    trait_name: 'Stone-Blood & Warg Bloodline',
+    abilities: 'Stone-Blood & Warg Bloodline: Eligible for the Warg skill (cavern/stone beasts); -2 damage per die from Poison and Slashing (25 ft base move).',
+    modSummary: '+5 STA (55), +5 WIL (55), -5 DEX (45)',
+  },
+  'Vanir Dwarves': {
+    category: 'The Norn',
+    modifiers: { str: 5, sta: 5, dex: 0, rs: -5, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 25, run: 50, glide: 0 },
+    movement_ft: 25,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Runeforged Resilience',
+    abilities: 'Runeforged Resilience: +10% resistance to hostile magic; ignores movement speed penalties of heavy armor (25 ft base move); can forge Runic magic items at Tradecraft Lvl 5+ without a co-caster.',
+    modSummary: '+5 STR (55), +5 STA (55), -5 RS (45)',
+  },
+  'Frost Urkai': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 5, dex: 0, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Rime-Born',
+    abilities: 'Rime-Born: Takes half damage from Cold/Frost; ignores ice movement penalties (30 ft base move).',
+    modSummary: '+5 STR (55), +5 STA (55), -5 HIST/REL (45)',
+  },
+  'Ash Urkai': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 5, dex: 0, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Cinder-Born',
+    abilities: 'Cinder-Born: Takes half damage from Fire/Heat; immune to smoke/ash inhalation penalties (30 ft base move).',
+    modSummary: '+5 STR (55), +5 STA (55), -5 HIST/REL (45)',
+  },
+  'Forest Urkai': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 0, dex: 5, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Thorn-Born',
+    abilities: 'Thorn-Born: Takes half damage from Poison/Acid; +10% ambush/stealth in heavy overgrowth (30 ft base move).',
+    modSummary: '+5 STR (55), +5 DEX (55), -5 HIST/REL (45)',
+  },
+  'Stone Urkai': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 10, dex: -5, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Granite Hide',
+    abilities: 'Granite Hide: Natural Damage Reduction (-2 damage per die from Slashing, Piercing, and Bludgeoning; 30 ft base move).',
+    modSummary: '+5 STR (55), +10 STA (60), -5 DEX (45), -5 HIST/REL (45)',
+  },
+  'Orcish': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 5, dex: 0, rs: 0, int: -5, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Blood Fury',
+    abilities: 'Blood Fury: When Stamina drops below 50% of Max STA, gains +10% to all Melee Attacks and +1d10 melee damage (30 ft base move).',
+    modSummary: '+5 STR (55), +5 STA (55), -5 INT (45)',
+  },
+  'Hobgoblins': {
+    category: 'The Urkai',
+    modifiers: { str: 5, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: -5, ldr: 5 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Phalanx Discipline',
+    abilities: 'Phalanx Discipline: Gains +5% to hit and -2 damage per die when within 5 ft (adjacent) of at least one allied token on the VTT grid (30 ft base move).',
+    modSummary: '+5 STR (55), +5 PRE (55), -5 WIL (45)',
+  },
+  'Goblins': {
+    category: 'The Urkai',
+    modifiers: { str: -10, sta: -5, dex: 10, rs: 5, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Small',
+    warg_eligible: false,
+    trait_name: 'Scurry & Skulk',
+    abilities: 'Scurry & Skulk: Small size (3–4 ft tall, 40 lbs); +10% to Stealth & Secrecy; can move through enemy 5 ft spaces and disengage without triggering free strikes (30 ft base move).',
+    modSummary: '+10 DEX (60), +5 RS (55), -10 STR (40), -5 STA (45)',
+  },
+  'True Giants': {
+    category: 'The Giants',
+    modifiers: { str: 20, sta: 20, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 40, run: 80, glide: 0 },
+    movement_ft: 40,
+    size: 'Large',
+    warg_eligible: false,
+    trait_name: 'Elder Primordials',
+    abilities: 'Elder Primordials: Large/Huge VTT footprint (10x10 ft or 15x15 ft, 12–20 ft tall); native mastery of Druidic, Arcane, or Ki power matching their lineage; immune to their native energy type (40 ft base move).',
+    modSummary: '+20 STR (70), +20 STA (70)',
+  },
+  'Giantken / Goliath': {
+    category: 'The Giants',
+    modifiers: { str: 10, sta: 10, dex: -10, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: "Titan's Heritage",
+    abilities: "Titan's Heritage: 7–8 ft tall (280–340 lbs); wields two-handed weapons in one hand (+1d10 melee damage) and halves incoming knockback/push distances (30 ft base move).",
+    modSummary: '+10 STR (60), +10 STA (60), -10 DEX (40), -5 HIST/REL (45)',
+  },
+  'Trollkin': {
+    category: 'The Giants',
+    modifiers: { str: 10, sta: 10, dex: 0, rs: 0, int: -10, log: 0, per: 0, ldr: -5 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Feral Regeneration',
+    abilities: 'Feral Regeneration: Regains 5 STA at the start of each turn unless damaged by Fire or Acid since their last turn (30 ft base move).',
+    modSummary: '+10 STR (60), +10 STA (60), -10 INT (40), -5 PRE (45)',
+  },
+  'Ogre': {
+    category: 'The Giants',
+    modifiers: { str: 15, sta: 15, dex: -10, rs: 0, int: -15, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Large',
+    warg_eligible: false,
+    trait_name: 'Crushing Bulk',
+    abilities: 'Crushing Bulk: Large footprint (10x10 ft, 9–10 ft tall); melee strikes knock Medium or smaller targets Prone on a roll ending in 0 or 5 (30 ft base move).',
+    modSummary: '+15 STR (65), +15 STA (65), -15 INT (35), -10 DEX (40)',
+  },
+  'Minotaur / Nord Minotaur': {
+    category: 'The Giants',
+    modifiers: { str: 10, sta: 5, dex: 0, rs: 0, int: -5, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Goring Charge',
+    abilities: 'Goring Charge: Moving 20 ft+ (4+ grid squares) in a straight line before attacking adds +1d10 damage and knocks target Prone; Nord Minotaur also halves Cold damage (30 ft base move).',
+    modSummary: '+10 STR (60), +5 STA (55), -5 INT (45)',
+  },
+  'Whisperlings': {
+    category: 'Hybrid & Spirit-Infected Lineages',
+    modifiers: { str: -5, sta: 0, dex: 5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Spirit-Infected',
+    abilities: 'Spirit-Infected: Rooted in any Foundation Species and transformed by spirit infection. Gains half-damage resistance to one energy type (Fire, Shadow, or Cold) and +5% to Shadow, Demonology, or Witchcraft casting (30 ft base move).',
+    modSummary: '+5 DEX (55), +5 WIL (55), -5 STR (45)',
+  },
+  'Mixlanders': {
+    category: 'Hybrid & Spirit-Infected Lineages',
+    modifiers: { str: 0, sta: -5, dex: 5, rs: 0, int: 5, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Elven Amalgam',
+    abilities: 'Elven Amalgam: A mixed-heritage blend of elven lineages (+5 to two stats, -5 to one stat). Inherits flexibility (+5% to any one secular skill check) and adapts easily to diverse regional magic traditions (30 ft base move).',
+    modSummary: '+5 DEX (55), +5 INT (55), -5 STA (45)',
+  },
+  'Human': {
+    category: 'Foundation Folk',
+    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 5, log: 0, per: 0, ldr: 5 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Adaptive Versatility',
+    abilities: 'Adaptive Versatility: +5 INT (55), +5 PRE (55); gains +5% to any one chosen secular skill check (30 ft base move).',
+    modSummary: '+5 INT (55), +5 PRE (55)',
+  },
 };
 
-export const OFFICIAL_SKILLS = [
-  // Military
-  { name: 'Beam Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Gyrojet Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Projectile Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Melee Weapons', psa: 'Military', baseChance: 'Melee Base (STR/DEX)' },
-  { name: 'Ranged Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Armor & Shield Mastery', psa: 'Military', baseChance: 'Strength' },
-  { name: 'Striker & Grappler', psa: 'Military', baseChance: 'Melee Base (STR/DEX)' },
-  { name: 'Athletics & Acrobatics', psa: 'Military', baseChance: 'Melee Base (STR/DEX)' },
-  { name: 'Thrown Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Demolitions', psa: 'Military', baseChance: 'Logic' },
-  { name: 'Martial Arts', psa: 'Military', baseChance: 'Melee Base (STR/DEX)' },
-  // Technological & Tradecraft
-  { name: 'Tradecraft', psa: 'Technological', baseChance: 'Logic' },
-  { name: 'Stealth & Secrecy', psa: 'Technological', baseChance: 'Dexterity' },
-  { name: 'Computer', psa: 'Technological', baseChance: 'Logic' },
-  { name: 'Robotics', psa: 'Technological', baseChance: 'Logic' },
-  { name: 'Technician', psa: 'Technological', baseChance: 'Logic' },
-  // Biosocial & Lore
-  { name: 'Wilderness & Beast Lore', psa: 'Biosocial', baseChance: 'Logic' },
-  { name: 'Herbalism & Medicine', psa: 'Biosocial', baseChance: 'Intuition' },
-  { name: 'History & Religion', psa: 'Biosocial', baseChance: 'Logic' },
-  { name: 'Environmental', psa: 'Biosocial', baseChance: 'Intuition' },
-  { name: 'Medical', psa: 'Biosocial', baseChance: 'Logic' },
-  { name: 'Psycho-Social', psa: 'Biosocial', baseChance: 'Personality' },
-  // Magic & Ki Traditions
-  { name: 'Arcane', psa: 'Biosocial', baseChance: 'Intuition', isTradition: true },
-  { name: 'Blood', psa: 'Biosocial', baseChance: 'Personality', isTradition: true },
-  { name: 'Shadow', psa: 'Biosocial', baseChance: 'Dexterity', isTradition: true },
-  { name: 'Demonology', psa: 'Biosocial', baseChance: 'Logic', isTradition: true },
-  { name: 'Necromancy', psa: 'Biosocial', baseChance: 'Logic', isTradition: true },
-  { name: 'Druidic', psa: 'Biosocial', baseChance: 'Personality', isTradition: true },
-  { name: 'Spiritual', psa: 'Biosocial', baseChance: 'Personality', isTradition: true },
-  { name: 'Ki', psa: 'Military', baseChance: 'Melee Base (STR/DEX)', isTradition: true },
-  { name: 'Warg', psa: 'Biosocial', baseChance: 'Personality', isTradition: true },
-  { name: 'Witchcraft', psa: 'Biosocial', baseChance: 'Logic', isTradition: true }
+export const CARTRIDGE_LINEAGE_GROUPS = [
+  {
+    label: 'The Norn (Elves, Dwarves & Wendhya)',
+    lineages: [
+      'Dawn Elves',
+      'Dusk Elves',
+      'Sylvan Elves',
+      'Wilder Elves',
+      'Twilight Elves',
+      'Wendhya',
+      'Weirgoth Dwarves',
+      'Vanir Dwarves',
+    ],
+  },
+  {
+    label: 'The Urkai & Goblinoid Clans',
+    lineages: [
+      'Frost Urkai',
+      'Ash Urkai',
+      'Forest Urkai',
+      'Stone Urkai',
+      'Orcish',
+      'Hobgoblins',
+      'Goblins',
+    ],
+  },
+  {
+    label: 'The Giants & Primordial Kin',
+    lineages: [
+      'True Giants',
+      'Giantken / Goliath',
+      'Trollkin',
+      'Ogre',
+      'Minotaur / Nord Minotaur',
+    ],
+  },
+  {
+    label: 'Hybrid, Spirit-Infected & Foundation Folk',
+    lineages: [
+      'Whisperlings',
+      'Mixlanders',
+      'Human',
+    ],
+  },
 ];
 
-export const MAGIC_TRADITIONS = [
-  { name: 'Arcane', baseStat: 'int', fuel: 'ess', label: 'Arcane (1/2 INT • ESS)' },
-  { name: 'Blood', baseStat: 'per', fuel: 'sta', label: 'Blood (1/2 WIL • STA)' },
-  { name: 'Shadow', baseStat: 'dex', fuel: 'ess', label: 'Shadow (1/2 DEX • ESS)' },
-  { name: 'Demonology', baseStat: 'log', fuel: 'ess', label: 'Demonology (1/2 HIST/REL • ESS)' },
-  { name: 'Necromancy', baseStat: 'log', fuel: 'ess', label: 'Necromancy (1/2 HIST/REL • ESS)' },
-  { name: 'Druidic', baseStat: 'per', fuel: 'ess', label: 'Druidic (1/2 WIL • ESS)' },
-  { name: 'Spiritual', baseStat: 'per', fuel: 'ess', label: 'Spiritual (1/2 WIL/PRE • ESS)' },
-  { name: 'Ki', baseStat: 'dex', fuel: 'ess', label: 'Ki (1/2 DEX/STR • ESS)' },
-  { name: 'Warg', baseStat: 'per', fuel: 'sta', label: 'Warg (1/2 WIL • STA)' },
-  { name: 'Witchcraft', baseStat: 'log', fuel: 'ess', label: 'Witchcraft (1/2 HIST/REL • ESS)' }
-];
-
-export const UNIVERSAL_MAGNITUDE_TABLE = {
-  0: {
-    tier: 0,
-    label: 'Cantrip / Minor (Tier 0)',
-    cost: 0,
-    strike: { dice: '1d6', count: 1, sides: 6, summary: '1d6 (Spark, minor strike)' },
-    blast: { dice: '1d6', count: 1, sides: 6, summary: 'Light campfire / 5 ft smoke puff (1d6)' },
-    ward_heal: { dice: '0d10', flatHeal: 2, count: 0, sides: 10, summary: 'Stop bleeding (+2 STA)' },
-    hex_summon: { dice: '0d10', count: 0, sides: 10, summary: 'Minor sensory trick / 10 ft wall-run' }
-  },
-  1: {
-    tier: 1,
-    label: 'Tier 1 (Lvl 1)',
-    cost: 2,
-    strike: { dice: '2d10', count: 2, sides: 10, summary: '2d10 damage' },
-    blast: { dice: '1d10', count: 1, sides: 10, summary: '1d10 (5 ft radius / 2 foes)' },
-    ward_heal: { dice: '2d10', count: 2, sides: 10, summary: '2d10 STA or 10 Temp Ward' },
-    hex_summon: { dice: '1d10', count: 1, sides: 10, summary: 'Inflict 1 Condition (-10% save) or summon Tier 1 minion' }
-  },
-  2: {
-    tier: 2,
-    label: 'Tier 2 (Lvl 2)',
-    cost: 4,
-    strike: { dice: '3d10', count: 3, sides: 10, summary: '3d10 damage' },
-    blast: { dice: '2d10', count: 2, sides: 10, summary: '2d10 (10 ft radius / 3 foes)' },
-    ward_heal: { dice: '3d10', count: 3, sides: 10, summary: '3d10 STA or 20 Temp Ward' },
-    hex_summon: { dice: '2d10', count: 2, sides: 10, summary: 'Inflict Condition (-20% save) or summon Tier 2 minion' }
-  },
-  3: {
-    tier: 3,
-    label: 'Tier 3 (Lvl 3)',
-    cost: 6,
-    strike: { dice: '4d10', count: 4, sides: 10, summary: '4d10 damage' },
-    blast: { dice: '3d10', count: 3, sides: 10, summary: '3d10 (15 ft radius / 4 foes)' },
-    ward_heal: { dice: '4d10', count: 4, sides: 10, summary: '4d10 STA or Half-Dmg Ward' },
-    hex_summon: { dice: '3d10', count: 3, sides: 10, summary: 'Multi-target Hex (-30% save) or summon Tier 3 entity' }
-  },
-  4: {
-    tier: 4,
-    label: 'Tier 4 (Lvl 4)',
-    cost: 8,
-    strike: { dice: '5d10', count: 5, sides: 10, summary: '5d10 damage' },
-    blast: { dice: '4d10', count: 4, sides: 10, summary: '4d10 (20 ft radius burst)' },
-    ward_heal: { dice: '5d10', count: 5, sides: 10, summary: '5d10 STA or Party Ward' },
-    hex_summon: { dice: '4d10', count: 4, sides: 10, summary: 'Area Lockdown (-40% save) or summon Tier 4 entity' }
-  },
-  5: {
-    tier: 5,
-    label: 'Tier 5 (Lvl 5 Apex)',
-    cost: 10,
-    strike: { dice: '6d10', count: 6, sides: 10, summary: '6d10 damage' },
-    blast: { dice: '5d10', count: 5, sides: 10, summary: '5d10 (30 ft Cataclysm)' },
-    ward_heal: { dice: '6d10', count: 6, sides: 10, summary: '6d10 STA / Full Restore' },
-    hex_summon: { dice: '5d10', count: 5, sides: 10, summary: 'Mass Dominate or summon Tier 5 Avatar' }
-  },
-  6: {
-    tier: 6,
-    label: 'Tier 6 (Lvl 6 Mythic)',
-    cost: 12,
-    strike: { dice: '8d10', count: 8, sides: 10, summary: '8d10 damage' },
-    blast: { dice: '6d10', count: 6, sides: 10, summary: '6d10 (30 ft+ Cataclysm)' },
-    ward_heal: { dice: '8d10', count: 8, sides: 10, summary: '8d10 STA / Mythic Aegis' },
-    hex_summon: { dice: '6d10', count: 6, sides: 10, summary: 'Apex Avatar (-50% save)' }
-  }
-};
-
-export const DISALLOWED_TRADECRAFT_DOMAINS = [
-  'herbalist',
-  'herbalism',
-  'medic',
-  'medicine',
-  'alchemist',
-  'alchemy',
-  'poisoner',
-  'locksmith',
-  'thief',
-  'assassin',
-  'stealth',
-  'beast trainer',
-  'tracker',
-  'scholar',
-  'priest',
-  'runecaster',
-  'wizard',
-  'mage',
-  'warlock',
-  'necromancer'
-];
-
-export const ALLOWED_TRADECRAFTS = [
-  'Weaponsmith',
-  'Armorer',
-  'Bowyer',
-  'Fletcher',
-  'Leatherworker',
-  'Metalsmith',
-  'Carpenter',
-  'Stonemason',
-  'Jeweler',
-  'Tailor',
-  'Shipwright',
-  'Cartographer'
-];
-
-export function calcCastCost(castTier) {
-  const tier = Math.max(0, Math.min(6, Math.floor(Number(castTier) || 0)));
-  return tier * 2;
-}
-
-export function getMagnitudeEntry(castTier, category = 'strike') {
-  const tier = Math.max(0, Math.min(6, Math.floor(Number(castTier) || 0)));
-  const row = UNIVERSAL_MAGNITUDE_TABLE[tier] || UNIVERSAL_MAGNITUDE_TABLE[1];
-  const cat = row[category] ? category : 'strike';
+/**
+ * Compute the 8 baseline ability scores for a given lineage name (applying modifiers to the 50 baseline).
+ */
+export function getLineageBaselineStats(lineageName) {
+  const mods = RACES_DATA[lineageName]?.modifiers || {
+    str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0,
+  };
+  const str = 50 + (mods.str || 0);
+  const sta = 50 + (mods.sta || 0);
+  const dex = 50 + (mods.dex || 0);
+  const rs = 50 + (mods.rs || 0);
+  const int = 50 + (mods.int || 0);
+  const log = 50 + (mods.log || 0);
+  const per = 50 + (mods.per || 0);
+  const ldr = 50 + (mods.ldr || 0);
+  const max_ess = Math.max(per, log, sta);
   return {
-    tier,
-    cost: row.cost,
-    label: row.label,
-    category: cat,
-    ...row[cat]
+    str,
+    sta,
+    dex,
+    rs,
+    int,
+    log,
+    per,
+    ldr,
+    max_stamina: sta,
+    current_stamina: sta,
+    max_ess,
+    current_ess: max_ess,
   };
 }
 
+export const OFFICIAL_SKILLS = [
+  // Wayworlds Core Secular Skills (10)
+  { name: 'Melee Weapons', psa: 'Military', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Ranged Weapons', psa: 'Military', baseChance: 'Dexterity' },
+  { name: 'Striker & Grappler', psa: 'Military', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Armor & Shield Mastery', psa: 'Military', baseChance: 'Stamina' },
+  { name: 'Athletics & Acrobatics', psa: 'Military', baseChance: 'Dexterity' },
+  { name: 'Stealth & Secrecy', psa: 'Military', baseChance: 'Dexterity' },
+  { name: 'Wilderness & Survival', psa: 'Biosocial', baseChance: 'Intuition' },
+  { name: 'Lore & Arcana', psa: 'Technological', baseChance: 'Logic' },
+  { name: 'Influence & Deception', psa: 'Biosocial', baseChance: 'Personality' },
+  { name: 'Herbalism & Medicine', psa: 'Biosocial', baseChance: 'Intuition' },
+  // Open-Ended Tradecraft Skill
+  { name: 'Tradecraft', psa: 'Technological', baseChance: 'Intuition' },
+  // 10 Magic & Ki Traditions
+  { name: 'Arcane', psa: 'Technological', baseChance: 'Intuition' },
+  { name: 'Blood', psa: 'Biosocial', baseChance: 'Personality' },
+  { name: 'Shadow', psa: 'Military', baseChance: 'Dexterity' },
+  { name: 'Demonology', psa: 'Biosocial', baseChance: 'Personality' },
+  { name: 'Necromancy', psa: 'Technological', baseChance: 'Intuition' },
+  { name: 'Druidic', psa: 'Biosocial', baseChance: 'Personality' },
+  { name: 'Spiritual', psa: 'Biosocial', baseChance: 'Logic' },
+  { name: 'Ki', psa: 'Military', baseChance: 'Personality' },
+  { name: 'Warg', psa: 'Biosocial', baseChance: 'Personality' },
+  { name: 'Witchcraft', psa: 'Biosocial', baseChance: 'Intuition' },
+];
+
+export const MAGIC_TRADITIONS = [
+  { name: 'Arcane', baseStat: 'int', baseStatLabel: 'INT', fuel: 'ess', description: 'Raw elemental manipulation, telekinesis, force wards, and scholarly enchantments.' },
+  { name: 'Blood', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'sta', description: 'Hemomancy and crimson curses; pays casting costs directly from Stamina (STA).' },
+  { name: 'Shadow', baseStat: 'int_or_dex', baseStatLabel: 'INT or DEX', fuel: 'ess', description: 'Shadow-stepping, darkness generation, illusions, and umbral strikes.' },
+  { name: 'Demonology', baseStat: 'per_or_ldr', baseStatLabel: 'WIL or PRE', fuel: 'ess', description: 'Infernal pacts and hellfire; can sacrifice 2 STA per 1 ESS to upcast.' },
+  { name: 'Necromancy', baseStat: 'int_or_log', baseStatLabel: 'INT or HIST/REL', fuel: 'ess', description: 'Soul-draining, bone armor, raising undead thralls, and necrotic decay.' },
+  { name: 'Druidic', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'ess', description: 'Primal weather, entangling roots, stone-shaping, and natural regeneration.' },
+  { name: 'Spiritual', baseStat: 'log_or_per', baseStatLabel: 'HIST/REL or WIL', fuel: 'ess', description: 'Ancestral/divine invocation, spirit-warding, radiant smiting, and soul-mending.' },
+  { name: 'Ki', baseStat: 'sta_or_per', baseStatLabel: 'STA or WIL', fuel: 'ess', description: 'Internal martial energy enhancing unarmed/melee strikes, iron-body deflection, and speed.' },
+  { name: 'Warg', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'sta', description: 'Skin-changing and beast-bonding (Sylvan/Wilder Elves, Wendhya, Weirgoth Dwarves).' },
+  { name: 'Witchcraft', baseStat: 'int_or_per', baseStatLabel: 'INT or WIL', fuel: 'ess', description: 'Hexes, evil-eye curses, fate-twisting, poultices/brews, and folk charms.' },
+];
+
+export const UNIVERSAL_MAGNITUDE_TABLE = [
+  {
+    tier: 0,
+    cost: 0,
+    strike: { dice: '1d6', count: 1, sides: 6, summary: 'Single Target (Up to 60 ft)' },
+    blast_heal: { dice: '1d6', count: 1, sides: 6, flatHeal: 5, summary: '5 ft Burst OR Restore 5 STA' },
+    ward_buff: { dice: '1d6', count: 1, sides: 6, summary: '+5% Skill/Defense OR 5 Temp Ward STA' },
+    hex_summon: { dice: '1d6', count: 1, sides: 6, summary: '-5% Penalty (1 Round) OR Minor Illusion' },
+  },
+  {
+    tier: 1,
+    cost: 2,
+    strike: { dice: '2d10', count: 2, sides: 10, summary: 'Single Target (Up to 60 ft)' },
+    blast_heal: { dice: '1d10', count: 1, sides: 10, summary: '10 ft Burst OR Restore 1d10 STA' },
+    ward_buff: { dice: '1d10', count: 1, sides: 10, summary: '-2 DR/die OR 10 Temp Ward STA OR +10% Skill' },
+    hex_summon: { dice: '1d10', count: 1, sides: 10, summary: '-10% Penalty / Prone OR Tier 1 Thrall/Beast' },
+  },
+  {
+    tier: 2,
+    cost: 4,
+    strike: { dice: '3d10', count: 3, sides: 10, summary: 'Single Target (Up to 90 ft)' },
+    blast_heal: { dice: '2d10', count: 2, sides: 10, summary: '15 ft Cone/Burst OR Restore 2d10 STA' },
+    ward_buff: { dice: '2d10', count: 2, sides: 10, summary: 'Half Damage (1 Type) OR 15 Temp Ward STA' },
+    hex_summon: { dice: '2d10', count: 2, sides: 10, summary: '-15% Penalty / Pinned OR Tier 2 Thrall/Beast' },
+  },
+  {
+    tier: 3,
+    cost: 6,
+    strike: { dice: '4d10', count: 4, sides: 10, summary: 'Single Target (Up to 120 ft)' },
+    blast_heal: { dice: '3d10', count: 3, sides: 10, summary: '20 ft Sphere / 30 ft Line OR Restore 3d10 STA' },
+    ward_buff: { dice: '3d10', count: 3, sides: 10, summary: 'Half Physical/Elemental OR 20 Temp Ward STA' },
+    hex_summon: { dice: '3d10', count: 3, sides: 10, summary: 'Blinded / Stunned (1 Rd) OR Tier 3 Thrall/Beast' },
+  },
+  {
+    tier: 4,
+    cost: 8,
+    strike: { dice: '5d10', count: 5, sides: 10, summary: 'Single Target (Up to 150 ft)' },
+    blast_heal: { dice: '4d10', count: 4, sides: 10, summary: '25 ft Sphere OR Restore 4d10 STA (Allies)' },
+    ward_buff: { dice: '4d10', count: 4, sides: 10, summary: '25 Temp Ward STA + +15% Attack/Defense' },
+    hex_summon: { dice: '4d10', count: 4, sides: 10, summary: 'Paralyzed / Dominated OR Tier 4 Demon/Undead' },
+  },
+  {
+    tier: 5,
+    cost: 10,
+    strike: { dice: '6d10', count: 6, sides: 10, summary: 'Single Target (Up to 240 ft)' },
+    blast_heal: { dice: '5d10', count: 5, sides: 10, summary: '30 ft Sphere OR Restore 5d10 STA (Allies)' },
+    ward_buff: { dice: '5d10', count: 5, sides: 10, summary: '30 Temp Ward STA + Flight / Ethereal Form' },
+    hex_summon: { dice: '5d10', count: 5, sides: 10, summary: 'Mass Hex (20 ft) OR Tier 4 Pack / Greater Fiend' },
+  },
+  {
+    tier: 6,
+    cost: 12,
+    strike: { dice: '8d10', count: 8, sides: 10, summary: 'Cataclysmic Lance (Up to 300 ft)' },
+    blast_heal: { dice: '6d10', count: 6, sides: 10, summary: '40 ft Cataclysm OR Full Party Restoration (6d10)' },
+    ward_buff: { dice: '6d10', count: 6, sides: 10, summary: '40 Temp Ward STA + Total Damage Immunity (1 Rd)' },
+    hex_summon: { dice: '6d10', count: 6, sides: 10, summary: 'Soul-Bind / Banishment OR Tier 5 Apex Entity' },
+  },
+];
+
+export const ALLOWED_TRADECRAFT_DOMAINS = [
+  'Weaponsmith',
+  'Armorsmith',
+  'Armorer',
+  'Bowyer / Fletcher',
+  'Bowyer',
+  'Leatherworker',
+  'Jeweler / Lapidary',
+  'Carpenter / Woodcarver',
+  'Stonemason',
+  'Tailor / Weaver',
+  'Cartographer / Scribe',
+  'Brewer / Cook',
+  'Shipwright / Wainwright',
+];
+
+export const PROHIBITED_TRADECRAFT_TERMS = [
+  'herbalist',
+  'herbalism',
+  'healer',
+  'medic',
+  'medicine',
+  'alchemist',
+  'apothecary',
+  'locksmith',
+  'runecaster',
+  'swordsman',
+  'archer',
+  'wizard',
+  'sorcerer',
+];
+
 export function getTraditionConfig(traditionName) {
   if (!traditionName) return MAGIC_TRADITIONS[0];
-  const found = MAGIC_TRADITIONS.find(
-    t => t.name.toLowerCase() === String(traditionName).trim().toLowerCase()
+  return (
+    MAGIC_TRADITIONS.find(
+      (t) => t.name.toLowerCase() === String(traditionName).trim().toLowerCase()
+    ) || MAGIC_TRADITIONS[0]
   );
-  return found || { name: String(traditionName).trim(), baseStat: 'int', fuel: 'ess', label: String(traditionName).trim() };
 }
 
-export function calcTraditionTargetPct(char, traditionName) {
-  if (!char) return 25;
-  const cfg = getTraditionConfig(traditionName);
-  let statVal = 50;
-  if (cfg.name === 'Ki' || cfg.name === 'Shadow') {
-    const dex = Number(char.dex ?? 50);
-    const alt = cfg.name === 'Ki' ? Number(char.str ?? 50) : Number(char.int ?? char.int_stat ?? 50);
-    statVal = Math.max(dex, alt);
-  } else if (cfg.name === 'Spiritual') {
-    statVal = Math.max(Number(char.per ?? 50), Number(char.ldr ?? 50));
-  } else if (cfg.baseStat === 'int') {
-    statVal = Number(char.int ?? char.int_stat ?? 50);
-  } else if (cfg.baseStat === 'log') {
-    statVal = Number(char.log ?? char.log_stat ?? 50);
-  } else if (cfg.baseStat === 'per') {
-    statVal = Number(char.per ?? 50);
-  } else if (cfg.baseStat === 'dex') {
-    statVal = Number(char.dex ?? 50);
+export function getMagnitudeEntry(castTier = 0, category = 'strike') {
+  const clamped = Math.max(0, Math.min(6, Number(castTier) || 0));
+  const row = UNIVERSAL_MAGNITUDE_TABLE[clamped] || UNIVERSAL_MAGNITUDE_TABLE[0];
+  let catKey = category;
+  if (category === 'blast' || category === 'heal') catKey = 'blast_heal';
+  else if (category === 'ward' || category === 'buff') catKey = 'ward_buff';
+  else if (category === 'hex' || category === 'summon') catKey = 'hex_summon';
+  else if (!['strike', 'blast_heal', 'ward_buff', 'hex_summon'].includes(category)) {
+    catKey = 'strike';
   }
-
-  const baseChance = Math.ceil(statVal / 2);
-  const skills = Array.isArray(char.skills) ? char.skills : [];
-  const matchingSkill = skills.find(
-    s => s && s.name && s.name.toLowerCase() === cfg.name.toLowerCase()
-  );
-  const skillLvl = matchingSkill ? Math.max(0, Number(matchingSkill.level) || 0) : 0;
-  return baseChance + skillLvl * 10;
+  return {
+    tier: row.tier,
+    cost: row.cost,
+    ...row[catKey],
+  };
 }
 
-export function calcCharacterTier(char) {
-  if (!char) return 1;
-  if (char.tier != null && !isNaN(char.tier)) return Math.max(1, Math.min(5, Number(char.tier)));
-  if (char.threat_tier != null && !isNaN(char.threat_tier)) return Math.max(1, Math.min(5, Number(char.threat_tier)));
-
-  const skills = Array.isArray(char.skills) ? char.skills : [];
-  const skillLevels = skills.map(s => Number(s?.level) || 0);
-  const grimoire = Array.isArray(char.grimoire)
-    ? char.grimoire
-    : (Array.isArray(char.racial_abilities?.grimoire) ? char.racial_abilities.grimoire : []);
-  const castTiers = grimoire.map(g => Number(g?.default_tier ?? g?.cast_tier) || 0);
-
-  const maxLvl = Math.max(...skillLevels, ...castTiers, 0);
-  const totalLevels = skillLevels.reduce((sum, lvl) => sum + lvl, 0);
-
-  if (maxLvl >= 6 || totalLevels >= 15) return 5;
-  if (maxLvl >= 5 || totalLevels >= 10) return 4;
-  if (maxLvl >= 3 || totalLevels >= 6) return 3;
-  if (maxLvl >= 2 || totalLevels >= 3) return 2;
-  return 1;
+export function calcCastCost(castTier = 0) {
+  const clamped = Math.max(0, Math.min(6, Number(castTier) || 0));
+  return clamped * 2;
 }
 
-export function getCharacterTradecraftRank(char, tradecraftName = null) {
-  if (!char) return 0;
-  const skills = Array.isArray(char.skills) ? char.skills : [];
+export function calcTraditionBaseStatValue(char, traditionName) {
+  if (!char) return 50;
+  const cfg = getTraditionConfig(traditionName);
+  const str = Number(char.str ?? 50);
+  const sta = Number(char.sta ?? char.max_stamina ?? 50);
+  const dex = Number(char.dex ?? 50);
+  const int = Number(char.int ?? char.int_stat ?? 50);
+  const log = Number(char.log ?? char.log_stat ?? 50);
+  const wil = Number(char.per ?? 50);
+  const pre = Number(char.ldr ?? 50);
+
+  switch (cfg.baseStat) {
+    case 'int':
+      return int;
+    case 'per':
+      return wil;
+    case 'int_or_dex':
+      return Math.max(int, dex);
+    case 'per_or_ldr':
+      return Math.max(wil, pre);
+    case 'int_or_log':
+      return Math.max(int, log);
+    case 'log_or_per':
+      return Math.max(log, wil);
+    case 'sta_or_per':
+      return Math.max(sta, wil);
+    case 'int_or_per':
+      return Math.max(int, wil);
+    default:
+      return Math.max(int, wil, str);
+  }
+}
+
+export function calcTraditionTargetPct(char, traditionName, explicitSkillLevel = null) {
+  const statVal = calcTraditionBaseStatValue(char, traditionName);
+  let skillLvl = explicitSkillLevel;
+  if (skillLvl === null || skillLvl === undefined) {
+    const skills = Array.isArray(char?.skills) ? char.skills : [];
+    const match = skills.find(
+      (s) => s && s.name && s.name.toLowerCase() === String(traditionName || '').toLowerCase()
+    );
+    skillLvl = match ? Number(match.level) || 0 : 0;
+  }
+  return Math.ceil(statVal / 2) + Math.max(0, Number(skillLvl) || 0) * 10;
+}
+
+export function validateTradecraftSpecialization(specName) {
+  const trimmed = String(specName || '').trim();
+  if (!trimmed) {
+    return { valid: false, error: 'Tradecraft specialization domain is required.' };
+  }
+  const lower = trimmed.toLowerCase();
+  if (PROHIBITED_TRADECRAFT_TERMS.some((term) => lower.includes(term))) {
+    return {
+      valid: false,
+      error: `Specialization "${trimmed}" conflicts with a core skill or magic tradition (e.g., Herbalism & Medicine).`,
+    };
+  }
+  return { valid: true, specialization: trimmed };
+}
+
+/**
+ * Get a character's Tradecraft skill rank (0-6), optionally matching a specialization.
+ */
+export function getCharacterTradecraftRank(char, specialization = null) {
+  if (!char || !Array.isArray(char.skills)) return 0;
   let maxRank = 0;
-  for (const sk of skills) {
-    if (!sk || !sk.name) continue;
-    const rawName = String(sk.name).trim();
-    const lower = rawName.toLowerCase();
-    const isTradecraft =
-      lower === 'tradecraft' ||
-      lower.startsWith('tradecraft:') ||
-      lower.startsWith('tradecraft (') ||
-      ALLOWED_TRADECRAFTS.some(t => t.toLowerCase() === lower);
-    if (!isTradecraft) continue;
-
-    if (tradecraftName) {
-      const targetLower = String(tradecraftName).trim().toLowerCase();
-      const spec = String(sk.specialization || '').trim().toLowerCase();
-      const matchesSpecific =
-        lower === 'tradecraft' ||
-        lower.includes(targetLower) ||
-        (spec && spec === targetLower);
-      if (!matchesSpecific) continue;
+  for (const s of char.skills) {
+    if (!s || typeof s !== 'object') continue;
+    const name = String(s.name || '').trim().toLowerCase();
+    if (name === 'tradecraft' || name.startsWith('tradecraft')) {
+      if (
+        !specialization ||
+        !s.specialization ||
+        String(s.specialization).trim().toLowerCase() === String(specialization).trim().toLowerCase()
+      ) {
+        maxRank = Math.max(maxRank, Number(s.level ?? s.rank ?? 0) || 0);
+      }
     }
-
-    const lvl = Math.max(0, Math.min(6, Number(sk.level) || 0));
-    if (lvl > maxRank) maxRank = lvl;
   }
   return maxRank;
 }
 
-export function calcMaxForgeTier(tradecraftRank, isGm = false) {
+/**
+ * Calculate maximum Forge Item Tier (0 to 5, or 6) based on Tradecraft rank or GM override.
+ */
+export function calcMaxForgeTier(tradecraftRank = 0, isGm = false) {
   if (isGm) return 5;
-  const rank = Math.max(0, Math.min(6, Math.floor(Number(tradecraftRank) || 0)));
-  if (rank <= 0) return 0;
-  if (rank >= 5) return 5;
-  return rank;
+  const r = Math.max(0, Number(tradecraftRank) || 0);
+  if (r <= 0) return 0;
+  return Math.min(5, r);
 }
 
-export function validateTradecraftSpecialization(specName) {
-  if (!specName || !String(specName).trim()) {
-    return { valid: true, error: '' };
+/**
+ * Validate clean Nd10 (or 1d6) damage formula without flat + or - numeric modifiers.
+ */
+export function validateForgeDamageFormula(formula) {
+  const str = String(formula || '').trim();
+  if (!str) {
+    return { valid: false, error: 'Damage dice formula is required.' };
   }
-  const normalized = String(specName).trim().toLowerCase();
-  for (const forbidden of DISALLOWED_TRADECRAFT_DOMAINS) {
-    if (normalized.includes(forbidden)) {
-      return {
-        valid: false,
-        error: `Tradecraft "${specName}" conflicts with a core skill or magic domain (${forbidden}).`
-      };
-    }
-  }
-  return { valid: true, error: '' };
-}
-
-export function validateForgeDamageFormula(damageStr) {
-  if (damageStr === undefined || damageStr === null || String(damageStr).trim() === '') {
-    return { valid: true, error: '' };
-  }
-  const raw = String(damageStr).trim();
-
-  // Reject any flat + or - numeric damage modifiers (e.g., "2d10+3", "1d10 + 2", "+5")
-  // Every '+' segment must contain an Nd10 or Nd6 die expression, never a flat number
-  if (/[+-]\s*\d+(?!\s*d\d+)/i.test(raw) || /^\d+$/.test(raw)) {
+  // Reject flat numeric modifiers like +2, -1, 2d10+3, etc. (allow dice terms like + 1d10)
+  if (/[+-]\s*\d+(?!\s*d)/i.test(str) || /^\d+$/.test(str)) {
     return {
       valid: false,
-      error: 'Flat damage modifiers (e.g. +1, +3) are forbidden. Use whole Nd10 dice only (e.g. "2d10" or "2d10 Slashing + 1d10 Cold").'
+      error: `Invalid damage_dice "${str}". Flat damage modifiers (like +1 or +3) are prohibited; use clean Nd10 or 1d6.`,
     };
   }
-
-  const segments = raw.split('+').map(s => s.trim()).filter(Boolean);
-  if (segments.length === 0) {
-    return { valid: false, error: 'Damage formula cannot be empty.' };
+  // Must contain at least one Nd10 or 1d6 term and no d4/d8/d12/d20 or multi-d6
+  const diceMatches = str.match(/\d+d\d+/gi);
+  if (!diceMatches || diceMatches.length === 0) {
+    return {
+      valid: false,
+      error: `Invalid damage_dice "${str}". Use clean Nd10 or 1d6 dice.`,
+    };
   }
-
-  for (const seg of segments) {
-    if (!/^\d+d10(?:\s+[a-zA-Z/()-]+)*$/i.test(seg)) {
+  for (const dm of diceMatches) {
+    if (!/^([1-9]\d*d10|1d6)$/i.test(dm)) {
       return {
         valid: false,
-        error: `Invalid damage segment "${seg}". Weapons must use whole Nd10 dice (e.g. 1d10, 2d10, 3d10) without flat + numbers.`
+        error: `Invalid damage_dice "${str}". Flat damage modifiers and non-d10 dice are prohibited; use clean Nd10 or 1d6.`,
       };
     }
   }
-
-  return { valid: true, error: '' };
+  return { valid: true, formula: str };
 }
 
-export function validateForgedItem(item, tradecraftRank = 1, isGm = false) {
-  if (!item || typeof item !== 'object') {
-    return { valid: false, error: 'Invalid item configuration.' };
+export function validateForgedEquipment(item = {}, crafterTradecraftLevel = 1, isGm = false) {
+  const errors = [];
+  const maxTier = isGm ? 6 : Math.max(0, Math.min(6, Number(crafterTradecraftLevel) || 0));
+  const itemTier = Number(item.item_tier ?? 1);
+
+  if (!item.name || !String(item.name).trim()) {
+    errors.push('Item name is required.');
   }
-  const name = String(item.name || '').trim();
-  if (!name) {
-    return { valid: false, error: 'Item name is required.' };
+  if (!Number.isInteger(itemTier) || itemTier < 1 || itemTier > 6) {
+    errors.push('Item Tier must be an integer between 1 and 6.');
+  } else if (itemTier > maxTier) {
+    errors.push(
+      `Item Tier (${itemTier}) exceeds your maximum Tradecraft Forge Tier (Level ${maxTier}).`
+    );
   }
 
   if (item.required_tradecraft) {
     const tcCheck = validateTradecraftSpecialization(item.required_tradecraft);
-    if (!tcCheck.valid) return tcCheck;
+    if (!tcCheck.valid) {
+      errors.push(tcCheck.error);
+    }
   }
 
-  const maxTier = calcMaxForgeTier(tradecraftRank, isGm);
-  const itemTier = Math.max(1, Math.min(5, Math.floor(Number(item.item_tier) || 1)));
-  if (!isGm && itemTier > maxTier) {
-    return {
-      valid: false,
-      error: `Item Tier ${itemTier} exceeds your maximum Tradecraft Forge Tier (Tier ${maxTier} at Tradecraft Lvl ${tradecraftRank}).`
-    };
+  if (item.damage_dice !== undefined && item.damage_dice !== null && String(item.damage_dice).trim() !== '') {
+    const dmgCheck = validateForgeDamageFormula(item.damage_dice);
+    if (!dmgCheck.valid) {
+      errors.push(dmgCheck.error);
+    }
   }
 
-  if (item.category === 'weapon' || item.damage_dice) {
-    const dmgCheck = validateForgeDamageFormula(item.damage_dice || '1d10');
-    if (!dmgCheck.valid) return dmgCheck;
+  if (item.attack_pct_bonus !== undefined && item.attack_pct_bonus !== null) {
+    const bonus = Number(item.attack_pct_bonus);
+    if (!Number.isFinite(bonus) || bonus < 0 || bonus > 30 || bonus % 5 !== 0) {
+      errors.push('Attack % bonus must be a multiple of 5% between 0% and 30%.');
+    }
+    const tierMaxBonus = itemTier <= 2 ? 5 : itemTier <= 4 ? 10 : itemTier === 5 ? 15 : 20;
+    if (bonus > tierMaxBonus) {
+      errors.push(
+        `Attack % bonus (+${bonus}%) exceeds the maximum allowed for Tier ${itemTier} (+${tierMaxBonus}%).`
+      );
+    }
   }
 
-  const atkBonus = Number(item.attack_pct_bonus || 0);
-  if (atkBonus < 0 || atkBonus > 20 || atkBonus % 5 !== 0) {
-    return {
-      valid: false,
-      error: 'Attack hit bonus must be a clean 5% percentile increment (0%, +5%, +10%, +15%, or +20%).'
-    };
-  }
-
-  const maxAllowedAtkBonus = itemTier === 1 ? 0 : (itemTier === 2 ? 5 : (itemTier === 3 ? 10 : (itemTier === 4 ? 15 : 20)));
-  if (!isGm && atkBonus > maxAllowedAtkBonus) {
-    return {
-      valid: false,
-      error: `+${atkBonus}% Attack Hit Bonus requires at least Forge Tier ${atkBonus / 5 + 1} (current item is Tier ${itemTier}).`
-    };
-  }
-
-  if (item.bonus_elemental_dice && Number(item.bonus_elemental_dice) > 0 && itemTier < 5 && !isGm) {
-    return {
-      valid: false,
-      error: 'Enchanted/Runeforged bonus elemental Nd10 dice require Forge Tier 5 (Tradecraft Lvl 5–6).'
-    };
-  }
-
-  return { valid: true, error: '' };
+  return {
+    valid: errors.length === 0,
+    errors,
+    error: errors[0] || null,
+  };
 }
 
+export const validateForgedItem = validateForgedEquipment;
+
+/**
+ * Calculate Character Tier (1 to 5) based on skill levels (or explicit tier override).
+ */
+export function calcCharacterTier(char) {
+  if (!char) return 1;
+  if (typeof char.tier === 'number' && char.tier >= 1 && char.tier <= 5) {
+    return char.tier;
+  }
+  if (typeof char.threat_tier === 'number' && char.threat_tier >= 1 && char.threat_tier <= 5) {
+    return char.threat_tier;
+  }
+
+  const skills = Array.isArray(char.skills) ? char.skills : [];
+  let maxLevel = 0;
+  let totalLevels = 0;
+  for (const s of skills) {
+    const lvl = typeof s === 'object' && s !== null ? Number(s.level ?? s.rank ?? 0) : 0;
+    if (lvl > maxLevel) maxLevel = lvl;
+    if (lvl > 0) totalLevels += lvl;
+  }
+
+  const grimoire = Array.isArray(char.grimoire)
+    ? char.grimoire
+    : Array.isArray(char.racial_abilities?.grimoire)
+    ? char.racial_abilities.grimoire
+    : [];
+  for (const sp of grimoire) {
+    const castTier = Number(sp?.default_tier ?? sp?.tier ?? 0);
+    if (castTier > maxLevel) maxLevel = castTier;
+  }
+
+  if (maxLevel >= 6 || totalLevels >= 15) return 5;
+  if (maxLevel >= 5 || totalLevels >= 10) return 4;
+  if (maxLevel >= 3 || totalLevels >= 6) return 3;
+  if (maxLevel >= 2 || totalLevels >= 3) return 2;
+  return 1;
+}
+
+/**
+ * Calculate the XP cost to advance a skill to `nextLevel` (1 to 6).
+ * Universal XP Cost Formula: 3 * nextLevel (Level 1: 3 XP, Level 2: 6 XP, Level 3: 9 XP, Level 4: 12 XP, Level 5: 15 XP, Level 6: 18 XP).
+ */
+export function calcXPCost(skillName, nextLevel, charPSA, explicitSkillPSA = null) {
+  if (nextLevel < 1 || nextLevel > 6) return 0;
+
+  const baseCost = nextLevel * 3;
+  const official = OFFICIAL_SKILLS.find((s) => s.name === skillName);
+  const effectiveSkillPSA = explicitSkillPSA || (official ? official.psa : null);
+  if (effectiveSkillPSA && charPSA && effectiveSkillPSA !== charPSA) {
+    return baseCost * 2;
+  }
+  return baseCost;
+}
+
+/**
+ * Calculate Initiative Modifier IM = ceil(RS / 10).
+ */
 export function calcIM(rs) {
-  return Math.ceil((rs ?? 50) / 10);
+  const val = rs ?? 50;
+  return Math.ceil(val / 10);
 }
 
+/**
+ * Calculate unarmed / punch damage bracket from STR.
+ */
 export function calcPunchDamage(str) {
-  const val = str ?? 50;
-  if (val <= 20) return '1';
-  if (val <= 40) return '2';
-  if (val <= 60) return '3';
-  if (val <= 80) return '4';
+  const s = str ?? 50;
+  if (s <= 20) return '1';
+  if (s <= 40) return '2';
+  if (s <= 60) return '3';
+  if (s <= 80) return '4';
   return '5';
 }
 
+/**
+ * Calculate base melee hit % = Higher of ceil(STR / 2) or ceil(DEX / 2).
+ */
 export function calcMeleeHit(str, dex) {
-  return Math.max(Math.ceil((str ?? 50) / 2), Math.ceil((dex ?? 50) / 2));
+  const s = str ?? 50;
+  const d = dex ?? 50;
+  return Math.max(Math.ceil(s / 2), Math.ceil(d / 2));
 }
 
+/**
+ * Calculate carrying capacity from STR.
+ */
 export function calcMaxCarry(str) {
-  return str ?? 50; // kg
+  const s = str ?? 50;
+  return s;
 }
 
+/**
+ * Calculate unencumbered carry threshold = ceil(STR / 2).
+ */
 export function calcUnencumberedMax(str) {
-  return Math.ceil((str ?? 50) / 2); // kg
-}
-
-export function calcXPCost(skillName, nextLevel, charPSA, skillPSA = null) {
-  const sk = OFFICIAL_SKILLS.find(s => s.name === skillName);
-  if (!sk) {
-    const isOutOfPsa = Boolean(skillPSA && charPSA && skillPSA !== charPSA);
-    return isOutOfPsa ? nextLevel * 3 * 2 : nextLevel * 3;
-  }
-  let baseMult = 3;
-  if (sk.psa === 'Technological') baseMult = 4;
-  if (sk.psa === 'Biosocial') baseMult = 5;
-  const inPSA = sk.psa === charPSA;
-  const cost = nextLevel * baseMult;
-  return inPSA ? cost : cost * 2;
+  const s = str ?? 50;
+  return Math.ceil(s / 2);
 }
