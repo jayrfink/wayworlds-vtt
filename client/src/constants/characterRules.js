@@ -339,29 +339,29 @@ export function getLineageBaselineStats(lineageName) {
 
 export const OFFICIAL_SKILLS = [
   // Wayworlds Core Secular Skills (10)
-  { name: 'Melee Weapons', psa: 'Military', baseChance: 'Melee Base (STR or DEX / 2)' },
-  { name: 'Ranged Weapons', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Striker & Grappler', psa: 'Military', baseChance: 'Melee Base (STR or DEX / 2)' },
-  { name: 'Armor & Shield Mastery', psa: 'Military', baseChance: 'Stamina' },
-  { name: 'Athletics & Acrobatics', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Stealth & Secrecy', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Wilderness & Survival', psa: 'Biosocial', baseChance: 'Intuition' },
-  { name: 'Lore & Arcana', psa: 'Technological', baseChance: 'Logic' },
-  { name: 'Influence & Deception', psa: 'Biosocial', baseChance: 'Personality' },
-  { name: 'Herbalism & Medicine', psa: 'Biosocial', baseChance: 'Intuition' },
+  { name: 'Melee Weapons', psa: 'Combat', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Ranged Weapons', psa: 'Combat', baseChance: 'Dexterity' },
+  { name: 'Striker & Grappler', psa: 'Combat', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Armor & Shield Mastery', psa: 'Combat', baseChance: 'Stamina' },
+  { name: 'Athletics & Acrobatics', psa: 'Combat', baseChance: 'Dexterity' },
+  { name: 'Stealth & Secrecy', psa: 'Combat', baseChance: 'Dexterity' },
+  { name: 'Wilderness & Survival', psa: 'Theurgy', baseChance: 'Intuition' },
+  { name: 'Lore & Arcana', psa: 'Magic', baseChance: 'Logic' },
+  { name: 'Influence & Deception', psa: 'Theurgy', baseChance: 'Personality' },
+  { name: 'Herbalism & Medicine', psa: 'Theurgy', baseChance: 'Intuition' },
   // Open-Ended Tradecraft Skill
-  { name: 'Tradecraft', psa: 'Technological', baseChance: 'Intuition' },
+  { name: 'Tradecraft', psa: 'Magic', baseChance: 'Intuition' },
   // 10 Magic & Ki Traditions
-  { name: 'Arcane', psa: 'Technological', baseChance: 'Intuition' },
-  { name: 'Blood', psa: 'Biosocial', baseChance: 'Personality' },
-  { name: 'Shadow', psa: 'Military', baseChance: 'Dexterity' },
-  { name: 'Demonology', psa: 'Biosocial', baseChance: 'Personality' },
-  { name: 'Necromancy', psa: 'Technological', baseChance: 'Intuition' },
-  { name: 'Druidic', psa: 'Biosocial', baseChance: 'Personality' },
-  { name: 'Spiritual', psa: 'Biosocial', baseChance: 'Logic' },
-  { name: 'Ki', psa: 'Military', baseChance: 'Personality' },
-  { name: 'Warg', psa: 'Biosocial', baseChance: 'Personality' },
-  { name: 'Witchcraft', psa: 'Biosocial', baseChance: 'Intuition' },
+  { name: 'Arcane', psa: 'Magic', baseChance: 'Intuition' },
+  { name: 'Blood', psa: 'Theurgy', baseChance: 'Personality' },
+  { name: 'Shadow', psa: 'Combat', baseChance: 'Dexterity' },
+  { name: 'Demonology', psa: 'Theurgy', baseChance: 'Personality' },
+  { name: 'Necromancy', psa: 'Magic', baseChance: 'Intuition' },
+  { name: 'Druidic', psa: 'Theurgy', baseChance: 'Personality' },
+  { name: 'Spiritual', psa: 'Theurgy', baseChance: 'Logic' },
+  { name: 'Ki', psa: 'Combat', baseChance: 'Personality' },
+  { name: 'Warg', psa: 'Theurgy', baseChance: 'Personality' },
+  { name: 'Witchcraft', psa: 'Theurgy', baseChance: 'Intuition' },
 ];
 
 export const MAGIC_TRADITIONS = [
@@ -717,6 +717,17 @@ export function calcCharacterTier(char) {
 }
 
 /**
+ * Normalize PSA values to canonical Wayworlds terms (Combat, Magic, Theurgy).
+ */
+export function normalizePSA(psa) {
+  if (!psa) return psa;
+  if (psa === 'Military') return 'Combat';
+  if (psa === 'Technological') return 'Magic';
+  if (psa === 'Biosocial') return 'Theurgy';
+  return psa;
+}
+
+/**
  * Calculate the XP cost to advance a skill to `nextLevel` (1 to 6).
  * Universal XP Cost Formula: 3 * nextLevel (Level 1: 3 XP, Level 2: 6 XP, Level 3: 9 XP, Level 4: 12 XP, Level 5: 15 XP, Level 6: 18 XP).
  */
@@ -726,7 +737,9 @@ export function calcXPCost(skillName, nextLevel, charPSA, explicitSkillPSA = nul
   const baseCost = nextLevel * 3;
   const official = OFFICIAL_SKILLS.find((s) => s.name === skillName);
   const effectiveSkillPSA = explicitSkillPSA || (official ? official.psa : null);
-  if (effectiveSkillPSA && charPSA && effectiveSkillPSA !== charPSA) {
+  const normCharPSA = normalizePSA(charPSA);
+  const normSkillPSA = normalizePSA(effectiveSkillPSA);
+  if (normSkillPSA && normCharPSA && normSkillPSA !== normCharPSA) {
     return baseCost * 2;
   }
   return baseCost;

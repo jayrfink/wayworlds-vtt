@@ -26,19 +26,25 @@ import {
 
 describe('Skill XP Costs in characterRules.js', () => {
   it('calculates standard PSA costs for ground skills', () => {
-    // Ranged Weapons (Military): in-PSA = nextLevel * 3, out-of-PSA = nextLevel * 6
+    // Ranged Weapons (Combat): in-PSA = nextLevel * 3, out-of-PSA = nextLevel * 6
+    expect(calcXPCost('Ranged Weapons', 2, 'Combat')).toBe(6);
+    expect(calcXPCost('Ranged Weapons', 2, 'Magic')).toBe(12);
+    // Legacy support for Military & Technological
     expect(calcXPCost('Ranged Weapons', 2, 'Military')).toBe(6);
     expect(calcXPCost('Ranged Weapons', 2, 'Technological')).toBe(12);
   });
 
   it('calculates custom skill XP cost with out-of-PSA penalty (Bug 35)', () => {
     // Custom skill without skillPSA: base nextLevel * 3
-    expect(calcXPCost('Hacking', 2, 'Technological')).toBe(6);
+    expect(calcXPCost('Hacking', 2, 'Magic')).toBe(6);
     // Custom skill with matching skillPSA: base nextLevel * 3
-    expect(calcXPCost('Hacking', 2, 'Technological', 'Technological')).toBe(6);
+    expect(calcXPCost('Hacking', 2, 'Magic', 'Magic')).toBe(6);
     // Custom skill with out-of-PSA skillPSA: double penalty nextLevel * 3 * 2
+    expect(calcXPCost('Hacking', 2, 'Combat', 'Magic')).toBe(12);
+    expect(calcXPCost('Ancient Runes', 3, 'Combat', 'Theurgy')).toBe(18); // 3 * 3 * 2
+    // Legacy support
     expect(calcXPCost('Hacking', 2, 'Military', 'Technological')).toBe(12);
-    expect(calcXPCost('Ancient Runes', 3, 'Military', 'Biosocial')).toBe(18); // 3 * 3 * 2
+    expect(calcXPCost('Ancient Runes', 3, 'Military', 'Biosocial')).toBe(18);
   });
 });
 

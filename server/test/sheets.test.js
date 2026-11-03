@@ -110,36 +110,50 @@ describe('Sheets API & Socket.io', () => {
       await agent.post('/api/auth/register').send({ username: 'player1', password: 'password123' });
       await agent.post('/api/auth/login').send({ username: 'player1', password: 'password123' });
 
-      // Create with Technological PSA
+      // Create with Magic PSA
       const createRes = await agent.post('/api/characters').send({
-        name: 'Tech Specialist',
+        name: 'Magic Specialist',
         race: 'Yazirian',
-        psa: 'Technological',
+        psa: 'Magic',
       });
       expect(createRes.status).toBe(201);
-      expect(createRes.body.psa).toBe('Technological');
+      expect(createRes.body.psa).toBe('Magic');
       const charId = createRes.body.id;
 
       // Fetch by ID
       const getRes = await agent.get(`/api/characters/${charId}`);
       expect(getRes.status).toBe(200);
-      expect(getRes.body.psa).toBe('Technological');
+      expect(getRes.body.psa).toBe('Magic');
 
-      // Update to Biosocial PSA
+      // Update to Theurgy PSA
       const emitSpy = vi.spyOn(io, 'emit');
       const updateRes = await agent.put(`/api/characters/${charId}`).send({
-        psa: 'Biosocial',
+        psa: 'Theurgy',
       });
       expect(updateRes.status).toBe(200);
-      expect(updateRes.body.psa).toBe('Biosocial');
+      expect(updateRes.body.psa).toBe('Theurgy');
       expect(emitSpy).toHaveBeenCalledWith('sheet:updated', {
         type: 'character',
-        sheet: expect.objectContaining({ id: charId, psa: 'Biosocial' }),
+        sheet: expect.objectContaining({ id: charId, psa: 'Theurgy' }),
       });
 
       // Verify persistence via GET
       const verifyRes = await agent.get(`/api/characters/${charId}`);
-      expect(verifyRes.body.psa).toBe('Biosocial');
+      expect(verifyRes.body.psa).toBe('Theurgy');
+
+      // Update to Combat PSA
+      const updateCombatRes = await agent.put(`/api/characters/${charId}`).send({
+        psa: 'Combat',
+      });
+      expect(updateCombatRes.status).toBe(200);
+      expect(updateCombatRes.body.psa).toBe('Combat');
+
+      // Also verifies legacy PSA input maps automatically
+      const legacyRes = await agent.put(`/api/characters/${charId}`).send({
+        psa: 'Technological',
+      });
+      expect(legacyRes.status).toBe(200);
+      expect(legacyRes.body.psa).toBe('Magic');
     });
 
     it('manages max_ess and current_ess, clamps them, and cascades current_ess to active map tokens', async () => {

@@ -96,7 +96,7 @@ describe('formatCharacterAscii Utility', () => {
 
     expect(text).toContain('Name:        Nameless Hero');
     expect(text).toContain('Species:     Human');
-    expect(text).toContain('Primary PSA: Military');
+    expect(text).toContain('Primary PSA: Combat');
     expect(text).not.toContain('undefined');
     expect(text).not.toContain('null');
     expect(text).not.toContain('NaN');

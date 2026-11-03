@@ -121,36 +121,45 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
   });
 
   describe('PSA Selection & Normalization', () => {
-    it('preserves non-Military PSA during normalization and defaults missing PSA to Military', () => {
+    it('normalizes PSA values to Combat, Magic, Theurgy and defaults missing PSA to Combat', () => {
       const normalize = CharacterSheetsView.methods.normalizeCharacterData;
 
-      const techChar = normalize({ name: 'Techie', psa: 'Technological' });
-      expect(techChar.psa).toBe('Technological');
+      const techChar = normalize({ name: 'Techie', psa: 'Magic' });
+      expect(techChar.psa).toBe('Magic');
 
-      const bioChar = normalize({ name: 'Medic', psa: 'Biosocial' });
-      expect(bioChar.psa).toBe('Biosocial');
+      const bioChar = normalize({ name: 'Medic', psa: 'Theurgy' });
+      expect(bioChar.psa).toBe('Theurgy');
 
-      const militaryChar = normalize({ name: 'Soldier', psa: 'Military' });
-      expect(militaryChar.psa).toBe('Military');
+      const combatChar = normalize({ name: 'Soldier', psa: 'Combat' });
+      expect(combatChar.psa).toBe('Combat');
 
       const defaultChar = normalize({ name: 'Recruit' });
-      expect(defaultChar.psa).toBe('Military');
+      expect(defaultChar.psa).toBe('Combat');
+
+      // Also converts legacy PSA names
+      expect(normalize({ name: 'OldTech', psa: 'Technological' }).psa).toBe('Magic');
+      expect(normalize({ name: 'OldBio', psa: 'Biosocial' }).psa).toBe('Theurgy');
+      expect(normalize({ name: 'OldMil', psa: 'Military' }).psa).toBe('Combat');
     });
 
     it('calculates XP cost based on active PSA', () => {
       const vmTech = {
-        selectedChar: { psa: 'Technological' },
+        selectedChar: { psa: 'Magic' },
       };
-      const vmMil = {
-        selectedChar: { psa: 'Military' },
+      const vmCombat = {
+        selectedChar: { psa: 'Combat' },
       };
 
-      // Lore & Arcana is Technological PSA (base cost 3 * level = 6)
+      // Lore & Arcana is Magic PSA (base cost 3 * level = 6)
       const costInPSA = CharacterSheetsView.methods.getXPCost.call(vmTech, 'Lore & Arcana', 2);
       expect(costInPSA).toBe(6); // 2 * 3
 
-      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmMil, 'Lore & Arcana', 2);
+      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmCombat, 'Lore & Arcana', 2);
       expect(costOutOfPSA).toBe(12); // 2 * (3 * 2)
+
+      // Legacy PSA support
+      const vmMil = { selectedChar: { psa: 'Military' } };
+      expect(CharacterSheetsView.methods.getXPCost.call(vmMil, 'Lore & Arcana', 2)).toBe(12);
     });
   });
 

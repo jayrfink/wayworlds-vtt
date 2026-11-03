@@ -18,6 +18,16 @@ function clampStat(val, fallback, min = 1, max = 200) {
   return Math.min(max, Math.max(min, Math.round(n)));
 }
 
+const PSA_MAP = {
+  Military: 'Combat',
+  Technological: 'Magic',
+  Biosocial: 'Theurgy',
+  Combat: 'Combat',
+  Magic: 'Magic',
+  Theurgy: 'Theurgy',
+};
+const VALID_PSAS = ['Combat', 'Magic', 'Theurgy', 'Military', 'Technological', 'Biosocial'];
+
 function formatCharacterSheet(row) {
   if (!row) return null;
   return {
@@ -27,7 +37,7 @@ function formatCharacterSheet(row) {
     max_ess: row.max_ess !== undefined && row.max_ess !== null ? Number(row.max_ess) : 50,
     current_ess: row.current_ess !== undefined && row.current_ess !== null ? Number(row.current_ess) : 50,
     current_xp: row.current_xp !== undefined && row.current_xp !== null ? Number(row.current_xp) : 0,
-    psa: row.psa || 'Military',
+    psa: PSA_MAP[row.psa] || row.psa || 'Combat',
     racial_abilities: safeJsonParse(row.racial_abilities, {}),
     skills: safeJsonParse(row.skills, []),
     inventory: safeJsonParse(row.inventory, []),
@@ -117,7 +127,7 @@ export function createCharacterRouter(db, io) {
       let { race } = req.body;
       const {
         name,
-        psa = 'Military',
+        psa = 'Combat',
         user_id,
         gender = null,
         height = null,
@@ -158,8 +168,7 @@ export function createCharacterRouter(db, io) {
       const characterName = name.trim();
       race = race.trim();
 
-      const validPsas = ['Military', 'Technological', 'Biosocial'];
-      const characterPsa = validPsas.includes(psa) ? psa : 'Military';
+      const characterPsa = VALID_PSAS.includes(psa) ? (PSA_MAP[psa] || psa) : 'Combat';
 
       const strVal = clampStat(str, 50, 1, 200);
       const staVal = clampStat(sta, 50, 1, 200);
@@ -242,7 +251,7 @@ export function createCharacterRouter(db, io) {
 
       let race = req.body.race !== undefined ? req.body.race : existing.race;
       const {
-        psa = existing.psa || 'Military',
+        psa = existing.psa || 'Combat',
         gender = existing.gender,
         height = existing.height,
         weight = existing.weight,
@@ -275,8 +284,9 @@ export function createCharacterRouter(db, io) {
 
       race = race.trim();
 
-      const validPsas = ['Military', 'Technological', 'Biosocial'];
-      const characterPsa = validPsas.includes(psa) ? psa : (existing.psa || 'Military');
+      const characterPsa = (psa !== undefined && VALID_PSAS.includes(psa))
+        ? (PSA_MAP[psa] || psa)
+        : (PSA_MAP[existing.psa] || existing.psa || 'Combat');
 
       const strVal = clampStat(str, existing.str, 1, 200);
       const staVal = clampStat(sta, existing.sta, 1, 200);

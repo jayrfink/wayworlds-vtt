@@ -151,9 +151,9 @@
                 <div class="psa-select-wrap">
                   <label>PSA:</label>
                   <select v-model="selectedChar.psa" @change="updateCharacter" class="select-psa">
-                    <option value="Military">Military</option>
-                    <option value="Technological">Technological</option>
-                    <option value="Biosocial">Biosocial</option>
+                    <option value="Combat">Combat</option>
+                    <option value="Magic">Magic</option>
+                    <option value="Theurgy">Theurgy</option>
                   </select>
                 </div>
                 <div v-if="isGm && registeredUsers.length > 0" class="player-select-wrap">
@@ -982,9 +982,9 @@
           <div class="form-group">
             <label>Primary System Area (PSA)</label>
             <select v-model="newCharForm.psa" class="char-create-select">
-              <option value="Military">Military</option>
-              <option value="Technological">Technological</option>
-              <option value="Biosocial">Biosocial</option>
+              <option value="Combat">Combat</option>
+              <option value="Magic">Magic</option>
+              <option value="Theurgy">Theurgy</option>
             </select>
           </div>
           <div v-if="isGm && registeredUsers.length > 0" class="form-group">
@@ -1344,7 +1344,7 @@ export default {
         name: '',
         race: 'Dawn Elves',
         customRaceName: '',
-        psa: 'Military',
+        psa: 'Combat',
         avatar_url: '',
         user_id: null,
         str: 50,
@@ -1590,7 +1590,10 @@ export default {
     },
     normalizeCharacterData(char) {
       const c = { ...char };
-      if (!c.psa) c.psa = 'Military';
+      if (!c.psa) c.psa = 'Combat';
+      else if (c.psa === 'Military') c.psa = 'Combat';
+      else if (c.psa === 'Technological') c.psa = 'Magic';
+      else if (c.psa === 'Biosocial') c.psa = 'Theurgy';
       // Ensure individual stats are set from paired stats if missing
       if (c.str === undefined) c.str = c.str_sta || 50;
       if (c.sta === undefined) c.sta = c.max_stamina !== undefined ? c.max_stamina : (c.str_sta || 50);
@@ -1745,7 +1748,7 @@ export default {
         name: '',
         race: defaultLineage,
         customRaceName: '',
-        psa: 'Military',
+        psa: 'Combat',
         avatar_url: '',
         user_id: defaultUserId,
         str: base.str,
@@ -2124,7 +2127,7 @@ export default {
       }
     },
     getXPCost(skillName, targetLevel, skillPSA = null) {
-      const charPSA = this.selectedChar ? this.selectedChar.psa || 'Military' : 'Military';
+      const charPSA = this.selectedChar ? this.selectedChar.psa || 'Combat' : 'Combat';
       return calcXPCost(skillName, targetLevel, charPSA, skillPSA);
     },
     getSkillSuccessChance(skill) {
