@@ -1,0 +1,29 @@
+{
+  "name": "ww-vtt-server",
+  "version": "0.14.2",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.0.0",
+    "compression": "^1.8.2",
+    "connect-sqlite3": "^0.9.15",
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "express-session": "^1.18.0",
+    "jimp": "^0.22.10",
+    "multer": "^2.4.0",
+    "pdf-parse": "^1.1.1",
+    "sharp": "^0.35.4",
+    "socket.io": "^4.8.3"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.4",
+    "supertest": "^7.0.0",
+    "vitest": "^2.0.0"
+  }
+}

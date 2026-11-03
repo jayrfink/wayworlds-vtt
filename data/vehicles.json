@@ -1,0 +1,28 @@
+[
+  {
+    "vehicle_id": "veh_riding_horse",
+    "name": "Riding Horse",
+    "category": "mount",
+    "threat_tier": 1,
+    "hp_max": 45,
+    "hp_current": 45,
+    "defense_summary": "Natural Hide DR 2",
+    "movement": "50 ft per move action",
+    "max_passengers": 1,
+    "cargo_capacity_lbs": 250,
+    "traits": ["Mount: Rider shares mount movement and gains elevation."]
+  },
+  {
+    "vehicle_id": "veh_heavy_wagon",
+    "name": "Reinforced Iron-Bound Wagon",
+    "category": "land_transport",
+    "threat_tier": 2,
+    "hp_max": 120,
+    "hp_current": 120,
+    "defense_summary": "Wood/Iron DR 5",
+    "movement": "30 ft per move action (Drawn by 2 Draft Beasts)",
+    "max_passengers": 6,
+    "cargo_capacity_lbs": 3300,
+    "traits": ["Cover: Passengers inside gain Hard Cover (+20% defense vs ranged attacks)."]
+  }
+]

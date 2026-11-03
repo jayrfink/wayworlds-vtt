@@ -1,0 +1,13 @@
+services:
+  ww-vtt-dev:
+    build: .
+    container_name: ww-vtt-dev
+    volumes:
+      - ${HOME}/wayworlds-vtt:${HOME}/wayworlds-vtt
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    working_dir: ${HOME}/wayworlds-vtt
+    environment:
+      - HOME=${HOME}
+    command: tail -f /dev/null

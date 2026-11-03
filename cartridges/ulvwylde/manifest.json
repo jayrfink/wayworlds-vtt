@@ -1,0 +1,11 @@
+{
+  "id": "ulvwylde",
+  "title": "UlvWylde Campaign World",
+  "version": "0.6.7",
+  "author": "Wayworlds Core Team",
+  "default_color_package": "maroons",
+  "hex_scales": {
+    "regional_hex_miles": 6,
+    "world_hex_miles": 24
+  }
+}

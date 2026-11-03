@@ -1,0 +1,13 @@
+{
+  "type": "module",
+  "scripts": {
+    "test:ctl": "./test/sf-vtt-ctl.test.sh"
+  },
+  "dependencies": {
+    "pdf-parse": "^2.4.5",
+    "puppeteer": "^24.43.1"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.4"
+  }
+}
