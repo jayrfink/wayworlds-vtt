@@ -1,46 +1,26 @@
 <template>
   <div class="rulebooks-container">
-    <!-- Top-Level Navigation Bar -->
-    <header class="top-nav-bar">
-      <nav class="mode-toggle" aria-label="Rulebook View Modes">
-        <button
-          type="button"
-          class="mode-btn"
-          :class="{ active: viewMode === 'quickref' }"
-          @click="viewMode = 'quickref'"
-        >
-          Quick Reference Tables
-        </button>
-        <button
-          type="button"
-          class="mode-btn"
-          :class="{ active: viewMode === 'additional' }"
-          @click="viewMode = 'additional'"
-        >
-          Additional Rules
-        </button>
-      </nav>
-    </header>
-
-    <!-- Quick Reference Tables View -->
-    <div v-if="viewMode === 'quickref'" class="quickref-layout">
-      <QuickReferenceTables key="quickref" initial-category="ranged" />
-    </div>
-
-    <!-- Additional Rules View -->
-    <div v-else-if="viewMode === 'additional'" class="quickref-layout">
-      <QuickReferenceTables key="additional" initial-category="additional" />
+    <div class="quickref-layout">
+      <QuickReferenceTables :initial-category="resolvedCategory" :initial-search="props.initialSearch" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue';
+import { computed } from 'vue';
 import QuickReferenceTables from '../components/QuickReferenceTables.vue';
-import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
+import { getUserState, getSafeUserId } from '../utils/userState.js';
 
 const props = defineProps({
+  initialCategory: {
+    type: String,
+    default: undefined,
+  },
   initialViewMode: {
+    type: String,
+    default: undefined,
+  },
+  initialSearch: {
     type: String,
     default: undefined,
   },
@@ -50,16 +30,12 @@ const savedRulebooks = getUserState(getSafeUserId(), 'rulebooks', {
   viewMode: 'quickref',
 });
 
-const viewMode = ref(
-  props.initialViewMode ??
-  (savedRulebooks.viewMode === 'pdf' ? 'additional' : savedRulebooks.viewMode) ??
-  'quickref'
-);
-
-watch(viewMode, (newVal) => {
-  saveUserState(getSafeUserId(), 'rulebooks', {
-    viewMode: newVal,
-  });
+const resolvedCategory = computed(() => {
+  if (props.initialCategory) return props.initialCategory;
+  if (props.initialViewMode === 'additional' || savedRulebooks.viewMode === 'additional') {
+    return 'additional';
+  }
+  return undefined;
 });
 </script>
 
@@ -75,54 +51,7 @@ watch(viewMode, (newVal) => {
   color: var(--text-primary);
 }
 
-/* Top Navigation Bar */
-.top-nav-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-  padding: 8px 12px;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  flex-shrink: 0;
-}
-
-.mode-toggle {
-  display: flex;
-  gap: 6px;
-  background: var(--bg-tertiary);
-  padding: 3px;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-
-.mode-btn {
-  background: transparent;
-  border: none;
-  color: var(--text-secondary);
-  padding: 6px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: all 0.15s ease;
-}
-
-.mode-btn:hover {
-  color: var(--text-primary);
-}
-
-.mode-btn.active {
-  background-color: #000000 !important;
-  border: 1px solid #d0d0d0 !important;
-  color: #d0d0d0 !important;
-  -webkit-text-fill-color: #d0d0d0;
-  box-shadow: 0 0 8px rgba(208, 208, 208, 0.3);
-}
-
-/* Quick Reference / Additional Rules Layout */
+/* Quick Reference Layout */
 .quickref-layout {
   flex: 1;
   min-height: 0;
