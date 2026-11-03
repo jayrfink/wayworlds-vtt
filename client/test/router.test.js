@@ -12,18 +12,18 @@ describe('Router Dynamic Tab Titles', () => {
     document.title = 'Default';
   });
 
-  it('sets document.title to WWVTT: Login on login route', async () => {
+  it('sets document.title to WayWorld: Login on login route', async () => {
     await router.push('/login');
-    expect(document.title).toBe('WWVTT: Login');
+    expect(document.title).toBe('WayWorld: Login');
   });
 
-  it('sets document.title to WWVTT: RPG VTT when navigating to authenticated dashboard route', async () => {
+  it('sets document.title to WayWorld: RPG VTT when navigating to authenticated dashboard route', async () => {
     const auth = useAuthStore();
     auth.user = { username: 'testuser', role: 'Player' };
     auth.checked = true;
 
     await router.push('/dashboard/rpg-vtt');
-    expect(document.title).toBe('WWVTT: RPG VTT');
+    expect(document.title).toBe('WayWorld: RPG VTT');
   });
 
   it('defines correct meta.title for all dashboard routes', () => {
@@ -61,6 +61,6 @@ describe('Router Dynamic Tab Titles', () => {
 
     await router.push('/dashboard/gm-notes');
     expect(router.currentRoute.value.path).toBe('/dashboard/gm-notes');
-    expect(document.title).toBe('WWVTT: GM Notes');
+    expect(document.title).toBe('WayWorld: GM Notes');
   });
 });

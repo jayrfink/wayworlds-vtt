@@ -92,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
 
 router.afterEach((to) => {
   const tabTitle = to.meta?.title;
-  document.title = tabTitle ? `WWVTT: ${tabTitle}` : 'Wayworlds VTT';
+  document.title = tabTitle ? `WayWorld: ${tabTitle}` : 'WayWorld';
   try {
     const auth = useAuthStore();
     if (auth.user?.id !== undefined && ALLOWED_DASHBOARD_NAMES.includes(to.name)) {
