@@ -21,7 +21,7 @@ describe('GmNotesView Component', () => {
         return {
           ok: true,
           json: async () => [
-            { id: 1, title: 'Session 1: Crash on Volturnus' },
+            { id: 1, title: 'Session 1: Siege of Ironhold' },
             { id: 2, title: 'Session 2: Kurabanda Caves' },
           ],
         };
@@ -44,7 +44,7 @@ describe('GmNotesView Component', () => {
 
       const sessionItems = wrapper.findAll('.gm-session-item');
       expect(sessionItems).toHaveLength(2);
-      expect(sessionItems[0].text()).toContain('Session 1: Crash on Volturnus');
+      expect(sessionItems[0].text()).toContain('Session 1: Siege of Ironhold');
 
       const panelCards = wrapper.findAll('.note-panel-card');
       expect(panelCards).toHaveLength(2);

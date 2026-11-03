@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <div class="login-card">
-      <h1>⭐ Star Frontiers VTT</h1>
+      <h1>⚔️ Wayworlds VTT</h1>
       <p class="subtitle">{{ isRegister ? 'Initial Setup: Create GameMaster Account' : 'Sign in to continue' }}</p>
       <AuthForm
         :mode="isRegister ? 'register' : 'login'"

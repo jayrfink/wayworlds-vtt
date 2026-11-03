@@ -78,7 +78,7 @@ describe('characterRules.js Math Helpers with Nullish Coalescing (0-safe)', () =
 
   it('calcUnencumberedMax correctly handles 0 kg unencumbered limit and rounds up (Bug 34)', () => {
     expect(calcUnencumberedMax(0)).toBe(0);
-    // 75 / 2 = 37.5 -> Math.ceil = 38 (Alpha Dawn round fractions up rule)
+    // 75 / 2 = 37.5 -> Math.ceil = 38 (Wayworlds round fractions up rule)
     expect(calcUnencumberedMax(75)).toBe(38);
     expect(calcUnencumberedMax(undefined)).toBe(25);
     expect(calcUnencumberedMax(null)).toBe(25);

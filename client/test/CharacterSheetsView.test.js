@@ -253,7 +253,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
             per: 50,
             ldr: 50,
             current_stamina: 50,
-            notes: 'Met contact on Volturnus',
+            notes: 'Met contact on Ironhold',
           },
           characters: [{ id: 42, name: 'Ace', notes: '' }],
           normalizeCharacterData: CharacterSheetsView.methods.normalizeCharacterData,
@@ -261,7 +261,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
 
         await CharacterSheetsView.methods.updateCharacter.call(vm);
         expect(sentBody).not.toBeNull();
-        expect(sentBody.notes).toBe('Met contact on Volturnus');
+        expect(sentBody.notes).toBe('Met contact on Ironhold');
       } finally {
         global.fetch = origFetch;
       }

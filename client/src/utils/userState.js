@@ -1,6 +1,6 @@
 import { useAuthStore } from '../stores/auth.js';
 
-const STORAGE_PREFIX = 'sf_vtt_user_state_';
+const STORAGE_PREFIX = 'ww_vtt_user_state_';
 const memoryFallback = new Map();
 
 function readRaw(key) {

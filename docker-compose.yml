@@ -4,6 +4,8 @@ services:
     container_name: ww-vtt-dev
     volumes:
       - ${HOME}/wayworlds-vtt:${HOME}/wayworlds-vtt
+      - ww_server_node_modules:${HOME}/wayworlds-vtt/server/node_modules
+      - ww_client_node_modules:${HOME}/wayworlds-vtt/client/node_modules
     ports:
       - "3000:3000"
       - "3001:3001"
@@ -11,3 +13,7 @@ services:
     environment:
       - HOME=${HOME}
     command: tail -f /dev/null
+
+volumes:
+  ww_server_node_modules:
+  ww_client_node_modules:

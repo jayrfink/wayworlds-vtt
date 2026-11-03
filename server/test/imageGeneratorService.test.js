@@ -25,7 +25,7 @@ describe('imageGeneratorService', () => {
       armor: 'Skein Suit',
     });
 
-    expect(prompt).toContain('Star Frontiers Sathar soldier');
+    expect(prompt).toContain('Wayworlds Sathar warrior');
     expect(prompt).toContain('Heavy Laser Rifle');
     expect(prompt).toContain('Skein Suit');
   });

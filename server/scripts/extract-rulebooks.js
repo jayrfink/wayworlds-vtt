@@ -10,12 +10,12 @@ const RULEBOOKS_DIR = path.join(__dirname, '../../assets/rulebooks');
 const OUTPUT_FILE = path.join(__dirname, '../../data/rulebooks.json');
 
 const BOOKS = [
-  { file: 'SF7007-AlphaDawn-Basic_Game_Rules.pdf', bookId: 'ad-basic', bookTitle: 'Alpha Dawn Basic Game Rules', system: 'Alpha Dawn' },
-  { file: 'SF7007-AlphaDawn-Expanded_Game_Rules.pdf', bookId: 'ad-expanded', bookTitle: 'Alpha Dawn Expanded Game Rules', system: 'Alpha Dawn' },
-  { file: 'SF7007-AlphaDawn-Crash_on_Volturnus.pdf', bookId: 'ad-volturnus', bookTitle: 'Crash on Volturnus Module', system: 'Alpha Dawn' },
-  { file: 'Star_Frontiers-7011-Knight_Hawks-Basic_Rules.pdf', bookId: 'kh-basic', bookTitle: 'Knight Hawks Basic Rules', system: 'Knight Hawks' },
-  { file: 'Star_Frontiers-7011-Knight_Hawks-Expansion_Rules.pdf', bookId: 'kh-expansion', bookTitle: 'Knight Hawks Expansion Rules', system: 'Knight Hawks' },
-  { file: 'Star_Frontiers-7011-Knight_Hawks-Mission_Brief.pdf', bookId: 'kh-mission', bookTitle: 'Knight Hawks Mission Brief', system: 'Knight Hawks' }
+  { file: 'wayworlds-basic-rules.pdf', bookId: 'ad-basic', bookTitle: 'Wayworlds Basic Game Rules', system: 'Wayworlds Core' },
+  { file: 'wayworlds-expanded-rules.pdf', bookId: 'ad-expanded', bookTitle: 'Wayworlds Expanded Game Rules', system: 'Wayworlds Core' },
+  { file: 'wayworlds-frontier-module.pdf', bookId: 'ad-frontier', bookTitle: 'Frontier Campaign Module', system: 'Wayworlds Core' },
+  { file: 'wayworlds-atlas-basic.pdf', bookId: 'kh-basic', bookTitle: 'World Atlas Basic Rules', system: 'World Atlas' },
+  { file: 'wayworlds-atlas-expansion.pdf', bookId: 'kh-expansion', bookTitle: 'World Atlas Expansion Rules', system: 'World Atlas' },
+  { file: 'wayworlds-atlas-brief.pdf', bookId: 'kh-mission', bookTitle: 'World Atlas Mission Brief', system: 'World Atlas' }
 ];
 
 export async function extractRulebooks() {

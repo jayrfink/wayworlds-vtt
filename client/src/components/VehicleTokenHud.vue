@@ -179,9 +179,9 @@
         </div>
       </section>
 
-      <!-- READ-ONLY ALPHA DAWN REFERENCE CARD -->
+      <!-- READ-ONLY REFERENCE CARD -->
       <section class="hud-section reference-card">
-        <h4 class="section-title">Alpha Dawn Rulebook Stats</h4>
+        <h4 class="section-title">Rulebook Stats</h4>
         <div class="stats-overview-grid">
           <div class="overview-item">
             <span class="item-label">Top Speed</span>

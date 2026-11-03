@@ -72,7 +72,7 @@
       <div v-if="!selectedChar" class="no-selection">
         <div class="stub-icon">📋</div>
         <h2>Select or Create a Character</h2>
-        <p>Choose a character sheet from the sidebar or build a new Alpha Dawn hero.</p>
+        <p>Choose a character sheet from the sidebar or build a new Wayworlds hero.</p>
       </div>
 
       <div v-else class="sheet-container">
@@ -462,7 +462,7 @@
             <span><strong>Battle Rage:</strong> <strong>{{ battleRageChance }}%</strong> base chance. When enraged, gains <strong>+20 bonus</strong> to hit in melee.</span>
           </div>
           <div v-else class="traits-rule-text">
-            <span><strong>Custom Species:</strong> Custom species without standard Star Frontiers species traits.</span>
+            <span><strong>Custom Species:</strong> Custom species without standard core species traits.</span>
           </div>
         </section>
 
@@ -971,7 +971,7 @@
           <button class="btn-close-modal" title="Close" @click="showEquipmentModal = false">✕</button>
         </div>
         <p class="equipment-modal-desc">
-          Search weapons, defenses, and gear from the Star Frontiers catalog. Click <strong>+ Add</strong> to add an item to your character's inventory.
+          Search weapons, defenses, and gear from the Wayworlds catalog. Click <strong>+ Add</strong> to add an item to your character's inventory.
         </p>
 
         <!-- Category Filter Tabs -->

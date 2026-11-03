@@ -175,6 +175,11 @@ ensure_container() {
     fi
     log_success "Container '${CONTAINER_NAME}' is active."
   fi
+  local safe_dir="${DIR//\'/\'\\\'\'}"
+  if ! docker exec "$CONTAINER_NAME" sh -c "[ -d '$safe_dir/server/node_modules/express' ] && [ -d '$safe_dir/client/node_modules/vite' ]" >/dev/null 2>&1; then
+    log_info "Installing container Linux dependencies in '${CONTAINER_NAME}'..."
+    docker exec "$CONTAINER_NAME" sh -c "cd '$safe_dir/server' && npm install && cd '$safe_dir/client' && npm install"
+  fi
 }
 
 is_container_running() {

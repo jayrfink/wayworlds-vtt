@@ -10,7 +10,7 @@ import {
 } from '../src/adversaryMathEngine.js';
 
 describe('Adversary Math Engine & Validator', () => {
-  describe('Star Frontiers NPC Math Formulas', () => {
+  describe('Wayworlds NPC Math Formulas', () => {
     it('calculates hit chance with formula: ceil(DEX / 2) + (skill_level * 10) + equip_mod', () => {
       // Base: DEX 50 -> 25%, Skill Lvl 0 -> 25%
       expect(calculateNpcHitChance(50, 0)).toBe(25);
@@ -104,7 +104,7 @@ describe('Adversary Math Engine & Validator', () => {
   describe('Threat Tier Creature Generator', () => {
     it('generates Tier 3 Stalker Creature adhering to creature benchmarks', () => {
       const creature = generateCreatureStats(3, {
-        name: 'Volturnian Stalker-Beast',
+        name: 'Rift Stalker-Beast',
         diet: 'Carnivore',
         attacks: ['Bite', 'Acid Spit'],
       });

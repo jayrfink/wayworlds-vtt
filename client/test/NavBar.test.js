@@ -50,11 +50,11 @@ describe('NavBar.vue', () => {
     return html;
   }
 
-  it('renders SFVTT brand text without star icon', async () => {
+  it('renders WWVTT brand text without star icon', async () => {
     const html = await renderNavBar();
-    expect(html).toContain('SFVTT');
+    expect(html).toContain('WWVTT');
     expect(html).not.toContain('⭐');
-    expect(html).not.toContain('Star Frontiers VTT');
+    expect(html).not.toContain('Wayworlds VTT');
   });
 
   it('renders standard navigation tabs for all users', async () => {

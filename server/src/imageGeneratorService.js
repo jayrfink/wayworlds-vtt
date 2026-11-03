@@ -18,8 +18,8 @@ export function buildTokenPrompt({ prompt, name, species, category, weapon, armo
     parts.push(`A vicious alien predatory beast called ${name || 'Alien Stalker'}`);
     if (attacks) parts.push(`with natural attacks: ${attacks}`);
   } else {
-    parts.push(`A Star Frontiers ${species || 'alien'} soldier called ${name || 'Trooper'}`);
-    if (weapon) parts.push(`armed with a futuristic ${weapon}`);
+    parts.push(`A Wayworlds ${species || 'humanoid'} warrior called ${name || 'Trooper'}`);
+    if (weapon) parts.push(`armed with ${weapon}`);
     if (armor) parts.push(`wearing ${armor}`);
   }
 

@@ -1,6 +1,6 @@
 /**
  * Processes an array of settled die objects from @3d-dice/dice-box for damage rolls.
- * In Star Frontiers, d10 damage values range from 1 to 10. If the physics engine
+ * In Wayworlds, d10 damage values range from 1 to 10. If the physics engine
  * returns 0 on a 10-sided die face, it represents a 10.
  *
  * @param {Array<{ value?: number }>} results
@@ -31,7 +31,7 @@ export function calculateDamageRoll(results) {
  * The tens die is the lighter colored die (#77d19e, group 0).
  * The ones die is the darker colored die (#22384a, group 1).
  * On a d10 face showing 0 (raw value 0 or 10), the digit value is 0.
- * In Star Frontiers, rolling 00 (tens 0 and ones 0) is 100.
+ * In Wayworlds, rolling 00 (tens 0 and ones 0) is 100.
  * All other rolls are tensDigit * 10 + onesDigit.
  *
  * @param {Array} results

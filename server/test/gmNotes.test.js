@@ -52,10 +52,10 @@ describe('GM Notes API (/api/gm-notes)', () => {
     // Create new session
     const createSessionRes = await gmAgent
       .post('/api/gm-notes/sessions')
-      .send({ title: 'Session 2: Escape from Volturnus' });
+      .send({ title: 'Session 2: Escape from Ironhold' });
     expect(createSessionRes.status).toBe(201);
     const sessionId = createSessionRes.body.id;
-    expect(createSessionRes.body.title).toBe('Session 2: Escape from Volturnus');
+    expect(createSessionRes.body.title).toBe('Session 2: Escape from Ironhold');
 
     // Rename session
     const renameSessionRes = await gmAgent

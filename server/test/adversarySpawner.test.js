@@ -172,7 +172,7 @@ describe('Adversary Database Storage, REST API & Spawner', () => {
 
       const mapRes = db.prepare(`
         INSERT INTO maps (user_id, name, map_type, width, height, is_active)
-        VALUES (1, 'Volturnus Desert', 'rpg', 20, 20, 1)
+        VALUES (1, 'Badlands Desert', 'rpg', 20, 20, 1)
       `).run();
       const mapId = mapRes.lastInsertRowid;
 

@@ -1,6 +1,6 @@
 <template>
   <nav class="navbar">
-    <div class="navbar-brand">SFVTT</div>
+    <div class="navbar-brand">WWVTT</div>
     <div class="navbar-tabs">
       <router-link
         v-for="tab in tabs"

@@ -1,6 +1,6 @@
 /**
- * Star Frontiers Combat Quick Reference Constants
- * Derived from Star Frontiers Alpha Dawn and Knight Hawks rulesets.
+ * Wayworlds Combat Quick Reference Constants
+ * Derived from Wayworlds d100 core combat rules.
  */
 
 export const RANGED_COMBAT_REF = {

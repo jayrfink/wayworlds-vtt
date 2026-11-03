@@ -1,6 +1,6 @@
 ---
 name: stock-encounter
-description: Stocks tactical VTT maps with rulebook-accurate Star Frontiers Sentient NPCs or Alien Creatures using procedural Threat Tier scaling, circular token art generation, and collision-avoidant canvas placement.
+description: Stocks tactical VTT maps with rulebook-accurate Wayworlds Sentient NPCs or Creatures using procedural Threat Tier scaling, circular token art generation, and collision-avoidant canvas placement.
 ---
 
 # Stock Encounter Skill
@@ -48,7 +48,7 @@ node scripts/stock-encounter.js \
 
 # Alien Creature Example
 node scripts/stock-encounter.js \
-  --name "Volturnian Stalker-Beast" \
+  --name "Rift Stalker-Beast" \
   --tier 3 \
   --category creature \
   --attacks "Claw, Acid Spit" \

@@ -1,7 +1,7 @@
 {
   "type": "module",
   "scripts": {
-    "test:ctl": "./test/sf-vtt-ctl.test.sh"
+    "test:ctl": "./test/ww-vtt-ctl.test.sh"
   },
   "dependencies": {
     "pdf-parse": "^2.4.5",

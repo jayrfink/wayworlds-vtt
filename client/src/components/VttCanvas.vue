@@ -431,7 +431,7 @@ function drawBackground(ctx, mapW, mapH) {
       }
       break;
     }
-    case 'volturnus_desert': {
+    case 'badlands_desert': {
       ctx.fillStyle = '#7c2d12';
       ctx.fillRect(0, 0, mapW, mapH);
       ctx.fillStyle = '#9a3412';

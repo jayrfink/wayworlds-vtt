@@ -8,17 +8,17 @@ describe('RulebooksView.vue', () => {
     {
       id: 'ad-basic-p1',
       bookId: 'ad-basic',
-      bookTitle: 'Alpha Dawn Basic Game Rules',
-      system: 'Alpha Dawn',
+      bookTitle: 'Wayworlds Basic Game Rules',
+      system: 'Wayworlds Core',
       page: 1,
       section: 'Page 1',
-      content: 'Jason Fink (Order #53019877)\nSTAR FRONTIERS Science Fiction Game'
+      content: 'Jason Fink (Order #53019877)\nWAYWORLDS Roleplaying Game'
     },
     {
       id: 'ad-basic-p2',
       bookId: 'ad-basic',
-      bookTitle: 'Alpha Dawn Basic Game Rules',
-      system: 'Alpha Dawn',
+      bookTitle: 'Wayworlds Basic Game Rules',
+      system: 'Wayworlds Core',
       page: 2,
       section: 'Page 2',
       content: 'HISTORY\nThe Humans made contact with an inventive race of insect-like creatures called Vrusk.'
@@ -26,11 +26,11 @@ describe('RulebooksView.vue', () => {
     {
       id: 'kh-basic-p1',
       bookId: 'kh-basic',
-      bookTitle: 'Knight Hawks Basic Rules',
-      system: 'Knight Hawks',
+      bookTitle: 'World Atlas Basic Rules',
+      system: 'World Atlas',
       page: 1,
       section: 'Page 1',
-      content: 'Knight Hawks space combat introduces tactical spaceship movement.'
+      content: 'World Atlas hex exploration introduces tactical spaceship movement.'
     }
   ];
 
@@ -73,11 +73,11 @@ describe('RulebooksView.vue', () => {
       expect(html).toContain('System:');
       expect(html).toContain('Book:');
       expect(html).toContain('All Systems');
-      expect(html).toContain('Alpha Dawn');
-      expect(html).toContain('Knight Hawks');
+      expect(html).toContain('Wayworlds Core');
+      expect(html).toContain('World Atlas');
 
       // Search box placeholder
-      expect(html).toContain('Search PDF rulebooks (e.g. Vrusk, Gyrojet, ADF)...');
+      expect(html).toContain('Search PDF rulebooks (e.g. Arcane, Greatsword, ESS)...');
 
       // PDF toolbar in right panel
       expect(html).toContain('Open in New Tab ↗');
@@ -105,8 +105,8 @@ describe('RulebooksView.vue', () => {
         initialDocs: mockDocs
       });
 
-      expect(html).toContain('Alpha Dawn Basic Game Rules');
-      expect(html).toContain('Knight Hawks Basic Rules');
+      expect(html).toContain('Wayworlds Basic Game Rules');
+      expect(html).toContain('World Atlas Basic Rules');
       expect(html).toContain('Page 1');
       expect(html).toContain('Page 2');
       expect(html).toContain('HISTORY');
@@ -119,7 +119,7 @@ describe('RulebooksView.vue', () => {
         initialSearch: 'Vrusk'
       });
 
-      expect(html).toContain('Alpha Dawn Basic Game Rules');
+      expect(html).toContain('Wayworlds Basic Game Rules');
       expect(html).toContain('p. 2');
       expect(html).toContain('<mark>Vrusk</mark>');
     });
@@ -150,11 +150,11 @@ describe('RulebooksView.vue', () => {
       const html = await renderView({
         initialViewMode: 'pdf',
         initialDocs: mockDocs,
-        initialSystem: 'Knight Hawks'
+        initialSystem: 'World Atlas'
       });
 
-      expect(html).toContain('Knight Hawks Basic Rules');
-      expect(html).not.toContain('Alpha Dawn Basic Game Rules');
+      expect(html).toContain('World Atlas Basic Rules');
+      expect(html).not.toContain('Wayworlds Basic Game Rules');
     });
 
     it('filters table of contents when a specific book is selected', async () => {
@@ -166,7 +166,7 @@ describe('RulebooksView.vue', () => {
 
       expect(html).toContain('Page 1');
       expect(html).toContain('Page 2');
-      expect(html).not.toContain('Knight Hawks space combat');
+      expect(html).not.toContain('World Atlas hex exploration');
     });
   });
 });

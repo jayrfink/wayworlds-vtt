@@ -74,14 +74,14 @@ describe('diceAudio service', () => {
     expect(mutedState).toBe(true);
     expect(diceAudio.isMuted()).toBe(true);
 
-    const saved = JSON.parse(storage['sf_vtt_audio_settings']);
+    const saved = JSON.parse(storage['ww_vtt_audio_settings']);
     expect(saved.muted).toBe(true);
 
     const unmutedState = diceAudio.toggleMute();
     expect(unmutedState).toBe(false);
     expect(diceAudio.isMuted()).toBe(false);
 
-    const saved2 = JSON.parse(storage['sf_vtt_audio_settings']);
+    const saved2 = JSON.parse(storage['ww_vtt_audio_settings']);
     expect(saved2.muted).toBe(false);
   });
 
@@ -89,11 +89,11 @@ describe('diceAudio service', () => {
     const diceAudio = await import('../src/services/diceAudio.js');
     diceAudio.setMuted(true);
     expect(diceAudio.isMuted()).toBe(true);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).muted).toBe(true);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).muted).toBe(true);
 
     diceAudio.setMuted(false);
     expect(diceAudio.isMuted()).toBe(false);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).muted).toBe(false);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).muted).toBe(false);
   });
 
   it('4. setVolume() clamps between 0.0 and 1.0 and persists', async () => {
@@ -101,17 +101,17 @@ describe('diceAudio service', () => {
 
     diceAudio.setVolume(0.5);
     expect(diceAudio.getVolume()).toBeCloseTo(0.5, 2);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).volume).toBeCloseTo(0.5, 2);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).volume).toBeCloseTo(0.5, 2);
 
     // Clamps upper bound to 1.0
     diceAudio.setVolume(1.8);
     expect(diceAudio.getVolume()).toBe(1.0);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).volume).toBe(1.0);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).volume).toBe(1.0);
 
     // Clamps lower bound to 0.0
     diceAudio.setVolume(-0.4);
     expect(diceAudio.getVolume()).toBe(0.0);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).volume).toBe(0.0);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).volume).toBe(0.0);
 
     // Calling setVolume with NaN or non-number preserves existing volume
     diceAudio.setVolume(0.65);
@@ -119,7 +119,7 @@ describe('diceAudio service', () => {
 
     diceAudio.setVolume(NaN);
     expect(diceAudio.getVolume()).toBeCloseTo(0.65, 2);
-    expect(JSON.parse(storage['sf_vtt_audio_settings']).volume).toBeCloseTo(0.65, 2);
+    expect(JSON.parse(storage['ww_vtt_audio_settings']).volume).toBeCloseTo(0.65, 2);
 
     diceAudio.setVolume('invalid');
     expect(diceAudio.getVolume()).toBeCloseTo(0.65, 2);
@@ -135,7 +135,7 @@ describe('diceAudio service', () => {
   });
 
   it('5. restores saved settings from localStorage on initial load', async () => {
-    storage['sf_vtt_audio_settings'] = JSON.stringify({ muted: true, volume: 0.35 });
+    storage['ww_vtt_audio_settings'] = JSON.stringify({ muted: true, volume: 0.35 });
     const diceAudio = await import('../src/services/diceAudio.js');
 
     expect(diceAudio.isMuted()).toBe(true);

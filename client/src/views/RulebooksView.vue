@@ -43,8 +43,8 @@
               <label for="system-filter">System:</label>
               <select id="system-filter" v-model="selectedSystem" class="sidebar-select">
                 <option value="All">All Systems</option>
-                <option value="Alpha Dawn">Alpha Dawn</option>
-                <option value="Knight Hawks">Knight Hawks</option>
+                <option value="Wayworlds Core">Wayworlds Core</option>
+                <option value="World Atlas">World Atlas</option>
               </select>
             </div>
             <div class="filter-field">
@@ -62,7 +62,7 @@
               v-model="searchQuery"
               type="text"
               class="search-input"
-              placeholder="Search PDF rulebooks (e.g. Vrusk, Gyrojet, ADF)..."
+              placeholder="Search PDF rulebooks (e.g. Arcane, Greatsword, ESS)..."
               aria-label="Search PDF rulebooks"
             />
             <button
@@ -252,12 +252,12 @@ const pdfBookId = ref(props.initialPdfBook ?? savedRulebooks.pdfBookId ?? 'ad-ba
 const pdfPage = ref(props.initialPdfPage ?? savedRulebooks.pdfPage ?? 1);
 
 const pdfBooksList = [
-  { id: 'ad-basic', title: 'Alpha Dawn Basic Rules', system: 'Alpha Dawn' },
-  { id: 'ad-expanded', title: 'Alpha Dawn Expanded Rules', system: 'Alpha Dawn' },
-  { id: 'ad-volturnus', title: 'Crash on Volturnus', system: 'Alpha Dawn' },
-  { id: 'kh-basic', title: 'Knight Hawks Basic Rules', system: 'Knight Hawks' },
-  { id: 'kh-expansion', title: 'Knight Hawks Expansion Rules', system: 'Knight Hawks' },
-  { id: 'kh-mission', title: 'Knight Hawks Mission Brief', system: 'Knight Hawks' },
+  { id: 'ad-basic', title: 'Wayworlds Basic Rules', system: 'Wayworlds Core' },
+  { id: 'ad-expanded', title: 'Wayworlds Expanded Rules', system: 'Wayworlds Core' },
+  { id: 'ad-frontier', title: 'Frontier Campaign Module', system: 'Wayworlds Core' },
+  { id: 'kh-basic', title: 'World Atlas Basic Rules', system: 'World Atlas' },
+  { id: 'kh-expansion', title: 'World Atlas Expansion Rules', system: 'World Atlas' },
+  { id: 'kh-mission', title: 'World Atlas Mission Brief', system: 'World Atlas' },
 ];
 
 const docs = ref([...props.initialDocs]);
@@ -302,7 +302,7 @@ const bookMaxPages = computed(() => {
   const map = {
     'ad-basic': 20,
     'ad-expanded': 68,
-    'ad-volturnus': 43,
+    'ad-frontier': 43,
     'kh-basic': 20,
     'kh-expansion': 68,
     'kh-mission': 18,

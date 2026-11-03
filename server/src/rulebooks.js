@@ -9,12 +9,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const RULEBOOKS_JSON = path.join(__dirname, '../../data/rulebooks.json');
 
 const BOOK_FILES = {
-  'ad-basic': 'SF7007-AlphaDawn-Basic_Game_Rules.pdf',
-  'ad-expanded': 'SF7007-AlphaDawn-Expanded_Game_Rules.pdf',
-  'ad-volturnus': 'SF7007-AlphaDawn-Crash_on_Volturnus.pdf',
-  'kh-basic': 'Star_Frontiers-7011-Knight_Hawks-Basic_Rules.pdf',
-  'kh-expansion': 'Star_Frontiers-7011-Knight_Hawks-Expansion_Rules.pdf',
-  'kh-mission': 'Star_Frontiers-7011-Knight_Hawks-Mission_Brief.pdf',
+  'ad-basic': 'wayworlds-basic-rules.pdf',
+  'ad-expanded': 'wayworlds-expanded-rules.pdf',
+  'ad-frontier': 'wayworlds-frontier-module.pdf',
+  'kh-basic': 'wayworlds-atlas-basic.pdf',
+  'kh-expansion': 'wayworlds-atlas-expansion.pdf',
+  'kh-mission': 'wayworlds-atlas-brief.pdf',
 };
 
 let extractionPromise = null;

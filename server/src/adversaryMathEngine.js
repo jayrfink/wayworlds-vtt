@@ -1,7 +1,7 @@
 /**
- * Core Schema Validator & Star Frontiers Math Engine
+ * Core Schema Validator & Wayworlds Math Engine
  *
- * Implements rulebook-accurate calculations for Star Frontiers (Alpha Dawn)
+ * Implements rulebook-accurate calculations for Wayworlds d100
  * and strict JSON contract validation for AdversaryTemplate and TokenInstance.
  */
 

@@ -1,12 +1,12 @@
 /**
- * Star Frontiers Character Sheet ASCII Export Utility
+ * Wayworlds Character Sheet ASCII Export Utility
  * Generates human-readable, plain-text character sheets for archival purposes.
  * Strictly excludes equipment and inventory per player export requirements.
  */
 
 /**
  * Format a character object into a clean ASCII text document.
- * @param {Object} char - Star Frontiers character record
+ * @param {Object} char - Wayworlds character record
  * @returns {string} Plain ASCII formatted text
  */
 export function formatCharacterAscii(char = {}) {
@@ -43,7 +43,7 @@ export function formatCharacterAscii(char = {}) {
 
   const lines = [
     divider,
-    'STAR FRONTIERS (ALPHA DAWN) CHARACTER SHEET',
+    'WAYWORLDS CHARACTER SHEET',
     divider,
     `Archived: ${new Date().toISOString()}`,
     '',
@@ -159,7 +159,7 @@ export function formatCharacterAscii(char = {}) {
 
 /**
  * Trigger a browser file download of the character sheet in ASCII format.
- * @param {Object} char - Star Frontiers character record
+ * @param {Object} char - Wayworlds character record
  * @returns {Object|null} Export details { filename, blob, text } or null if invalid
  */
 export function downloadCharacterAscii(char) {

@@ -477,7 +477,7 @@
                 <select v-model="activeMapForm.preset_bg" @change="updateActiveMapSettings" class="tactical-map-select">
                   <option value="grid_only">Grid Only</option>
                   <option value="ship_deck">Ship Deck</option>
-                  <option value="volturnus_desert">Volturnus Desert</option>
+                  <option value="badlands_desert">Badlands Desert</option>
                   <option value="starfield">Starfield</option>
                   <option value="grassland">Grassland</option>
                 </select>
@@ -709,7 +709,7 @@
             <select v-model="newMapForm.preset_bg" class="tactical-map-select">
               <option value="grid_only">Grid Only</option>
               <option value="ship_deck">Ship Deck</option>
-              <option value="volturnus_desert">Volturnus Desert</option>
+              <option value="badlands_desert">Badlands Desert</option>
               <option value="starfield">Starfield</option>
               <option value="grassland">Grassland</option>
             </select>
@@ -939,7 +939,7 @@ const lastInitiativeRoll = ref(null);
 const showInitiativeHud = ref(false);
 let initiativeHudTimeout = null;
 
-const RPG_ROLL_LOG_KEY = 'sf_vtt_rpg_roll_log';
+const RPG_ROLL_LOG_KEY = 'ww_vtt_rpg_roll_log';
 const rollLog = ref([]);
 const isRollLogOpen = ref(false);
 isRollLogOpen.value = !!initialVttState.isRollLogOpen;

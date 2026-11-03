@@ -44,7 +44,7 @@ describe('formatCharacterAscii Utility', () => {
     const text = formatCharacterAscii(sampleCharacter);
 
     // Title & Identity
-    expect(text).toContain('STAR FRONTIERS (ALPHA DAWN) CHARACTER SHEET');
+    expect(text).toContain('WAYWORLDS CHARACTER SHEET');
     expect(text).toContain('Name:        Wilks');
     expect(text).toContain('Species:     Vrusk');
     expect(text).toContain('Primary PSA: Military');
@@ -109,7 +109,7 @@ describe('formatCharacterAscii Utility', () => {
       note_panels: [
         { id: 'p1', title: 'Background', content: 'Grew up on Pale near the sulfur fields.' },
         { id: 'p2', title: 'Notes', content: 'Met with UPF intelligence operative in Port Loren.' },
-        { id: 'p3', title: 'Mission Log', content: 'Scouted Sathar outpost on Volturnus.' },
+        { id: 'p3', title: 'Mission Log', content: 'Scouted Sathar outpost on Ashen Wastes.' },
       ],
     };
 
@@ -120,7 +120,7 @@ describe('formatCharacterAscii Utility', () => {
     expect(text).toContain('--- Notes ---');
     expect(text).toContain('Met with UPF intelligence operative in Port Loren.');
     expect(text).toContain('--- Mission Log ---');
-    expect(text).toContain('Scouted Sathar outpost on Volturnus.');
+    expect(text).toContain('Scouted Sathar outpost on Ashen Wastes.');
   });
 
   it('handles JSON serialized note panels in notes string', () => {

@@ -24,8 +24,8 @@ describe('Per-User Tab and View State Persistence', () => {
       const user1State = getUserState(101, 'worldVtt', { panX: 50, panY: 50, zoomLevel: 1.0 });
       const user2State = getUserState(202, 'worldVtt', { panX: 50, panY: 50, zoomLevel: 1.0 });
 
-      expect(getStorageKey(101)).toBe('sf_vtt_user_state_101');
-      expect(getStorageKey(202)).toBe('sf_vtt_user_state_202');
+      expect(getStorageKey(101)).toBe('ww_vtt_user_state_101');
+      expect(getStorageKey(202)).toBe('ww_vtt_user_state_202');
       expect(user1State).toEqual({ panX: -240, panY: 180, zoomLevel: 1.5 });
       expect(user2State).toEqual({ panX: 50, panY: 50, zoomLevel: 0.75 });
     });

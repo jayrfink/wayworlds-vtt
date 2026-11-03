@@ -5,7 +5,7 @@
  * - Anti-repetition track selection
  * - Pitch/playbackRate micro-variations (0.96 - 1.04)
  * - Remote roll volume attenuation (volume * 0.55)
- * - Mute and volume state persistence via localStorage (sf_vtt_audio_settings)
+ * - Mute and volume state persistence via localStorage (ww_vtt_audio_settings)
  * - Autoplay policy rejection resilience
  */
 
@@ -15,7 +15,7 @@ export const SOUND_FILES = [
   '/assets/sounds/dice/roll_wood_3.mp3',
 ];
 
-export const STORAGE_KEY = 'sf_vtt_audio_settings';
+export const STORAGE_KEY = 'ww_vtt_audio_settings';
 
 const DEFAULT_SETTINGS = {
   muted: false,

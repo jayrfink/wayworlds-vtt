@@ -91,8 +91,8 @@ describe('Maps & Tokens API & Socket.io', () => {
 
       // GM creating map
       const gmCreateRes = await gmAgent.post('/api/maps').send({
-        name: 'Volturnus Outpost',
-        preset_bg: 'volturnus_desert',
+        name: 'Ironhold Outpost',
+        preset_bg: 'badlands_desert',
         width: 30,
         height: 30,
         grid_size: 40,
@@ -100,12 +100,12 @@ describe('Maps & Tokens API & Socket.io', () => {
       });
 
       expect(gmCreateRes.status).toBe(201);
-      expect(gmCreateRes.body.name).toBe('Volturnus Outpost');
-      expect(gmCreateRes.body.preset_bg).toBe('volturnus_desert');
+      expect(gmCreateRes.body.name).toBe('Ironhold Outpost');
+      expect(gmCreateRes.body.preset_bg).toBe('badlands_desert');
       expect(gmCreateRes.body.width).toBe(30);
       expect(gmCreateRes.body.fog_data).toEqual([]);
       expect(emitSpy).toHaveBeenCalledWith('map:created', expect.objectContaining({
-        map: expect.objectContaining({ name: 'Volturnus Outpost' }),
+        map: expect.objectContaining({ name: 'Ironhold Outpost' }),
       }));
     });
 

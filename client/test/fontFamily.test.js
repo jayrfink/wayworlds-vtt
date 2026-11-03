@@ -11,7 +11,7 @@ import {
   initColorPackage,
 } from '../src/utils/themeManager.js';
 
-describe('Sitewide Font Family (Modesto Headings & Inherited Star Frontiers Body - Roboto)', () => {
+describe('Sitewide Font Family (Modesto Headings & Inherited Body - Roboto)', () => {
   const indexHtmlPath = path.resolve(__dirname, '../index.html');
   const mainCssPath = path.resolve(__dirname, '../src/main.css');
   const indexHtml = fs.readFileSync(indexHtmlPath, 'utf-8');

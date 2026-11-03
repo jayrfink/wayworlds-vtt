@@ -111,11 +111,11 @@ describe('stockEncounter Pipeline', () => {
     expect(fs.existsSync(path.join(TEST_UPLOADS_DIR, 'tokens', 'sathar-shock-trooper-t2.png'))).toBe(true);
   });
 
-  it('stocks Tier 3 Volturnian Stalker-Beast into active map', async () => {
+  it('stocks Tier 3 Rift Stalker-Beast into active map', async () => {
     const result = await stockEncounter({
       db,
       uploadsDir: TEST_UPLOADS_DIR,
-      name: 'Volturnian Stalker-Beast',
+      name: 'Rift Stalker-Beast',
       threat_tier: 3,
       category: 'creature',
       attacks: 'Claw, Acid Spit',
@@ -126,8 +126,8 @@ describe('stockEncounter Pipeline', () => {
     expect(result.template.category).toBe('creature');
     expect(result.template.threat_tier).toBe(3);
     expect(result.tokens).toHaveLength(2);
-    expect(result.tokens[0].name).toBe('Volturnian Stalker-Beast #1');
-    expect(result.tokens[1].name).toBe('Volturnian Stalker-Beast #2');
+    expect(result.tokens[0].name).toBe('Rift Stalker-Beast #1');
+    expect(result.tokens[1].name).toBe('Rift Stalker-Beast #2');
 
     // Token coordinates should not collide
     expect(result.tokens[0].x).not.toBe(result.tokens[1].x);

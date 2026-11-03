@@ -22,7 +22,7 @@ describe('calculateDamageRoll', () => {
     });
   });
 
-  it('maps 0 value to 10 for Star Frontiers d10 damage', () => {
+  it('maps 0 value to 10 for Wayworlds d10 damage', () => {
     const raw = [{ value: 0 }, { value: 5 }];
     const result = calculateDamageRoll(raw);
     expect(result).toEqual({
@@ -213,7 +213,7 @@ describe('calculateInitiativeRoll', () => {
     });
   });
 
-  it('maps 0 value to 10 for Star Frontiers d10 initiative', () => {
+  it('maps 0 value to 10 for Wayworlds d10 initiative', () => {
     const raw = [
       { value: 0, theme: 'custom-init-player' },
       { value: 8, theme: 'custom-init-opp' },

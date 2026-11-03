@@ -205,12 +205,12 @@ export function createSessionMiddleware(dataDir) {
   const secret = process.env.SESSION_SECRET;
 
   if (isProduction) {
-    if (!secret || secret === 'sf-vtt-dev-secret') {
+    if (!secret || secret === 'ww-vtt-dev-secret') {
       throw new Error('SESSION_SECRET environment variable must be set to a secure secret in production mode');
     }
   }
 
-  const sessionSecret = secret || 'sf-vtt-dev-secret';
+  const sessionSecret = secret || 'ww-vtt-dev-secret';
   const isCookieSecure = process.env.COOKIE_SECURE === 'true' || (isProduction && process.env.COOKIE_SECURE !== 'false');
 
   let store;

@@ -52,7 +52,7 @@
               v-model="selectedSession.title"
               @change="updateSelectedSessionTitle"
               class="session-title-input"
-              placeholder="Session Title (e.g. Session 1: Outpost on Volturnus)"
+              placeholder="Session Title (e.g. Session 1: Outpost on the Frontier)"
             />
           </div>
 

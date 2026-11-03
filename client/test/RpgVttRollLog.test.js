@@ -11,8 +11,8 @@ describe('RpgVttView Roll Log', () => {
     expect(content).toMatch(/const isRollLogOpen\s*=\s*ref\(false\)/);
   });
 
-  it('uses sf_vtt_rpg_roll_log storage key', () => {
-    expect(content).toMatch(/sf_vtt_rpg_roll_log/);
+  it('uses ww_vtt_rpg_roll_log storage key', () => {
+    expect(content).toMatch(/ww_vtt_rpg_roll_log/);
   });
 
   it('caps roll log at 20 items', () => {

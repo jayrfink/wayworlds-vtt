@@ -27,7 +27,7 @@ describe('Security Hardening (SEC-03, SEC-15, SEC-16)', () => {
 
     it('throws an error in production if SESSION_SECRET is the default dev secret', () => {
       process.env.NODE_ENV = 'production';
-      process.env.SESSION_SECRET = 'sf-vtt-dev-secret';
+      process.env.SESSION_SECRET = 'ww-vtt-dev-secret';
 
       expect(() => {
         createSessionMiddleware(':memory:');
