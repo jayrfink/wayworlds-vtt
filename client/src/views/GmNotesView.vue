@@ -438,13 +438,13 @@ onMounted(() => {
 .sidebar-header h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #00ffff;
+  color: #cecece;
 }
 
 .btn-new-session {
-  background: #082d33;
-  color: #00ffff;
-  border: 1px solid #2394a6;
+  background: #000000;
+  color: #cecece;
+  border: 1px solid #cecece;
   padding: 6px 10px;
   border-radius: 6px;
   font-size: 0.8rem;
@@ -454,9 +454,9 @@ onMounted(() => {
 }
 
 .btn-new-session:hover {
-  background: #0d3b44;
-  border-color: #33b5cb;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  background: #000000;
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .session-list {
@@ -486,9 +486,9 @@ onMounted(() => {
 }
 
 .gm-session-item.active {
-  background: #082d33;
-  border-color: #2394a6;
-  border-left: 4px solid aquamarine;
+  background: #000000;
+  border-color: #cecece;
+  border-left: 4px solid #cecece;
 }
 
 .session-title-text {
@@ -500,7 +500,7 @@ onMounted(() => {
 }
 
 .gm-session-item.active .session-title-text {
-  color: aquamarine;
+  color: #cecece;
 }
 
 .btn-delete-small {
@@ -581,9 +581,9 @@ onMounted(() => {
 }
 
 .btn-add-panel {
-  background: #082d33;
-  border: 1px solid #2394a6;
-  color: #00ffff;
+  background: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-weight: 600;
   padding: 8px 14px;
   border-radius: 6px;
@@ -592,9 +592,9 @@ onMounted(() => {
 }
 
 .btn-add-panel:hover {
-  background: #0d3b44;
-  border-color: #33b5cb;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  background: #000000;
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .preset-chips {
@@ -606,14 +606,14 @@ onMounted(() => {
 
 .preset-label {
   font-size: 0.78rem;
-  color: #2394a6;
+  color: #cecece;
   text-transform: uppercase;
   font-weight: 600;
 }
 
 .btn-preset-chip {
-  background: #1e293b;
-  border: 1px solid #334155;
+  background: #000000;
+  border: 1px solid #cecece;
   color: #cecece;
   padding: 5px 10px;
   border-radius: 999px;
@@ -623,9 +623,9 @@ onMounted(() => {
 }
 
 .btn-preset-chip:hover {
-  border-color: #2394a6;
-  color: #00ffff;
-  background: rgba(35, 148, 166, 0.15);
+  border-color: #cecece;
+  color: #cecece;
+  background: #000000;
 }
 
 .note-panels-grid {
@@ -648,9 +648,9 @@ onMounted(() => {
 
 .panel-title-input {
   flex: 1;
-  background: #0d1117;
-  border: 1px solid #334155;
-  color: #00ffff;
+  background: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-size: 1rem;
   font-weight: 700;
   padding: 6px 10px;
@@ -660,8 +660,8 @@ onMounted(() => {
 
 .panel-title-input:focus {
   outline: none;
-  border-color: #2394a6;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .save-status {
@@ -727,8 +727,8 @@ onMounted(() => {
 }
 
 .note-panel-card.panel-drag-over {
-  border-color: #2394a6;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
+  border-color: #cecece;
+  box-shadow: 0 0 10px rgba(206, 206, 206, 0.25);
 }
 
 .panel-content-textarea {

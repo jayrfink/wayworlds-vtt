@@ -3436,8 +3436,8 @@ export default {
 
 .btn-shift {
   background: #000000;
-  border: 1px solid #00a8a8;
-  color: aqua;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-size: 0.65rem;
   padding: 2px 5px;
   border-radius: 3px;
@@ -3445,10 +3445,10 @@ export default {
   transition: all 0.15s ease-in-out;
 }
 .btn-shift:hover {
-  background: #082020;
-  border-color: #00dada;
-  color: #00dada;
-  box-shadow: 0 0 6px rgba(0, 218, 218, 0.4);
+  background: #000000;
+  border-color: #cecece;
+  color: #cecece;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
 }
 .btn-shift:active {
   transform: translateY(1px);
@@ -3666,8 +3666,8 @@ export default {
 
 /* Buttons & Controls */
 .btn-new-character {
-  background-color: #021a1e !important;
-  background: #021a1e !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3680,8 +3680,8 @@ export default {
   transition: all 0.15s ease-in-out;
 }
 .btn-new-character:hover {
-  background-color: #04272d !important;
-  background: #04272d !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border-color: #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3790,8 +3790,8 @@ export default {
 .form-group input,
 .form-group select {
   background-color: #000000;
-  border: 1px solid rgba(0, 128, 128, 0.6);
-  color: #00ffff;
+  border: 1px solid #cecece;
+  color: #cecece;
   padding: 8px;
   border-radius: 4px;
 }
@@ -3799,13 +3799,13 @@ export default {
 .char-create-select,
 .char-create-select option {
   background-color: #000000 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   background-image: none !important;
 }
 
 .char-create-select {
-  border: 1px solid rgba(0, 255, 255, 0.4) !important;
+  border: 1px solid #cecece !important;
   border-radius: var(--radius, 4px);
   padding: 8px 12px;
   padding-right: 28px !important;
@@ -3815,24 +3815,24 @@ export default {
 
 .char-create-select:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.5);
 }
 
 .modal-card input[type="text"],
 .modal-card input[type="number"] {
   color-scheme: dark;
   background-color: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.6) !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .modal-card input[type="text"]:focus,
 .modal-card input[type="number"]:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .form-row {
@@ -3851,9 +3851,9 @@ export default {
 .modal-card .btn-modal-cancel {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #00a8a8 !important;
-  color: #00a8a8 !important;
-  -webkit-text-fill-color: #00a8a8;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   padding: 6px 14px;
   border-radius: var(--radius, 4px);
   font-size: 13px;
@@ -3863,16 +3863,16 @@ export default {
 }
 
 .modal-card .btn-modal-cancel:hover {
-  background-color: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background-color: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .modal-card .btn-modal-create {
-  background-color: #021a1e !important;
-  background: #021a1e !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3887,7 +3887,7 @@ export default {
 }
 
 .modal-card .btn-modal-create:hover:not(:disabled) {
-  background-color: #04272d !important;
+  background-color: #000000 !important;
   border-color: #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3995,8 +3995,8 @@ export default {
   margin-bottom: 14px;
   padding: 8px 12px;
   background-color: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.6) !important;
-  color: #00ffff !important;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
   border-radius: 4px;
   font-size: 14px;
   width: 100%;
@@ -4005,8 +4005,8 @@ export default {
 
 .modal-search:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .equipment-list {
@@ -4226,8 +4226,8 @@ export default {
 
 .notes-textarea:focus {
   outline: none;
-  border-color: #2394a6;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .notes-section-header {
@@ -4267,9 +4267,9 @@ export default {
 
 .panel-title-input {
   flex: 1;
-  background: #0d1117;
-  border: 1px solid #334155;
-  color: #00ffff;
+  background: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-size: 1rem;
   font-weight: 700;
   padding: 6px 10px;
@@ -4279,8 +4279,8 @@ export default {
 
 .panel-title-input:focus {
   outline: none;
-  border-color: #2394a6;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .btn-delete-panel {
@@ -4299,8 +4299,8 @@ export default {
 }
 
 .note-panel-card.panel-drag-over {
-  border-color: #2394a6;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.25);
+  border-color: #cecece;
+  box-shadow: 0 0 10px rgba(206, 206, 206, 0.25);
 }
 
 .panels-empty {

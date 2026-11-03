@@ -568,7 +568,7 @@ onMounted(() => {
 }
 
 .mode-btn.active {
-  background-color: #021a1e !important;
+  background-color: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;

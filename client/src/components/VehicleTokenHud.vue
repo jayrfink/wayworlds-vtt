@@ -475,9 +475,9 @@ export default {
   font-weight: bold;
   padding: 1px 6px;
   border-radius: 4px;
-  background-color: #082d33;
-  border: 1px solid rgba(0, 255, 255, 0.4);
-  color: #00ffff;
+  background-color: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   margin-top: 2px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -690,14 +690,14 @@ export default {
 
 .chip-recharge {
   flex: 1.5;
-  background-color: #082d33;
-  border-color: rgba(0, 255, 255, 0.4);
-  color: #00ffff;
+  background-color: #000000;
+  border-color: #cecece;
+  color: #cecece;
 }
 
 .chip-recharge:hover {
-  background-color: #0d3b44;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  background-color: #000000;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.3);
 }
 
 .conditions-group {
@@ -753,15 +753,15 @@ export default {
   font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid rgba(0, 255, 255, 0.4);
-  background-color: #082d33;
-  color: #00ffff;
+  border: 1px solid #cecece;
+  background-color: #000000;
+  color: #cecece;
   transition: all 0.15s ease;
 }
 
 .btn-dice-action:hover {
-  background-color: #0d3b44;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  background-color: #000000;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.3);
 }
 
 .btn-roll-damage {

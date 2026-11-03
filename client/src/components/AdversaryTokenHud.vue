@@ -581,10 +581,10 @@ export default {
 }
 
 .cond-pill.active {
-  background-color: #082d33;
-  color: #00ffff;
-  border-color: #00ffff;
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.3);
+  background-color: #000000;
+  color: #cecece;
+  border-color: #cecece;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.3);
 }
 
 /* Reference Card Styles */
@@ -658,9 +658,9 @@ export default {
 }
 
 .action-pct-badge {
-  background-color: #082d33;
-  border: 1px solid rgba(0, 255, 255, 0.4);
-  color: #00ffff;
+  background-color: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-size: 0.75rem;
   font-weight: bold;
   padding: 2px 6px;

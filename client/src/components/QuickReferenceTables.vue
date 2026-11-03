@@ -435,7 +435,7 @@ const noResults = computed(() => {
 }
 
 .tab-button.active {
-  background-color: #021a1e !important;
+  background-color: #000000 !important;
   border-color: #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;

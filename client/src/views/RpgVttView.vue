@@ -2749,9 +2749,9 @@ onBeforeUnmount(() => {
 .btn-stock-encounter,
 .btn-deploy-vehicle,
 .btn-sidebar {
-  background: #082d33;
-  border: 1px solid #2394a6;
-  color: #00ffff;
+  background: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -2764,26 +2764,26 @@ onBeforeUnmount(() => {
 .btn-stock-encounter:hover,
 .btn-deploy-vehicle:hover,
 .btn-sidebar:hover {
-  background: #0d3b44;
-  border-color: #33b5cb;
-  color: #00ffff;
+  background: #000000;
+  border-color: #cecece;
+  color: #cecece;
 }
 
 .btn-sidebar.active {
-  background: #0d3b44;
-  border-color: #33b5cb;
-  color: #a8ffea;
-  box-shadow: 0 0 10px rgba(51, 181, 203, 0.4);
+  background: #000000;
+  border-color: #cecece;
+  color: #cecece;
+  box-shadow: 0 0 10px rgba(206, 206, 206, 0.4);
 }
 
 .btn-stock-adversary-alt,
 .btn-deploy-vehicle-alt {
-  border-color: #2394a6;
+  border-color: #cecece;
 }
 
 .btn-add-token {
-  background-color: #021a1e !important;
-  background: #021a1e !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -2795,8 +2795,8 @@ onBeforeUnmount(() => {
 }
 
 .btn-add-token:hover {
-  background-color: #04272d !important;
-  background: #04272d !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border-color: #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -2844,18 +2844,18 @@ onBeforeUnmount(() => {
 }
 
 .vtt-toolbar > button.active {
-  background: #082d33;
-  color: #2dd4bf;
+  background: #000000;
+  color: #cecece;
   font-weight: 600;
-  border: 1px solid #14b8a6;
-  box-shadow: 0 0 8px rgba(20, 184, 166, 0.4);
+  border: 1px solid #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .vtt-toolbar > button.active:hover {
-  background: #0d3b44;
-  color: #5eead4;
-  border-color: #2dd4bf;
-  box-shadow: 0 0 12px rgba(45, 212, 191, 0.6);
+  background: #000000;
+  color: #cecece;
+  border-color: #cecece;
+  box-shadow: 0 0 12px rgba(206, 206, 206, 0.6);
 }
 
 .tool-icon {
@@ -3507,13 +3507,13 @@ onBeforeUnmount(() => {
 .tactical-map-select,
 .tactical-map-select option {
   background-color: #000000 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .character-sheet-select,
 .tactical-map-select {
-  border: 1px solid rgba(0, 255, 255, 0.4) !important;
+  border: 1px solid #cecece !important;
   border-radius: var(--radius);
   padding: 8px 12px;
   font-size: 14px;
@@ -3523,24 +3523,24 @@ onBeforeUnmount(() => {
 .character-sheet-select:focus,
 .tactical-map-select:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.5);
 }
 
 .modal-card input[type="text"],
 .modal-card input[type="number"] {
   color-scheme: dark;
   background-color: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.6) !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .modal-card input[type="text"]:focus,
 .modal-card input[type="number"]:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .token-file-input,
@@ -3557,9 +3557,9 @@ onBeforeUnmount(() => {
 .map-file-input::file-selector-button,
 .map-file-input::-webkit-file-upload-button {
   background-color: #000000 !important;
-  border: 1px solid #00a8a8 !important;
-  color: #00a8a8 !important;
-  -webkit-text-fill-color: #00a8a8;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   border-radius: var(--radius);
   padding: 6px 14px;
   font-size: 13px;
@@ -3572,11 +3572,11 @@ onBeforeUnmount(() => {
 .token-file-input::-webkit-file-upload-button:hover,
 .map-file-input::file-selector-button:hover,
 .map-file-input::-webkit-file-upload-button:hover {
-  background-color: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background-color: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .map-bg-btn-row {
@@ -3651,9 +3651,9 @@ onBeforeUnmount(() => {
 .btn-browse-avatar {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #00a8a8 !important;
-  color: #00a8a8 !important;
-  -webkit-text-fill-color: #00a8a8;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   border-radius: var(--radius);
   padding: 6px 14px;
   font-size: 13px;
@@ -3663,18 +3663,18 @@ onBeforeUnmount(() => {
 }
 
 .btn-browse-avatar:hover {
-  background-color: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background-color: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .btn-clear-avatar {
   background: #000000 !important;
-  border: 1px solid #00a8a8 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   font-size: 11px;
   padding: 4px 8px;
   border-radius: var(--radius);
@@ -3683,16 +3683,16 @@ onBeforeUnmount(() => {
 }
 
 .btn-clear-avatar:hover {
-  background: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 6px rgba(0, 218, 218, 0.4);
+  background: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
 }
 
 .uploading-spinner {
   font-size: 12px;
-  color: #00dada;
+  color: #cecece;
   font-style: italic;
 }
 
@@ -3706,9 +3706,9 @@ onBeforeUnmount(() => {
 .btn-modal-cancel {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #00a8a8 !important;
-  color: #00a8a8 !important;
-  -webkit-text-fill-color: #00a8a8;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   padding: 6px 14px;
   border-radius: var(--radius);
   font-size: 13px;
@@ -3718,16 +3718,16 @@ onBeforeUnmount(() => {
 }
 
 .btn-modal-cancel:hover {
-  background-color: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background-color: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .btn-add-token-submit {
-  background-color: #021a1e !important;
-  background: #021a1e !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3739,8 +3739,8 @@ onBeforeUnmount(() => {
 }
 
 .btn-add-token-submit:hover:not(:disabled) {
-  background-color: #04272d !important;
-  background: #04272d !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
   border-color: #d0d0d0 !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
@@ -3787,12 +3787,12 @@ onBeforeUnmount(() => {
 .size-select,
 .size-select option {
   background-color: #000000 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .size-select {
-  border: 1px solid rgba(0, 128, 128, 0.6) !important;
+  border: 1px solid #cecece !important;
   border-radius: var(--radius);
   padding: 6px 10px;
   font-size: 13px;
@@ -3802,8 +3802,8 @@ onBeforeUnmount(() => {
 
 .size-select:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+  border-color: #cecece !important;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
 }
 
 .empty-text {

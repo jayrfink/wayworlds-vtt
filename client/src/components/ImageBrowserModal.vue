@@ -516,8 +516,8 @@ export default {
 
 .btn-nav {
   background: #000000;
-  border: 1px solid rgba(0, 128, 128, 0.6);
-  color: aquamarine;
+  border: 1px solid #cecece;
+  color: #cecece;
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 12px;
@@ -528,9 +528,9 @@ export default {
 }
 
 .btn-nav:hover {
-  background: #04272d;
-  border-color: aquamarine;
-  box-shadow: 0 0 8px rgba(127, 255, 212, 0.3);
+  background: #000000;
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.3);
 }
 
 .breadcrumbs {
@@ -582,7 +582,7 @@ export default {
 }
 
 .btn-primary-action {
-  background-color: #021a1e;
+  background-color: #000000;
   border: 1px solid #d0d0d0;
   color: #d0d0d0;
   padding: 6px 14px;
@@ -596,7 +596,7 @@ export default {
 }
 
 .btn-primary-action:hover:not(:disabled) {
-  background-color: #04272d;
+  background-color: #000000;
   border-color: #d0d0d0;
   color: #d0d0d0;
   box-shadow: 0 0 14px rgba(208, 208, 208, 0.4);
@@ -836,8 +836,8 @@ export default {
 
 .btn-footer-cancel {
   background: #000000;
-  border: 1px solid #00a8a8;
-  color: #00a8a8;
+  border: 1px solid #cecece;
+  color: #cecece;
   padding: 6px 14px;
   border-radius: 4px;
   font-size: 13px;
@@ -847,14 +847,14 @@ export default {
 }
 
 .btn-footer-cancel:hover {
-  background: #082020;
-  border-color: #00dada;
-  color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background: #000000;
+  border-color: #cecece;
+  color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .btn-footer-use {
-  background-color: #021a1e;
+  background-color: #000000;
   border: 1px solid #d0d0d0;
   color: #d0d0d0;
   padding: 6px 16px;
@@ -867,7 +867,7 @@ export default {
 }
 
 .btn-footer-use:hover:not(:disabled) {
-  background-color: #04272d;
+  background-color: #000000;
   border-color: #d0d0d0;
   color: #d0d0d0;
   box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);

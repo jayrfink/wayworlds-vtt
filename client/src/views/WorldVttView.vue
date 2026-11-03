@@ -1964,8 +1964,8 @@ onBeforeUnmount(() => {
 
 .btn-gm,
 .btn-sidebar {
-  background: #082d33;
-  border: 1px solid #45acba;
+  background: #000000;
+  border: 1px solid #cecece;
   color: #cecece;
   padding: 6px 12px;
   border-radius: var(--radius);
@@ -1978,13 +1978,13 @@ onBeforeUnmount(() => {
 }
 
 .btn-sidebar.active {
-  background: #0d3b44;
-  border-color: #33b5cb;
-  color: #a8ffea;
+  background: #000000;
+  border-color: #cecece;
+  color: #cecece;
 }
 
 .btn-add-token {
-  background-color: #021a1e !important;
+  background-color: #000000 !important;
   border: 1px solid #d0d0d0 !important;
   color: #d0d0d0 !important;
   font-weight: 700;
@@ -2023,10 +2023,10 @@ onBeforeUnmount(() => {
 }
 
 .vtt-toolbar > button.active {
-  background: #082d33;
-  color: #2dd4bf;
+  background: #000000;
+  color: #cecece;
   font-weight: 600;
-  border: 1px solid #14b8a6;
+  border: 1px solid #cecece;
 }
 
 .tool-icon {
@@ -2356,7 +2356,7 @@ onBeforeUnmount(() => {
 .form-group select,
 .world-select {
   background-color: #000000;
-  border: 1px solid rgba(0, 255, 255, 0.4);
+  border: 1px solid #cecece;
   border-radius: var(--radius);
   padding: 8px 12px;
   font-size: 14px;
@@ -2377,9 +2377,9 @@ onBeforeUnmount(() => {
 .modal-card input[type="number"] {
   color-scheme: dark;
   background-color: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.6) !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  border: 1px solid #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .roll-log-hud {

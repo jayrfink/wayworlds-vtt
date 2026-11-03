@@ -871,9 +871,9 @@ textarea:focus {
 }
 
 .type-badge {
-  background-color: #082d33;
-  border: 1px solid rgba(0, 255, 255, 0.4);
-  color: #00ffff;
+  background-color: #000000;
+  border: 1px solid #cecece;
+  color: #cecece;
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 0.75rem;
@@ -991,9 +991,9 @@ textarea:focus {
 }
 
 .btn-select-custom {
-  background-color: #082d33;
-  color: #00ffff;
-  border: 1px solid #00ffff;
+  background-color: #000000;
+  color: #cecece;
+  border: 1px solid #cecece;
   border-radius: 4px;
   padding: 3px 8px;
   font-size: 0.75rem;
@@ -1002,8 +1002,8 @@ textarea:focus {
 }
 
 .btn-select-custom:hover {
-  background-color: #0d3b44;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  background-color: #000000;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.3);
 }
 
 .delete-custom-btn {

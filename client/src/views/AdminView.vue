@@ -964,7 +964,7 @@ defineExpose({
 .admin-header h2 {
   font-size: 24px;
   margin-bottom: 4px;
-  color: #00ffff;
+  color: #cecece;
 }
 
 .subtitle {
@@ -1012,7 +1012,7 @@ defineExpose({
 .admin-card h3 {
   font-size: 18px;
   margin-bottom: 16px;
-  color: #2394a6;
+  color: #cecece;
 }
 
 .card-header-row {
@@ -1137,12 +1137,12 @@ defineExpose({
 .role-select,
 .role-select option {
   background-color: #000000 !important;
-  color: aqua !important;
-  -webkit-text-fill-color: aqua;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
 }
 
 .role-select {
-  border: 1px solid rgba(0, 255, 255, 0.4) !important;
+  border: 1px solid #cecece !important;
   border-radius: var(--radius);
   padding: 8px 12px;
   font-size: 14px;
@@ -1151,8 +1151,8 @@ defineExpose({
 
 .role-select:focus {
   outline: none;
-  border-color: aqua !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.5);
+  border-color: #cecece !important;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.5);
 }
 
 .form-actions {
@@ -1256,23 +1256,23 @@ defineExpose({
 }
 
 .btn-secondary {
-  background-color: #082d33 !important;
-  background: #082d33 !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
-  border: 1px solid #2394a6 !important;
+  background-color: #000000 !important;
+  background: #000000 !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  border: 1px solid #cecece !important;
   border-radius: var(--radius);
   font-weight: 600;
   transition: all 0.15s ease-in-out;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: #0d3b44 !important;
-  background: #0d3b44 !important;
-  border-color: #33b5cb !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.35);
+  background-color: #000000 !important;
+  background: #000000 !important;
+  border-color: #cecece !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
 }
 
 .btn-danger {

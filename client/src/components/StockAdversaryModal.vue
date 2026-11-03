@@ -1000,10 +1000,10 @@ export default {
   color: #cecece;
 }
 .pill-btn.active {
-  background-color: #082d33;
-  color: #00ffff;
-  border-color: #00ffff;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  background-color: #000000;
+  color: #cecece;
+  border-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.3);
 }
 
 .tier-chips-row {
@@ -1374,11 +1374,11 @@ export default {
 .active-map-badge {
   display: inline-block;
   padding: 6px 10px;
-  background-color: #082d33;
-  border: 1px solid rgba(0, 255, 255, 0.4);
+  background-color: #000000;
+  border: 1px solid #cecece;
   border-radius: 4px;
   font-size: 0.85rem;
-  color: #00ffff;
+  color: #cecece;
   font-weight: 500;
 }
 
