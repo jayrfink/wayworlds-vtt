@@ -32,7 +32,7 @@ export const COLOR_PACKAGES = [
     brightColor: '#38bdf8',
     headerColor: '#7dd3fc',
     staColor: '#38bdf8',
-    essColor: '#818cf8',
+    essColor: '#67e8f9',
   },
   {
     key: 'blues-greens',

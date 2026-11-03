@@ -238,8 +238,8 @@
   --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%2338bdf8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
   --theme-sta-color: #38bdf8;
   --theme-sta-glow: 0 0 12px rgba(56, 189, 248, 0.7);
-  --theme-ess-color: #818cf8;
-  --theme-ess-glow: 0 0 12px rgba(129, 140, 248, 0.75);
+  --theme-ess-color: #67e8f9;
+  --theme-ess-glow: 0 0 12px rgba(103, 232, 249, 0.75);
 }
 
 :root[data-color-pkg="blues-greens"],
