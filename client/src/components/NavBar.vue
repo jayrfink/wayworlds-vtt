@@ -124,11 +124,11 @@ async function handleLogout() {
 
 .navbar-brand {
   font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', 'Consolas', 'Roboto', sans-serif);
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: var(--theme-header-color, var(--theme-bright, #cecece));
-  text-shadow: var(--theme-header-glow, 0 0 10px rgba(6, 182, 212, 0.5));
+  color: #c3c3c3 !important;
+  text-shadow: 0 0 8px rgba(195, 195, 195, 0.35);
   white-space: nowrap;
   flex-shrink: 0;
 }
