@@ -7,6 +7,10 @@ export const COLOR_PACKAGES = [
     widgetColor: '#853146',
     borderColor: '#521d2a',
     widgetTrack: '#1f090f',
+    brightColor: '#e25b7a',
+    headerColor: '#ff7597',
+    staColor: '#e25b7a',
+    essColor: '#ff7597',
   },
   {
     key: 'greens',
@@ -14,6 +18,10 @@ export const COLOR_PACKAGES = [
     widgetColor: '#2b8c42',
     borderColor: '#1f542b',
     widgetTrack: '#131c15',
+    brightColor: '#34d399',
+    headerColor: '#4ade80',
+    staColor: '#34d399',
+    essColor: '#10b981',
   },
   {
     key: 'blues',
@@ -21,6 +29,10 @@ export const COLOR_PACKAGES = [
     widgetColor: '#4cb2d4',
     borderColor: '#347b93',
     widgetTrack: '#1c4452',
+    brightColor: '#38bdf8',
+    headerColor: '#7dd3fc',
+    staColor: '#38bdf8',
+    essColor: '#818cf8',
   },
   {
     key: 'blues-greens',
@@ -28,6 +40,10 @@ export const COLOR_PACKAGES = [
     widgetColor: '#4cb2d4',
     borderColor: '#2b8c42',
     widgetTrack: '#131c15',
+    brightColor: '#2dd4bf',
+    headerColor: '#5eead4',
+    staColor: '#2dd4bf',
+    essColor: '#38bdf8',
   },
   {
     key: 'oranges-maroon',
@@ -35,6 +51,10 @@ export const COLOR_PACKAGES = [
     widgetColor: '#d46a2b',
     borderColor: '#853146',
     widgetTrack: '#1f090f',
+    brightColor: '#fb923c',
+    headerColor: '#fdba74',
+    staColor: '#fb923c',
+    essColor: '#f43f5e',
   },
 ];
 

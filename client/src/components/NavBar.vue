@@ -127,8 +127,8 @@ async function handleLogout() {
   font-size: 20px;
   font-weight: 800;
   letter-spacing: 1.5px;
-  color: #cecece;
-  text-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
+  color: var(--theme-header-color, var(--theme-bright, #cecece));
+  text-shadow: var(--theme-header-glow, 0 0 10px rgba(6, 182, 212, 0.5));
   white-space: nowrap;
   flex-shrink: 0;
 }
@@ -161,8 +161,8 @@ async function handleLogout() {
 
 .tab-active {
   color: var(--text-primary);
-  border-bottom-color: var(--sci-cyan);
-  text-shadow: 0 0 8px rgba(6, 182, 212, 0.4);
+  border-bottom-color: var(--theme-bright, var(--sci-cyan));
+  text-shadow: var(--theme-header-glow, 0 0 8px rgba(6, 182, 212, 0.4));
 }
 
 .tab-icon {
@@ -265,14 +265,18 @@ async function handleLogout() {
   min-width: 132px;
   padding: 4px 26px 4px 8px;
   font-size: 12px;
-  background-color: var(--bg-input, #1c2026);
-  border: 1px solid var(--border-color, #521d2a);
-  color: #cecece;
+  background-color: #000000;
+  border: 1px solid var(--theme-bright, var(--border-color, #521d2a));
+  color: var(--theme-bright, #cecece);
+  box-shadow: var(--theme-glow-subtle);
   border-radius: var(--radius);
+  transition: all 0.15s ease;
 }
 
-.color-pkg-select:focus {
-  border-color: var(--widget-color, #853146);
+.color-pkg-select:focus,
+.color-pkg-select:hover {
+  border-color: var(--theme-bright-hover, var(--theme-bright));
+  box-shadow: var(--theme-glow-hover);
   outline: none;
 }
 </style>

@@ -486,9 +486,10 @@ onMounted(() => {
 }
 
 .gm-session-item.active {
-  background: #000000;
-  border-color: #cecece;
-  border-left: 4px solid #cecece;
+  background: var(--theme-surface-active, #000000);
+  border-color: var(--theme-bright, #cecece);
+  border-left: 4px solid var(--theme-bright, #cecece);
+  box-shadow: inset 4px 0 12px var(--theme-glow-subtle);
 }
 
 .session-title-text {
@@ -500,7 +501,8 @@ onMounted(() => {
 }
 
 .gm-session-item.active .session-title-text {
-  color: #cecece;
+  color: var(--theme-bright, #cecece);
+  text-shadow: 0 0 8px var(--theme-glow);
 }
 
 .btn-delete-small {
@@ -583,18 +585,22 @@ onMounted(() => {
 .btn-add-panel {
   background: #000000;
   border: 1px solid #cecece;
+  border-color: var(--theme-secondary-btn-border, #cecece);
   color: #cecece;
+  color: var(--theme-bright, #cecece);
   font-weight: 600;
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
+  box-shadow: var(--theme-glow-subtle);
   transition: all 0.15s ease-in-out;
 }
 
 .btn-add-panel:hover {
   background: #000000;
-  border-color: #cecece;
-  box-shadow: 0 0 8px rgba(206, 206, 206, 0.35);
+  border-color: var(--theme-bright, #cecece);
+  color: var(--theme-bright-hover, var(--theme-bright, #cecece));
+  box-shadow: var(--theme-glow-hover, 0 0 8px rgba(206, 206, 206, 0.35));
 }
 
 .preset-chips {
@@ -613,19 +619,21 @@ onMounted(() => {
 
 .btn-preset-chip {
   background: #000000;
-  border: 1px solid #cecece;
-  color: #cecece;
+  border: 1px solid var(--theme-secondary-btn-border, #cecece);
+  color: var(--theme-bright, #cecece);
   padding: 5px 10px;
   border-radius: 999px;
   font-size: 0.78rem;
+  box-shadow: var(--theme-glow-subtle);
   cursor: pointer;
-  transition: all 0.15s;
+  transition: all 0.15s ease-in-out;
 }
 
 .btn-preset-chip:hover {
-  border-color: #cecece;
-  color: #cecece;
+  border-color: var(--theme-bright, #cecece);
+  color: var(--theme-bright-hover, var(--theme-bright, #cecece));
   background: #000000;
+  box-shadow: var(--theme-glow-hover, 0 0 8px rgba(206, 206, 206, 0.35));
 }
 
 .note-panels-grid {

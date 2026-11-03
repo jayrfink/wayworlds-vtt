@@ -515,11 +515,11 @@ const noResults = computed(() => {
 
 .tab-button.active {
   background-color: #000000 !important;
-  border-color: #d0d0d0 !important;
-  color: #d0d0d0 !important;
-  -webkit-text-fill-color: #d0d0d0;
+  border-color: var(--theme-bright, #d0d0d0) !important;
+  color: var(--theme-bright, #d0d0d0) !important;
+  -webkit-text-fill-color: var(--theme-bright, #d0d0d0);
   font-weight: 600;
-  box-shadow: 0 0 8px rgba(208, 208, 208, 0.3);
+  box-shadow: var(--theme-glow-hover, 0 0 8px rgba(208, 208, 208, 0.3));
 }
 
 .tab-icon {
@@ -606,7 +606,8 @@ const noResults = computed(() => {
   gap: 10px;
   font-size: 18px;
   font-weight: 700;
-  color: var(--text-primary);
+  color: var(--theme-header-color, var(--theme-bright, var(--text-primary)));
+  text-shadow: var(--theme-header-glow, none);
   letter-spacing: 0.5px;
   text-transform: uppercase;
 }
@@ -616,9 +617,10 @@ const noResults = computed(() => {
   font-weight: 700;
   text-transform: uppercase;
   padding: 2px 8px;
-  background: rgba(88, 166, 255, 0.15);
-  color: var(--accent);
-  border: 1px solid rgba(88, 166, 255, 0.3);
+  background: var(--theme-surface-active, rgba(88, 166, 255, 0.15));
+  color: var(--theme-bright, var(--accent));
+  border: 1px solid var(--theme-border-subtle, rgba(88, 166, 255, 0.3));
+  box-shadow: var(--theme-glow-subtle);
   border-radius: 12px;
   letter-spacing: 0.5px;
 }
