@@ -22,7 +22,7 @@ describe('RulebooksView.vue', () => {
       // Category navigation tabs from the second row are present
       expect(html).toContain('Ranged Weapon Combat');
       expect(html).toContain('Melee Combat');
-      expect(html).toContain('Additional Rules');
+      expect(html).toContain('Overland');
       expect(html).toMatch(/Filter rules &(amp;)?\s*tables\.\.\./);
 
       // Old PDF / text reader elements are completely gone
@@ -31,8 +31,8 @@ describe('RulebooksView.vue', () => {
       expect(html).not.toContain('Search PDF rulebooks');
     });
 
-    it('renders Additional Rules when initialCategory or initialViewMode is additional', async () => {
-      const html = await renderView({ initialCategory: 'additional' });
+    it('renders Overland when initialCategory or initialViewMode is overland', async () => {
+      const html = await renderView({ initialCategory: 'overland' });
 
       // Renders horse movement rules table
       expect(html).toContain('Mounts &amp; Overland Movement');

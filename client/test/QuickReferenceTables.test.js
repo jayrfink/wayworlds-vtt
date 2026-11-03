@@ -17,7 +17,7 @@ describe('QuickReferenceTables.vue', () => {
     const html = await renderComponent();
     expect(html).toContain('Ranged Weapon Combat');
     expect(html).toContain('Melee Combat');
-    expect(html).toContain('Additional Rules');
+    expect(html).toContain('Overland');
     expect(html).toMatch(/Filter rules &(amp;)?\s*tables\.\.\./);
   });
 
@@ -77,9 +77,9 @@ describe('QuickReferenceTables.vue', () => {
     });
   });
 
-  describe('Additional Rules Tab', () => {
+  describe('Overland Tab', () => {
     it('renders horse movement rules and mounts table', async () => {
-      const html = await renderComponent({ initialCategory: 'additional' });
+      const html = await renderComponent({ initialCategory: 'overland' });
 
       expect(html).toContain('Mounts &amp; Overland Movement');
       expect(html).toContain('Horse Movement (Riding Horse)');

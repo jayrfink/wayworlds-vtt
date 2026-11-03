@@ -263,8 +263,8 @@
         </section>
       </div>
 
-      <!-- ================= ADDITIONAL RULES ================= -->
-      <div v-else-if="activeCategory === 'additional'" class="category-panel">
+      <!-- ================= OVERLAND ================= -->
+      <div v-else-if="activeCategory === 'overland' || activeCategory === 'additional'" class="category-panel">
         <!-- Overview Banner -->
         <div class="formula-banner">
           <div class="formula-icon">🐎</div>
@@ -331,7 +331,7 @@ const props = defineProps({
 const tabs = [
   { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
   { id: 'melee', label: 'Melee Combat', icon: '⚔️' },
-  { id: 'additional', label: 'Additional Rules', icon: '🐎' },
+  { id: 'overland', label: 'Overland', icon: '🐎' },
 ];
 
 const savedQuickRef = getUserState(getSafeUserId(), 'rulebooks', {
@@ -339,7 +339,9 @@ const savedQuickRef = getUserState(getSafeUserId(), 'rulebooks', {
   quickRefSearch: '',
 });
 
-const activeCategory = ref(props.initialCategory ?? (savedQuickRef.quickRefCategory === 'ship' ? 'ranged' : savedQuickRef.quickRefCategory) ?? 'ranged');
+const rawInitial = props.initialCategory ?? (savedQuickRef.quickRefCategory === 'ship' ? 'ranged' : savedQuickRef.quickRefCategory) ?? 'ranged';
+const initial = (rawInitial === 'additional' || rawInitial === 'overland') ? 'overland' : rawInitial;
+const activeCategory = ref(initial);
 const searchQuery = ref(props.initialSearch ?? savedQuickRef.quickRefSearch ?? '');
 
 watch([activeCategory, searchQuery], () => {
@@ -431,7 +433,7 @@ const noResults = computed(() => {
       filteredMeleeModifiers.value.length === 0
     );
   }
-  if (activeCategory.value === 'additional') {
+  if (activeCategory.value === 'overland' || activeCategory.value === 'additional') {
     return filteredAdditionalMounts.value.length === 0;
   }
   return false;

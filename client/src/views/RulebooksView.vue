@@ -31,9 +31,11 @@ const savedRulebooks = getUserState(getSafeUserId(), 'rulebooks', {
 });
 
 const resolvedCategory = computed(() => {
-  if (props.initialCategory) return props.initialCategory;
-  if (props.initialViewMode === 'additional' || savedRulebooks.viewMode === 'additional') {
-    return 'additional';
+  if (props.initialCategory) {
+    return props.initialCategory === 'additional' ? 'overland' : props.initialCategory;
+  }
+  if (props.initialViewMode === 'additional' || props.initialViewMode === 'overland' || savedRulebooks.viewMode === 'additional') {
+    return 'overland';
   }
   return undefined;
 });
