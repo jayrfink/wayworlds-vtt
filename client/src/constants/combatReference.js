@@ -312,3 +312,18 @@ export const MELEE_COMBAT_REF = {
     { situation: 'Improvised Melee Weapon (torch, chair, rock)', modifier: '-15%', notes: 'Base 1d5 + STR Mod damage; breaks on Fumble' },
   ],
 };
+
+export const ADDITIONAL_RULES_REF = {
+  title: 'Additional Rules',
+  description: 'Supplementary mechanics, mounted travel, and situational rules for Wayworlds d100.',
+  mountsAndMovement: [
+    {
+      subject: 'Horse Movement (Riding Horse)',
+      tacticalSpeed: '50 ft / Action (Dash: 100 ft)',
+      overlandSpeed: '4 mph (24–32 miles / day); Gallop: 8 mph',
+      capacity: '1 Rider + 250 lbs cargo',
+      mechanics:
+        'Rider shares mount movement without spending own movement actions. Grants +10% Melee Hit bonus vs targets on foot. Mounting or dismounting costs half of base Walk speed. If mount is reduced to 0 STA or knocked prone, rider must pass an Athletics & Acrobatics check or fall Prone in an adjacent 5 ft square, taking 1d10 damage.',
+    },
+  ],
+};

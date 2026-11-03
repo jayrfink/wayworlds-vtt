@@ -1,7 +1,8 @@
 import { describe, it, expect } from 'vitest';
 import {
   RANGED_COMBAT_REF,
-  MELEE_COMBAT_REF
+  MELEE_COMBAT_REF,
+  ADDITIONAL_RULES_REF,
 } from './combatReference.js';
 
 describe('combatReference', () => {
@@ -110,6 +111,22 @@ describe('combatReference', () => {
         expect(m).toHaveProperty('modifier');
         expect(m).toHaveProperty('notes');
       });
+    });
+  });
+
+  describe('ADDITIONAL_RULES_REF', () => {
+    it('exports comprehensive additional rules with horse movement', () => {
+      expect(ADDITIONAL_RULES_REF.title).toBe('Additional Rules');
+      expect(ADDITIONAL_RULES_REF.description).toBeDefined();
+      expect(Array.isArray(ADDITIONAL_RULES_REF.mountsAndMovement)).toBe(true);
+      expect(ADDITIONAL_RULES_REF.mountsAndMovement.length).toBeGreaterThanOrEqual(1);
+
+      const horse = ADDITIONAL_RULES_REF.mountsAndMovement[0];
+      expect(horse.subject).toContain('Horse Movement');
+      expect(horse.tacticalSpeed).toContain('50 ft');
+      expect(horse.overlandSpeed).toContain('4 mph');
+      expect(horse.capacity).toContain('250 lbs');
+      expect(horse.mechanics).toContain('Rider shares mount movement');
     });
   });
 });

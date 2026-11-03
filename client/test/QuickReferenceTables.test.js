@@ -13,10 +13,11 @@ describe('QuickReferenceTables.vue', () => {
     return html;
   }
 
-  it('renders both category tabs and search input', async () => {
+  it('renders all three category tabs and search input', async () => {
     const html = await renderComponent();
     expect(html).toContain('Ranged Weapon Combat');
     expect(html).toContain('Melee Combat');
+    expect(html).toContain('Additional Rules');
     expect(html).toMatch(/Filter rules &(amp;)?\s*tables\.\.\./);
   });
 
@@ -73,6 +74,19 @@ describe('QuickReferenceTables.vue', () => {
       expect(html).toContain('Melee Modifiers');
       expect(html).toContain('Charging Attack');
       expect(html).toContain('Flanking / Rear Attack');
+    });
+  });
+
+  describe('Additional Rules Tab', () => {
+    it('renders horse movement rules and mounts table', async () => {
+      const html = await renderComponent({ initialCategory: 'additional' });
+
+      expect(html).toContain('Mounts &amp; Overland Movement');
+      expect(html).toContain('Horse Movement (Riding Horse)');
+      expect(html).toContain('50 ft / Action (Dash: 100 ft)');
+      expect(html).toContain('4 mph (24–32 miles / day); Gallop: 8 mph');
+      expect(html).toContain('1 Rider + 250 lbs cargo');
+      expect(html).toContain('Rider shares mount movement');
     });
   });
 

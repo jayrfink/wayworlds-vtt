@@ -262,6 +262,48 @@
           </div>
         </section>
       </div>
+
+      <!-- ================= ADDITIONAL RULES ================= -->
+      <div v-else-if="activeCategory === 'additional'" class="category-panel">
+        <!-- Overview Banner -->
+        <div class="formula-banner">
+          <div class="formula-icon">🐎</div>
+          <div class="formula-details">
+            <span class="formula-subtitle">Wayworlds d100 Systems &amp; Environment</span>
+            <div class="formula-code">{{ ADDITIONAL_RULES_REF.description }}</div>
+          </div>
+        </div>
+
+        <!-- Mounts & Movement Table -->
+        <section v-if="filteredAdditionalMounts.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Mounts &amp; Travel</span>
+            Mounts &amp; Overland Movement
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 220px;">Subject / Mount</th>
+                  <th style="width: 200px;">Tactical Speed</th>
+                  <th style="width: 230px;">Overland Speed</th>
+                  <th style="width: 170px;">Capacity</th>
+                  <th>Rules &amp; Mechanics</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="r in filteredAdditionalMounts" :key="r.subject">
+                  <td class="col-name font-bold">{{ r.subject }}</td>
+                  <td class="col-highlight font-mono">{{ r.tacticalSpeed }}</td>
+                  <td class="font-mono">{{ r.overlandSpeed }}</td>
+                  <td>{{ r.capacity }}</td>
+                  <td class="col-notes">{{ r.mechanics }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 </template>
@@ -271,6 +313,7 @@ import { ref, computed, watch } from 'vue';
 import {
   RANGED_COMBAT_REF,
   MELEE_COMBAT_REF,
+  ADDITIONAL_RULES_REF,
 } from '../constants/combatReference.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 
@@ -287,7 +330,8 @@ const props = defineProps({
 
 const tabs = [
   { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
-  { id: 'melee', label: 'Melee Combat', icon: '⚔️' }
+  { id: 'melee', label: 'Melee Combat', icon: '⚔️' },
+  { id: 'additional', label: 'Additional Rules', icon: '🐎' },
 ];
 
 const savedQuickRef = getUserState(getSafeUserId(), 'rulebooks', {
@@ -363,6 +407,11 @@ const filteredMeleeModifiers = computed(() =>
   MELEE_COMBAT_REF.modifiers.filter((item) => matchesQuery(item, searchQuery.value))
 );
 
+// Filtered Additional Rules items
+const filteredAdditionalMounts = computed(() =>
+  ADDITIONAL_RULES_REF.mountsAndMovement.filter((item) => matchesQuery(item, searchQuery.value))
+);
+
 // Empty state check per active category
 const noResults = computed(() => {
   if (!searchQuery.value.trim()) return false;
@@ -381,6 +430,9 @@ const noResults = computed(() => {
       filteredMeleeWeapons.value.length === 0 &&
       filteredMeleeModifiers.value.length === 0
     );
+  }
+  if (activeCategory.value === 'additional') {
+    return filteredAdditionalMounts.value.length === 0;
   }
   return false;
 });

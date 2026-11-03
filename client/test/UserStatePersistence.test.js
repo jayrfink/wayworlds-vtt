@@ -190,7 +190,7 @@ describe('Per-User Tab and View State Persistence', () => {
       }
     });
 
-    it('RulebooksView and QuickReferenceTables restore saved mode, PDF book/page, and category per user', async () => {
+    it('RulebooksView and QuickReferenceTables restore saved mode and category per user', async () => {
       const { createSSRApp } = await import('vue');
       const { renderToString } = await import('vue/server-renderer');
       const RulebooksView = (await import('../src/views/RulebooksView.vue')).default;
@@ -200,15 +200,13 @@ describe('Per-User Tab and View State Persistence', () => {
       auth.user = { id: 505, username: 'loremaster', role: 'Player' };
 
       saveUserState(505, 'rulebooks', {
-        viewMode: 'pdf',
-        pdfBookId: 'kh-expansion',
-        pdfPage: 25,
+        viewMode: 'additional',
         quickRefCategory: 'melee',
       });
 
       const rbApp = createSSRApp(RulebooksView);
       const rbHtml = await renderToString(rbApp);
-      expect(rbHtml).toContain('src="/api/rulebooks/pdf/kh-expansion#page=25"');
+      expect(rbHtml).toContain('Horse Movement (Riding Horse)');
 
       const qrApp = createSSRApp(QuickReferenceTables);
       const qrHtml = await renderToString(qrApp);

@@ -36,14 +36,14 @@ describe('Rulebooks API', () => {
     expect(Array.isArray(res.body)).toBe(true);
   });
 
-  it('serves PDF file inline when authenticated', async () => {
+  it('returns 404 for removed PDF rulebook files when authenticated', async () => {
     const agent = request.agent(app);
     await agent.post('/api/auth/register').send({ username: 'gm', password: 'password123' });
     await agent.post('/api/auth/login').send({ username: 'gm', password: 'password123' });
 
     const res = await agent.get('/api/rulebooks/pdf/ad-basic');
-    expect(res.status).toBe(200);
-    expect(res.headers['content-type']).toContain('application/pdf');
+    expect(res.status).toBe(404);
+    expect(res.body.error).toMatch(/missing|not found/i);
   });
 
   it('returns 404 for invalid bookId', async () => {

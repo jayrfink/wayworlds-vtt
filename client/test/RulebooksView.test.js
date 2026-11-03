@@ -4,36 +4,6 @@ import { renderToString } from 'vue/server-renderer';
 import RulebooksView from '../src/views/RulebooksView.vue';
 
 describe('RulebooksView.vue', () => {
-  const mockDocs = [
-    {
-      id: 'ad-basic-p1',
-      bookId: 'ad-basic',
-      bookTitle: 'Wayworlds Basic Game Rules',
-      system: 'Wayworlds Core',
-      page: 1,
-      section: 'Page 1',
-      content: 'Jason Fink (Order #53019877)\nWAYWORLDS Roleplaying Game'
-    },
-    {
-      id: 'ad-basic-p2',
-      bookId: 'ad-basic',
-      bookTitle: 'Wayworlds Basic Game Rules',
-      system: 'Wayworlds Core',
-      page: 2,
-      section: 'Page 2',
-      content: 'HISTORY\nThe Humans made contact with an inventive race of insect-like creatures called Vrusk.'
-    },
-    {
-      id: 'kh-basic-p1',
-      bookId: 'kh-basic',
-      bookTitle: 'World Atlas Basic Rules',
-      system: 'World Atlas',
-      page: 1,
-      section: 'Page 1',
-      content: 'World Atlas hex exploration introduces tactical spaceship movement.'
-    }
-  ];
-
   async function renderView(props = {}) {
     const app = createSSRApp(RulebooksView, props);
     const html = await renderToString(app);
@@ -46,7 +16,8 @@ describe('RulebooksView.vue', () => {
 
       // Top nav bar buttons
       expect(html).toContain('Quick Reference Tables');
-      expect(html).toContain('PDF Rulebooks');
+      expect(html).toContain('Additional Rules');
+      expect(html).not.toContain('PDF Rulebooks');
 
       // Quick reference tab is active
       expect(html).toMatch(/class="[^"]*(active\s+mode-btn|mode-btn\s+active)[^"]*"[^>]*>\s*Quick Reference Tables/);
@@ -55,118 +26,30 @@ describe('RulebooksView.vue', () => {
       expect(html).toContain('Ranged Weapon Combat');
       expect(html).toContain('Melee Combat');
 
-      // Old raw text reader markup is completely removed
-      expect(html).not.toContain('empty-reader');
-      expect(html).not.toContain('reader-pane');
-      expect(html).not.toContain('Text Reader');
+      // Old PDF / text reader elements are completely gone
+      expect(html).not.toContain('pdf-iframe');
+      expect(html).not.toContain('pdf-sidebar');
+      expect(html).not.toContain('Search PDF rulebooks');
     });
   });
 
-  describe('PDF Rulebooks Tab', () => {
-    it('renders sidebar filters, search box, and PDF iframe toolbar', async () => {
-      const html = await renderView({ initialViewMode: 'pdf' });
+  describe('Additional Rules Tab', () => {
+    it('renders Additional Rules view when initialViewMode is additional', async () => {
+      const html = await renderView({ initialViewMode: 'additional' });
 
-      // Active button is PDF Rulebooks
-      expect(html).toMatch(/class="[^"]*(active\s+mode-btn|mode-btn\s+active)[^"]*"[^>]*>\s*PDF Rulebooks/);
+      // Active button is Additional Rules
+      expect(html).toMatch(/class="[^"]*(active\s+mode-btn|mode-btn\s+active)[^"]*"[^>]*>\s*Additional Rules/);
 
-      // Sidebar filters
-      expect(html).toContain('System:');
-      expect(html).toContain('Book:');
-      expect(html).toContain('All Systems');
-      expect(html).toContain('Wayworlds Core');
-      expect(html).toContain('World Atlas');
+      // Renders horse movement rules table
+      expect(html).toContain('Mounts &amp; Overland Movement');
+      expect(html).toContain('Horse Movement (Riding Horse)');
+      expect(html).toContain('50 ft / Action (Dash: 100 ft)');
+      expect(html).toContain('4 mph (24–32 miles / day); Gallop: 8 mph');
+      expect(html).toContain('1 Rider + 250 lbs cargo');
+      expect(html).toContain('Rider shares mount movement');
 
-      // Search box placeholder
-      expect(html).toContain('Search PDF rulebooks (e.g. Arcane, Greatsword, ESS)...');
-
-      // PDF toolbar in right panel
-      expect(html).toContain('Open in New Tab ↗');
-      expect(html).toContain('← Prev');
-      expect(html).toContain('Next →');
-
-      // Default iframe points to ad-basic page 1
-      expect(html).toContain('src="/api/rulebooks/pdf/ad-basic#page=1"');
-    });
-
-    it('renders iframe with custom initial book and page', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialPdfBook: 'kh-basic',
-        initialPdfPage: 12
-      });
-
-      expect(html).toContain('src="/api/rulebooks/pdf/kh-basic#page=12"');
-      expect(html).toContain('href="/api/rulebooks/pdf/kh-basic#page=12"');
-    });
-
-    it('renders table of contents / page index when no search query is active', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs
-      });
-
-      expect(html).toContain('Wayworlds Basic Game Rules');
-      expect(html).toContain('World Atlas Basic Rules');
-      expect(html).toContain('Page 1');
-      expect(html).toContain('Page 2');
-      expect(html).toContain('HISTORY');
-    });
-
-    it('displays search results with highlighted terms when search query is entered', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs,
-        initialSearch: 'Vrusk'
-      });
-
-      expect(html).toContain('Wayworlds Basic Game Rules');
-      expect(html).toContain('p. 2');
-      expect(html).toContain('<mark>Vrusk</mark>');
-    });
-
-    it('safely highlights multi-term searches without corrupting mark tags', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs,
-        initialSearch: 'Humans mark'
-      });
-
-      expect(html).toContain('<mark>Humans</mark>');
-      expect(html).not.toContain('<<mark>');
-      expect(html).not.toContain('</mark></mark>');
-    });
-
-    it('displays no matching sections message when search yields nothing', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs,
-        initialSearch: 'NonExistentQueryXYZ'
-      });
-
-      expect(html).toContain('No matching rulebook sections found.');
-    });
-
-    it('filters table of contents when a specific system is selected', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs,
-        initialSystem: 'World Atlas'
-      });
-
-      expect(html).toContain('World Atlas Basic Rules');
-      expect(html).not.toContain('Wayworlds Basic Game Rules');
-    });
-
-    it('filters table of contents when a specific book is selected', async () => {
-      const html = await renderView({
-        initialViewMode: 'pdf',
-        initialDocs: mockDocs,
-        initialBook: 'ad-basic'
-      });
-
-      expect(html).toContain('Page 1');
-      expect(html).toContain('Page 2');
-      expect(html).not.toContain('World Atlas hex exploration');
+      // PDF elements do not exist
+      expect(html).not.toContain('pdf-iframe');
     });
   });
 });
