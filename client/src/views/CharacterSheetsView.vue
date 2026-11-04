@@ -2877,8 +2877,8 @@ export default {
 .sidebar-header h3 {
   margin: 0;
   font-size: 1.21rem;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 .sidebar-loading,
@@ -3614,8 +3614,8 @@ export default {
 /* Primary Stats Grid (2x2) */
 .stats-section h4 {
   margin: 0 0 12px 0;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 .stats-grid {
@@ -3729,8 +3729,8 @@ export default {
   margin-bottom: 20px;
   padding: 10px 14px;
   border-radius: 6px;
-  background: rgba(56, 189, 248, 0.05);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(200, 200, 200, 0.04) !important;
+  border: 1px solid rgba(200, 200, 200, 0.2) !important;
   display: flex;
   flex-direction: column;
   gap: 6px;
@@ -3747,11 +3747,12 @@ export default {
   width: fit-content;
   padding: 3px 8px;
   border-radius: 4px;
-  background: var(--theme-surface-active, rgba(56, 189, 248, 0.15));
-  color: #38bdf8;
-  color: var(--theme-bright, #38bdf8);
-  border: 1px solid var(--theme-border-subtle, rgba(56, 189, 248, 0.3));
-  box-shadow: var(--theme-glow-subtle);
+  background: rgba(200, 200, 200, 0.1) !important;
+  color: #c8c8c8 !important;
+  -webkit-text-fill-color: #c8c8c8 !important;
+  border: 1px solid rgba(200, 200, 200, 0.3) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
 }
 
 .traits-rule-text {
@@ -3782,8 +3783,8 @@ export default {
 }
 .list-header h4 {
   margin: 0;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 .empty-list {
@@ -4045,8 +4046,8 @@ export default {
 
 .modal-card h3 {
   margin-top: 0;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
   margin-bottom: 16px;
 }
 
@@ -4203,8 +4204,8 @@ export default {
 
 .equipment-modal-header h3 {
   margin: 0;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 .btn-close-modal {
@@ -4495,8 +4496,8 @@ export default {
 .notes-section h4 {
   margin: 0;
   color: #45acba;
-  color: var(--theme-header-color, var(--theme-bright, #45acba));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 .notes-textarea {

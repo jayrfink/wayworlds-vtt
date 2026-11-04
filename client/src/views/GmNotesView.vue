@@ -438,7 +438,7 @@ onMounted(() => {
 .sidebar-header h3 {
   margin: 0;
   font-size: 1.1rem;
-  color: #cecece;
+  color: #c8c8c8;
 }
 
 .btn-new-session {

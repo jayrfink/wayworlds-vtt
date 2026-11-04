@@ -100,8 +100,8 @@
   --theme-accent: #b8435f;
   --theme-bright: #e25b7a;
   --theme-bright-hover: #ff7597;
-  --theme-header-color: #ff7597;
-  --theme-header-glow: 0 0 10px rgba(226, 91, 122, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #2d0c14;
   --theme-surface-hover: #1e080e;
   --theme-surface-hover-active: #3d111c;
@@ -145,8 +145,8 @@
   --theme-accent: #b8435f;
   --theme-bright: #e25b7a;
   --theme-bright-hover: #ff7597;
-  --theme-header-color: #ff7597;
-  --theme-header-glow: 0 0 10px rgba(226, 91, 122, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #2d0c14;
   --theme-surface-hover: #1e080e;
   --theme-surface-hover-active: #3d111c;
@@ -181,8 +181,8 @@
   --theme-accent: #2fa84b;
   --theme-bright: #34d399;
   --theme-bright-hover: #4ade80;
-  --theme-header-color: #4ade80;
-  --theme-header-glow: 0 0 10px rgba(74, 222, 128, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #0d2818;
   --theme-surface-hover: #091c10;
   --theme-surface-hover-active: #143822;
@@ -217,8 +217,8 @@
   --theme-accent: #38bdf8;
   --theme-bright: #38bdf8;
   --theme-bright-hover: #7dd3fc;
-  --theme-header-color: #7dd3fc;
-  --theme-header-glow: 0 0 10px rgba(56, 189, 248, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #0c2d3a;
   --theme-surface-hover: #081f29;
   --theme-surface-hover-active: #113f52;
@@ -253,8 +253,8 @@
   --theme-accent: #14b8a6;
   --theme-bright: #2dd4bf;
   --theme-bright-hover: #5eead4;
-  --theme-header-color: #5eead4;
-  --theme-header-glow: 0 0 10px rgba(45, 212, 191, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #092e2b;
   --theme-surface-hover: #061f1d;
   --theme-surface-hover-active: #0f423e;
@@ -289,8 +289,8 @@
   --theme-accent: #ea580c;
   --theme-bright: #fb923c;
   --theme-bright-hover: #fdba74;
-  --theme-header-color: #fdba74;
-  --theme-header-glow: 0 0 10px rgba(251, 146, 60, 0.5);
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
   --theme-surface-active: #33140a;
   --theme-surface-hover: #240e07;
   --theme-surface-hover-active: #471b0e;
@@ -404,8 +404,8 @@ h6,
 .badge-tier,
 .hud-tier-badge {
   font-family: var(--font-family-header);
-  color: var(--theme-header-color, var(--theme-bright, #cecece));
-  text-shadow: var(--theme-header-glow, none);
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
 }
 
 h1 {

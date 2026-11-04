@@ -1548,13 +1548,13 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         expect(banner.find('select').exists()).toBe(false);
         expect(banner.find('button').exists()).toBe(false);
 
-        // Verify styles match Ship Sheets flip-burn banner color scheme
+        // Verify dark and light grey colors on species traits banner & badge
         const fs = require('fs');
         const path = require('path');
         const vueFile = fs.readFileSync(path.resolve(__dirname, '../src/views/CharacterSheetsView.vue'), 'utf-8');
-        expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*background:\s*rgba\(56,\s*189,\s*248,\s*0\.05\)/);
-        expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*border:\s*1px solid rgba\(56,\s*189,\s*248,\s*0\.35\)/);
-        expect(vueFile).toMatch(/\.traits-badge\s*\{[^}]*color:\s*#38bdf8/);
+        expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*background:\s*rgba\(200,\s*200,\s*200,\s*0\.04\)/);
+        expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*border:\s*1px solid rgba\(200,\s*200,\s*200,\s*0\.2\)/);
+        expect(vueFile).toMatch(/\.traits-badge\s*\{[^}]*color:\s*#c8c8c8/);
       } finally {
         global.fetch = origFetch;
       }
