@@ -85,7 +85,7 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="greens"\]\s*\{[\s\S]*?--widget-color:\s*#1b7a4d;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
     expect(mainCss).toMatch(/\[data-color-pkg="blues"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#347b93;[\s\S]*?--widget-track:\s*#1c4452;/);
     expect(mainCss).toMatch(/\[data-color-pkg="blues-greens"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="maroons"\]\s*\{[\s\S]*?--widget-color:\s*#a03b54;[\s\S]*?--border-color:\s*#622332;[\s\S]*?--widget-track:\s*#250b12;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="maroons"\]\s*\{[\s\S]*?--widget-color:\s*#bc3846;[\s\S]*?--border-color:\s*#72222a;[\s\S]*?--widget-track:\s*#2d0b0f;/);
     expect(mainCss).toMatch(/\[data-color-pkg="oranges-maroon"\]\s*\{[\s\S]*?--widget-color:\s*#d46a2b;[\s\S]*?--border-color:\s*#853146;[\s\S]*?--widget-track:\s*#1f090f;/);
     expect(mainCss).toMatch(/\[data-color-pkg="rust"\]\s*\{[\s\S]*?--widget-color:\s*#7f513e;[\s\S]*?--border-color:\s*#543325;[\s\S]*?--widget-track:\s*#180e0a;/);
   });
