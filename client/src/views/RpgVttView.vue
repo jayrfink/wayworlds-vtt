@@ -28,9 +28,9 @@
         <button v-if="isGm" class="btn-gm btn-stock-encounter" @click="showStockAdversaryModal = true" title="Stock Adversaries on Active Map">
           Stock Adversary
         </button>
-        <!-- Deploy Vehicle Button -->
-        <button v-if="isGm" class="btn-gm btn-deploy-vehicle" @click="showDeployVehicleModal = true" title="Deploy Vehicle on Active Map">
-          Deploy Vehicle
+        <!-- Deploy Vehicle / Mount Button -->
+        <button v-if="isGm" class="btn-gm btn-deploy-vehicle" @click="showDeployVehicleModal = true" title="Deploy Mount(s) on Active Map">
+          Mount(s)
         </button>
       </div>
     </header>
@@ -542,8 +542,6 @@
         <div v-show="!isTokenSidebarRolledUp" class="sidebar-content">
           <!-- Token Creation Button -->
           <button class="primary full-width btn-add-token" @click="openAddTokenModal">+ Add New Token</button>
-          <button v-if="isGm" class="secondary full-width btn-stock-adversary-alt" @click="showStockAdversaryModal = true" style="margin-top: 8px;">Stock Adversary Encounter</button>
-          <button v-if="isGm" class="secondary full-width btn-deploy-vehicle-alt" @click="showDeployVehicleModal = true" style="margin-top: 8px;">Deploy Vehicle</button>
 
           <!-- Selected Token Details -->
           <div v-if="selectedToken" class="section-box token-inspector">
