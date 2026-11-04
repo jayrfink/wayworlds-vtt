@@ -116,7 +116,7 @@ async function handleLogout() {
   height: 48px;
   padding: 0 16px;
   background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid #30363d !important;
   box-sizing: border-box;
   flex-shrink: 0;
   user-select: none;
@@ -161,8 +161,8 @@ async function handleLogout() {
 
 .tab-active {
   color: var(--text-primary);
-  border-bottom-color: var(--theme-bright, var(--sci-cyan));
-  text-shadow: var(--theme-header-glow, 0 0 8px rgba(6, 182, 212, 0.4));
+  border-bottom-color: #c0c0c0 !important;
+  text-shadow: 0 0 8px rgba(192, 192, 192, 0.4) !important;
 }
 
 .tab-icon {
@@ -245,7 +245,7 @@ async function handleLogout() {
 
 .color-pkg-label {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: #8b949e !important;
   white-space: nowrap;
 }
 
@@ -254,18 +254,30 @@ async function handleLogout() {
   min-width: 132px;
   padding: 4px 26px 4px 8px;
   font-size: 12px;
-  background-color: #000000;
-  border: 1px solid var(--theme-bright, var(--border-color, #521d2a));
-  color: var(--theme-bright, #cecece);
-  box-shadow: var(--theme-glow-subtle);
+  background-color: #0d1117 !important;
+  border: 1px solid #484f58 !important;
+  color: #8b949e !important;
+  -webkit-text-fill-color: #8b949e !important;
+  box-shadow: none !important;
   border-radius: var(--radius);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 10px 12px !important;
   transition: all 0.15s ease;
+}
+
+.color-pkg-select option {
+  background-color: #0d1117 !important;
+  color: #8b949e !important;
+  -webkit-text-fill-color: #8b949e !important;
+  background-image: none !important;
 }
 
 .color-pkg-select:focus,
 .color-pkg-select:hover {
-  border-color: var(--theme-bright-hover, var(--theme-bright));
-  box-shadow: var(--theme-glow-hover);
+  border-color: #6e7681 !important;
+  box-shadow: none !important;
   outline: none;
 }
 </style>

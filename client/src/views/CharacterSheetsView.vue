@@ -480,7 +480,7 @@
 
         <!-- Detailed Species Abilities Panel -->
         <section class="card racial-panel species-traits-banner">
-          <span class="traits-badge">🧬 Species Traits &amp; Abilities &bull; {{ selectedChar.race }}</span>
+          <span class="traits-badge">Species Traits &amp; Abilities &bull; {{ selectedChar.race }}</span>
           <div v-if="racesData[selectedChar.race]" class="traits-rule-text">
             <span>
               <strong>{{ racesData[selectedChar.race].trait_name || selectedChar.race }}:</strong>
@@ -579,9 +579,9 @@
             <div class="list-header">
               <h4>Inventory & Mass</h4>
               <div class="list-header-actions">
-                <button class="btn-secondary" @click="showEquipmentModal = true">+ Add Equipment</button>
+                <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Add Equipment</button>
                 <button class="btn-secondary btn-open-forge" @click="openForgeApplet">⚒️ Item Forge</button>
-                <button class="btn-secondary" @click="addInventoryItem">+ Custom Item</button>
+                <button class="btn-secondary btn-add-custom-item" @click="addInventoryItem">+ Custom Item</button>
               </div>
             </div>
             <div class="inventory-search-wrap" style="margin-bottom: 12px;">
@@ -3995,13 +3995,17 @@ export default {
   letter-spacing: 0.3px;
   transition: all 0.15s ease-in-out;
 }
-.btn-new-character:hover {
+.btn-new-character:hover,
+.btn-new-character:focus,
+.btn-new-character:focus-visible,
+.btn-new-character:active {
   background-color: #000000 !important;
   background: #000000 !important;
   border-color: #c0c0c0 !important;
   color: #c0c0c0 !important;
   -webkit-text-fill-color: #c0c0c0 !important;
   box-shadow: 0 0 16px rgba(192, 192, 192, 0.5) !important;
+  outline: none !important;
 }
 .btn-new-character:active {
   transform: translateY(1px);
@@ -4061,6 +4065,27 @@ export default {
 }
 .btn-secondary:active:not(:disabled) {
   transform: translateY(1px);
+}
+
+.btn-add-equipment,
+.btn-open-forge,
+.btn-add-custom-item,
+.btn-add-spell,
+.btn-add-note-panel {
+  background-color: #303030 !important;
+  background: #303030 !important;
+  border-color: #484848 !important;
+}
+
+.btn-add-equipment:hover:not(:disabled),
+.btn-open-forge:hover:not(:disabled),
+.btn-add-custom-item:hover:not(:disabled),
+.btn-add-spell:hover:not(:disabled),
+.btn-add-note-panel:hover:not(:disabled) {
+  background-color: #404040 !important;
+  background: #404040 !important;
+  border-color: #606060 !important;
+  box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
 }
 
 /* Modal */
