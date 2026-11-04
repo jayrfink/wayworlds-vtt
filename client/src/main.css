@@ -208,38 +208,38 @@
 
 :root[data-color-pkg="maroons"],
 [data-color-pkg="maroons"] {
-  --widget-color: #853146;
-  --border-color: #521d2a;
-  --widget-track: #1f090f;
-  --border: #521d2a;
-  --theme-primary: #853146;
-  --theme-secondary: #521d2a;
-  --theme-accent: #b8435f;
-  --theme-bright: #e25b7a;
-  --theme-bright-hover: #ff7597;
+  --widget-color: #a03b54;
+  --border-color: #622332;
+  --widget-track: #250b12;
+  --border: #622332;
+  --theme-primary: #a03b54;
+  --theme-secondary: #622332;
+  --theme-accent: #c7667d;
+  --theme-bright: #ec91a6;
+  --theme-bright-hover: #ffbfcf;
   --theme-header-color: #c8c8c8;
   --theme-header-glow: none;
-  --theme-surface-active: #2d0c14;
-  --theme-surface-hover: #1e080e;
-  --theme-surface-hover-active: #3d111c;
-  --theme-border-subtle: rgba(226, 91, 122, 0.35);
-  --theme-glow-bg: rgba(226, 91, 122, 0.12);
-  --theme-glow: rgba(226, 91, 122, 0.33);
-  --theme-glow-subtle: 0 0 6px rgba(226, 91, 122, 0.22);
-  --theme-glow-hover: 0 0 14px rgba(255, 117, 151, 0.7);
-  --theme-glow-strong: 0 0 18px rgba(255, 117, 151, 0.85);
-  --theme-btn-border: #853146;
-  --theme-btn-color: #e25b7a;
-  --theme-secondary-btn-border: #853146;
-  --theme-secondary-btn-color: #e25b7a;
-  --theme-stepper-arrow: #e25b7a;
-  --theme-stepper-filter: sepia(100%) saturate(350%) hue-rotate(300deg) brightness(1.2);
-  --theme-stepper-filter-hover: sepia(100%) saturate(600%) hue-rotate(300deg) brightness(1.5) drop-shadow(0 0 3px #e25b7a);
-  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%23e25b7a' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
-  --theme-sta-color: #e25b7a;
-  --theme-sta-glow: 0 0 12px rgba(226, 91, 122, 0.7);
-  --theme-ess-color: #ff7597;
-  --theme-ess-glow: 0 0 12px rgba(255, 117, 151, 0.75);
+  --theme-surface-active: #360e18;
+  --theme-surface-hover: #240a11;
+  --theme-surface-hover-active: #491422;
+  --theme-border-subtle: rgba(236, 145, 166, 0.35);
+  --theme-glow-bg: rgba(236, 145, 166, 0.12);
+  --theme-glow: rgba(236, 145, 166, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(236, 145, 166, 0.22);
+  --theme-glow-hover: 0 0 14px rgba(255, 191, 207, 0.7);
+  --theme-glow-strong: 0 0 18px rgba(255, 191, 207, 0.85);
+  --theme-btn-border: #a03b54;
+  --theme-btn-color: #ec91a6;
+  --theme-secondary-btn-border: #a03b54;
+  --theme-secondary-btn-color: #ec91a6;
+  --theme-stepper-arrow: #ec91a6;
+  --theme-stepper-filter: sepia(100%) saturate(350%) hue-rotate(300deg) brightness(1.4);
+  --theme-stepper-filter-hover: sepia(100%) saturate(600%) hue-rotate(300deg) brightness(1.7) drop-shadow(0 0 3px #ec91a6);
+  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%23ec91a6' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
+  --theme-sta-color: #ec91a6;
+  --theme-sta-glow: 0 0 12px rgba(236, 145, 166, 0.7);
+  --theme-ess-color: #ffbfcf;
+  --theme-ess-glow: 0 0 12px rgba(255, 191, 207, 0.75);
 }
 
 :root[data-color-pkg="greens"],
