@@ -2080,6 +2080,33 @@ onBeforeUnmount(() => {
   margin: 4px 0;
 }
 
+.shortcut-tip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+  color: #8b949e;
+  text-align: center;
+  user-select: none;
+}
+
+.key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 6px;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 600;
+  color: var(--text-primary, #cecece);
+  background: var(--bg-tertiary, #1f242c);
+  border: 1px solid var(--border, #30363d);
+  border-radius: 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
 .btn-clear-ping {
   color: #f87171;
   border-color: rgba(239, 68, 68, 0.3);

@@ -82,4 +82,10 @@ describe('WorldVttCanvas & WorldVttView - Regional/World Map Mode', () => {
     expect(viewSrc).toContain('linked_map_id');
     expect(viewSrc).toContain('launchLinkedTacticalScene');
   });
+
+  it('WorldVttView styles shortcut-tip and key-badge with font-size: 13px to match toolbar fonts', () => {
+    const viewSrc = fs.readFileSync(path.resolve(__dirname, '../src/views/WorldVttView.vue'), 'utf-8');
+    expect(viewSrc).toMatch(/\.shortcut-tip\s*\{[^}]*font-size:\s*13px;/);
+    expect(viewSrc).toMatch(/\.key-badge\s*\{[^}]*font-size:\s*13px;/);
+  });
 });
