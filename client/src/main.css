@@ -320,14 +320,14 @@
   box-sizing: border-box;
 }
 
-/* Global Dark Scrollbar Theme (with dynamic data-color-pkg override) */
+/* Global Dark Scrollbar Theme (Always dark gray for slider and black background across all pages) */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 255, 255, 0.3) #0d1117;
+  scrollbar-color: #484f58 #000000;
 }
 
 [data-color-pkg] * {
-  scrollbar-color: var(--widget-color) var(--widget-track);
+  scrollbar-color: #484f58 #000000;
 }
 
 ::-webkit-scrollbar {
@@ -336,43 +336,44 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #0d1117;
+  background: #000000 !important;
   border-radius: 4px;
 }
 
 [data-color-pkg] ::-webkit-scrollbar-track {
-  background: var(--widget-track);
+  background: #000000 !important;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 255, 255, 0.25);
+  background: #484f58 !important;
   border-radius: 4px;
-  border: 1px solid rgba(0, 255, 255, 0.35);
+  border: 1px solid #30363d !important;
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
 [data-color-pkg] ::-webkit-scrollbar-thumb {
-  background: var(--widget-color);
-  border-color: var(--border-color);
+  background: #484f58 !important;
+  border-color: #30363d !important;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 255, 255, 0.5);
-  border-color: #00ffff;
-  box-shadow: 0 0 6px rgba(0, 255, 255, 0.4);
+  background: #586069 !important;
+  border-color: #6e7681 !important;
+  box-shadow: none !important;
 }
 
 [data-color-pkg] ::-webkit-scrollbar-thumb:hover {
-  background: var(--widget-color);
-  border-color: var(--widget-color);
+  background: #586069 !important;
+  border-color: #6e7681 !important;
+  box-shadow: none !important;
 }
 
 ::-webkit-scrollbar-corner {
-  background: #0d1117;
+  background: #000000 !important;
 }
 
 [data-color-pkg] ::-webkit-scrollbar-corner {
-  background: var(--widget-track);
+  background: #000000 !important;
 }
 
 /* Permanent Dark UI Backdrop (#0d0f12 main, #14171c panels) */

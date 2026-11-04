@@ -3308,7 +3308,8 @@ export default {
 .encumbrance-bar-bg {
   height: 8px;
   background: #000000;
-  border: 1px solid var(--border-color, rgba(200, 200, 200, 0.25));
+  border: none !important;
+  outline: none !important;
   border-radius: 4px;
   overflow: hidden;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);

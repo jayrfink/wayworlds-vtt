@@ -87,9 +87,8 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="oranges-maroon"\]\s*\{[\s\S]*?--widget-color:\s*#d46a2b;[\s\S]*?--border-color:\s*#853146;[\s\S]*?--widget-track:\s*#1f090f;/);
   });
 
-  it('applies --widget-color to checkboxes, radios, range inputs, and scrollbars', () => {
+  it('applies --widget-color to checkboxes, radios, and range inputs in main.css', () => {
     expect(mainCss).toMatch(/input\[type="checkbox"\][\s\S]*?accent-color:\s*var\(--widget-color/);
-    expect(mainCss).toMatch(/\[data-color-pkg\]\s*\*\s*\{[\s\S]*?scrollbar-color:\s*var\(--widget-color\)\s*var\(--widget-track\);/);
   });
 
   it('switches and persists data-color-pkg via themeManager.js', () => {

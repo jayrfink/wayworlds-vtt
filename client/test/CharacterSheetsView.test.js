@@ -2130,6 +2130,13 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(options[0].text()).toContain('Default');
       expect(themeSelect.element.value).toBe('greens');
     });
+
+    it('has no outline or border on the encumbrance bar indicator', () => {
+      const vueFile = fs.readFileSync(path.resolve(__dirname, '../src/views/CharacterSheetsView.vue'), 'utf-8');
+      expect(vueFile).toMatch(/\.encumbrance-bar-bg\s*\{[^}]*border:\s*none\s*!important;/);
+      expect(vueFile).toMatch(/\.encumbrance-bar-bg\s*\{[^}]*outline:\s*none\s*!important;/);
+      expect(vueFile).not.toMatch(/\.encumbrance-bar-bg\s*\{[^}]*border:\s*1px\s*solid\s*var\(--border-color/);
+    });
   });
 });
 
