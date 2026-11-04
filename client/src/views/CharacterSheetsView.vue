@@ -2900,7 +2900,9 @@ export default {
 }
 
 .character-list li:hover {
-  background: var(--theme-surface-hover, #21262d);
+  background: #000000 !important;
+  border-left-color: #c0c0c0 !important;
+  box-shadow: 0 0 10px rgba(192, 192, 192, 0.4) !important;
 }
 
 .character-list li.dragging {
@@ -2914,23 +2916,24 @@ export default {
 }
 
 .character-list li.active {
-  background: #cccccc !important;
-  border-left: 4px solid #aaaaaa !important;
+  background: #282e38 !important;
+  border-left: 4px solid #c0c0c0 !important;
   box-shadow: none !important;
-  color: #f9f9f9 !important;
+  color: #e0e0e0 !important;
 }
 
 .character-list li.active:hover {
-  background: #cccccc !important;
+  background: #000000 !important;
+  box-shadow: 0 0 10px rgba(192, 192, 192, 0.4) !important;
 }
 
 .character-list li.active .char-name {
-  color: #f9f9f9 !important;
+  color: #e0e0e0 !important;
   text-shadow: none !important;
 }
 
 .character-list li.active .char-sub {
-  color: #f9f9f9 !important;
+  color: #d4d4d4 !important;
   text-shadow: none !important;
 }
 
@@ -3995,14 +3998,14 @@ export default {
 .btn-new-character:hover {
   background-color: #000000 !important;
   background: #000000 !important;
-  border-color: #d0d0d0 !important;
-  color: #d0d0d0 !important;
-  -webkit-text-fill-color: #d0d0d0;
-  box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
+  border-color: #c0c0c0 !important;
+  color: #c0c0c0 !important;
+  -webkit-text-fill-color: #c0c0c0 !important;
+  box-shadow: 0 0 16px rgba(192, 192, 192, 0.5) !important;
 }
 .btn-new-character:active {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(127, 255, 212, 0.4);
+  box-shadow: 0 0 6px rgba(192, 192, 192, 0.4) !important;
 }
 
 .btn-primary {
