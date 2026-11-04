@@ -220,17 +220,17 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding: 12px 18px;
-  background: rgba(0, 128, 128, 0.15);
-  border-bottom: 1px solid rgba(0, 128, 128, 0.3);
+  background: rgba(200, 200, 200, 0.05);
+  border-bottom: 1px solid rgba(200, 200, 200, 0.2);
 }
 
 .modal-title {
   margin: 0;
   font-size: 18px;
   font-weight: 700;
-  color: #00ffff;
+  color: #c8c8c8;
   letter-spacing: 1px;
-  text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+  text-shadow: none;
 }
 
 .btn-close {
@@ -334,8 +334,8 @@ export default {
 
 .btn-submit {
   background: #000000;
-  border: 1px solid #00a8a8;
-  color: #00ffff;
+  border: 1px solid #484f58;
+  color: #c8c8c8;
   padding: 6px 16px;
   font-size: 13px;
   font-weight: 600;
@@ -345,9 +345,10 @@ export default {
 }
 
 .btn-submit:hover:not(:disabled) {
-  background: #082020;
-  border-color: #00dada;
-  box-shadow: 0 0 10px rgba(0, 218, 218, 0.5);
+  background: #c8c8c8;
+  border-color: #c8c8c8;
+  color: #000000;
+  box-shadow: 0 0 10px rgba(200, 200, 200, 0.4);
 }
 
 .btn-submit:disabled,
