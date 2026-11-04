@@ -2,26 +2,37 @@ export const COLOR_PKG_STORAGE_KEY = 'wayworlds_color_pkg';
 
 export const COLOR_PACKAGES = [
   {
-    key: 'maroons',
-    label: 'Maroons',
-    widgetColor: '#853146',
-    borderColor: '#521d2a',
-    widgetTrack: '#1f090f',
-    brightColor: '#e25b7a',
-    headerColor: '#ff7597',
-    staColor: '#e25b7a',
-    essColor: '#ff7597',
+    key: 'silver',
+    label: 'Silver',
+    widgetColor: '#7d8590',
+    borderColor: '#484f58',
+    widgetTrack: '#161b22',
+    brightColor: '#c0c0c0',
+    headerColor: '#c8c8c8',
+    staColor: '#c0c0c0',
+    essColor: '#a8b4c0',
+  },
+  {
+    key: 'dark-grey',
+    label: 'Dark Grey',
+    widgetColor: '#545d68',
+    borderColor: '#30363d',
+    widgetTrack: '#111418',
+    brightColor: '#8b949e',
+    headerColor: '#c8c8c8',
+    staColor: '#8b949e',
+    essColor: '#6e7681',
   },
   {
     key: 'greens',
-    label: 'Greens',
-    widgetColor: '#2b8c42',
-    borderColor: '#1f542b',
-    widgetTrack: '#131c15',
-    brightColor: '#34d399',
-    headerColor: '#4ade80',
-    staColor: '#34d399',
-    essColor: '#10b981',
+    label: 'Greens (Emerald)',
+    widgetColor: '#1b7a4d',
+    borderColor: '#0d3822',
+    widgetTrack: '#081a10',
+    brightColor: '#10b981',
+    headerColor: '#34d399',
+    staColor: '#10b981',
+    essColor: '#059669',
   },
   {
     key: 'blues',
@@ -38,12 +49,23 @@ export const COLOR_PACKAGES = [
     key: 'blues-greens',
     label: 'Blues & Greens',
     widgetColor: '#4cb2d4',
-    borderColor: '#2b8c42',
-    widgetTrack: '#131c15',
-    brightColor: '#2dd4bf',
-    headerColor: '#5eead4',
-    staColor: '#2dd4bf',
+    borderColor: '#0d3822',
+    widgetTrack: '#081a10',
+    brightColor: '#10b981',
+    headerColor: '#34d399',
+    staColor: '#10b981',
     essColor: '#38bdf8',
+  },
+  {
+    key: 'maroons',
+    label: 'Maroons',
+    widgetColor: '#853146',
+    borderColor: '#521d2a',
+    widgetTrack: '#1f090f',
+    brightColor: '#e25b7a',
+    headerColor: '#ff7597',
+    staColor: '#e25b7a',
+    essColor: '#ff7597',
   },
   {
     key: 'oranges-maroon',
@@ -58,7 +80,7 @@ export const COLOR_PACKAGES = [
   },
 ];
 
-export const DEFAULT_COLOR_PACKAGE = 'maroons';
+export const DEFAULT_COLOR_PACKAGE = 'silver';
 
 export function isValidColorPackage(pkgKey) {
   return COLOR_PACKAGES.some((p) => p.key === pkgKey);

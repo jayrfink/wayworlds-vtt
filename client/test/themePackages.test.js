@@ -1,0 +1,153 @@
+/**
+ * @vitest-environment happy-dom
+ */
+import { describe, it, expect } from 'vitest';
+import { mount } from '@vue/test-utils';
+import { createPinia, setActivePinia } from 'pinia';
+import fs from 'fs';
+import path from 'path';
+import {
+  COLOR_PACKAGES,
+  DEFAULT_COLOR_PACKAGE,
+  isValidColorPackage,
+  getSavedColorPackage,
+  applyColorPackage,
+  initColorPackage,
+} from '../src/utils/themeManager.js';
+import LoginView from '../src/views/LoginView.vue';
+import CharacterSheetsView from '../src/views/CharacterSheetsView.vue';
+import NavBar from '../src/components/NavBar.vue';
+
+describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => {
+  it('defines silver as the default theme package for unauthenticated / new users', () => {
+    expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
+  });
+
+  it('includes silver and dark-grey along with dark emerald greens in COLOR_PACKAGES', () => {
+    const keys = COLOR_PACKAGES.map((p) => p.key);
+    expect(keys).toContain('silver');
+    expect(keys).toContain('dark-grey');
+    expect(keys).toContain('greens');
+    expect(keys).toContain('blues-greens');
+    expect(keys).toContain('blues');
+    expect(keys).toContain('maroons');
+    expect(keys).toContain('oranges-maroon');
+
+    const greenPkg = COLOR_PACKAGES.find((p) => p.key === 'greens');
+    expect(greenPkg.widgetColor).toBe('#1b7a4d');
+    expect(greenPkg.borderColor).toBe('#0d3822');
+    expect(greenPkg.brightColor).toBe('#10b981');
+
+    const blueGreenPkg = COLOR_PACKAGES.find((p) => p.key === 'blues-greens');
+    expect(blueGreenPkg.borderColor).toBe('#0d3822');
+    expect(blueGreenPkg.brightColor).toBe('#10b981');
+  });
+
+  it('sets data-color-pkg="silver" on index.html', () => {
+    const htmlPath = path.resolve(__dirname, '../index.html');
+    const html = fs.readFileSync(htmlPath, 'utf-8');
+    expect(html).toMatch(/<html[^>]*data-color-pkg="silver"/);
+  });
+
+  it('renders LoginView with data-color-pkg="silver" on the login card and container', () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
+    const wrapper = mount(LoginView, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          AuthForm: true,
+        },
+        mocks: {
+          $router: { push: () => {} },
+        },
+      },
+    });
+
+    const page = wrapper.find('.login-page');
+    expect(page.attributes('data-color-pkg')).toBe('silver');
+
+    const card = wrapper.find('.login-card');
+    expect(card.attributes('data-color-pkg')).toBe('silver');
+  });
+
+  it('makes all themes available in NavBar sitewide selector', () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
+    const wrapper = mount(NavBar, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          RouterLink: true,
+          ChangePasswordModal: true,
+        },
+      },
+    });
+
+    const select = wrapper.find('#nav-color-pkg-select');
+    expect(select.exists()).toBe(true);
+    const optionValues = select.findAll('option').map((o) => o.element.value);
+    expect(optionValues).toContain('silver');
+    expect(optionValues).toContain('dark-grey');
+    expect(optionValues).toContain('greens');
+    expect(optionValues).toContain('blues');
+    expect(optionValues).toContain('blues-greens');
+    expect(optionValues).toContain('maroons');
+    expect(optionValues).toContain('oranges-maroon');
+  });
+
+  it('makes all themes available in CharacterSheetsView character sheet theme selector', async () => {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+
+    const wrapper = mount(CharacterSheetsView, {
+      global: {
+        plugins: [pinia],
+        stubs: {
+          ImageBrowserModal: true,
+        },
+      },
+    });
+
+    wrapper.vm.characters = [
+      {
+        id: 1,
+        name: 'Themed Hero',
+        race: 'Dawn Elves',
+        psa: 'Combat',
+        color_theme: 'silver',
+        str: 50,
+        sta: 50,
+        dex: 50,
+        rs: 50,
+        int_stat: 50,
+        log_stat: 50,
+        per: 50,
+        ldr: 50,
+        max_ess: 50,
+        current_ess: 50,
+        current_xp: 0,
+      },
+    ];
+    wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
+    await wrapper.vm.$nextTick();
+
+    const select = wrapper.find('.select-char-theme');
+    expect(select.exists()).toBe(true);
+    const optionValues = select.findAll('option').map((o) => o.element.value);
+    expect(optionValues).toContain(''); // Default (App Theme)
+    expect(optionValues).toContain('silver');
+    expect(optionValues).toContain('dark-grey');
+    expect(optionValues).toContain('greens');
+    expect(optionValues).toContain('blues');
+    expect(optionValues).toContain('blues-greens');
+    expect(optionValues).toContain('maroons');
+    expect(optionValues).toContain('oranges-maroon');
+
+    // Scoped container receives data-color-pkg="silver"
+    const sheetContainer = wrapper.find('.sheet-container');
+    expect(sheetContainer.attributes('data-color-pkg')).toBe('silver');
+  });
+});

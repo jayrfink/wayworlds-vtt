@@ -79,11 +79,13 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).not.toMatch(/color-scheme:\s*light/i);
   });
 
-  it('defines all 5 data-color-pkg theme packages (maroons, greens, blues, blues-greens, oranges-maroon) in main.css', () => {
-    expect(mainCss).toMatch(/\[data-color-pkg="maroons"\]\s*\{[\s\S]*?--widget-color:\s*#853146;[\s\S]*?--border-color:\s*#521d2a;[\s\S]*?--widget-track:\s*#1f090f;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="greens"\]\s*\{[\s\S]*?--widget-color:\s*#2b8c42;[\s\S]*?--border-color:\s*#1f542b;[\s\S]*?--widget-track:\s*#131c15;/);
+  it('defines all 7 data-color-pkg theme packages (silver, dark-grey, greens, blues, blues-greens, maroons, oranges-maroon) in main.css', () => {
+    expect(mainCss).toMatch(/\[data-color-pkg="silver"\]\s*\{[\s\S]*?--widget-color:\s*#7d8590;[\s\S]*?--border-color:\s*#484f58;[\s\S]*?--widget-track:\s*#161b22;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="dark-grey"\]\s*\{[\s\S]*?--widget-color:\s*#545d68;[\s\S]*?--border-color:\s*#30363d;[\s\S]*?--widget-track:\s*#111418;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="greens"\]\s*\{[\s\S]*?--widget-color:\s*#1b7a4d;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
     expect(mainCss).toMatch(/\[data-color-pkg="blues"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#347b93;[\s\S]*?--widget-track:\s*#1c4452;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="blues-greens"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#2b8c42;[\s\S]*?--widget-track:\s*#131c15;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="blues-greens"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="maroons"\]\s*\{[\s\S]*?--widget-color:\s*#853146;[\s\S]*?--border-color:\s*#521d2a;[\s\S]*?--widget-track:\s*#1f090f;/);
     expect(mainCss).toMatch(/\[data-color-pkg="oranges-maroon"\]\s*\{[\s\S]*?--widget-color:\s*#d46a2b;[\s\S]*?--border-color:\s*#853146;[\s\S]*?--widget-track:\s*#1f090f;/);
   });
 
@@ -109,19 +111,23 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     };
 
     expect(COLOR_PACKAGES.map((p) => p.key)).toEqual([
-      'maroons',
+      'silver',
+      'dark-grey',
       'greens',
       'blues',
       'blues-greens',
+      'maroons',
       'oranges-maroon',
     ]);
-    expect(DEFAULT_COLOR_PACKAGE).toBe('maroons');
+    expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
+    expect(isValidColorPackage('silver')).toBe(true);
+    expect(isValidColorPackage('dark-grey')).toBe(true);
     expect(isValidColorPackage('oranges-maroon')).toBe(true);
     expect(isValidColorPackage('light-mode')).toBe(false);
 
-    // Initialize defaults to maroons
-    expect(initColorPackage()).toBe('maroons');
-    expect(attrs['data-color-pkg']).toBe('maroons');
+    // Initialize defaults to silver
+    expect(initColorPackage()).toBe('silver');
+    expect(attrs['data-color-pkg']).toBe('silver');
 
     // Switch to oranges-maroon
     expect(applyColorPackage('oranges-maroon')).toBe('oranges-maroon');
@@ -129,8 +135,8 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(attrs['data-color-pkg']).toBe('oranges-maroon');
     expect(getSavedColorPackage()).toBe('oranges-maroon');
 
-    // Invalid key falls back to maroons
-    expect(applyColorPackage('invalid-theme')).toBe('maroons');
-    expect(attrs['data-color-pkg']).toBe('maroons');
+    // Invalid key falls back to silver
+    expect(applyColorPackage('invalid-theme')).toBe('silver');
+    expect(attrs['data-color-pkg']).toBe('silver');
   });
 });

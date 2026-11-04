@@ -1,6 +1,6 @@
 <template>
-  <div class="login-page">
-    <div class="login-card">
+  <div class="login-page" data-color-pkg="silver">
+    <div class="login-card" data-color-pkg="silver">
       <h1>⚔️ Wayworlds VTT</h1>
       <p class="subtitle">{{ isRegister ? 'Initial Setup: Create GameMaster Account' : 'Sign in to continue' }}</p>
       <AuthForm
