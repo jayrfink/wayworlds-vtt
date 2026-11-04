@@ -3107,18 +3107,7 @@ export default {
   background: var(--bg-panel, #14171c);
   border: 1px solid var(--border-color, #30363d);
   box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
-  filter: drop-shadow(0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.25)));
-  border-radius: 0;
-  clip-path: polygon(
-    12px 0%,
-    calc(100% - 12px) 0%,
-    100% 12px,
-    100% calc(100% - 12px),
-    calc(100% - 12px) 100%,
-    12px 100%,
-    0% calc(100% - 12px),
-    0% 12px
-  );
+  border-radius: 6px;
   padding: 16px;
 }
 
@@ -3127,18 +3116,7 @@ export default {
   background: var(--bg-panel, #14171c);
   border: 1px solid var(--border-color, #30363d);
   box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
-  filter: drop-shadow(0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.25)));
-  border-radius: 0;
-  clip-path: polygon(
-    12px 0%,
-    calc(100% - 12px) 0%,
-    100% 12px,
-    100% calc(100% - 12px),
-    calc(100% - 12px) 100%,
-    12px 100%,
-    0% calc(100% - 12px),
-    0% 12px
-  );
+  border-radius: 6px;
   padding: 16px;
 }
 
@@ -4188,6 +4166,7 @@ export default {
 .modal-card {
   background: #161b22;
   border: 1px solid #30363d;
+  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
   border-radius: 8px;
   padding: 24px;
   width: 440px;
@@ -4829,12 +4808,11 @@ export default {
 .grimoire-row {
   background: #0d1117;
   border: 1px solid #30363d;
+  border-radius: 4px;
   padding: 10px 12px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  clip-path: none !important;
-  filter: none !important;
   box-shadow: none !important;
 }
 
