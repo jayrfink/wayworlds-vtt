@@ -4041,11 +4041,11 @@ export default {
 }
 
 .btn-secondary {
-  background-color: #2c2c2c !important;
-  background: #2c2c2c !important;
+  background-color: #1d1d1d !important;
+  background: #1d1d1d !important;
   color: #e0e0e0 !important;
   -webkit-text-fill-color: #e0e0e0 !important;
-  border: 1px solid #484848 !important;
+  border: 1px solid #383838 !important;
   padding: 5px 12px;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -4056,9 +4056,9 @@ export default {
   box-shadow: none !important;
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: #3c3c3c !important;
-  background: #3c3c3c !important;
-  border-color: #606060 !important;
+  background-color: #2d2d2d !important;
+  background: #2d2d2d !important;
+  border-color: #505050 !important;
   color: #e0e0e0 !important;
   -webkit-text-fill-color: #e0e0e0 !important;
   box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
@@ -4073,9 +4073,9 @@ export default {
 .btn-add-custom-item,
 .btn-add-spell,
 .btn-add-note-panel {
-  background-color: #2c2c2c !important;
-  background: #2c2c2c !important;
-  border-color: #484848 !important;
+  background-color: #1d1d1d !important;
+  background: #1d1d1d !important;
+  border-color: #383838 !important;
 }
 
 .btn-add-skill:hover:not(:disabled),
@@ -4084,9 +4084,9 @@ export default {
 .btn-add-custom-item:hover:not(:disabled),
 .btn-add-spell:hover:not(:disabled),
 .btn-add-note-panel:hover:not(:disabled) {
-  background-color: #3c3c3c !important;
-  background: #3c3c3c !important;
-  border-color: #606060 !important;
+  background-color: #2d2d2d !important;
+  background: #2d2d2d !important;
+  border-color: #505050 !important;
   box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
 }
 

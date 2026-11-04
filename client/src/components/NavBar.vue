@@ -15,7 +15,7 @@
     </div>
     <div class="navbar-user">
       <div class="color-pkg-switcher" title="Border & Widget Color Package (Dark UI Invariant)">
-        <label for="nav-color-pkg-select" class="color-pkg-label">🎨 Theme:</label>
+        <label for="nav-color-pkg-select" class="color-pkg-label">Theme:</label>
         <select
           id="nav-color-pkg-select"
           v-model="selectedColorPkg"
