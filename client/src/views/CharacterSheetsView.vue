@@ -3218,10 +3218,9 @@ export default {
   grid-template-columns: repeat(3, 1fr) 2fr;
   gap: 12px;
   align-items: center;
-  background: #0d1117;
-  border: 1px solid var(--border-color, #30363d);
-  border-radius: 6px;
-  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
 .tactical-stat {
@@ -3253,9 +3252,11 @@ export default {
 
 .encumbrance-bar-bg {
   height: 8px;
-  background: #21262d;
+  background: #000000;
+  border: 1px solid var(--border-color, rgba(200, 200, 200, 0.25));
   border-radius: 4px;
   overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.8);
 }
 
 .encumbrance-bar-fill {
