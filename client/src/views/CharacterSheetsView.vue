@@ -3106,7 +3106,7 @@ export default {
 .card {
   background: var(--bg-panel, #14171c);
   border: 1px solid var(--border-color, #30363d);
-  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
+  box-shadow: 0 0 10px 1px var(--theme-glow, rgba(208, 208, 208, 0.35)), 0 0 16px var(--theme-glow, rgba(208, 208, 208, 0.2));
   border-radius: 6px;
   padding: 16px;
 }
@@ -3115,7 +3115,7 @@ export default {
 .sheet-header {
   background: var(--bg-panel, #14171c);
   border: 1px solid var(--border-color, #30363d);
-  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
+  box-shadow: 0 0 10px 1px var(--theme-glow, rgba(208, 208, 208, 0.35)), 0 0 16px var(--theme-glow, rgba(208, 208, 208, 0.2));
   border-radius: 6px;
   padding: 16px;
 }
@@ -4166,7 +4166,7 @@ export default {
 .modal-card {
   background: #161b22;
   border: 1px solid #30363d;
-  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
+  box-shadow: 0 0 10px 1px var(--theme-glow, rgba(208, 208, 208, 0.35)), 0 0 16px var(--theme-glow, rgba(208, 208, 208, 0.2));
   border-radius: 8px;
   padding: 24px;
   width: 440px;
@@ -4428,7 +4428,7 @@ export default {
 .equipment-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border);
-  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
+  box-shadow: 0 0 10px 1px var(--theme-glow, rgba(208, 208, 208, 0.35)), 0 0 16px var(--theme-glow, rgba(208, 208, 208, 0.2));
   border-radius: 8px;
   padding: 12px;
   transition: border-color 0.15s ease;
@@ -4771,7 +4771,7 @@ export default {
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.2));
+  box-shadow: 0 0 8px 1px var(--theme-glow, rgba(208, 208, 208, 0.35));
   transition: all 0.15s ease;
 }
 
