@@ -535,7 +535,8 @@ onMounted(() => {
 
 .card {
   background: var(--bg-secondary, #161b22);
-  border: 1px solid var(--border, #30363d);
+  border: 2px solid var(--border, #30363d);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 8px;
   padding: 16px;
 }

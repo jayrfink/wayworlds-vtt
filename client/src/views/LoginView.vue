@@ -77,7 +77,8 @@ async function handleAuth({ username, password }) {
 
 .login-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow-subtle, 0 0 8px rgba(192, 192, 192, 0.3));
   border-radius: 12px;
   padding: 40px;
   display: flex;

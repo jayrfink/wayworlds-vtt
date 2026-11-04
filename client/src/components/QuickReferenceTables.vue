@@ -654,7 +654,8 @@ const noResults = computed(() => {
   gap: 8px;
   padding: 8px 16px;
   background: var(--bg-tertiary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.25));
   border-radius: var(--radius);
   color: var(--text-secondary);
   font-size: 14px;
@@ -813,7 +814,8 @@ const noResults = computed(() => {
 
 .step-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.25));
   border-radius: var(--radius);
   padding: 14px 16px;
   display: flex;

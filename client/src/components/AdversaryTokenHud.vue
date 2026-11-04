@@ -370,9 +370,9 @@ export default {
   max-width: 90vw;
   max-height: calc(100% - 32px);
   background-color: var(--bg-panel, #14171c);
-  border: 1px solid var(--border-color, #30363d);
+  border: 2px solid var(--border-color, #30363d);
   border-radius: 8px;
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), 0 0 16px rgba(0, 255, 255, 0.1);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.85), var(--theme-glow-subtle, 0 0 10px rgba(192, 192, 192, 0.3));
   display: flex;
   flex-direction: column;
   z-index: 150;

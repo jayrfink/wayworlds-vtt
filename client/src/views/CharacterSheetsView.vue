@@ -3105,7 +3105,8 @@ export default {
 
 .card {
   background: var(--bg-panel, #14171c);
-  border: 1px solid var(--border-color, #30363d);
+  border: 2px solid var(--border-color, #30363d);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 6px;
   padding: 16px;
 }
@@ -3113,7 +3114,8 @@ export default {
 /* Header */
 .sheet-header {
   background: var(--bg-panel, #14171c);
-  border: 1px solid var(--border-color, #30363d);
+  border: 2px solid var(--border-color, #30363d);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 6px;
   padding: 16px;
 }
@@ -4424,7 +4426,8 @@ export default {
 
 .equipment-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 8px;
   padding: 12px;
   transition: border-color 0.15s ease;
@@ -4449,12 +4452,12 @@ export default {
 
 .eq-add-btn {
   background-color: #000000;
-  border: 1px solid var(--theme-bright, #cecece);
+  border: 2px solid var(--theme-bright, #cecece);
   color: var(--theme-bright, #cecece);
   padding: 4px 14px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: var(--theme-glow-subtle);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   transition: all 0.15s ease;
 }
 
@@ -4760,13 +4763,14 @@ export default {
 
 .domain-tab-btn {
   background-color: #000000;
-  border: 1px solid var(--border-color, #30363d);
+  border: 2px solid var(--border-color, #30363d);
   color: var(--text-secondary, #8b949e);
   padding: 7px 14px;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.2));
   transition: all 0.15s ease;
 }
 
@@ -4840,7 +4844,7 @@ export default {
 .spell-cost-badge,
 .spell-magnitude-badge {
   background: var(--theme-surface-active, rgba(69, 172, 186, 0.12));
-  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
+  border: 2px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
   color: var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   padding: 4px 8px;
@@ -4862,7 +4866,7 @@ export default {
 
 .grimoire-cast-banner {
   background: var(--theme-surface-active, rgba(6, 182, 212, 0.12));
-  border: 1px solid var(--theme-bright, #45acba);
+  border: 2px solid var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   border-radius: 6px;
   padding: 10px 12px;
@@ -4884,7 +4888,7 @@ export default {
 .cast-tradition-tag,
 .cast-cost-tag {
   background: #000000;
-  border: 1px solid var(--theme-border-subtle, #30363d);
+  border: 2px solid var(--theme-border-subtle, #30363d);
   padding: 2px 8px;
   border-radius: 4px;
   color: var(--theme-bright, #45acba);
@@ -4915,7 +4919,7 @@ export default {
   padding: 2px 8px;
   border-radius: 4px;
   background: var(--theme-surface-active, rgba(69, 172, 186, 0.15));
-  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.4));
+  border: 2px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.4));
   color: var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   font-weight: 700;

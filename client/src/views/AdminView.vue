@@ -1004,7 +1004,8 @@ defineExpose({
 
 .admin-card {
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 8px;
   padding: 20px;
 }
