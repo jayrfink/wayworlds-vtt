@@ -121,45 +121,51 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
   });
 
   describe('PSA Selection & Normalization', () => {
-    it('normalizes PSA values to Combat, Magic, Theurgy and defaults missing PSA to Combat', () => {
+    it('normalizes PSA values to Martial, Mystic, Theurgy and defaults missing PSA to Martial', () => {
       const normalize = CharacterSheetsView.methods.normalizeCharacterData;
 
-      const techChar = normalize({ name: 'Techie', psa: 'Magic' });
-      expect(techChar.psa).toBe('Magic');
+      const mysticChar = normalize({ name: 'Mystic', psa: 'Mystic' });
+      expect(mysticChar.psa).toBe('Mystic');
 
       const bioChar = normalize({ name: 'Medic', psa: 'Theurgy' });
       expect(bioChar.psa).toBe('Theurgy');
 
-      const combatChar = normalize({ name: 'Soldier', psa: 'Combat' });
-      expect(combatChar.psa).toBe('Combat');
+      const martialChar = normalize({ name: 'Soldier', psa: 'Martial' });
+      expect(martialChar.psa).toBe('Martial');
 
       const defaultChar = normalize({ name: 'Recruit' });
-      expect(defaultChar.psa).toBe('Combat');
+      expect(defaultChar.psa).toBe('Martial');
 
       // Also converts legacy PSA names
-      expect(normalize({ name: 'OldTech', psa: 'Technological' }).psa).toBe('Magic');
+      expect(normalize({ name: 'OldTech', psa: 'Technological' }).psa).toBe('Mystic');
+      expect(normalize({ name: 'OldMagic', psa: 'Magic' }).psa).toBe('Mystic');
       expect(normalize({ name: 'OldBio', psa: 'Biosocial' }).psa).toBe('Theurgy');
-      expect(normalize({ name: 'OldMil', psa: 'Military' }).psa).toBe('Combat');
+      expect(normalize({ name: 'OldMil', psa: 'Military' }).psa).toBe('Martial');
+      expect(normalize({ name: 'OldCombat', psa: 'Combat' }).psa).toBe('Martial');
     });
 
     it('calculates XP cost based on active PSA', () => {
-      const vmTech = {
-        selectedChar: { psa: 'Magic' },
+      const vmMystic = {
+        selectedChar: { psa: 'Mystic' },
       };
-      const vmCombat = {
-        selectedChar: { psa: 'Combat' },
+      const vmMartial = {
+        selectedChar: { psa: 'Martial' },
       };
 
-      // Lore & Arcana is Magic PSA (base cost 3 * level = 6)
-      const costInPSA = CharacterSheetsView.methods.getXPCost.call(vmTech, 'Lore & Arcana', 2);
+      // Lore & Arcana is Mystic PSA (base cost 3 * level = 6)
+      const costInPSA = CharacterSheetsView.methods.getXPCost.call(vmMystic, 'Lore & Arcana', 2);
       expect(costInPSA).toBe(6); // 2 * 3
 
-      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmCombat, 'Lore & Arcana', 2);
+      const costOutOfPSA = CharacterSheetsView.methods.getXPCost.call(vmMartial, 'Lore & Arcana', 2);
       expect(costOutOfPSA).toBe(12); // 2 * (3 * 2)
 
       // Legacy PSA support
       const vmMil = { selectedChar: { psa: 'Military' } };
       expect(CharacterSheetsView.methods.getXPCost.call(vmMil, 'Lore & Arcana', 2)).toBe(12);
+      const vmCombat = { selectedChar: { psa: 'Combat' } };
+      expect(CharacterSheetsView.methods.getXPCost.call(vmCombat, 'Lore & Arcana', 2)).toBe(12);
+      const vmTech = { selectedChar: { psa: 'Technological' } };
+      expect(CharacterSheetsView.methods.getXPCost.call(vmTech, 'Lore & Arcana', 2)).toBe(6);
     });
   });
 

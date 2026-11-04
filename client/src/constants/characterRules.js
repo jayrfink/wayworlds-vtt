@@ -339,27 +339,27 @@ export function getLineageBaselineStats(lineageName) {
 
 export const OFFICIAL_SKILLS = [
   // Wayworlds Core Secular Skills (10)
-  { name: 'Melee Weapons', psa: 'Combat', baseChance: 'Melee Base (STR or DEX / 2)' },
-  { name: 'Ranged Weapons', psa: 'Combat', baseChance: 'Agility' },
-  { name: 'Striker & Grappler', psa: 'Combat', baseChance: 'Melee Base (STR or DEX / 2)' },
-  { name: 'Armor & Shield Mastery', psa: 'Combat', baseChance: 'Stamina' },
-  { name: 'Athletics & Acrobatics', psa: 'Combat', baseChance: 'Agility' },
-  { name: 'Stealth & Secrecy', psa: 'Combat', baseChance: 'Agility' },
+  { name: 'Melee Weapons', psa: 'Martial', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Ranged Weapons', psa: 'Martial', baseChance: 'Agility' },
+  { name: 'Striker & Grappler', psa: 'Martial', baseChance: 'Melee Base (STR or DEX / 2)' },
+  { name: 'Armor & Shield Mastery', psa: 'Martial', baseChance: 'Stamina' },
+  { name: 'Athletics & Acrobatics', psa: 'Martial', baseChance: 'Agility' },
+  { name: 'Stealth & Secrecy', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Wilderness & Survival', psa: 'Theurgy', baseChance: 'History & Religion' },
-  { name: 'Lore & Arcana', psa: 'Magic', baseChance: 'History & Religion' },
+  { name: 'Lore & Arcana', psa: 'Mystic', baseChance: 'History & Religion' },
   { name: 'Influence & Deception', psa: 'Theurgy', baseChance: 'Presence' },
   { name: 'Herbalism & Medicine', psa: 'Theurgy', baseChance: 'Intellect' },
   // Open-Ended Tradecraft Skill
-  { name: 'Tradecraft', psa: 'Magic', baseChance: 'Intellect' },
+  { name: 'Tradecraft', psa: 'Mystic', baseChance: 'Intellect' },
   // 10 Magic & Ki Traditions
-  { name: 'Arcane', psa: 'Magic', baseChance: 'Intellect' },
+  { name: 'Arcane', psa: 'Mystic', baseChance: 'Intellect' },
   { name: 'Blood', psa: 'Theurgy', baseChance: 'Willpower' },
-  { name: 'Shadow', psa: 'Combat', baseChance: 'Agility' },
+  { name: 'Shadow', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Demonology', psa: 'Theurgy', baseChance: 'Willpower' },
-  { name: 'Necromancy', psa: 'Magic', baseChance: 'Intellect' },
+  { name: 'Necromancy', psa: 'Mystic', baseChance: 'Intellect' },
   { name: 'Druidic', psa: 'Theurgy', baseChance: 'Willpower' },
   { name: 'Spiritual', psa: 'Theurgy', baseChance: 'History & Religion' },
-  { name: 'Ki', psa: 'Combat', baseChance: 'Willpower' },
+  { name: 'Ki', psa: 'Martial', baseChance: 'Willpower' },
   { name: 'Warg', psa: 'Theurgy', baseChance: 'Willpower' },
   { name: 'Witchcraft', psa: 'Theurgy', baseChance: 'Intellect' },
 ];
@@ -717,13 +717,13 @@ export function calcCharacterTier(char) {
 }
 
 /**
- * Normalize PSA values to canonical Wayworlds terms (Combat, Magic, Theurgy).
+ * Normalize PSA values to canonical Wayworlds terms (Martial, Mystic, Theurgy).
  */
 export function normalizePSA(psa) {
   if (!psa) return psa;
-  if (psa === 'Military') return 'Combat';
-  if (psa === 'Technological') return 'Magic';
-  if (psa === 'Biosocial') return 'Theurgy';
+  if (psa === 'Military' || psa === 'Combat' || psa === 'Martial') return 'Martial';
+  if (psa === 'Technological' || psa === 'Magic' || psa === 'Mystic') return 'Mystic';
+  if (psa === 'Biosocial' || psa === 'Theurgy') return 'Theurgy';
   return psa;
 }
 

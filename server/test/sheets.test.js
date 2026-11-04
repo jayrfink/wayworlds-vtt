@@ -110,20 +110,20 @@ describe('Sheets API & Socket.io', () => {
       await agent.post('/api/auth/register').send({ username: 'player1', password: 'password123' });
       await agent.post('/api/auth/login').send({ username: 'player1', password: 'password123' });
 
-      // Create with Magic PSA
+      // Create with Mystic PSA
       const createRes = await agent.post('/api/characters').send({
-        name: 'Magic Specialist',
+        name: 'Mystic Specialist',
         race: 'Yazirian',
-        psa: 'Magic',
+        psa: 'Mystic',
       });
       expect(createRes.status).toBe(201);
-      expect(createRes.body.psa).toBe('Magic');
+      expect(createRes.body.psa).toBe('Mystic');
       const charId = createRes.body.id;
 
       // Fetch by ID
       const getRes = await agent.get(`/api/characters/${charId}`);
       expect(getRes.status).toBe(200);
-      expect(getRes.body.psa).toBe('Magic');
+      expect(getRes.body.psa).toBe('Mystic');
 
       // Update to Theurgy PSA
       const emitSpy = vi.spyOn(io, 'emit');
@@ -141,19 +141,25 @@ describe('Sheets API & Socket.io', () => {
       const verifyRes = await agent.get(`/api/characters/${charId}`);
       expect(verifyRes.body.psa).toBe('Theurgy');
 
-      // Update to Combat PSA
+      // Update to Martial PSA
       const updateCombatRes = await agent.put(`/api/characters/${charId}`).send({
-        psa: 'Combat',
+        psa: 'Martial',
       });
       expect(updateCombatRes.status).toBe(200);
-      expect(updateCombatRes.body.psa).toBe('Combat');
+      expect(updateCombatRes.body.psa).toBe('Martial');
 
       // Also verifies legacy PSA input maps automatically
       const legacyRes = await agent.put(`/api/characters/${charId}`).send({
         psa: 'Technological',
       });
       expect(legacyRes.status).toBe(200);
-      expect(legacyRes.body.psa).toBe('Magic');
+      expect(legacyRes.body.psa).toBe('Mystic');
+
+      const legacyCombatRes = await agent.put(`/api/characters/${charId}`).send({
+        psa: 'Combat',
+      });
+      expect(legacyCombatRes.status).toBe(200);
+      expect(legacyCombatRes.body.psa).toBe('Martial');
     });
 
     it('creates character with color_theme and allows updating color_theme independently', async () => {

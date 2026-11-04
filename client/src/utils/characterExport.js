@@ -12,7 +12,7 @@
 export function formatCharacterAscii(char = {}) {
   const name = char.name || 'Unnamed Character';
   const race = char.race || 'Unknown Species';
-  const psa = char.psa || 'Combat';
+  const psa = char.psa || 'Martial';
   const gender = char.gender || 'N/A';
   const height = char.height || 'N/A';
   const weight = char.weight || 'N/A';

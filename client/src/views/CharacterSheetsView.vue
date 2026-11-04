@@ -151,8 +151,8 @@
                 <div class="psa-select-wrap">
                   <label>PSA:</label>
                   <select v-model="selectedChar.psa" @change="updateCharacter" class="select-psa">
-                    <option value="Combat">Combat</option>
-                    <option value="Magic">Magic</option>
+                    <option value="Martial">Martial</option>
+                    <option value="Mystic">Mystic</option>
                     <option value="Theurgy">Theurgy</option>
                   </select>
                 </div>
@@ -994,8 +994,8 @@
           <div class="form-group">
             <label>Primary System Area (PSA)</label>
             <select v-model="newCharForm.psa" class="char-create-select">
-              <option value="Combat">Combat</option>
-              <option value="Magic">Magic</option>
+              <option value="Martial">Martial</option>
+              <option value="Mystic">Mystic</option>
               <option value="Theurgy">Theurgy</option>
             </select>
           </div>
@@ -1358,7 +1358,7 @@ export default {
         name: '',
         race: 'Dawn Elves',
         customRaceName: '',
-        psa: 'Combat',
+        psa: 'Martial',
         color_theme: '',
         avatar_url: '',
         user_id: null,
@@ -1621,9 +1621,9 @@ export default {
     },
     normalizeCharacterData(char) {
       const c = { ...char };
-      if (!c.psa) c.psa = 'Combat';
-      else if (c.psa === 'Military') c.psa = 'Combat';
-      else if (c.psa === 'Technological') c.psa = 'Magic';
+      if (!c.psa) c.psa = 'Martial';
+      else if (c.psa === 'Military' || c.psa === 'Combat') c.psa = 'Martial';
+      else if (c.psa === 'Technological' || c.psa === 'Magic') c.psa = 'Mystic';
       else if (c.psa === 'Biosocial') c.psa = 'Theurgy';
       // Ensure individual stats are set from paired stats if missing
       if (c.str === undefined) c.str = c.str_sta || 50;
@@ -1784,7 +1784,7 @@ export default {
         name: '',
         race: defaultLineage,
         customRaceName: '',
-        psa: 'Combat',
+        psa: 'Martial',
         color_theme: '',
         avatar_url: '',
         user_id: defaultUserId,
@@ -2177,7 +2177,7 @@ export default {
       }
     },
     getXPCost(skillName, targetLevel, skillPSA = null) {
-      const charPSA = this.selectedChar ? this.selectedChar.psa || 'Combat' : 'Combat';
+      const charPSA = this.selectedChar ? this.selectedChar.psa || 'Martial' : 'Martial';
       return calcXPCost(skillName, targetLevel, charPSA, skillPSA);
     },
     getSkillSuccessChance(skill) {

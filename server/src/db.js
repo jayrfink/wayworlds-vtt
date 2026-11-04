@@ -83,7 +83,7 @@ function migrate(db, dataDir = null) {
       user_id INTEGER NOT NULL,
       name TEXT NOT NULL,
       race TEXT NOT NULL CHECK(length(trim(race)) > 0),
-      psa TEXT NOT NULL DEFAULT 'Combat' CHECK(psa IN ('Combat', 'Magic', 'Theurgy', 'Military', 'Technological', 'Biosocial')),
+      psa TEXT NOT NULL DEFAULT 'Martial' CHECK(psa IN ('Martial', 'Mystic', 'Theurgy', 'Combat', 'Magic', 'Military', 'Technological', 'Biosocial')),
       gender TEXT,
       height TEXT,
       weight TEXT,
@@ -299,7 +299,7 @@ if (!mapCols.includes('map_type')) {
     db.exec('ALTER TABLE character_sheets ADD COLUMN avatar_url TEXT DEFAULT ""');
   }
   if (!charCols.includes('psa')) {
-    db.exec('ALTER TABLE character_sheets ADD COLUMN psa TEXT NOT NULL DEFAULT "Combat"');
+    db.exec('ALTER TABLE character_sheets ADD COLUMN psa TEXT NOT NULL DEFAULT "Martial"');
   }
   if (!charCols.includes('max_ess')) {
     db.exec('ALTER TABLE character_sheets ADD COLUMN max_ess INTEGER NOT NULL DEFAULT 50');
@@ -324,7 +324,7 @@ if (!mapCols.includes('map_type')) {
   const charTableInfo = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='character_sheets'").get();
   if (charTableInfo && charTableInfo.sql && (
     charTableInfo.sql.includes("CHECK(race IN ('Human', 'Dralasite', 'Vrusk', 'Yazirian'))") ||
-    (charTableInfo.sql.includes("CHECK(psa IN ('Military', 'Technological', 'Biosocial'))") && !charTableInfo.sql.includes("'Combat'"))
+    !charTableInfo.sql.includes("'Martial'")
   )) {
     db.pragma('foreign_keys = OFF');
     const migrateCharSheets = db.transaction(() => {
@@ -334,7 +334,7 @@ if (!mapCols.includes('map_type')) {
           user_id INTEGER NOT NULL,
           name TEXT NOT NULL,
           race TEXT NOT NULL CHECK(length(trim(race)) > 0),
-          psa TEXT NOT NULL DEFAULT 'Combat' CHECK(psa IN ('Combat', 'Magic', 'Theurgy', 'Military', 'Technological', 'Biosocial')),
+          psa TEXT NOT NULL DEFAULT 'Martial' CHECK(psa IN ('Martial', 'Mystic', 'Theurgy', 'Combat', 'Magic', 'Military', 'Technological', 'Biosocial')),
           gender TEXT,
           height TEXT,
           weight TEXT,
@@ -368,10 +368,10 @@ if (!mapCols.includes('map_type')) {
         SELECT
           id, user_id, name, race,
           CASE
-            WHEN psa = 'Military' THEN 'Combat'
-            WHEN psa = 'Technological' THEN 'Magic'
+            WHEN psa IN ('Military', 'Combat') THEN 'Martial'
+            WHEN psa IN ('Technological', 'Magic') THEN 'Mystic'
             WHEN psa = 'Biosocial' THEN 'Theurgy'
-            ELSE COALESCE(psa, 'Combat')
+            ELSE COALESCE(psa, 'Martial')
           END,
           gender, height, weight,
           str, sta, current_sta,
@@ -389,8 +389,8 @@ if (!mapCols.includes('map_type')) {
 
   try {
     db.exec(`
-      UPDATE character_sheets SET psa = 'Combat' WHERE psa = 'Military';
-      UPDATE character_sheets SET psa = 'Magic' WHERE psa = 'Technological';
+      UPDATE character_sheets SET psa = 'Martial' WHERE psa IN ('Military', 'Combat');
+      UPDATE character_sheets SET psa = 'Mystic' WHERE psa IN ('Technological', 'Magic');
       UPDATE character_sheets SET psa = 'Theurgy' WHERE psa = 'Biosocial';
     `);
   } catch (_e) {
