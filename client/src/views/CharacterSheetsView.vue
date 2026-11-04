@@ -480,7 +480,7 @@
 
         <!-- Detailed Species Abilities Panel -->
         <section class="card racial-panel species-traits-banner">
-          <span class="traits-badge">Species Traits &amp; Abilities &bull; {{ selectedChar.race }}</span>
+          <span class="traits-badge">Species Traits &amp; Abilities - {{ selectedChar.race }}</span>
           <div v-if="racesData[selectedChar.race]" class="traits-rule-text">
             <span>
               <strong>{{ racesData[selectedChar.race].trait_name || selectedChar.race }}:</strong>
@@ -501,7 +501,7 @@
           <section class="card list-card">
             <div class="list-header">
               <h4>Skills & Experience</h4>
-              <button class="btn-secondary" @click="addSkill">+ Add Skill</button>
+              <button class="btn-secondary btn-add-skill" @click="addSkill">+ Add Skill</button>
             </div>
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
@@ -4041,11 +4041,11 @@ export default {
 }
 
 .btn-secondary {
-  background-color: #666666 !important;
-  background: #666666 !important;
+  background-color: #2c2c2c !important;
+  background: #2c2c2c !important;
   color: #e0e0e0 !important;
   -webkit-text-fill-color: #e0e0e0 !important;
-  border: 1px solid #777777 !important;
+  border: 1px solid #484848 !important;
   padding: 5px 12px;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -4056,34 +4056,36 @@ export default {
   box-shadow: none !important;
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: #777777 !important;
-  background: #777777 !important;
-  border-color: #888888 !important;
+  background-color: #3c3c3c !important;
+  background: #3c3c3c !important;
+  border-color: #606060 !important;
   color: #e0e0e0 !important;
   -webkit-text-fill-color: #e0e0e0 !important;
-  box-shadow: 0 0 6px rgba(224, 224, 224, 0.25) !important;
+  box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
 }
 .btn-secondary:active:not(:disabled) {
   transform: translateY(1px);
 }
 
+.btn-add-skill,
 .btn-add-equipment,
 .btn-open-forge,
 .btn-add-custom-item,
 .btn-add-spell,
 .btn-add-note-panel {
-  background-color: #303030 !important;
-  background: #303030 !important;
+  background-color: #2c2c2c !important;
+  background: #2c2c2c !important;
   border-color: #484848 !important;
 }
 
+.btn-add-skill:hover:not(:disabled),
 .btn-add-equipment:hover:not(:disabled),
 .btn-open-forge:hover:not(:disabled),
 .btn-add-custom-item:hover:not(:disabled),
 .btn-add-spell:hover:not(:disabled),
 .btn-add-note-panel:hover:not(:disabled) {
-  background-color: #404040 !important;
-  background: #404040 !important;
+  background-color: #3c3c3c !important;
+  background: #3c3c3c !important;
   border-color: #606060 !important;
   box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
 }
