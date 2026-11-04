@@ -170,39 +170,39 @@
                   </span>
                 </div>
               </div>
+
+              <!-- 3rd Row: Tactical Stats (IM, Melee Base Hit, Movement, Encumbrance) -->
+              <div class="tactical-bar header-tactical-row">
+                <div class="tactical-stat">
+                  <span class="tactical-label">IM</span>
+                  <span class="tactical-value">+{{ derivedIM }}</span>
+                </div>
+                <div class="tactical-stat">
+                  <span class="tactical-label">Melee Base Hit</span>
+                  <span class="tactical-value">{{ derivedMeleeHit }}%</span>
+                </div>
+                <div class="tactical-stat">
+                  <span class="tactical-label">Movement (Walk / Dash)</span>
+                  <span class="tactical-value">
+                    {{ movementRates.walk }} / {{ movementRates.run }} ft
+                  </span>
+                </div>
+                <div class="tactical-stat encumbrance-stat">
+                  <span class="tactical-label">Encumbrance ({{ totalInventoryWeight }} / {{ unencumberedMaxWeight }} lbs)</span>
+                  <div class="encumbrance-bar-bg">
+                    <div
+                      class="encumbrance-bar-fill"
+                      :style="{ width: encumbrancePct + '%', backgroundColor: encumbranceColor }"
+                    ></div>
+                  </div>
+                  <span class="encumbrance-sub" :class="{ 'over-limit': isOverloaded }">
+                    Max Carry: {{ maxCarryWeight }} lbs
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
         </header>
-
-        <!-- Derived Tactical Sub-Stats Bar -->
-        <section class="tactical-bar card">
-          <div class="tactical-stat">
-            <span class="tactical-label">IM</span>
-            <span class="tactical-value">+{{ derivedIM }}</span>
-          </div>
-          <div class="tactical-stat">
-            <span class="tactical-label">Melee Base Hit</span>
-            <span class="tactical-value">{{ derivedMeleeHit }}%</span>
-          </div>
-          <div class="tactical-stat">
-            <span class="tactical-label">Movement (Walk / Dash)</span>
-            <span class="tactical-value">
-              {{ movementRates.walk }} / {{ movementRates.run }} ft
-            </span>
-          </div>
-          <div class="tactical-stat encumbrance-stat">
-            <span class="tactical-label">Encumbrance ({{ totalInventoryWeight }} / {{ unencumberedMaxWeight }} lbs)</span>
-            <div class="encumbrance-bar-bg">
-              <div
-                class="encumbrance-bar-fill"
-                :style="{ width: encumbrancePct + '%', backgroundColor: encumbranceColor }"
-              ></div>
-            </div>
-            <span class="encumbrance-sub" :class="{ 'over-limit': isOverloaded }">
-              Max Carry: {{ maxCarryWeight }} lbs
-            </span>
-          </div>
-        </section>
 
         <!-- Middle Section: Primary Attributes (Left) and Compact Trackers (Right) -->
         <div class="middle-section-grid">
@@ -3212,13 +3212,16 @@ export default {
   margin-top: 8px;
 }
 
-/* Derived Tactical Sub-Stats Bar */
+/* Derived Tactical Sub-Stats Bar (3rd row in sheet header) */
 .tactical-bar {
   display: grid;
   grid-template-columns: repeat(3, 1fr) 2fr;
   gap: 12px;
   align-items: center;
   background: #0d1117;
+  border: 1px solid var(--border-color, #30363d);
+  border-radius: 6px;
+  padding: 8px 12px;
 }
 
 .tactical-stat {
@@ -3667,8 +3670,8 @@ export default {
   font-size: 1.05rem;
   font-weight: 700;
   text-align: center;
-  background: #000000;
-  border: 1px solid var(--border-color, #30363d);
+  background: transparent;
+  border: none !important;
   color: #cdcdcd !important;
   -webkit-text-fill-color: #cdcdcd !important;
   text-shadow: none !important;
@@ -3679,8 +3682,9 @@ export default {
 }
 
 .stat-input:focus {
-  border-color: #cdcdcd !important;
-  box-shadow: 0 0 6px rgba(205, 205, 205, 0.4);
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .stat-input::-webkit-inner-spin-button,
