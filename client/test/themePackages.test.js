@@ -79,11 +79,11 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
 
     const firePkg = COLOR_PACKAGES.find((p) => p.key === 'fire');
     expect(firePkg.label).toBe('Fire');
-    expect(firePkg.widgetColor).toBe('#d44a27');
+    expect(firePkg.widgetColor).toBe('#fa982f');
 
     const limePkg = COLOR_PACKAGES.find((p) => p.key === 'lime');
     expect(limePkg.label).toBe('Lime');
-    expect(limePkg.widgetColor).toBe('#b4f071');
+    expect(limePkg.widgetColor).toBe('#bdff7a');
   });
 
   it('sets data-color-pkg="silver" on index.html', () => {

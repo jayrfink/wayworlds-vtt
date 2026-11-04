@@ -92,8 +92,8 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="crimson"\]\s*\{[\s\S]*?--widget-color:\s*#b3273a;[\s\S]*?--border-color:\s*#6d1823;[\s\S]*?--widget-track:\s*#25090d;/);
     expect(mainCss).toMatch(/\[data-color-pkg="forest"\]\s*\{[\s\S]*?--widget-color:\s*#3dd465;[\s\S]*?--border-color:\s*#1d8639;[\s\S]*?--widget-track:\s*#092511;/);
     expect(mainCss).toMatch(/\[data-color-pkg="indiglo"\]\s*\{[\s\S]*?--widget-color:\s*#2d798a;[\s\S]*?--border-color:\s*#1b4a55;[\s\S]*?--widget-track:\s*#0b1e23;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="fire"\]\s*\{[\s\S]*?--widget-color:\s*#d44a27;[\s\S]*?--border-color:\s*#7a2d1a;[\s\S]*?--widget-track:\s*#250f09;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="lime"\]\s*\{[\s\S]*?--widget-color:\s*#b4f071;[\s\S]*?--border-color:\s*#5a8f1e;[\s\S]*?--widget-track:\s*#182509;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="fire"\]\s*\{[\s\S]*?--widget-color:\s*#fa982f;[\s\S]*?--border-color:\s*#7a4c1a;[\s\S]*?--widget-track:\s*#251709;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="lime"\]\s*\{[\s\S]*?--widget-color:\s*#bdff7a;[\s\S]*?--border-color:\s*#578f1e;[\s\S]*?--widget-track:\s*#172509;/);
   });
 
   it('applies --widget-color to checkboxes, radios, and range inputs in main.css', () => {
