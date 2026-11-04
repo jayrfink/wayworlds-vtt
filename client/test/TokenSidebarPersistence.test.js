@@ -38,8 +38,9 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       expect(rpgViewSrc).toMatch(/watch\(\[[^\]]*showTokenSidebar[^\]]*\],/);
     });
 
-    it('binds toggleTokenSidebar and active class to .btn-sidebar in header', () => {
-      expect(rpgViewSrc).toMatch(/<button[^>]*class="[^"]*btn-sidebar[^"]*"[^>]*:class="\{\s*active:\s*showTokenSidebar\s*\}"[^>]*@click="toggleTokenSidebar"/);
+    it('does not have a Tokens button in the header toolbar, keeping sidebar in DOM', () => {
+      expect(rpgViewSrc).not.toMatch(/<button[^>]*class="[^"]*btn-sidebar[^"]*"/);
+      expect(rpgViewSrc).toMatch(/<aside\s+class="token-sidebar"\s+:class="\{\s*'token-sidebar-rolled-up':\s*isTokenSidebarRolledUp\s*\}"/);
     });
 
     it('uses closeTokenSidebar method on sidebar close button', () => {
@@ -63,8 +64,9 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       expect(spaceViewSrc).toMatch(/watch\(\[[^\]]*showTokenSidebar[^\]]*\],/);
     });
 
-    it('binds toggleTokenSidebar and active class to .btn-sidebar in header', () => {
-      expect(spaceViewSrc).toMatch(/<button[^>]*class="[^"]*btn-sidebar[^"]*"[^>]*:class="\{\s*active:\s*showTokenSidebar\s*\}"[^>]*@click="toggleTokenSidebar"/);
+    it('does not have a Markers button in the header toolbar, keeping sidebar in DOM', () => {
+      expect(spaceViewSrc).not.toMatch(/<button[^>]*class="[^"]*btn-sidebar[^"]*"/);
+      expect(spaceViewSrc).toMatch(/<aside\s+class="token-sidebar"\s+:class="\{\s*'token-sidebar-rolled-up':\s*isTokenSidebarRolledUp\s*\}"/);
     });
 
     it('uses closeTokenSidebar method on sidebar close button', () => {
@@ -83,16 +85,19 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       auth.user = { id: 701, username: 'scout', role: 'Player' };
 
       // User closes sidebar on RPG VTT
-      saveUserState(701, 'rpgVtt', { showTokenSidebar: false });
+      saveUserState(701, 'rpgVtt', { showTokenSidebar: false, isTokenSidebarRolledUp: true });
       expect(getUserState(701, 'rpgVtt', { showTokenSidebar: true }).showTokenSidebar).toBe(false);
+      expect(getUserState(701, 'rpgVtt', { isTokenSidebarRolledUp: false }).isTokenSidebarRolledUp).toBe(true);
 
       // User closes sidebar on Space VTT
-      saveUserState(701, 'spaceVtt', { showTokenSidebar: false });
+      saveUserState(701, 'spaceVtt', { showTokenSidebar: false, isTokenSidebarRolledUp: true });
       expect(getUserState(701, 'spaceVtt', { showTokenSidebar: true }).showTokenSidebar).toBe(false);
+      expect(getUserState(701, 'spaceVtt', { isTokenSidebarRolledUp: false }).isTokenSidebarRolledUp).toBe(true);
 
       // User opens sidebar on RPG VTT
-      saveUserState(701, 'rpgVtt', { showTokenSidebar: true });
+      saveUserState(701, 'rpgVtt', { showTokenSidebar: true, isTokenSidebarRolledUp: false });
       expect(getUserState(701, 'rpgVtt', { showTokenSidebar: false }).showTokenSidebar).toBe(true);
+      expect(getUserState(701, 'rpgVtt', { isTokenSidebarRolledUp: true }).isTokenSidebarRolledUp).toBe(false);
     });
   });
 });

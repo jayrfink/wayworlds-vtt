@@ -32,16 +32,6 @@
         <button v-if="isGm" class="btn-gm btn-deploy-vehicle" @click="showDeployVehicleModal = true" title="Deploy Vehicle on Active Map">
           Deploy Vehicle
         </button>
-        <!-- Token Inspector Toggle -->
-        <button
-          type="button"
-          class="btn-sidebar"
-          :class="{ active: showTokenSidebar }"
-          @click="toggleTokenSidebar"
-          :title="showTokenSidebar ? 'Close Token Inspector' : 'Open Token Inspector'"
-        >
-          Tokens {{ tokens.length > 0 ? `(${tokens.length})` : '' }}
-        </button>
       </div>
     </header>
 
@@ -530,11 +520,11 @@
       </div>
 
       <!-- Token Inspector Sidebar / Drawer -->
-      <aside v-if="showTokenSidebar" class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
+      <aside class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
         <div
           class="sidebar-header"
           @click.self="toggleTokenSidebarRollup"
-          :title="isTokenSidebarRolledUp ? 'Click to expand Token Inspector' : 'Click to collapse Token Inspector to top'"
+          :title="isTokenSidebarRolledUp ? 'Click to expand Token Inspector (Roll Down)' : 'Click to collapse Token Inspector to Top (Roll Up)'"
           style="cursor: pointer;"
         >
           <h3 @click="toggleTokenSidebarRollup">Token Inspector</h3>
@@ -1308,14 +1298,7 @@ const showTokenSidebar = ref(initialVttState.showTokenSidebar ?? true);
 const isTokenSidebarRolledUp = ref(Boolean(initialVttState.isTokenSidebarRolledUp));
 
 function toggleTokenSidebar() {
-  if (!showTokenSidebar.value) {
-    showTokenSidebar.value = true;
-    isTokenSidebarRolledUp.value = false;
-  } else if (isTokenSidebarRolledUp.value) {
-    isTokenSidebarRolledUp.value = false;
-  } else {
-    isTokenSidebarRolledUp.value = true;
-  }
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
   persistVttState();
 }
 

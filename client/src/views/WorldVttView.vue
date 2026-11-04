@@ -24,16 +24,6 @@
         <button v-if="isGm" class="btn-gm" @click="showGmDrawer = !showGmDrawer">
           GM Map Manager
         </button>
-        <!-- Marker Inspector Toggle -->
-        <button
-          type="button"
-          class="btn-sidebar"
-          :class="{ active: showTokenSidebar }"
-          @click="toggleTokenSidebar"
-          :title="showTokenSidebar ? 'Close Marker Inspector' : 'Open Marker Inspector'"
-        >
-          Markers {{ markers.length > 0 ? `(${markers.length})` : '' }}
-        </button>
       </div>
     </header>
 
@@ -501,11 +491,11 @@
       </div>
 
       <!-- Marker Inspector Sidebar -->
-      <aside v-if="showTokenSidebar" class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
+      <aside class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
         <div
           class="sidebar-header"
           @click.self="toggleTokenSidebarRollup"
-          :title="isTokenSidebarRolledUp ? 'Click to expand Marker Inspector' : 'Click to collapse Marker Inspector to top'"
+          :title="isTokenSidebarRolledUp ? 'Click to expand Marker Inspector (Roll Down)' : 'Click to collapse Marker Inspector to Top (Roll Up)'"
           style="cursor: pointer;"
         >
           <h3 @click="toggleTokenSidebarRollup">World Marker Inspector</h3>
@@ -1207,14 +1197,7 @@ const showTokenSidebar = ref(initialVttState.showTokenSidebar ?? true);
 const isTokenSidebarRolledUp = ref(Boolean(initialVttState.isTokenSidebarRolledUp));
 
 function toggleTokenSidebar() {
-  if (!showTokenSidebar.value) {
-    showTokenSidebar.value = true;
-    isTokenSidebarRolledUp.value = false;
-  } else if (isTokenSidebarRolledUp.value) {
-    isTokenSidebarRolledUp.value = false;
-  } else {
-    isTokenSidebarRolledUp.value = true;
-  }
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
   persistVttState();
 }
 
