@@ -23,30 +23,37 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
   });
 
-  it('includes silver and dark-grey along with dark emerald greens in COLOR_PACKAGES', () => {
+  it('includes silver, dark-grey, emerald, azure, plum, copper, and rust in COLOR_PACKAGES', () => {
     const keys = COLOR_PACKAGES.map((p) => p.key);
     expect(keys).toContain('silver');
     expect(keys).toContain('dark-grey');
-    expect(keys).toContain('greens');
-    expect(keys).toContain('blues-greens');
-    expect(keys).toContain('blues');
-    expect(keys).toContain('maroons');
-    expect(keys).toContain('oranges-maroon');
+    expect(keys).toContain('emerald');
+    expect(keys).toContain('azure');
+    expect(keys).toContain('plum');
+    expect(keys).toContain('copper');
     expect(keys).toContain('rust');
+    expect(keys).not.toContain('blues-greens');
 
     const rustPkg = COLOR_PACKAGES.find((p) => p.key === 'rust');
+    expect(rustPkg.label).toBe('Rust');
     expect(rustPkg.widgetColor).toBe('#7f513e');
     expect(rustPkg.borderColor).toBe('#543325');
     expect(rustPkg.brightColor).toBe('#c27a59');
 
-    const greenPkg = COLOR_PACKAGES.find((p) => p.key === 'greens');
-    expect(greenPkg.widgetColor).toBe('#1b7a4d');
-    expect(greenPkg.borderColor).toBe('#0d3822');
-    expect(greenPkg.brightColor).toBe('#10b981');
+    const emeraldPkg = COLOR_PACKAGES.find((p) => p.key === 'emerald');
+    expect(emeraldPkg.label).toBe('Emerald');
+    expect(emeraldPkg.widgetColor).toBe('#1b7a4d');
+    expect(emeraldPkg.borderColor).toBe('#0d3822');
+    expect(emeraldPkg.brightColor).toBe('#10b981');
 
-    const blueGreenPkg = COLOR_PACKAGES.find((p) => p.key === 'blues-greens');
-    expect(blueGreenPkg.borderColor).toBe('#0d3822');
-    expect(blueGreenPkg.brightColor).toBe('#10b981');
+    const plumPkg = COLOR_PACKAGES.find((p) => p.key === 'plum');
+    expect(plumPkg.label).toBe('Plum');
+
+    const azurePkg = COLOR_PACKAGES.find((p) => p.key === 'azure');
+    expect(azurePkg.label).toBe('Azure');
+
+    const copperPkg = COLOR_PACKAGES.find((p) => p.key === 'copper');
+    expect(copperPkg.label).toBe('Copper');
   });
 
   it('sets data-color-pkg="silver" on index.html', () => {
@@ -97,12 +104,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     const optionValues = select.findAll('option').map((o) => o.element.value);
     expect(optionValues).toContain('silver');
     expect(optionValues).toContain('dark-grey');
-    expect(optionValues).toContain('greens');
-    expect(optionValues).toContain('blues');
-    expect(optionValues).toContain('blues-greens');
-    expect(optionValues).toContain('maroons');
-    expect(optionValues).toContain('oranges-maroon');
+    expect(optionValues).toContain('emerald');
+    expect(optionValues).toContain('azure');
+    expect(optionValues).toContain('plum');
+    expect(optionValues).toContain('copper');
     expect(optionValues).toContain('rust');
+    expect(optionValues).not.toContain('blues-greens');
   });
 
   it('makes all themes available in CharacterSheetsView character sheet theme selector', async () => {
@@ -147,12 +154,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain(''); // Default (App Theme)
     expect(optionValues).toContain('silver');
     expect(optionValues).toContain('dark-grey');
-    expect(optionValues).toContain('greens');
-    expect(optionValues).toContain('blues');
-    expect(optionValues).toContain('blues-greens');
-    expect(optionValues).toContain('maroons');
-    expect(optionValues).toContain('oranges-maroon');
+    expect(optionValues).toContain('emerald');
+    expect(optionValues).toContain('azure');
+    expect(optionValues).toContain('plum');
+    expect(optionValues).toContain('copper');
     expect(optionValues).toContain('rust');
+    expect(optionValues).not.toContain('blues-greens');
 
     // Scoped container receives data-color-pkg="silver"
     const sheetContainer = wrapper.find('.sheet-container');

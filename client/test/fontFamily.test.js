@@ -79,14 +79,14 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).not.toMatch(/color-scheme:\s*light/i);
   });
 
-  it('defines all 8 data-color-pkg theme packages (silver, dark-grey, greens, blues, blues-greens, maroons, oranges-maroon, rust) in main.css', () => {
+  it('defines all 7 data-color-pkg theme packages (silver, dark-grey, emerald, azure, plum, copper, rust) in main.css', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="silver"\]\s*\{[\s\S]*?--widget-color:\s*#7d8590;[\s\S]*?--border-color:\s*#484f58;[\s\S]*?--widget-track:\s*#161b22;/);
     expect(mainCss).toMatch(/\[data-color-pkg="dark-grey"\]\s*\{[\s\S]*?--widget-color:\s*#545d68;[\s\S]*?--border-color:\s*#30363d;[\s\S]*?--widget-track:\s*#111418;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="greens"\]\s*\{[\s\S]*?--widget-color:\s*#1b7a4d;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="blues"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#347b93;[\s\S]*?--widget-track:\s*#1c4452;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="blues-greens"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="maroons"\]\s*\{[\s\S]*?--widget-color:\s*#bc3846;[\s\S]*?--border-color:\s*#72222a;[\s\S]*?--widget-track:\s*#2d0b0f;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="oranges-maroon"\]\s*\{[\s\S]*?--widget-color:\s*#d46a2b;[\s\S]*?--border-color:\s*#853146;[\s\S]*?--widget-track:\s*#1f090f;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="emerald"\]\s*\{[\s\S]*?--widget-color:\s*#1b7a4d;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="azure"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#347b93;[\s\S]*?--widget-track:\s*#1c4452;/);
+    expect(mainCss).not.toMatch(/\[data-color-pkg="blues-greens"\]/);
+    expect(mainCss).toMatch(/\[data-color-pkg="plum"\]\s*\{[\s\S]*?--widget-color:\s*#bc3846;[\s\S]*?--border-color:\s*#72222a;[\s\S]*?--widget-track:\s*#2d0b0f;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="copper"\]\s*\{[\s\S]*?--widget-color:\s*#d46a2b;[\s\S]*?--border-color:\s*#853146;[\s\S]*?--widget-track:\s*#1f090f;/);
     expect(mainCss).toMatch(/\[data-color-pkg="rust"\]\s*\{[\s\S]*?--widget-color:\s*#7f513e;[\s\S]*?--border-color:\s*#543325;[\s\S]*?--widget-track:\s*#180e0a;/);
   });
 
@@ -114,29 +114,33 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(COLOR_PACKAGES.map((p) => p.key)).toEqual([
       'silver',
       'dark-grey',
-      'greens',
-      'blues',
-      'blues-greens',
-      'maroons',
-      'oranges-maroon',
+      'emerald',
+      'azure',
+      'plum',
+      'copper',
       'rust',
     ]);
     expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
     expect(isValidColorPackage('silver')).toBe(true);
     expect(isValidColorPackage('dark-grey')).toBe(true);
-    expect(isValidColorPackage('oranges-maroon')).toBe(true);
+    expect(isValidColorPackage('emerald')).toBe(true);
+    expect(isValidColorPackage('azure')).toBe(true);
+    expect(isValidColorPackage('plum')).toBe(true);
+    expect(isValidColorPackage('copper')).toBe(true);
     expect(isValidColorPackage('rust')).toBe(true);
+    expect(isValidColorPackage('oranges-maroon')).toBe(true);
+    expect(isValidColorPackage('blues-greens')).toBe(false);
     expect(isValidColorPackage('light-mode')).toBe(false);
 
     // Initialize defaults to silver
     expect(initColorPackage()).toBe('silver');
     expect(attrs['data-color-pkg']).toBe('silver');
 
-    // Switch to oranges-maroon
-    expect(applyColorPackage('oranges-maroon')).toBe('oranges-maroon');
-    expect(store[COLOR_PKG_STORAGE_KEY]).toBe('oranges-maroon');
-    expect(attrs['data-color-pkg']).toBe('oranges-maroon');
-    expect(getSavedColorPackage()).toBe('oranges-maroon');
+    // Switch to copper
+    expect(applyColorPackage('copper')).toBe('copper');
+    expect(store[COLOR_PKG_STORAGE_KEY]).toBe('copper');
+    expect(attrs['data-color-pkg']).toBe('copper');
+    expect(getSavedColorPackage()).toBe('copper');
 
     // Invalid key falls back to silver
     expect(applyColorPackage('invalid-theme')).toBe('silver');

@@ -1,5 +1,13 @@
 export const COLOR_PKG_STORAGE_KEY = 'wayworlds_color_pkg';
 
+export const THEME_KEY_ALIASES = {
+  greens: 'emerald',
+  blues: 'azure',
+  maroons: 'plum',
+  'oranges-maroon': 'copper',
+  'blues-greens': 'silver',
+};
+
 export const COLOR_PACKAGES = [
   {
     key: 'silver',
@@ -24,8 +32,8 @@ export const COLOR_PACKAGES = [
     essColor: '#6e7681',
   },
   {
-    key: 'greens',
-    label: 'Greens (Emerald)',
+    key: 'emerald',
+    label: 'Emerald',
     widgetColor: '#1b7a4d',
     borderColor: '#0d3822',
     widgetTrack: '#081a10',
@@ -35,8 +43,8 @@ export const COLOR_PACKAGES = [
     essColor: '#059669',
   },
   {
-    key: 'blues',
-    label: 'Blues',
+    key: 'azure',
+    label: 'Azure',
     widgetColor: '#4cb2d4',
     borderColor: '#347b93',
     widgetTrack: '#1c4452',
@@ -46,19 +54,8 @@ export const COLOR_PACKAGES = [
     essColor: '#67e8f9',
   },
   {
-    key: 'blues-greens',
-    label: 'Blues & Greens',
-    widgetColor: '#4cb2d4',
-    borderColor: '#0d3822',
-    widgetTrack: '#081a10',
-    brightColor: '#10b981',
-    headerColor: '#34d399',
-    staColor: '#10b981',
-    essColor: '#38bdf8',
-  },
-  {
-    key: 'maroons',
-    label: 'Maroons',
+    key: 'plum',
+    label: 'Plum',
     widgetColor: '#bc3846',
     borderColor: '#72222a',
     widgetTrack: '#2d0b0f',
@@ -68,8 +65,8 @@ export const COLOR_PACKAGES = [
     essColor: '#fbc5cb',
   },
   {
-    key: 'oranges-maroon',
-    label: 'Oranges & Maroon',
+    key: 'copper',
+    label: 'Copper',
     widgetColor: '#d46a2b',
     borderColor: '#853146',
     widgetTrack: '#1f090f',
@@ -80,7 +77,7 @@ export const COLOR_PACKAGES = [
   },
   {
     key: 'rust',
-    label: 'Rust (Fighter)',
+    label: 'Rust',
     widgetColor: '#7f513e',
     borderColor: '#543325',
     widgetTrack: '#180e0a',
@@ -93,8 +90,15 @@ export const COLOR_PACKAGES = [
 
 export const DEFAULT_COLOR_PACKAGE = 'silver';
 
+export function normalizeColorPackage(pkgKey) {
+  if (!pkgKey) return DEFAULT_COLOR_PACKAGE;
+  return THEME_KEY_ALIASES[pkgKey] || pkgKey;
+}
+
 export function isValidColorPackage(pkgKey) {
-  return COLOR_PACKAGES.some((p) => p.key === pkgKey);
+  if (pkgKey === 'blues-greens') return false;
+  const normalized = normalizeColorPackage(pkgKey);
+  return COLOR_PACKAGES.some((p) => p.key === normalized);
 }
 
 export function getSavedColorPackage() {
@@ -102,7 +106,7 @@ export function getSavedColorPackage() {
     if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem(COLOR_PKG_STORAGE_KEY);
       if (saved && isValidColorPackage(saved)) {
-        return saved;
+        return normalizeColorPackage(saved);
       }
     }
   } catch {
@@ -112,7 +116,8 @@ export function getSavedColorPackage() {
 }
 
 export function applyColorPackage(pkgKey) {
-  const validKey = isValidColorPackage(pkgKey) ? pkgKey : DEFAULT_COLOR_PACKAGE;
+  const normalized = normalizeColorPackage(pkgKey);
+  const validKey = isValidColorPackage(normalized) ? normalized : DEFAULT_COLOR_PACKAGE;
   try {
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(COLOR_PKG_STORAGE_KEY, validKey);

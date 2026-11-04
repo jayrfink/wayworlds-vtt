@@ -2103,7 +2103,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
           name: 'Hero A',
           race: 'Dawn Elves',
           psa: 'Combat',
-          color_theme: 'greens',
+          color_theme: 'emerald',
           str: 50,
           sta: 50,
           dex: 50,
@@ -2120,10 +2120,10 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
       await wrapper.vm.$nextTick();
 
-      // Check sheet container has data-color-pkg="greens"
+      // Check sheet container has data-color-pkg="emerald"
       const sheetContainer = wrapper.find('.sheet-container');
       expect(sheetContainer.exists()).toBe(true);
-      expect(sheetContainer.attributes('data-color-pkg')).toBe('greens');
+      expect(sheetContainer.attributes('data-color-pkg')).toBe('emerald');
 
       // Check theme dropdown is present next to PSA
       const psaWrap = wrapper.find('.psa-select-wrap');
@@ -2136,9 +2136,9 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
 
       // Verify options include Default plus color packages
       const options = themeSelect.findAll('option');
-      expect(options.length).toBeGreaterThanOrEqual(6); // 1 default + 5 packages
+      expect(options.length).toBeGreaterThanOrEqual(6); // 1 default + packages
       expect(options[0].text()).toContain('Default');
-      expect(themeSelect.element.value).toBe('greens');
+      expect(themeSelect.element.value).toBe('emerald');
     });
 
     it('has no outline or border on the encumbrance bar indicator', () => {

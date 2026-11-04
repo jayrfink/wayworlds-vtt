@@ -207,7 +207,9 @@
 }
 
 :root[data-color-pkg="maroons"],
-[data-color-pkg="maroons"] {
+[data-color-pkg="maroons"],
+:root[data-color-pkg="plum"],
+[data-color-pkg="plum"] {
   --widget-color: #bc3846;
   --border-color: #72222a;
   --widget-track: #2d0b0f;
@@ -243,7 +245,9 @@
 }
 
 :root[data-color-pkg="greens"],
-[data-color-pkg="greens"] {
+[data-color-pkg="greens"],
+:root[data-color-pkg="emerald"],
+[data-color-pkg="emerald"] {
   --widget-color: #1b7a4d;
   --border-color: #0d3822;
   --widget-track: #081a10;
@@ -279,7 +283,9 @@
 }
 
 :root[data-color-pkg="blues"],
-[data-color-pkg="blues"] {
+[data-color-pkg="blues"],
+:root[data-color-pkg="azure"],
+[data-color-pkg="azure"] {
   --widget-color: #4cb2d4;
   --border-color: #347b93;
   --widget-track: #1c4452;
@@ -314,44 +320,10 @@
   --theme-ess-glow: 0 0 12px rgba(103, 232, 249, 0.75);
 }
 
-:root[data-color-pkg="blues-greens"],
-[data-color-pkg="blues-greens"] {
-  --widget-color: #4cb2d4;
-  --border-color: #0d3822;
-  --widget-track: #081a10;
-  --border: #0d3822;
-  --theme-primary: #4cb2d4;
-  --theme-secondary: #0d3822;
-  --theme-accent: #059669;
-  --theme-bright: #10b981;
-  --theme-bright-hover: #34d399;
-  --theme-header-color: #c8c8c8;
-  --theme-header-glow: none;
-  --theme-surface-active: #07261a;
-  --theme-surface-hover: #051b12;
-  --theme-surface-hover-active: #0a3424;
-  --theme-border-subtle: rgba(16, 185, 129, 0.35);
-  --theme-glow-bg: rgba(16, 185, 129, 0.12);
-  --theme-glow: rgba(16, 185, 129, 0.33);
-  --theme-glow-subtle: 0 0 6px rgba(16, 185, 129, 0.22);
-  --theme-glow-hover: 0 0 14px rgba(52, 211, 153, 0.7);
-  --theme-glow-strong: 0 0 18px rgba(52, 211, 153, 0.85);
-  --theme-btn-border: #0d3822;
-  --theme-btn-color: #10b981;
-  --theme-secondary-btn-border: #0d3822;
-  --theme-secondary-btn-color: #10b981;
-  --theme-stepper-arrow: #10b981;
-  --theme-stepper-filter: sepia(100%) saturate(350%) hue-rotate(145deg) brightness(1.2);
-  --theme-stepper-filter-hover: sepia(100%) saturate(600%) hue-rotate(145deg) brightness(1.5) drop-shadow(0 0 3px #10b981);
-  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
-  --theme-sta-color: #10b981;
-  --theme-sta-glow: 0 0 12px rgba(16, 185, 129, 0.7);
-  --theme-ess-color: #38bdf8;
-  --theme-ess-glow: 0 0 12px rgba(56, 189, 248, 0.75);
-}
-
 :root[data-color-pkg="oranges-maroon"],
-[data-color-pkg="oranges-maroon"] {
+[data-color-pkg="oranges-maroon"],
+:root[data-color-pkg="copper"],
+[data-color-pkg="copper"] {
   --widget-color: #d46a2b;
   --border-color: #853146;
   --widget-track: #1f090f;

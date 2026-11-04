@@ -150,13 +150,16 @@ describe('NavBar.vue', () => {
     expect(exposed.showPasswordModal.value).toBe(true);
   });
 
-  it('renders data-color-pkg theme switcher with Maroons, Greens, Blues, Blues & Greens, and Oranges & Maroon options', async () => {
+  it('renders data-color-pkg theme switcher with Plum, Emerald, Azure, Copper, and Rust options', async () => {
     const html = await renderNavBar({ username: 'PlayerOne', role: 'Player' });
     expect(html).toContain('color-pkg-select');
-    expect(html).toContain('Maroons');
-    expect(html).toContain('Greens');
-    expect(html).toContain('Blues');
-    expect(html).toContain('Blues &amp; Greens');
-    expect(html).toContain('Oranges &amp; Maroon');
+    expect(html).toContain('Plum');
+    expect(html).toContain('Emerald');
+    expect(html).toContain('Azure');
+    expect(html).toContain('Copper');
+    expect(html).toContain('Rust');
+    expect(html).not.toContain('Blues &amp; Greens');
+    expect(html).not.toContain('Maroons');
+    expect(html).not.toContain('Rust (Fighter)');
   });
 });
