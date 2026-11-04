@@ -3341,7 +3341,7 @@ onBeforeUnmount(() => {
 /* Canvas Area */
 .vtt-canvas-wrapper {
   flex: 1;
-  width: 100%;
+  min-width: 0;
   height: 100%;
 }
 
@@ -3403,20 +3403,20 @@ onBeforeUnmount(() => {
 /* Token Sidebar */
 .token-sidebar {
   width: 320px;
+  flex-shrink: 0;
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
   z-index: 5;
-  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .token-sidebar.token-sidebar-rolled-up {
   position: absolute;
   right: 0;
   top: 0;
+  width: 320px;
   height: auto;
-  max-height: 48px;
   z-index: 10;
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);

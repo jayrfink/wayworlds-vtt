@@ -310,11 +310,13 @@ function getWorldFromScreen(sx, sy) {
 function resizeCanvas() {
   if (!containerRef.value || !canvasRef.value) return;
   const rect = containerRef.value.getBoundingClientRect();
+  if (rect.width <= 0 || rect.height <= 0) return;
   const dpr = typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1;
   canvasRef.value.width = Math.round(rect.width * dpr);
   canvasRef.value.height = Math.round(rect.height * dpr);
   canvasRef.value.style.width = `${rect.width}px`;
   canvasRef.value.style.height = `${rect.height}px`;
+  requestRender();
 }
 
 let animationFrameId = null;

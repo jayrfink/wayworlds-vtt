@@ -18,6 +18,14 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
     path.resolve(__dirname, '../src/views/WorldVttView.vue'),
     'utf8'
   );
+  const rpgCanvasSrc = fs.readFileSync(
+    path.resolve(__dirname, '../src/components/VttCanvas.vue'),
+    'utf8'
+  );
+  const worldCanvasSrc = fs.readFileSync(
+    path.resolve(__dirname, '../src/components/WorldVttCanvas.vue'),
+    'utf8'
+  );
 
   beforeEach(() => {
     setActivePinia(createPinia());
@@ -51,6 +59,12 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       expect(rpgViewSrc).toMatch(/function onTokenSelected\(token\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
       expect(rpgViewSrc).toMatch(/watch\(selectedTokenId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
     });
+
+    it('ensures .vtt-canvas-wrapper allows shrinking and redraws on resize', () => {
+      expect(rpgViewSrc).toMatch(/\.vtt-canvas-wrapper\s*\{[^}]*min-width:\s*0;/);
+      expect(rpgViewSrc).not.toMatch(/\.vtt-canvas-wrapper\s*\{[^}]*width:\s*100%;/);
+      expect(rpgCanvasSrc).toMatch(/function resizeCanvas\(\)\s*\{[\s\S]*requestRender\(\);/);
+    });
   });
 
   describe('WorldVttView token sidebar persistence', () => {
@@ -76,6 +90,12 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
     it('unrolls and opens marker inspector when a marker is selected or clicked', () => {
       expect(spaceViewSrc).toMatch(/function onMarkerSelected\(marker\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
       expect(spaceViewSrc).toMatch(/watch\(selectedMarkerId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+    });
+
+    it('ensures .vtt-canvas-wrapper allows shrinking and redraws on resize', () => {
+      expect(spaceViewSrc).toMatch(/\.vtt-canvas-wrapper\s*\{[^}]*min-width:\s*0;/);
+      expect(spaceViewSrc).not.toMatch(/\.vtt-canvas-wrapper\s*\{[^}]*width:\s*100%;/);
+      expect(worldCanvasSrc).toMatch(/function resizeCanvas\(\)\s*\{[\s\S]*requestRender\(\);/);
     });
   });
 
