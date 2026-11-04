@@ -809,7 +809,7 @@
                   type="text"
                   v-model="spell.name"
                   @change="updateGrimoire"
-                  placeholder="Spell or Technique Name (e.g. Grimnir's Rime-Lance)"
+                  placeholder="Spell / Technique Name"
                   class="item-name-input spell-name-input"
                 />
                 <select
@@ -818,17 +818,13 @@
                   class="select-official-skill spell-category-select"
                   title="Universal Magnitude Category"
                 >
-                  <option value="strike">Strike (Single-Target Bolt/Smite)</option>
-                  <option value="blast">Blast / Cleave (Area Burst/Cone)</option>
-                  <option value="ward_heal">Ward / Restoration (Shield/Heal)</option>
-                  <option value="hex_summon">Hex / Control / Summon</option>
+                  <option value="strike">Strike</option>
+                  <option value="blast">Blast / Cleave</option>
+                  <option value="ward_heal">Ward / Heal</option>
+                  <option value="hex_summon">Hex / Control</option>
                 </select>
-                <button type="button" class="btn-remove btn-remove-spell" title="Delete Spell" @click="removeGrimoireEntry(sIdx)">✕</button>
-              </div>
-
-              <div class="grimoire-row-mid">
-                <div class="spell-dial-group">
-                  <label>Cast Tier (0–{{ getMaxCastTierForSpell(spell) }}):</label>
+                <div class="spell-dial-group" :title="'Cast Tier (0–' + getMaxCastTierForSpell(spell) + ')'">
+                  <span class="spell-tier-label">Tier</span>
                   <input
                     type="number"
                     v-model.number="spell.default_tier"
@@ -836,34 +832,42 @@
                     min="0"
                     :max="getMaxCastTierForSpell(spell)"
                     class="item-level-input spell-tier-input"
+                    :title="'Cast Tier (0–' + getMaxCastTierForSpell(spell) + ')'"
                   />
                 </div>
-                <span class="skill-chance-badge spell-target-badge" title="Tradition Target %">
-                  Target {{ getSpellTargetPct(spell) }}%
+                <span class="skill-chance-badge spell-target-badge" :title="'Tradition Target: ' + getSpellTargetPct(spell) + '%'">
+                  Tgt {{ getSpellTargetPct(spell) }}%
                 </span>
-                <span class="spell-cost-badge" title="Resource Cost (Cast Tier * 2)">
-                  Cost: {{ getSpellCost(spell) }} {{ getSpellFuelLabel(spell) }}
+                <span class="spell-cost-badge" :title="'Resource Cost (Cast Tier × 2)'">
+                  {{ getSpellCost(spell) }} {{ getSpellFuelLabel(spell) }}
                 </span>
-                <span class="spell-magnitude-badge" title="Universal Magnitude Effect">
+                <button
+                  type="button"
+                  class="btn-xp-upgrade btn-cast-spell"
+                  title="Cast / Channel this power"
+                  @click="castGrimoireSpell(spell, sIdx)"
+                >
+                  ⚡ Cast
+                </button>
+                <button
+                  type="button"
+                  class="btn-remove btn-remove-spell"
+                  title="Delete Spell"
+                  @click="removeGrimoireEntry(sIdx)"
+                >✕</button>
+              </div>
+
+              <div class="grimoire-row-bot">
+                <span class="spell-magnitude-badge" :title="'Universal Magnitude: ' + getSpellMagnitudeSummary(spell)">
                   {{ getSpellMagnitudeSummary(spell) }}
                 </span>
                 <input
                   type="text"
                   v-model="spell.range_area"
                   @change="updateGrimoire"
-                  placeholder="Range / Area (e.g. 60 ft / Single Target)"
+                  placeholder="Range / Area (e.g. 60 ft)"
                   class="item-name-input spell-range-input"
                 />
-                <button
-                  type="button"
-                  class="btn-xp-upgrade btn-cast-spell"
-                  @click="castGrimoireSpell(spell, sIdx)"
-                >
-                  ⚡ Cast / Channel
-                </button>
-              </div>
-
-              <div class="grimoire-row-bot">
                 <input
                   type="text"
                   v-model="spell.description"
@@ -4939,17 +4943,17 @@ export default {
 .grimoire-list {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
 }
 
 .grimoire-row {
   background: #0d1117;
   border: 1px solid #30363d;
   border-radius: 4px;
-  padding: 10px 12px;
+  padding: 5px 8px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 4px;
   box-shadow: none !important;
 }
 
@@ -4958,49 +4962,131 @@ export default {
 .grimoire-row-bot {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
-.spell-name-input {
-  flex: 2;
-  min-width: 180px;
+.grimoire-row .spell-name-input {
+  flex: 1 1 160px;
+  min-width: 130px;
   font-weight: 700;
+  padding: 3px 6px;
+  font-size: 0.82rem;
+  height: 26px;
+  box-sizing: border-box;
 }
 
-.spell-tradition-select,
-.spell-category-select {
-  min-width: 160px;
+.grimoire-row .spell-tradition-select,
+.grimoire-row .spell-category-select {
+  flex: 0 1 125px;
+  min-width: 95px;
+  padding: 3px 20px 3px 6px !important;
+  font-size: 0.78rem;
+  height: 26px;
+  box-sizing: border-box;
+  background-position: right 6px center !important;
 }
 
-.spell-dial-group {
+.grimoire-row .spell-dial-group {
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 0.8rem;
+  gap: 4px;
+  font-size: 0.76rem;
   color: #8b949e;
+  white-space: nowrap;
 }
 
-.spell-cost-badge,
-.spell-magnitude-badge {
+.grimoire-row .spell-tier-label {
+  font-size: 0.76rem;
+  color: #8b949e;
+  font-weight: 600;
+  cursor: default;
+}
+
+.grimoire-row .spell-tier-input {
+  width: 38px;
+  padding: 2px 2px;
+  font-size: 0.8rem;
+  height: 26px;
+  box-sizing: border-box;
+}
+
+.grimoire-row .spell-target-badge {
+  padding: 2px 6px;
+  font-size: 0.76rem;
+  height: 26px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.grimoire-row .spell-cost-badge {
   background: var(--theme-surface-active, rgba(69, 172, 186, 0.12));
   border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
   color: var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
-  padding: 4px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   font-weight: 600;
+  height: 26px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
 }
 
-.spell-range-input {
-  flex: 1;
-  min-width: 150px;
+.grimoire-row .btn-cast-spell {
+  padding: 3px 8px;
+  font-size: 0.76rem;
+  height: 26px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
-.spell-desc-input {
-  width: 100%;
-  font-size: 0.82rem;
+.grimoire-row .btn-remove-spell {
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  height: 26px;
+  line-height: 1;
+}
+
+.grimoire-row .spell-magnitude-badge {
+  background: var(--theme-surface-active, rgba(69, 172, 186, 0.12));
+  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
+  color: var(--theme-bright, #45acba);
+  box-shadow: var(--theme-glow-subtle);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  height: 24px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.grimoire-row .spell-range-input {
+  flex: 0 1 140px;
+  min-width: 105px;
+  padding: 2px 6px;
+  font-size: 0.78rem;
+  height: 24px;
+  box-sizing: border-box;
+}
+
+.grimoire-row .spell-desc-input {
+  flex: 1 1 160px;
+  min-width: 140px;
+  padding: 2px 6px;
+  font-size: 0.78rem;
+  height: 24px;
+  box-sizing: border-box;
   color: #8b949e;
 }
 
