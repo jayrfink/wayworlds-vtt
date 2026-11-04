@@ -336,3 +336,200 @@ export const ADDITIONAL_RULES_REF = {
     },
   ],
 };
+
+export const ATTRIBUTES_RULES_REF = {
+  title: 'Wayworlds Primary Attributes & Resource Pools',
+  overview: {
+    title: 'Universal d100 Attribute Baseline & Pair Shifting',
+    baseline: 50,
+    formula: 'Target % = ceil(Base Stat / 2) + (Skill Level x 10) + Lineage & Gear Modifiers',
+    description:
+      'All characters and sentient NPCs possess 4 paired percentile ability scores (1–100) starting at a flat 50 baseline before Lineage modifications. Attributes directly determine skill base success chances, physical thresholds, and resource pools.',
+  },
+  pairs: [
+    {
+      pairName: 'Strength / Stamina',
+      acronym: 'STR / STA',
+      title: 'Physical Might & Vital Endurance',
+      primaryRole: 'Melee combat, carry capacity, physical labor, and health pool.',
+      stats: [
+        {
+          name: 'Strength',
+          acronym: 'STR',
+          baseValue: 50,
+          pairedWith: 'STA',
+          description:
+            'Raw muscular power, physical exertion, striking force, and lifting capability.',
+          governs: [
+            'Melee Attack Base Hit: ceil(STR / 2) (or DEX for finesse weapons)',
+            'Maximum Carry Capacity: STR x 2 lbs (Unencumbered: STR x 1 lb)',
+            'Heavy weapon & heavy armor minimum strength requirements',
+            'Athletics checks (climbing, swimming, forcing doors, jumping)',
+            'Unarmed strike damage scaling',
+          ],
+          keySkills: 'Melee Weapons, Striker & Grappler, Athletics & Acrobatics, Tradecraft',
+        },
+        {
+          name: 'Stamina',
+          acronym: 'STA',
+          baseValue: 50,
+          pairedWith: 'STR',
+          description:
+            'Cardiovascular endurance, physical resilience against injury, poison, and fatigue.',
+          governs: [
+            'Maximum Health Pool: hp_max = adjusted STA score',
+            'Survival against mortal wounds and shock',
+            'Fuel source for Blood Magic and Overchanneling abilities',
+            'Armor & Shield tolerance and continuous battle endurance',
+            'Essence pool maximum for Ki martial artists',
+          ],
+          keySkills: 'Armor & Shield Mastery, Blood Magic, Ki Traditions',
+        },
+      ],
+    },
+    {
+      pairName: 'Agility / Reflex Speed',
+      acronym: 'DEX / RS',
+      title: 'Finesse, Coordination & Combat Reaction',
+      primaryRole: 'Ranged accuracy, dexterity, dodging, and turn initiative.',
+      stats: [
+        {
+          name: 'Agility',
+          acronym: 'DEX',
+          baseValue: 50,
+          pairedWith: 'RS',
+          description:
+            'Hand-eye coordination, fine motor skills, agility, balance, and physical stealth.',
+          governs: [
+            'Ranged Attack Base Hit: ceil(DEX / 2) for bows, crossbows, and thrown weapons',
+            'Finesse melee accuracy (daggers, rapiers, shortswords)',
+            'Dodging, tumbling, and fall damage reduction',
+            'Stealth, lockpicking, sleight of hand, and trap disarming',
+            'Somatic precision for Shadow magic and thievery',
+          ],
+          keySkills: 'Ranged Weapons, Stealth & Secrecy, Athletics & Acrobatics, Shadow Magic',
+        },
+        {
+          name: 'Reflex Speed',
+          acronym: 'RS',
+          baseValue: 50,
+          pairedWith: 'DEX',
+          description:
+            'Neural response time, combat alertness, twitch reflexes, and sudden threat reactions.',
+          governs: [
+            'Initiative Modifier: IM = ceil(RS / 10) added to combat round rolls',
+            'Turn sequence priority and tie-breaking',
+            'Opportunity attack evasion and reaction speed',
+            'Quick-drawing weapons and rapid defensive parries',
+          ],
+          keySkills: 'Combat Initiative, Reaction Positioning',
+        },
+      ],
+    },
+    {
+      pairName: 'Intellect / History & Religion',
+      acronym: 'INT / HIST/REL',
+      title: 'Logic, Lore, Ancient Wisdom & Faith',
+      primaryRole: 'Scholarly spells, artisan crafts, medicine, world lore, and divine invocation.',
+      stats: [
+        {
+          name: 'Intellect',
+          acronym: 'INT',
+          baseValue: 50,
+          pairedWith: 'HIST/REL',
+          description:
+            'Analytical reasoning, mental clarity, memory, deduction, and scholarly learning.',
+          governs: [
+            'Arcane and scholarly spell base hit: ceil(INT / 2)',
+            'Artisan Crafting & Field Repairs in Tradecraft',
+            'Medicine, field surgery, anatomy, and poultice brewing',
+            'Decoding runes, languages, ancient scripts, and mechanical puzzles',
+            'Necromantic and Witchcraft spell attunement',
+          ],
+          keySkills: 'Arcane Magic, Tradecraft, Herbalism & Medicine, Necromancy, Witchcraft',
+        },
+        {
+          name: 'History & Religion',
+          acronym: 'HIST/REL',
+          baseValue: 50,
+          pairedWith: 'INT',
+          description:
+            'Understanding of historic empires, lineages, regional faiths, deities, cults, and myths.',
+          governs: [
+            'Spiritual and ancestral invocation accuracy: ceil(HIST/REL / 2)',
+            'Wilderness & Beast Lore identification and navigation',
+            'Diagnosing curses, divine relics, demonic entities, and planar rifts',
+            'Determining starting Essence pool (if higher than WIL/STA)',
+            'Religious rituals and sacred consecrations',
+          ],
+          keySkills: 'History & Religion, Wilderness & Beast Lore, Spiritual Channeling',
+        },
+      ],
+    },
+    {
+      pairName: 'Willpower / Presence',
+      acronym: 'WIL / PRE',
+      title: 'Mental Fortitude, Soul Power & Social Authority',
+      primaryRole: 'Essence fuel pool, mental saves, charisma, command, and leadership.',
+      stats: [
+        {
+          name: 'Willpower',
+          acronym: 'WIL',
+          baseValue: 50,
+          pairedWith: 'PRE',
+          description:
+            'Inner resolve, spirit strength, mental discipline, and resistance to mystical influence.',
+          governs: [
+            'Maximum Essence Pool (ESS) for channelers and spellcasters',
+            'Spiritual, Druidic, Blood, and Demonology power channeling: ceil(WIL / 2)',
+            'Saving throws against fear, terror, charms, and psychic domination',
+            'Concentration checks under battle damage or harsh environments',
+            'Channeling high Cast Tiers (Tier 1–6) without losing focus',
+          ],
+          keySkills: 'Druidic Magic, Demonology, Blood Magic, Ki, Warg Traditions',
+        },
+        {
+          name: 'Presence',
+          acronym: 'PRE',
+          baseValue: 50,
+          pairedWith: 'WIL',
+          description:
+            'Magnetism, force of personality, command voice, social influence, and leadership aura.',
+          governs: [
+            'Persuasion, deceit, negotiation, and social discourse',
+            'Intimidation and demoralizing opposing forces',
+            'Tactical squad command and inspiring allied morale',
+            'Demonological pact bargaining and entity binding',
+          ],
+          keySkills: 'Influence & Deception, Leadership, Demonology Negotiations',
+        },
+      ],
+    },
+  ],
+  summaryTable: [
+    { acronym: 'STR', name: 'Strength', pair: 'STA', baseRole: 'Melee Damage, Carry Limit, Physical Feats', formulaRole: 'Base Melee Hit: ceil(STR / 2), Max Carry = STR x 2 lbs' },
+    { acronym: 'STA', name: 'Stamina', pair: 'STR', baseRole: 'Health (HP), Fatigue, Blood Magic Pool', formulaRole: 'Max STA / HP = adjusted STA score' },
+    { acronym: 'DEX', name: 'Agility', pair: 'RS', baseRole: 'Ranged Accuracy, Finesse, Stealth, Dodging', formulaRole: 'Base Ranged Hit: ceil(DEX / 2)' },
+    { acronym: 'RS', name: 'Reflex Speed', pair: 'DEX', baseRole: 'Combat Alertness, Initiative, Reaction Speed', formulaRole: 'Initiative Modifier: IM = ceil(RS / 10)' },
+    { acronym: 'INT', name: 'Intellect', pair: 'HIST/REL', baseRole: 'Arcane Spells, Tradecraft, Field Medicine', formulaRole: 'Base Arcane Hit: ceil(INT / 2)' },
+    { acronym: 'HIST/REL', name: 'History & Religion', pair: 'INT', baseRole: 'Ancient Lore, Faith, Divine Magic, Rituals', formulaRole: 'Base Spiritual Hit: ceil(HIST/REL / 2)' },
+    { acronym: 'WIL', name: 'Willpower', pair: 'PRE', baseRole: 'Essence Pool, Mental Fortitude, Tradition Channeling', formulaRole: 'Max Essence: max(WIL, HIST/REL, STA)' },
+    { acronym: 'PRE', name: 'Presence', pair: 'WIL', baseRole: 'Leadership, Intimidation, Persuasion, Social Force', formulaRole: 'Social & Command Resolution' },
+  ],
+  resourcePools: [
+    {
+      name: 'Stamina (STA)',
+      acronym: 'STA',
+      metric: 'Max = Adjusted STA Score',
+      description:
+        'Physical health, endurance, and fortitude. When reduced to 0, a character falls unconscious or suffers mortal trauma. Also spent as fuel for Blood Magic or Overchanneling.',
+    },
+    {
+      name: 'Essence (ESS)',
+      acronym: 'ESS',
+      metric: 'Max = Highest of adjusted WIL, HIST/REL, or STA (for Ki)',
+      description:
+        'The supernatural energy and focus pool used to cast spells, channel Ki, or manifest traditions. Standard cast cost is strictly Cast Tier x 2 ESS (0 for Cantrips/Minor moves). Fully restored upon a Full Rest.',
+    },
+  ],
+};

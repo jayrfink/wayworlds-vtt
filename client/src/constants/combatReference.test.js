@@ -3,6 +3,7 @@ import {
   RANGED_COMBAT_REF,
   MELEE_COMBAT_REF,
   ADDITIONAL_RULES_REF,
+  ATTRIBUTES_RULES_REF,
 } from './combatReference.js';
 
 describe('combatReference', () => {
@@ -145,6 +146,39 @@ describe('combatReference', () => {
       expect(horse.overlandSpeed).toContain('4 mph');
       expect(horse.capacity).toContain('250 lbs');
       expect(horse.mechanics).toContain('Rider shares mount movement');
+    });
+  });
+
+  describe('ATTRIBUTES_RULES_REF', () => {
+    it('exports all 4 paired attributes and primary resource pools', () => {
+      expect(ATTRIBUTES_RULES_REF.overview.baseline).toBe(50);
+      expect(ATTRIBUTES_RULES_REF.pairs.length).toBe(4);
+
+      const pairAcronyms = ATTRIBUTES_RULES_REF.pairs.map((p) => p.acronym);
+      expect(pairAcronyms).toEqual([
+        'STR / STA',
+        'DEX / RS',
+        'INT / HIST/REL',
+        'WIL / PRE',
+      ]);
+
+      const allStats = ATTRIBUTES_RULES_REF.pairs.flatMap((p) => p.stats);
+      expect(allStats.length).toBe(8);
+      const statAcronyms = allStats.map((s) => s.acronym);
+      expect(statAcronyms).toEqual([
+        'STR',
+        'STA',
+        'DEX',
+        'RS',
+        'INT',
+        'HIST/REL',
+        'WIL',
+        'PRE',
+      ]);
+
+      expect(ATTRIBUTES_RULES_REF.summaryTable.length).toBe(8);
+      expect(ATTRIBUTES_RULES_REF.resourcePools.length).toBe(2);
+      expect(ATTRIBUTES_RULES_REF.resourcePools.map((p) => p.acronym)).toEqual(['STA', 'ESS']);
     });
   });
 });

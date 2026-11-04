@@ -227,11 +227,11 @@
             </div>
             <div class="stats-grid">
               <!-- STR / STA -->
-              <div class="stat-pair-box">
+              <div class="stat-pair-box" title="Strength / Stamina">
                 <div class="stat-pair-header">STR / STA</div>
                 <div class="stat-inputs-row">
                   <div class="sub-stat">
-                    <label>STR</label>
+                    <label title="Strength">STR</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.str"
@@ -246,7 +246,7 @@
                     <button class="btn-shift" title="Shift point to STA" @click="shiftStat('str', 'sta', -1)">►</button>
                   </div>
                   <div class="sub-stat">
-                    <label>STA</label>
+                    <label title="Stamina">STA</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.sta"
@@ -260,11 +260,11 @@
               </div>
 
               <!-- DEX / RS -->
-              <div class="stat-pair-box">
+              <div class="stat-pair-box" title="Agility / Reflex Speed">
                 <div class="stat-pair-header">DEX / RS</div>
                 <div class="stat-inputs-row">
                   <div class="sub-stat">
-                    <label>DEX</label>
+                    <label title="Agility">DEX</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.dex"
@@ -279,7 +279,7 @@
                     <button class="btn-shift" title="Shift point to RS" @click="shiftStat('dex', 'rs', -1)">►</button>
                   </div>
                   <div class="sub-stat">
-                    <label>RS</label>
+                    <label title="Reflex Speed">RS</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.rs"
@@ -292,12 +292,12 @@
                 </div>
               </div>
 
-              <!-- INT / LOG -->
-              <div class="stat-pair-box">
-                <div class="stat-pair-header">INT / LOG</div>
+              <!-- INT / HIST/REL -->
+              <div class="stat-pair-box" title="Intellect / History & Religion">
+                <div class="stat-pair-header">INT / HIST/REL</div>
                 <div class="stat-inputs-row">
                   <div class="sub-stat">
-                    <label>INT</label>
+                    <label title="Intellect">INT</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.int"
@@ -309,10 +309,10 @@
                   </div>
                   <div class="shift-controls">
                     <button class="btn-shift" title="Shift point to INT" @click="shiftStat('int', 'log', 1)">◄</button>
-                    <button class="btn-shift" title="Shift point to LOG" @click="shiftStat('int', 'log', -1)">►</button>
+                    <button class="btn-shift" title="Shift point to HIST/REL" @click="shiftStat('int', 'log', -1)">►</button>
                   </div>
                   <div class="sub-stat">
-                    <label>LOG</label>
+                    <label title="History & Religion">HIST/REL</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.log"
@@ -325,12 +325,12 @@
                 </div>
               </div>
 
-              <!-- PER / LDR -->
-              <div class="stat-pair-box">
-                <div class="stat-pair-header">PER / LDR</div>
+              <!-- WIL / PRE -->
+              <div class="stat-pair-box" title="Willpower / Presence">
+                <div class="stat-pair-header">WIL / PRE</div>
                 <div class="stat-inputs-row">
                   <div class="sub-stat">
-                    <label>PER</label>
+                    <label title="Willpower">WIL</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.per"
@@ -341,11 +341,11 @@
                     />
                   </div>
                   <div class="shift-controls">
-                    <button class="btn-shift" title="Shift point to PER" @click="shiftStat('per', 'ldr', 1)">◄</button>
-                    <button class="btn-shift" title="Shift point to LDR" @click="shiftStat('per', 'ldr', -1)">►</button>
+                    <button class="btn-shift" title="Shift point to WIL" @click="shiftStat('per', 'ldr', 1)">◄</button>
+                    <button class="btn-shift" title="Shift point to PRE" @click="shiftStat('per', 'ldr', -1)">►</button>
                   </div>
                   <div class="sub-stat">
-                    <label>LDR</label>
+                    <label title="Presence">PRE</label>
                     <input
                       type="number"
                       v-model.number="selectedChar.ldr"
@@ -978,8 +978,8 @@
               <strong>Lineage Adjusted Baseline (from 50):</strong>
               STR {{ newCharForm.str }} / STA {{ newCharForm.sta }} &bull;
               DEX {{ newCharForm.dex }} / RS {{ newCharForm.rs }} &bull;
-              INT {{ newCharForm.int }} / LOG {{ newCharForm.log }} &bull;
-              PER {{ newCharForm.per }} / LDR {{ newCharForm.ldr }}
+              INT {{ newCharForm.int }} / HIST/REL {{ newCharForm.log }} &bull;
+              WIL {{ newCharForm.per }} / PRE {{ newCharForm.ldr }}
             </div>
           </div>
           <div v-if="newCharForm.race === 'Custom'" class="form-group custom-race-input-group">
@@ -1009,37 +1009,37 @@
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>STR</label>
+              <label title="Strength">STR</label>
               <input type="number" v-model.number="newCharForm.str" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>STA</label>
+              <label title="Stamina">STA</label>
               <input type="number" v-model.number="newCharForm.sta" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>DEX</label>
+              <label title="Agility">DEX</label>
               <input type="number" v-model.number="newCharForm.dex" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>RS</label>
+              <label title="Reflex Speed">RS</label>
               <input type="number" v-model.number="newCharForm.rs" min="1" max="100" />
             </div>
           </div>
           <div class="form-row">
             <div class="form-group">
-              <label>INT</label>
+              <label title="Intellect">INT</label>
               <input type="number" v-model.number="newCharForm.int" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>LOG (HIST/REL)</label>
+              <label title="History & Religion">HIST/REL</label>
               <input type="number" v-model.number="newCharForm.log" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>PER (WIL)</label>
+              <label title="Willpower">WIL</label>
               <input type="number" v-model.number="newCharForm.per" min="1" max="100" />
             </div>
             <div class="form-group">
-              <label>LDR (PRE)</label>
+              <label title="Presence">PRE</label>
               <input type="number" v-model.number="newCharForm.ldr" min="1" max="100" />
             </div>
           </div>
@@ -2185,18 +2185,22 @@ export default {
       const offSk = OFFICIAL_SKILLS.find((s) => s.name === skill.name);
       let baseVal = 50;
       if (offSk) {
-        if (offSk.baseChance === 'Dexterity') {
+        if (offSk.baseChance === 'Agility' || offSk.baseChance === 'Dexterity') {
           baseVal = Math.ceil((this.selectedChar.dex ?? 50) / 2);
-        } else if (offSk.baseChance === 'Reaction Speed') {
+        } else if (offSk.baseChance === 'Reflex Speed' || offSk.baseChance === 'Reaction Speed') {
           baseVal = Math.ceil((this.selectedChar.rs ?? 50) / 2);
         } else if (offSk.baseChance === 'Stamina') {
           baseVal = Math.ceil((this.selectedChar.sta ?? 50) / 2);
-        } else if (offSk.baseChance === 'Logic') {
+        } else if (offSk.baseChance === 'Strength') {
+          baseVal = Math.ceil((this.selectedChar.str ?? 50) / 2);
+        } else if (offSk.baseChance === 'History & Religion' || offSk.baseChance === 'HIST/REL' || offSk.baseChance === 'Logic') {
           baseVal = Math.ceil((this.selectedChar.log ?? 50) / 2);
-        } else if (offSk.baseChance === 'Intuition') {
+        } else if (offSk.baseChance === 'Intellect' || offSk.baseChance === 'Intuition') {
           baseVal = Math.ceil((this.selectedChar.int ?? 50) / 2);
-        } else if (offSk.baseChance === 'Personality') {
+        } else if (offSk.baseChance === 'Willpower' || offSk.baseChance === 'Personality') {
           baseVal = Math.ceil((this.selectedChar.per ?? 50) / 2);
+        } else if (offSk.baseChance === 'Presence' || offSk.baseChance === 'Leadership') {
+          baseVal = Math.ceil((this.selectedChar.ldr ?? 50) / 2);
         } else if (offSk.baseChance.includes('Melee Base')) {
           baseVal = this.derivedMeleeHit;
         }

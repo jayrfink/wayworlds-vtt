@@ -96,6 +96,49 @@ describe('QuickReferenceTables.vue', () => {
     });
   });
 
+  describe('Primary Attributes Tab', () => {
+    it('renders attribute pairs, overview baseline formula, summary table, and resource pools', async () => {
+      const html = await renderComponent({ initialCategory: 'attributes' });
+
+      // Overview banner
+      expect(html).toContain('Universal d100 Attribute Baseline &amp; Pair Shifting');
+      expect(html).toContain('Baseline: 50');
+      expect(html).toContain('Target % = ceil(Base Stat / 2) + (Skill Level x 10) + Lineage &amp; Gear Modifiers');
+
+      // Summary table
+      expect(html).toContain('Attributes Quick Reference');
+      expect(html).toContain('STR');
+      expect(html).toContain('STA');
+      expect(html).toContain('DEX');
+      expect(html).toContain('RS');
+      expect(html).toContain('INT');
+      expect(html).toContain('HIST/REL');
+      expect(html).toContain('WIL');
+      expect(html).toContain('PRE');
+
+      // Pairs and cards
+      expect(html).toContain('Strength / Stamina (STR / STA)');
+      expect(html).toContain('Agility / Reflex Speed (DEX / RS)');
+      expect(html).toContain('Intellect / History &amp; Religion (INT / HIST/REL)');
+      expect(html).toContain('Willpower / Presence (WIL / PRE)');
+
+      // Resource pools
+      expect(html).toContain('Primary Resource Pools');
+      expect(html).toContain('Stamina (STA)');
+      expect(html).toContain('Essence (ESS)');
+    });
+
+    it('filters attributes tab based on search query', async () => {
+      const html = await renderComponent({
+        initialCategory: 'attributes',
+        initialSearch: 'Willpower',
+      });
+
+      expect(html).toContain('Willpower');
+      expect(html).not.toContain('Agility / Reflex Speed (DEX / RS)');
+    });
+  });
+
   describe('Search Filter', () => {
     it('filters tables based on search query', async () => {
       const html = await renderComponent({

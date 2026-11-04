@@ -57,8 +57,8 @@ describe('formatCharacterAscii Utility', () => {
     expect(text).toContain('Stamina: 50 / 60');
     expect(text).toContain('DEX / RS:    50 / 65');
     expect(text).toContain('Initiative Modifier: +6');
-    expect(text).toContain('INT / LOG:   45 / 55');
-    expect(text).toContain('PER / LDR:   40 / 50');
+    expect(text).toContain('INT / HIST/REL: 45 / 55');
+    expect(text).toContain('WIL / PRE:   40 / 50');
     expect(text).toContain('Energy Pool: 42 / 50 ESS');
 
     // Species abilities

@@ -325,6 +325,108 @@
           </div>
         </section>
       </div>
+
+      <!-- ================= PRIMARY ATTRIBUTES ================= -->
+      <div v-else-if="activeCategory === 'attributes'" class="category-panel">
+        <!-- Overview Banner -->
+        <div v-if="filteredAttributesOverview" class="formula-banner">
+          <div class="formula-icon">✨</div>
+          <div class="formula-details">
+            <span class="formula-subtitle">{{ ATTRIBUTES_RULES_REF.overview.title }} (Baseline: {{ ATTRIBUTES_RULES_REF.overview.baseline }})</span>
+            <div class="formula-code">{{ ATTRIBUTES_RULES_REF.overview.formula }}</div>
+            <p class="formula-desc">{{ ATTRIBUTES_RULES_REF.overview.description }}</p>
+          </div>
+        </div>
+
+        <!-- Attributes Quick Reference Summary Table -->
+        <section v-if="filteredAttributesSummary.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Overview</span>
+            Attributes Quick Reference
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 140px;">Acronym</th>
+                  <th style="width: 180px;">Attribute</th>
+                  <th style="width: 110px;">Paired With</th>
+                  <th style="width: 320px;">Governing Role &amp; Mechanical Impact</th>
+                  <th>Formula &amp; Thresholds</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="stat in filteredAttributesSummary" :key="stat.acronym">
+                  <td class="col-name font-bold font-mono">
+                    <span class="attr-pill">{{ stat.acronym }}</span>
+                  </td>
+                  <td class="font-bold">{{ stat.name }}</td>
+                  <td class="font-mono text-center">{{ stat.pair }}</td>
+                  <td>{{ stat.baseRole }}</td>
+                  <td class="col-highlight font-mono">{{ stat.formulaRole }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Paired Attributes Detail Cards -->
+        <section v-for="pair in filteredAttributePairs" :key="pair.acronym" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Pair</span>
+            {{ pair.pairName }} ({{ pair.acronym }})
+          </h2>
+          <div class="pair-meta-desc">{{ pair.title }} &bull; {{ pair.primaryRole }}</div>
+          <div class="stat-cards-grid">
+            <div v-for="st in pair.stats" :key="st.acronym" class="stat-detail-card">
+              <div class="stat-card-header">
+                <span class="stat-badge">{{ st.acronym }}</span>
+                <div class="stat-card-title-group">
+                  <h3 class="stat-card-name">{{ st.name }}</h3>
+                  <span class="stat-card-sub">Paired with: {{ st.pairedWith }} &bull; Baseline: {{ st.baseValue }}</span>
+                </div>
+              </div>
+              <p class="stat-card-desc">{{ st.description }}</p>
+              <div class="stat-card-governs">
+                <span class="governs-label">Governs &amp; Calculations:</span>
+                <ul class="governs-list">
+                  <li v-for="(rule, idx) in st.governs" :key="idx">{{ rule }}</li>
+                </ul>
+              </div>
+              <div class="stat-card-skills">
+                <span class="skills-label">Key Associated Skills &amp; Traditions:</span>
+                <span class="skills-text">{{ st.keySkills }}</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Primary Resource Pools Table -->
+        <section v-if="filteredResourcePools.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Vital Pools</span>
+            Primary Resource Pools
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 180px;">Resource Pool</th>
+                  <th style="width: 280px;">Maximum Capacity Formula</th>
+                  <th>Depletion, Spell Costs &amp; Recovery</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="pool in filteredResourcePools" :key="pool.acronym">
+                  <td class="col-name font-bold">{{ pool.name }}</td>
+                  <td class="col-highlight font-mono">{{ pool.metric }}</td>
+                  <td class="col-notes">{{ pool.description }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 </template>
@@ -335,6 +437,7 @@ import {
   RANGED_COMBAT_REF,
   MELEE_COMBAT_REF,
   ADDITIONAL_RULES_REF,
+  ATTRIBUTES_RULES_REF,
 } from '../constants/combatReference.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 
@@ -350,6 +453,7 @@ const props = defineProps({
 });
 
 const tabs = [
+  { id: 'attributes', label: 'Primary Attributes', icon: '✨' },
   { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
   { id: 'melee', label: 'Melee Combat', icon: '⚔️' },
   { id: 'overland', label: 'Overland', icon: '🐎' },
@@ -438,9 +542,60 @@ const filteredAdditionalMounts = computed(() =>
   ADDITIONAL_RULES_REF.mountsAndMovement.filter((item) => matchesQuery(item, searchQuery.value))
 );
 
+// Filtered Primary Attributes items
+const filteredAttributesOverview = computed(() => {
+  if (!searchQuery.value.trim()) return true;
+  const q = searchQuery.value.trim().toLowerCase();
+  return (
+    ATTRIBUTES_RULES_REF.overview.title.toLowerCase().includes(q) ||
+    ATTRIBUTES_RULES_REF.overview.formula.toLowerCase().includes(q) ||
+    ATTRIBUTES_RULES_REF.overview.description.toLowerCase().includes(q)
+  );
+});
+
+const filteredAttributesSummary = computed(() =>
+  ATTRIBUTES_RULES_REF.summaryTable.filter((item) => matchesQuery(item, searchQuery.value))
+);
+
+const filteredAttributePairs = computed(() => {
+  if (!searchQuery.value.trim()) return ATTRIBUTES_RULES_REF.pairs;
+  const q = searchQuery.value.trim().toLowerCase();
+  return ATTRIBUTES_RULES_REF.pairs
+    .map((pair) => {
+      const pairMatches =
+        pair.pairName.toLowerCase().includes(q) ||
+        pair.acronym.toLowerCase().includes(q) ||
+        pair.title.toLowerCase().includes(q) ||
+        pair.primaryRole.toLowerCase().includes(q);
+      const matchingStats = pair.stats.filter(
+        (st) => pairMatches || matchesQuery(st, searchQuery.value)
+      );
+      if (matchingStats.length > 0) {
+        return {
+          ...pair,
+          stats: matchingStats,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+});
+
+const filteredResourcePools = computed(() =>
+  ATTRIBUTES_RULES_REF.resourcePools.filter((item) => matchesQuery(item, searchQuery.value))
+);
+
 // Empty state check per active category
 const noResults = computed(() => {
   if (!searchQuery.value.trim()) return false;
+  if (activeCategory.value === 'attributes') {
+    return (
+      !filteredAttributesOverview.value &&
+      filteredAttributesSummary.value.length === 0 &&
+      filteredAttributePairs.value.length === 0 &&
+      filteredResourcePools.value.length === 0
+    );
+  }
   if (activeCategory.value === 'ranged') {
     return (
       filteredRangedSequence.value.length === 0 &&
@@ -1024,5 +1179,146 @@ const noResults = computed(() => {
   color: #00dada !important;
   -webkit-text-fill-color: #00dada;
   box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+}
+
+/* Attribute Cards & Details */
+.formula-desc {
+  font-size: 13px;
+  line-height: 1.4;
+  margin: 4px 0 0;
+  color: var(--text-secondary);
+}
+
+.pair-meta-desc {
+  font-size: 13px;
+  margin-top: -4px;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.stat-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.stat-detail-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.stat-detail-card:hover {
+  border-color: var(--theme-bright, #d0d0d0);
+  box-shadow: var(--theme-glow-subtle, 0 0 8px rgba(208, 208, 208, 0.2));
+}
+
+.stat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.stat-badge {
+  font-size: 13px;
+  font-weight: 800;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  padding: 4px 10px;
+  border-radius: 6px;
+  background: var(--theme-surface-active, rgba(88, 166, 255, 0.15));
+  border: 1px solid var(--theme-border-subtle, rgba(88, 166, 255, 0.35));
+  color: var(--theme-bright, #cecece);
+  box-shadow: var(--theme-glow-subtle);
+  letter-spacing: 0.5px;
+}
+
+.stat-card-title-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-card-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.stat-card-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.stat-card-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.stat-card-governs {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.governs-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+}
+
+.governs-list {
+  margin: 0;
+  padding-left: 18px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.governs-list li {
+  margin-bottom: 3px;
+}
+
+.stat-card-skills {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.skills-label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.skills-text {
+  color: var(--theme-bright, #cecece);
+  font-weight: 500;
+}
+
+.attr-pill {
+  display: inline-block;
+  padding: 2px 8px;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--theme-bright, #cecece);
+  font-weight: 700;
 }
 </style>

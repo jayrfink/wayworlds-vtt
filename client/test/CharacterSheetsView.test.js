@@ -643,7 +643,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       // Right button ► should shift point to right stat (-1)
       expect(vueFile).toContain('<button class="btn-shift" title="Shift point to STA" @click="shiftStat(\'str\', \'sta\', -1)">►</button>');
       expect(vueFile).toContain('<button class="btn-shift" title="Shift point to RS" @click="shiftStat(\'dex\', \'rs\', -1)">►</button>');
-      expect(vueFile).toContain('<button class="btn-shift" title="Shift point to LOG" @click="shiftStat(\'int\', \'log\', -1)">►</button>');
+      expect(vueFile).toContain('<button class="btn-shift" title="Shift point to HIST/REL" @click="shiftStat(\'int\', \'log\', -1)">►</button>');
     });
 
     it('Bug 29: displays reactive errorMessage when character update, create, or delete fails', async () => {
@@ -1379,9 +1379,13 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         const statBoxes = statsSection.findAll('.stat-pair-box');
         expect(statBoxes.length).toBe(4);
         expect(statBoxes[0].find('.stat-pair-header').text()).toBe('STR / STA');
+        expect(statBoxes[0].attributes('title')).toBe('Strength / Stamina');
         expect(statBoxes[1].find('.stat-pair-header').text()).toBe('DEX / RS');
-        expect(statBoxes[2].find('.stat-pair-header').text()).toBe('INT / LOG');
-        expect(statBoxes[3].find('.stat-pair-header').text()).toBe('PER / LDR');
+        expect(statBoxes[1].attributes('title')).toBe('Agility / Reflex Speed');
+        expect(statBoxes[2].find('.stat-pair-header').text()).toBe('INT / HIST/REL');
+        expect(statBoxes[2].attributes('title')).toBe('Intellect / History & Religion');
+        expect(statBoxes[3].find('.stat-pair-header').text()).toBe('WIL / PRE');
+        expect(statBoxes[3].attributes('title')).toBe('Willpower / Presence');
 
         // Right box: trackers-section with STA, ESS, XP
         const trackersSection = middleGrid.find('.trackers-section');
