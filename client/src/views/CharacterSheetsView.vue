@@ -3116,7 +3116,7 @@ export default {
   flex: 1;
   min-width: 180px;
   background: var(--bg-input, #1c2026);
-  border: 1px solid var(--border-color, #30363d);
+  border: none !important;
   color: #c9c9c9 !important;
   -webkit-text-fill-color: #c9c9c9 !important;
   text-shadow: none !important;
@@ -3125,6 +3125,12 @@ export default {
   font-weight: 700;
   padding: 8px 12px;
   border-radius: 4px;
+}
+
+.input-name:focus {
+  outline: none;
+  border: none !important;
+  box-shadow: none !important;
 }
 
 .race-select-wrap,
