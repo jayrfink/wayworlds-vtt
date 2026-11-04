@@ -139,6 +139,64 @@ describe('QuickReferenceTables.vue', () => {
     });
   });
 
+  describe('Primary System Areas (PSA) Tab', () => {
+    it('renders PSA overview banner, XP point-buy table, character tier benchmarks, and areas', async () => {
+      const html = await renderComponent({ initialCategory: 'psa' });
+
+      // Overview banner
+      expect(html).toContain('Primary System Area (PSA) Doctrine &amp; Universal XP Costs');
+      expect(html).toContain('In-PSA: Next Level × 3 XP | Out-of-PSA: Next Level × 6 XP (2× Multiplier)');
+
+      // XP Progression Table
+      expect(html).toContain('Universal PSA-Scaled XP Point-Buy Table');
+      expect(html).toContain('Level 1');
+      expect(html).toContain('Level 6');
+      expect(html).toContain('3 XP');
+      expect(html).toContain('6 XP');
+      expect(html).toContain('18 XP');
+      expect(html).toContain('36 XP');
+
+      // Character Tier Benchmarks
+      expect(html).toContain('Character Tier Calculation Benchmarks');
+      expect(html).toContain('Tier 1');
+      expect(html).toContain('Tier 5');
+      expect(html).toContain('Legendary Paragon');
+
+      // Areas and Skills
+      expect(html).toContain('Martial');
+      expect(html).toContain('Melee Weapons');
+      expect(html).toContain('Armor &amp; Shield Mastery');
+      expect(html).toContain('Shadow');
+      expect(html).toContain('Ki');
+
+      expect(html).toContain('Mystic');
+      expect(html).toContain('Lore &amp; Arcana');
+      expect(html).toContain('Tradecraft');
+      expect(html).toContain('Arcane');
+      expect(html).toContain('Necromancy');
+
+      expect(html).toContain('Theurgy');
+      expect(html).toContain('Wilderness &amp; Survival');
+      expect(html).toContain('Influence &amp; Deception');
+      expect(html).toContain('Herbalism &amp; Medicine');
+      expect(html).toContain('Blood');
+      expect(html).toContain('Druidic');
+
+      // Summary Table
+      expect(html).toContain('Complete Skills &amp; Traditions Reference (21 Total)');
+    });
+
+    it('filters PSA tab based on search query', async () => {
+      const html = await renderComponent({
+        initialCategory: 'psa',
+        initialSearch: 'Necromancy',
+      });
+
+      expect(html).toContain('Necromancy');
+      expect(html).not.toContain('Armor &amp; Shield Mastery');
+    });
+  });
+
   describe('Search Filter', () => {
     it('filters tables based on search query', async () => {
       const html = await renderComponent({

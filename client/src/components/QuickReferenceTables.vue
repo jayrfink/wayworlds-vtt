@@ -427,6 +427,190 @@
           </div>
         </section>
       </div>
+
+      <!-- ================= PRIMARY SYSTEM AREAS (PSA) ================= -->
+      <div v-else-if="activeCategory === 'psa'" class="category-panel">
+        <!-- Overview Banner -->
+        <div v-if="filteredPsaOverview" class="formula-banner">
+          <div class="formula-icon">🛡️</div>
+          <div class="formula-details">
+            <span class="formula-subtitle">{{ PSA_RULES_REF.overview.title }}</span>
+            <div class="formula-code">{{ PSA_RULES_REF.overview.formula }}</div>
+            <p class="formula-desc">{{ PSA_RULES_REF.overview.description }}</p>
+          </div>
+        </div>
+
+        <!-- Universal PSA-Scaled XP Progression Table -->
+        <section v-if="filteredPsaXpTable.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Advancement</span>
+            Universal PSA-Scaled XP Point-Buy Table (Levels 1–6)
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 90px;">Level</th>
+                  <th style="width: 110px;">Check Bonus</th>
+                  <th style="width: 140px;">In-PSA Cost</th>
+                  <th style="width: 170px;">In-PSA Cumulative</th>
+                  <th style="width: 160px;">Out-of-PSA Cost</th>
+                  <th style="width: 190px;">Out-of-PSA Cumulative</th>
+                  <th>Proficiency Rank</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in filteredPsaXpTable" :key="row.level">
+                  <td class="font-bold text-center font-mono">Level {{ row.level }}</td>
+                  <td class="col-highlight font-mono font-bold text-center">{{ row.bonus }}</td>
+                  <td class="font-mono text-center font-bold text-emerald">{{ row.inPsaCost }} XP</td>
+                  <td class="font-mono text-center">{{ row.cumInPsa }} XP</td>
+                  <td class="font-mono text-center font-bold text-rose">{{ row.outPsaCost }} XP</td>
+                  <td class="font-mono text-center">{{ row.cumOutPsa }} XP</td>
+                  <td class="col-name">{{ row.rank }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- Character Tier Benchmarks Table -->
+        <section v-if="filteredPsaCharacterTiers.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Tiers</span>
+            Character Tier Calculation Benchmarks
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 100px;">Tier</th>
+                  <th style="width: 180px;">Title</th>
+                  <th style="width: 260px;">Skill Qualification</th>
+                  <th>World &amp; Adversary Benchmark</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="tier in filteredPsaCharacterTiers" :key="tier.tier">
+                  <td class="col-name font-bold font-mono">
+                    <span class="attr-pill">{{ tier.tier }}</span>
+                  </td>
+                  <td class="font-bold">{{ tier.title }}</td>
+                  <td class="col-highlight font-mono">{{ tier.req }}</td>
+                  <td class="col-notes">{{ tier.benchmark }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- PSA Detailed Areas Cards -->
+        <section v-for="area in filteredPsaAreas" :key="area.id" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Area</span>
+            <span class="psa-badge" :class="area.id.toLowerCase()">{{ area.name }}</span>
+            {{ area.tagline }}
+          </h2>
+          <p class="pair-meta-desc">{{ area.description }}</p>
+
+          <!-- Secular Skills in this PSA -->
+          <div v-if="area.secularSkills.length > 0" class="psa-subgroup">
+            <h3 class="psa-sub-title">Core Secular Skills ({{ area.name }} PSA)</h3>
+            <div class="stat-cards-grid">
+              <div v-for="sk in area.secularSkills" :key="sk.name" class="stat-detail-card">
+                <div class="stat-card-header">
+                  <span class="skill-category-tag">{{ sk.type }}</span>
+                  <div class="stat-card-title-group">
+                    <h4 class="stat-card-name">{{ sk.name }}</h4>
+                    <span class="stat-card-sub">Base Stat: {{ sk.baseStat }} &bull; In-PSA: 1× Cost</span>
+                  </div>
+                </div>
+                <p class="stat-card-desc">{{ sk.description }}</p>
+                <div class="stat-card-governs">
+                  <span class="governs-label">Base Chance Formula:</span>
+                  <div class="font-mono col-highlight" style="font-size: 12px;">{{ sk.baseChance }}</div>
+                </div>
+                <div class="stat-card-skills">
+                  <span class="skills-label">Primary Applications:</span>
+                  <span class="skills-text">{{ sk.keyUse }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Traditions in this PSA -->
+          <div v-if="area.traditions.length > 0" class="psa-subgroup">
+            <h3 class="psa-sub-title">Traditions &amp; Disciplines ({{ area.name }} PSA)</h3>
+            <div class="stat-cards-grid">
+              <div v-for="tr in area.traditions" :key="tr.name" class="stat-detail-card">
+                <div class="stat-card-header">
+                  <span class="skill-category-tag tradition-tag">{{ tr.type }}</span>
+                  <div class="stat-card-title-group">
+                    <h4 class="stat-card-name">{{ tr.name }}</h4>
+                    <span class="stat-card-sub">Fuel: {{ tr.fuel }} &bull; Base Stat: {{ tr.baseStat }}</span>
+                  </div>
+                </div>
+                <p class="stat-card-desc">{{ tr.description }}</p>
+                <div class="stat-card-governs">
+                  <span class="governs-label">Base Chance Formula:</span>
+                  <div class="font-mono col-highlight" style="font-size: 12px;">{{ tr.baseChance }}</div>
+                </div>
+                <div class="stat-card-skills">
+                  <span class="skills-label">Signature Manifestations:</span>
+                  <span class="skills-text">{{ tr.keyUse }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Full Skills & Traditions Summary Table -->
+        <section v-if="filteredPsaSummary.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Matrix</span>
+            Complete Skills &amp; Traditions Reference (21 Total)
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 180px;">Skill / Tradition</th>
+                  <th style="width: 110px;">PSA</th>
+                  <th style="width: 130px;">Category</th>
+                  <th style="width: 140px;">Base Stat</th>
+                  <th style="width: 220px;">Base Hit Formula</th>
+                  <th style="width: 120px;">Fuel Cost</th>
+                  <th>Tactical Focus &amp; Applications</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in filteredPsaSummary" :key="item.name">
+                  <td class="col-name font-bold">{{ item.name }}</td>
+                  <td>
+                    <span class="psa-badge" :class="item.psa.toLowerCase()">{{ item.psa }}</span>
+                  </td>
+                  <td>
+                    <span class="skill-category-tag" :class="{ 'tradition-tag': item.category === 'Tradition' }">{{ item.category }}</span>
+                  </td>
+                  <td class="font-mono font-bold">{{ item.baseStat }}</td>
+                  <td class="col-highlight font-mono">{{ item.baseChance }}</td>
+                  <td class="font-mono">
+                    <span
+                      class="fuel-pill"
+                      :class="{
+                        ess: item.fuel.includes('ESS'),
+                        sta: item.fuel.includes('STA'),
+                        none: item.fuel === '—'
+                      }"
+                    >{{ item.fuel }}</span>
+                  </td>
+                  <td class="col-notes">{{ item.keyUse }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </main>
   </div>
 </template>
@@ -438,6 +622,7 @@ import {
   MELEE_COMBAT_REF,
   ADDITIONAL_RULES_REF,
   ATTRIBUTES_RULES_REF,
+  PSA_RULES_REF,
 } from '../constants/combatReference.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 
@@ -454,6 +639,7 @@ const props = defineProps({
 
 const tabs = [
   { id: 'attributes', label: 'Primary Attributes', icon: '✨' },
+  { id: 'psa', label: 'Primary System Areas (PSA)', icon: '🛡️' },
   { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
   { id: 'melee', label: 'Melee Combat', icon: '⚔️' },
   { id: 'overland', label: 'Overland', icon: '🐎' },
@@ -585,6 +771,56 @@ const filteredResourcePools = computed(() =>
   ATTRIBUTES_RULES_REF.resourcePools.filter((item) => matchesQuery(item, searchQuery.value))
 );
 
+// Filtered PSA items
+const filteredPsaOverview = computed(() => {
+  if (!searchQuery.value.trim()) return true;
+  const q = searchQuery.value.trim().toLowerCase();
+  return (
+    PSA_RULES_REF.overview.title.toLowerCase().includes(q) ||
+    PSA_RULES_REF.overview.formula.toLowerCase().includes(q) ||
+    PSA_RULES_REF.overview.description.toLowerCase().includes(q)
+  );
+});
+
+const filteredPsaXpTable = computed(() =>
+  PSA_RULES_REF.xpTable.filter((row) => matchesQuery(row, searchQuery.value))
+);
+
+const filteredPsaCharacterTiers = computed(() =>
+  PSA_RULES_REF.characterTiers.filter((row) => matchesQuery(row, searchQuery.value))
+);
+
+const filteredPsaAreas = computed(() => {
+  if (!searchQuery.value.trim()) return PSA_RULES_REF.areas;
+  const q = searchQuery.value.trim().toLowerCase();
+  return PSA_RULES_REF.areas
+    .map((area) => {
+      const areaMatches =
+        area.name.toLowerCase().includes(q) ||
+        area.tagline.toLowerCase().includes(q) ||
+        area.description.toLowerCase().includes(q);
+      const matchingSecular = area.secularSkills.filter(
+        (sk) => areaMatches || matchesQuery(sk, searchQuery.value)
+      );
+      const matchingTraditions = area.traditions.filter(
+        (tr) => areaMatches || matchesQuery(tr, searchQuery.value)
+      );
+      if (areaMatches || matchingSecular.length > 0 || matchingTraditions.length > 0) {
+        return {
+          ...area,
+          secularSkills: matchingSecular,
+          traditions: matchingTraditions,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
+});
+
+const filteredPsaSummary = computed(() =>
+  PSA_RULES_REF.summaryTable.filter((item) => matchesQuery(item, searchQuery.value))
+);
+
 // Empty state check per active category
 const noResults = computed(() => {
   if (!searchQuery.value.trim()) return false;
@@ -594,6 +830,15 @@ const noResults = computed(() => {
       filteredAttributesSummary.value.length === 0 &&
       filteredAttributePairs.value.length === 0 &&
       filteredResourcePools.value.length === 0
+    );
+  }
+  if (activeCategory.value === 'psa') {
+    return (
+      !filteredPsaOverview.value &&
+      filteredPsaXpTable.value.length === 0 &&
+      filteredPsaCharacterTiers.value.length === 0 &&
+      filteredPsaAreas.value.length === 0 &&
+      filteredPsaSummary.value.length === 0
     );
   }
   if (activeCategory.value === 'ranged') {
@@ -1322,5 +1567,99 @@ const noResults = computed(() => {
   border-radius: 4px;
   color: var(--theme-bright, #cecece);
   font-weight: 700;
+}
+
+.text-emerald {
+  color: #34d399 !important;
+}
+
+.text-rose {
+  color: #f87171 !important;
+}
+
+.psa-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid var(--theme-border-subtle, rgba(200, 200, 200, 0.3));
+}
+
+.psa-badge.martial {
+  background: rgba(239, 68, 68, 0.15);
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #fca5a5;
+}
+
+.psa-badge.mystic {
+  background: rgba(14, 165, 233, 0.15);
+  border-color: rgba(14, 165, 233, 0.4);
+  color: #7dd3fc;
+}
+
+.psa-badge.theurgy {
+  background: rgba(16, 185, 129, 0.15);
+  border-color: rgba(16, 185, 129, 0.4);
+  color: #86efac;
+}
+
+.skill-category-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+
+.skill-category-tag.tradition-tag {
+  background: rgba(168, 85, 247, 0.15);
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #d8b4fe;
+}
+
+.fuel-pill {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+}
+
+.fuel-pill.ess {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+  border: 1px solid rgba(56, 189, 248, 0.35);
+}
+
+.fuel-pill.sta {
+  background: rgba(248, 113, 113, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(248, 113, 113, 0.35);
+}
+
+.fuel-pill.none {
+  color: var(--text-secondary);
+}
+
+.psa-subgroup {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.psa-sub-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--theme-bright, #cecece);
+  margin: 0;
+  letter-spacing: 0.3px;
 }
 </style>

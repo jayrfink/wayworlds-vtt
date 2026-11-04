@@ -4,6 +4,7 @@ import {
   MELEE_COMBAT_REF,
   ADDITIONAL_RULES_REF,
   ATTRIBUTES_RULES_REF,
+  PSA_RULES_REF,
 } from './combatReference.js';
 
 describe('combatReference', () => {
@@ -179,6 +180,45 @@ describe('combatReference', () => {
       expect(ATTRIBUTES_RULES_REF.summaryTable.length).toBe(8);
       expect(ATTRIBUTES_RULES_REF.resourcePools.length).toBe(2);
       expect(ATTRIBUTES_RULES_REF.resourcePools.map((p) => p.acronym)).toEqual(['STA', 'ESS']);
+    });
+  });
+
+  describe('PSA_RULES_REF', () => {
+    it('exports all 3 Primary System Areas with secular skills and traditions', () => {
+      expect(PSA_RULES_REF.overview).toBeDefined();
+      expect(PSA_RULES_REF.xpTable.length).toBe(6);
+      expect(PSA_RULES_REF.characterTiers.length).toBe(5);
+      expect(PSA_RULES_REF.areas.length).toBe(3);
+
+      const areaNames = PSA_RULES_REF.areas.map((a) => a.name);
+      expect(areaNames).toEqual(['Martial', 'Mystic', 'Theurgy']);
+
+      // 6 secular + 2 traditions in Martial = 8
+      const martial = PSA_RULES_REF.areas.find((a) => a.name === 'Martial');
+      expect(martial.secularSkills.length).toBe(6);
+      expect(martial.traditions.length).toBe(2);
+
+      // 2 secular + 2 traditions in Mystic = 4
+      const mystic = PSA_RULES_REF.areas.find((a) => a.name === 'Mystic');
+      expect(mystic.secularSkills.length).toBe(2);
+      expect(mystic.traditions.length).toBe(2);
+
+      // 3 secular + 6 traditions in Theurgy = 9
+      const theurgy = PSA_RULES_REF.areas.find((a) => a.name === 'Theurgy');
+      expect(theurgy.secularSkills.length).toBe(3);
+      expect(theurgy.traditions.length).toBe(6);
+
+      // Total skills in summary matrix: 21 (11 secular + 10 traditions)
+      expect(PSA_RULES_REF.summaryTable.length).toBe(21);
+    });
+
+    it('validates universal XP cost point-buy rules (3x in-PSA vs 6x out-of-PSA)', () => {
+      PSA_RULES_REF.xpTable.forEach((row) => {
+        expect(row.inPsaCost).toBe(row.level * 3);
+        expect(row.outPsaCost).toBe(row.level * 6);
+      });
+      expect(PSA_RULES_REF.xpTable[5].cumInPsa).toBe(63);
+      expect(PSA_RULES_REF.xpTable[5].cumOutPsa).toBe(126);
     });
   });
 });
