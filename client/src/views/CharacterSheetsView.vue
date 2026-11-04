@@ -1050,42 +1050,6 @@
               </option>
             </select>
           </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label title="Strength">STR</label>
-              <input type="number" v-model.number="newCharForm.str" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="Stamina">STA</label>
-              <input type="number" v-model.number="newCharForm.sta" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="Agility">DEX</label>
-              <input type="number" v-model.number="newCharForm.dex" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="Reflex Speed">RS</label>
-              <input type="number" v-model.number="newCharForm.rs" min="1" max="100" />
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label title="Intellect">INT</label>
-              <input type="number" v-model.number="newCharForm.int" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="History & Religion">HIST/REL</label>
-              <input type="number" v-model.number="newCharForm.log" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="Willpower">WIL</label>
-              <input type="number" v-model.number="newCharForm.per" min="1" max="100" />
-            </div>
-            <div class="form-group">
-              <label title="Presence">PRE</label>
-              <input type="number" v-model.number="newCharForm.ldr" min="1" max="100" />
-            </div>
-          </div>
           <div class="modal-actions">
             <button type="button" class="btn-modal-cancel" @click="showCreateModal = false">Cancel</button>
             <button type="submit" class="btn-modal-create" :disabled="creating">Create Character</button>
@@ -4342,6 +4306,8 @@ export default {
   padding: 24px;
   width: 440px;
   max-width: 90vw;
+  max-height: 90vh;
+  overflow-y: auto;
 }
 
 .modal-card h3 {

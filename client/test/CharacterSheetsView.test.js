@@ -2203,6 +2203,40 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(wrapper.find('.sidebar-body-wrap').classes()).not.toContain('rolled-up');
       expect(btnRollup.text()).toBe('▲');
     });
+
+    it('removes manual attribute inputs from create character modal and sets attributes based on species/race', async () => {
+      setActivePinia(createPinia());
+      const wrapper = mount(CharacterSheetsView, {
+        global: {
+          stubs: {
+            ImageBrowserModal: true,
+          },
+        },
+      });
+
+      wrapper.vm.openCreateModal();
+      await wrapper.vm.$nextTick();
+
+      const modal = wrapper.find('.modal-card');
+      expect(modal.exists()).toBe(true);
+
+      // Verify no manual attribute inputs exist in the create character form
+      const attributeInputs = modal.findAll('input[type="number"]');
+      expect(attributeInputs.length).toBe(0);
+
+      // Verify species selection automatically sets lineage baseline stats on newCharForm
+      wrapper.vm.newCharForm.race = 'Vanir Dwarves';
+      wrapper.vm.onCreateRaceChange();
+      expect(wrapper.vm.newCharForm.str).toBe(55); // Vanir Dwarves +5 STR
+      expect(wrapper.vm.newCharForm.sta).toBe(55); // Vanir Dwarves +5 STA
+      expect(wrapper.vm.newCharForm.rs).toBe(45);  // Vanir Dwarves -5 RS
+
+      // Change to True Giants
+      wrapper.vm.newCharForm.race = 'True Giants';
+      wrapper.vm.onCreateRaceChange();
+      expect(wrapper.vm.newCharForm.str).toBe(70); // True Giants +20 STR
+      expect(wrapper.vm.newCharForm.sta).toBe(70); // True Giants +20 STA
+    });
   });
 });
 
