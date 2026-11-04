@@ -501,13 +501,26 @@
       </div>
 
       <!-- Marker Inspector Sidebar -->
-      <aside v-if="showTokenSidebar" class="token-sidebar">
-        <div class="sidebar-header">
-          <h3>World Marker Inspector</h3>
-          <button type="button" class="close-btn" @click="closeTokenSidebar" title="Close Marker Inspector">×</button>
+      <aside v-if="showTokenSidebar" class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
+        <div
+          class="sidebar-header"
+          @click.self="toggleTokenSidebarRollup"
+          :title="isTokenSidebarRolledUp ? 'Click to expand Marker Inspector' : 'Click to collapse Marker Inspector to top'"
+          style="cursor: pointer;"
+        >
+          <h3 @click="toggleTokenSidebarRollup">World Marker Inspector</h3>
+          <button
+            type="button"
+            class="close-btn"
+            @click="closeTokenSidebar"
+            :title="isTokenSidebarRolledUp ? 'Expand Marker Inspector (Roll Down)' : 'Collapse Marker Inspector to Top (Roll Up)'"
+            :aria-label="isTokenSidebarRolledUp ? 'Expand Marker Inspector' : 'Collapse Marker Inspector to Top'"
+          >
+            {{ isTokenSidebarRolledUp ? '▼' : '▲' }}
+          </button>
         </div>
 
-        <div class="sidebar-content">
+        <div v-show="!isTokenSidebarRolledUp" class="sidebar-content">
           <button v-if="isGm" class="primary full-width btn-add-token" @click="openAddMarkerModal">+ Place World Marker</button>
 
           <!-- Selected Marker Inspector -->
@@ -802,6 +815,7 @@ const initialVttState = getUserState(getSafeUserId(), 'worldVtt', {
   selectedMarkerId: null,
   isRollLogOpen: false,
   showTokenSidebar: true,
+  isTokenSidebarRolledUp: false,
 });
 
 const markerTypeOptions = [
@@ -1176,6 +1190,7 @@ function persistVttStateNow() {
     selectedMarkerId: selectedMarkerId.value,
     isRollLogOpen: isRollLogOpen.value,
     showTokenSidebar: showTokenSidebar.value,
+    isTokenSidebarRolledUp: isTokenSidebarRolledUp.value,
   });
 }
 
@@ -1189,19 +1204,33 @@ function persistVttState() {
 
 const showGmDrawer = ref(false);
 const showTokenSidebar = ref(initialVttState.showTokenSidebar ?? true);
+const isTokenSidebarRolledUp = ref(Boolean(initialVttState.isTokenSidebarRolledUp));
 
 function toggleTokenSidebar() {
-  showTokenSidebar.value = !showTokenSidebar.value;
+  if (!showTokenSidebar.value) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+  } else if (isTokenSidebarRolledUp.value) {
+    isTokenSidebarRolledUp.value = false;
+  } else {
+    isTokenSidebarRolledUp.value = true;
+  }
+  persistVttState();
+}
+
+function toggleTokenSidebarRollup() {
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
+  persistVttState();
 }
 
 function closeTokenSidebar() {
-  showTokenSidebar.value = false;
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
+  persistVttState();
 }
 
-watch([panX, panY, zoomLevel, activeTool, selectedMarkerId, isRollLogOpen, showTokenSidebar], () => {
-    persistVttState();
-  }
-);
+watch([panX, panY, zoomLevel, activeTool, selectedMarkerId, isRollLogOpen, showTokenSidebar, isTokenSidebarRolledUp], () => {
+  persistVttState();
+});
 
 const showCreateMapModal = ref(false);
 const createMapError = ref('');
@@ -2272,6 +2301,39 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   z-index: 5;
+  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.token-sidebar.token-sidebar-rolled-up {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: auto;
+  max-height: 48px;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+}
+
+.token-sidebar .sidebar-header {
+  user-select: none;
+}
+
+.token-sidebar .close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.token-sidebar .close-btn:hover {
+  background-color: var(--bg-tertiary, #1f242c);
+  color: var(--theme-bright, #cecece);
 }
 
 .section-box {

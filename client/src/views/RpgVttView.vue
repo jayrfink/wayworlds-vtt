@@ -530,13 +530,26 @@
       </div>
 
       <!-- Token Inspector Sidebar / Drawer -->
-      <aside v-if="showTokenSidebar" class="token-sidebar">
-        <div class="sidebar-header">
-          <h3>Token Inspector</h3>
-          <button type="button" class="close-btn" @click="closeTokenSidebar" title="Close Token Inspector">×</button>
+      <aside v-if="showTokenSidebar" class="token-sidebar" :class="{ 'token-sidebar-rolled-up': isTokenSidebarRolledUp }">
+        <div
+          class="sidebar-header"
+          @click.self="toggleTokenSidebarRollup"
+          :title="isTokenSidebarRolledUp ? 'Click to expand Token Inspector' : 'Click to collapse Token Inspector to top'"
+          style="cursor: pointer;"
+        >
+          <h3 @click="toggleTokenSidebarRollup">Token Inspector</h3>
+          <button
+            type="button"
+            class="close-btn"
+            @click="closeTokenSidebar"
+            :title="isTokenSidebarRolledUp ? 'Expand Token Inspector (Roll Down)' : 'Collapse Token Inspector to Top (Roll Up)'"
+            :aria-label="isTokenSidebarRolledUp ? 'Expand Token Inspector' : 'Collapse Token Inspector to Top'"
+          >
+            {{ isTokenSidebarRolledUp ? '▼' : '▲' }}
+          </button>
         </div>
 
-        <div class="sidebar-content">
+        <div v-show="!isTokenSidebarRolledUp" class="sidebar-content">
           <!-- Token Creation Button -->
           <button class="primary full-width btn-add-token" @click="openAddTokenModal">+ Add New Token</button>
           <button v-if="isGm" class="secondary full-width btn-stock-adversary-alt" @click="showStockAdversaryModal = true" style="margin-top: 8px;">Stock Adversary Encounter</button>
@@ -889,6 +902,7 @@ const initialVttState = getUserState(getSafeUserId(), 'rpgVtt', {
   selectedTokenId: null,
   isRollLogOpen: false,
   showTokenSidebar: true,
+  isTokenSidebarRolledUp: false,
 });
 
 
@@ -1275,6 +1289,7 @@ function persistVttStateNow() {
     selectedTokenId: selectedTokenId.value,
     isRollLogOpen: isRollLogOpen.value,
     showTokenSidebar: showTokenSidebar.value,
+    isTokenSidebarRolledUp: isTokenSidebarRolledUp.value,
   });
 }
 
@@ -1290,18 +1305,31 @@ function persistVttState() {
 
 const showGmDrawer = ref(false);
 const showTokenSidebar = ref(initialVttState.showTokenSidebar ?? true);
+const isTokenSidebarRolledUp = ref(Boolean(initialVttState.isTokenSidebarRolledUp));
 
 function toggleTokenSidebar() {
-  showTokenSidebar.value = !showTokenSidebar.value;
+  if (!showTokenSidebar.value) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+  } else if (isTokenSidebarRolledUp.value) {
+    isTokenSidebarRolledUp.value = false;
+  } else {
+    isTokenSidebarRolledUp.value = true;
+  }
+  persistVttState();
+}
+
+function toggleTokenSidebarRollup() {
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
   persistVttState();
 }
 
 function closeTokenSidebar() {
-  showTokenSidebar.value = false;
+  isTokenSidebarRolledUp.value = !isTokenSidebarRolledUp.value;
   persistVttState();
 }
 
-watch([panX, panY, zoomLevel, activeTool, selectedTokenId, isRollLogOpen, showTokenSidebar], () => {
+watch([panX, panY, zoomLevel, activeTool, selectedTokenId, isRollLogOpen, showTokenSidebar, isTokenSidebarRolledUp], () => {
   persistVttState();
 });
 const showCreateMapModal = ref(false);
@@ -3373,6 +3401,39 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   z-index: 5;
+  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.token-sidebar.token-sidebar-rolled-up {
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: auto;
+  max-height: 48px;
+  z-index: 10;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
+}
+
+.token-sidebar .sidebar-header {
+  user-select: none;
+}
+
+.token-sidebar .close-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.token-sidebar .close-btn:hover {
+  background-color: var(--bg-tertiary, #1f242c);
+  color: var(--theme-bright, #cecece);
 }
 
 .section-box {
