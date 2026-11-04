@@ -730,10 +730,10 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         updateCharacter: vi.fn(),
       };
 
-      // Compute percentage: 40/50 = 80% (pale azure)
+      // Compute percentage: 40/50 = 80% (teal/cyan)
       expect(CharacterSheetsView.computed.essPercentage.call(vm)).toBe(80);
-      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#7dd3fc');
-      expect(CharacterSheetsView.computed.essGlow.call(vm)).toBe('0 0 10px rgba(125, 211, 252, 0.7)');
+      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#14b8a6');
+      expect(CharacterSheetsView.computed.essGlow.call(vm)).toBe('0 0 10px rgba(20, 184, 166, 0.7)');
 
       // Adjust ESS: -5
       CharacterSheetsView.methods.adjustEss.call(vm, -5);
@@ -764,10 +764,10 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         selectedChar: { current_stamina: 50, max_stamina: 50 },
       };
 
-      // Full / healthy (> 50% -> pale green)
+      // Full / healthy (> 50% -> darkened green)
       expect(CharacterSheetsView.computed.staminaPercentage.call(vm)).toBe(100);
-      expect(CharacterSheetsView.computed.staminaColor.call(vm)).toBe('#86efac');
-      expect(CharacterSheetsView.computed.staminaGlow.call(vm)).toBe('0 0 10px rgba(134, 239, 172, 0.7)');
+      expect(CharacterSheetsView.computed.staminaColor.call(vm)).toBe('#79d79b');
+      expect(CharacterSheetsView.computed.staminaGlow.call(vm)).toBe('0 0 10px rgba(121, 215, 155, 0.7)');
 
       // Getting low (50% -> orange)
       vm.selectedChar.current_stamina = 25;

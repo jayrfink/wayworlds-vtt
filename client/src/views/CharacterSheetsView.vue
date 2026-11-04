@@ -1465,13 +1465,13 @@ export default {
     },
     staminaColor() {
       const pct = typeof this.staminaPercentage === 'number' ? this.staminaPercentage : (this.selectedChar?.max_stamina ? (this.selectedChar.current_stamina / this.selectedChar.max_stamina) * 100 : 0);
-      if (pct > 50) return '#86efac';
+      if (pct > 50) return '#79d79b';
       if (pct > 25) return '#fb923c';
       return '#ef4444';
     },
     staminaGlow() {
       const pct = typeof this.staminaPercentage === 'number' ? this.staminaPercentage : (this.selectedChar?.max_stamina ? (this.selectedChar.current_stamina / this.selectedChar.max_stamina) * 100 : 0);
-      if (pct > 50) return '0 0 10px rgba(134, 239, 172, 0.7)';
+      if (pct > 50) return '0 0 10px rgba(121, 215, 155, 0.7)';
       if (pct > 25) return '0 0 10px rgba(251, 146, 60, 0.7)';
       return '0 0 10px rgba(239, 68, 68, 0.7)';
     },
@@ -1482,13 +1482,13 @@ export default {
     },
     essColor() {
       const pct = typeof this.essPercentage === 'number' ? this.essPercentage : (this.selectedChar?.max_ess ? (this.selectedChar.current_ess / this.selectedChar.max_ess) * 100 : 0);
-      if (pct > 50) return '#7dd3fc';
+      if (pct > 50) return '#14b8a6';
       if (pct > 25) return '#fdba74';
       return '#fca5a5';
     },
     essGlow() {
       const pct = typeof this.essPercentage === 'number' ? this.essPercentage : (this.selectedChar?.max_ess ? (this.selectedChar.current_ess / this.selectedChar.max_ess) * 100 : 0);
-      if (pct > 50) return '0 0 10px rgba(125, 211, 252, 0.7)';
+      if (pct > 50) return '0 0 10px rgba(20, 184, 166, 0.7)';
       if (pct > 25) return '0 0 10px rgba(253, 186, 116, 0.7)';
       return '0 0 10px rgba(252, 165, 165, 0.7)';
     },
@@ -3105,18 +3105,40 @@ export default {
 
 .card {
   background: var(--bg-panel, #14171c);
-  border: 2px solid var(--border-color, #30363d);
-  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
-  border-radius: 6px;
+  border: 1px solid var(--border-color, #30363d);
+  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
+  filter: drop-shadow(0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.25)));
+  border-radius: 0;
+  clip-path: polygon(
+    12px 0%,
+    calc(100% - 12px) 0%,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0% calc(100% - 12px),
+    0% 12px
+  );
   padding: 16px;
 }
 
 /* Header */
 .sheet-header {
   background: var(--bg-panel, #14171c);
-  border: 2px solid var(--border-color, #30363d);
-  box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
-  border-radius: 6px;
+  border: 1px solid var(--border-color, #30363d);
+  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.25));
+  filter: drop-shadow(0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.25)));
+  border-radius: 0;
+  clip-path: polygon(
+    12px 0%,
+    calc(100% - 12px) 0%,
+    100% 12px,
+    100% calc(100% - 12px),
+    calc(100% - 12px) 100%,
+    12px 100%,
+    0% calc(100% - 12px),
+    0% 12px
+  );
   padding: 16px;
 }
 
@@ -3467,15 +3489,15 @@ export default {
 .stamina-bar-fill {
   height: 100%;
   transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  background: #86efac;
-  box-shadow: 0 0 10px rgba(134, 239, 172, 0.7);
+  background: #79d79b;
+  box-shadow: 0 0 10px rgba(121, 215, 155, 0.7);
 }
 
 .ess-bar-fill {
   height: 100%;
   transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  background: #7dd3fc;
-  box-shadow: 0 0 10px rgba(125, 211, 252, 0.7);
+  background: #14b8a6;
+  box-shadow: 0 0 10px rgba(20, 184, 166, 0.7);
 }
 
 .stamina-values .current,
@@ -4426,7 +4448,7 @@ export default {
 
 .equipment-card {
   background: var(--bg-secondary);
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   box-shadow: var(--theme-glow-subtle, 0 0 6px rgba(192, 192, 192, 0.3));
   border-radius: 8px;
   padding: 12px;
@@ -4452,7 +4474,7 @@ export default {
 
 .eq-add-btn {
   background-color: #000000;
-  border: 2px solid var(--theme-bright, #cecece);
+  border: 1px solid var(--theme-bright, #cecece);
   color: var(--theme-bright, #cecece);
   padding: 4px 14px;
   font-size: 13px;
@@ -4763,7 +4785,7 @@ export default {
 
 .domain-tab-btn {
   background-color: #000000;
-  border: 2px solid var(--border-color, #30363d);
+  border: 1px solid var(--border-color, #30363d);
   color: var(--text-secondary, #8b949e);
   padding: 7px 14px;
   border-radius: 6px;
@@ -4811,6 +4833,9 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  clip-path: none !important;
+  filter: none !important;
+  box-shadow: none !important;
 }
 
 .grimoire-row-top,
@@ -4844,7 +4869,7 @@ export default {
 .spell-cost-badge,
 .spell-magnitude-badge {
   background: var(--theme-surface-active, rgba(69, 172, 186, 0.12));
-  border: 2px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
+  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
   color: var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   padding: 4px 8px;
@@ -4866,7 +4891,7 @@ export default {
 
 .grimoire-cast-banner {
   background: var(--theme-surface-active, rgba(6, 182, 212, 0.12));
-  border: 2px solid var(--theme-bright, #45acba);
+  border: 1px solid var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   border-radius: 6px;
   padding: 10px 12px;
@@ -4888,7 +4913,7 @@ export default {
 .cast-tradition-tag,
 .cast-cost-tag {
   background: #000000;
-  border: 2px solid var(--theme-border-subtle, #30363d);
+  border: 1px solid var(--theme-border-subtle, #30363d);
   padding: 2px 8px;
   border-radius: 4px;
   color: var(--theme-bright, #45acba);
@@ -4919,9 +4944,20 @@ export default {
   padding: 2px 8px;
   border-radius: 4px;
   background: var(--theme-surface-active, rgba(69, 172, 186, 0.15));
-  border: 2px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.4));
+  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.4));
   color: var(--theme-bright, #45acba);
   box-shadow: var(--theme-glow-subtle);
   font-weight: 700;
+}
+
+/* Character Sheet Scoped 1px Theme Borders */
+.sheet-container input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]),
+.sheet-container select,
+.sheet-container textarea {
+  border-width: 1px;
+}
+
+.sheet-container button:not(.btn-sta):not(.btn-ess):not(.btn-shift) {
+  border-width: 1px;
 }
 </style>
