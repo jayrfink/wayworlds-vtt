@@ -78,6 +78,17 @@ export const COLOR_PACKAGES = [
     staColor: '#fb923c',
     essColor: '#f43f5e',
   },
+  {
+    key: 'rust',
+    label: 'Rust (Fighter)',
+    widgetColor: '#7f513e',
+    borderColor: '#543325',
+    widgetTrack: '#180e0a',
+    brightColor: '#c27a59',
+    headerColor: '#c8c8c8',
+    staColor: '#c27a59',
+    essColor: '#7f513e',
+  },
 ];
 
 export const DEFAULT_COLOR_PACKAGE = 'silver';

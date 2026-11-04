@@ -32,6 +32,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(keys).toContain('blues');
     expect(keys).toContain('maroons');
     expect(keys).toContain('oranges-maroon');
+    expect(keys).toContain('rust');
+
+    const rustPkg = COLOR_PACKAGES.find((p) => p.key === 'rust');
+    expect(rustPkg.widgetColor).toBe('#7f513e');
+    expect(rustPkg.borderColor).toBe('#543325');
+    expect(rustPkg.brightColor).toBe('#c27a59');
 
     const greenPkg = COLOR_PACKAGES.find((p) => p.key === 'greens');
     expect(greenPkg.widgetColor).toBe('#1b7a4d');
@@ -96,6 +102,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('blues-greens');
     expect(optionValues).toContain('maroons');
     expect(optionValues).toContain('oranges-maroon');
+    expect(optionValues).toContain('rust');
   });
 
   it('makes all themes available in CharacterSheetsView character sheet theme selector', async () => {
@@ -145,6 +152,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('blues-greens');
     expect(optionValues).toContain('maroons');
     expect(optionValues).toContain('oranges-maroon');
+    expect(optionValues).toContain('rust');
 
     // Scoped container receives data-color-pkg="silver"
     const sheetContainer = wrapper.find('.sheet-container');
