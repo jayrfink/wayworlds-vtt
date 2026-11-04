@@ -158,6 +158,12 @@ describe('NavBar.vue', () => {
     expect(html).toContain('Azure');
     expect(html).toContain('Copper');
     expect(html).toContain('Rust');
+    expect(html).toContain('Oceanic');
+    expect(html).toContain('Crimson');
+    expect(html).toContain('Forest');
+    expect(html).toContain('Indiglo');
+    expect(html).toContain('Fire');
+    expect(html).toContain('Lime');
     expect(html).not.toContain('Blues &amp; Greens');
     expect(html).not.toContain('Maroons');
     expect(html).not.toContain('Rust (Fighter)');

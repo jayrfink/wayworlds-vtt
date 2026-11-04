@@ -23,7 +23,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
   });
 
-  it('includes silver, dark-grey, emerald, azure, plum, copper, and rust in COLOR_PACKAGES', () => {
+  it('includes silver, dark-grey, emerald, azure, plum, copper, rust, oceanic, crimson, forest, indiglo, fire, and lime in COLOR_PACKAGES', () => {
     const keys = COLOR_PACKAGES.map((p) => p.key);
     expect(keys).toContain('silver');
     expect(keys).toContain('dark-grey');
@@ -32,6 +32,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(keys).toContain('plum');
     expect(keys).toContain('copper');
     expect(keys).toContain('rust');
+    expect(keys).toContain('oceanic');
+    expect(keys).toContain('crimson');
+    expect(keys).toContain('forest');
+    expect(keys).toContain('indiglo');
+    expect(keys).toContain('fire');
+    expect(keys).toContain('lime');
     expect(keys).not.toContain('blues-greens');
 
     const rustPkg = COLOR_PACKAGES.find((p) => p.key === 'rust');
@@ -54,6 +60,30 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
 
     const copperPkg = COLOR_PACKAGES.find((p) => p.key === 'copper');
     expect(copperPkg.label).toBe('Copper');
+
+    const oceanicPkg = COLOR_PACKAGES.find((p) => p.key === 'oceanic');
+    expect(oceanicPkg.label).toBe('Oceanic');
+    expect(oceanicPkg.widgetColor).toBe('#27b3a7');
+
+    const crimsonPkg = COLOR_PACKAGES.find((p) => p.key === 'crimson');
+    expect(crimsonPkg.label).toBe('Crimson');
+    expect(crimsonPkg.widgetColor).toBe('#b3273a');
+
+    const forestPkg = COLOR_PACKAGES.find((p) => p.key === 'forest');
+    expect(forestPkg.label).toBe('Forest');
+    expect(forestPkg.widgetColor).toBe('#3dd465');
+
+    const indigloPkg = COLOR_PACKAGES.find((p) => p.key === 'indiglo');
+    expect(indigloPkg.label).toBe('Indiglo');
+    expect(indigloPkg.widgetColor).toBe('#2d798a');
+
+    const firePkg = COLOR_PACKAGES.find((p) => p.key === 'fire');
+    expect(firePkg.label).toBe('Fire');
+    expect(firePkg.widgetColor).toBe('#d44a27');
+
+    const limePkg = COLOR_PACKAGES.find((p) => p.key === 'lime');
+    expect(limePkg.label).toBe('Lime');
+    expect(limePkg.widgetColor).toBe('#b4f071');
   });
 
   it('sets data-color-pkg="silver" on index.html', () => {
@@ -109,6 +139,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('plum');
     expect(optionValues).toContain('copper');
     expect(optionValues).toContain('rust');
+    expect(optionValues).toContain('oceanic');
+    expect(optionValues).toContain('crimson');
+    expect(optionValues).toContain('forest');
+    expect(optionValues).toContain('indiglo');
+    expect(optionValues).toContain('fire');
+    expect(optionValues).toContain('lime');
     expect(optionValues).not.toContain('blues-greens');
   });
 
@@ -159,6 +195,12 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('plum');
     expect(optionValues).toContain('copper');
     expect(optionValues).toContain('rust');
+    expect(optionValues).toContain('oceanic');
+    expect(optionValues).toContain('crimson');
+    expect(optionValues).toContain('forest');
+    expect(optionValues).toContain('indiglo');
+    expect(optionValues).toContain('fire');
+    expect(optionValues).toContain('lime');
     expect(optionValues).not.toContain('blues-greens');
 
     // Scoped container receives data-color-pkg="silver"
