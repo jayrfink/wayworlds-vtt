@@ -2685,6 +2685,14 @@ onBeforeUnmount(() => {
   overflow: hidden;
 }
 
+/* RPG VTT Buttons - Remove outer borders */
+.vtt-view button,
+.vtt-view button:hover,
+.vtt-view button:active,
+.vtt-view button:focus {
+  border: none !important;
+}
+
 /* Header */
 .vtt-header {
   position: relative;
@@ -2730,6 +2738,7 @@ onBeforeUnmount(() => {
   padding: 2px 8px;
   font-size: 13px;
   height: 26px;
+  border: none !important;
 }
 
 .zoom-readout {
@@ -2750,7 +2759,7 @@ onBeforeUnmount(() => {
 .btn-deploy-vehicle,
 .btn-sidebar {
   background: #000000;
-  border: 1px solid #cecece;
+  border: none !important;
   color: #cecece;
   font-weight: 500;
   display: flex;
@@ -2765,26 +2774,26 @@ onBeforeUnmount(() => {
 .btn-deploy-vehicle:hover,
 .btn-sidebar:hover {
   background: #000000;
-  border-color: #cecece;
+  border: none !important;
   color: #cecece;
 }
 
 .btn-sidebar.active {
   background: #000000;
-  border-color: #cecece;
+  border: none !important;
   color: #cecece;
   box-shadow: 0 0 10px rgba(206, 206, 206, 0.4);
 }
 
 .btn-stock-adversary-alt,
 .btn-deploy-vehicle-alt {
-  border-color: #cecece;
+  border: none !important;
 }
 
 .btn-add-token {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #d0d0d0 !important;
+  border: none !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
   font-weight: 700;
@@ -2797,7 +2806,7 @@ onBeforeUnmount(() => {
 .btn-add-token:hover {
   background-color: #000000 !important;
   background: #000000 !important;
-  border-color: #d0d0d0 !important;
+  border: none !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
   box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
@@ -2841,20 +2850,21 @@ onBeforeUnmount(() => {
   font-size: 13px;
   border-radius: 4px;
   text-align: left;
+  border: none !important;
 }
 
 .vtt-toolbar > button.active {
   background: #000000;
   color: #cecece;
   font-weight: 600;
-  border: 1px solid #cecece;
+  border: none !important;
   box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .vtt-toolbar > button.active:hover {
   background: #000000;
   color: #cecece;
-  border-color: #cecece;
+  border: none !important;
   box-shadow: 0 0 12px rgba(206, 206, 206, 0.6);
 }
 
@@ -2889,23 +2899,23 @@ onBeforeUnmount(() => {
 
 .btn-clear-ping {
   color: #f87171;
-  border-color: rgba(239, 68, 68, 0.3);
+  border: none !important;
 }
 
 .btn-clear-ping:hover {
   background: rgba(239, 68, 68, 0.15);
-  border-color: #ef4444;
+  border: none !important;
   color: #fca5a5;
 }
 
 .btn-clear-all-pings {
   color: #fbbf24;
-  border-color: rgba(245, 158, 11, 0.3);
+  border: none !important;
 }
 
 .btn-clear-all-pings:hover {
   background: rgba(245, 158, 11, 0.15);
-  border-color: #f59e0b;
+  border: none !important;
   color: #fde68a;
 }
 
@@ -2924,7 +2934,7 @@ onBeforeUnmount(() => {
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: none !important;
   color: var(--text-primary);
   display: flex;
   align-items: center;
@@ -2937,7 +2947,7 @@ onBeforeUnmount(() => {
 
 .btn-dmg-main:hover,
 .btn-dmg-main.active {
-  border-color: #f29249;
+  border: none !important;
   color: #f29249;
 }
 
@@ -2948,8 +2958,7 @@ onBeforeUnmount(() => {
   width: 22px;
   padding: 0 !important;
   background: var(--bg-primary);
-  border: 1px solid var(--border);
-  border-left: none;
+  border: none !important;
   color: var(--text-primary);
   font-size: 13px !important;
   font-weight: bold;
@@ -2965,7 +2974,7 @@ onBeforeUnmount(() => {
 .btn-dmg-step:hover:not(:disabled) {
   background: var(--bg-secondary);
   color: #f29249;
-  border-color: #f29249;
+  border: none !important;
 }
 
 .btn-dmg-step:disabled {
@@ -3032,7 +3041,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: center;
   background: var(--bg-secondary);
-  border: 1px solid var(--border);
+  border: none !important;
   border-radius: 4px;
   color: var(--text-primary);
   cursor: pointer;
@@ -3041,7 +3050,7 @@ onBeforeUnmount(() => {
 .stepper-btn:hover:not(:disabled) {
   background: #f29249;
   color: #140409;
-  border-color: #f29249;
+  border: none !important;
 }
 
 .stepper-btn:disabled {
@@ -3069,19 +3078,19 @@ onBeforeUnmount(() => {
   justify-content: center !important;
   border-radius: 4px;
   background: var(--bg-primary);
-  border: 1px solid var(--border);
+  border: none !important;
   color: var(--text-secondary);
   cursor: pointer;
 }
 
 .preset-btn:hover {
-  border-color: #f29249;
+  border: none !important;
   color: #f29249;
 }
 
 .preset-btn.active {
   background: rgba(242, 146, 73, 0.2);
-  border-color: #f29249;
+  border: none !important;
   color: #f29249;
   font-weight: 600;
 }
@@ -3557,7 +3566,7 @@ onBeforeUnmount(() => {
 .map-file-input::file-selector-button,
 .map-file-input::-webkit-file-upload-button {
   background-color: #000000 !important;
-  border: 1px solid #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   border-radius: var(--radius);
@@ -3573,7 +3582,7 @@ onBeforeUnmount(() => {
 .map-file-input::file-selector-button:hover,
 .map-file-input::-webkit-file-upload-button:hover {
   background-color: #000000 !important;
-  border-color: #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
@@ -3651,7 +3660,7 @@ onBeforeUnmount(() => {
 .btn-browse-avatar {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   border-radius: var(--radius);
@@ -3664,7 +3673,7 @@ onBeforeUnmount(() => {
 
 .btn-browse-avatar:hover {
   background-color: #000000 !important;
-  border-color: #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
@@ -3672,7 +3681,7 @@ onBeforeUnmount(() => {
 
 .btn-clear-avatar {
   background: #000000 !important;
-  border: 1px solid #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   font-size: 11px;
@@ -3684,7 +3693,7 @@ onBeforeUnmount(() => {
 
 .btn-clear-avatar:hover {
   background: #000000 !important;
-  border-color: #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
@@ -3706,7 +3715,7 @@ onBeforeUnmount(() => {
 .btn-modal-cancel {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   padding: 6px 14px;
@@ -3719,7 +3728,7 @@ onBeforeUnmount(() => {
 
 .btn-modal-cancel:hover {
   background-color: #000000 !important;
-  border-color: #cecece !important;
+  border: none !important;
   color: #cecece !important;
   -webkit-text-fill-color: #cecece;
   box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
@@ -3728,7 +3737,7 @@ onBeforeUnmount(() => {
 .btn-add-token-submit {
   background-color: #000000 !important;
   background: #000000 !important;
-  border: 1px solid #d0d0d0 !important;
+  border: none !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
   font-weight: 700;
@@ -3741,7 +3750,7 @@ onBeforeUnmount(() => {
 .btn-add-token-submit:hover:not(:disabled) {
   background-color: #000000 !important;
   background: #000000 !important;
-  border-color: #d0d0d0 !important;
+  border: none !important;
   color: #d0d0d0 !important;
   -webkit-text-fill-color: #d0d0d0;
   box-shadow: 0 0 16px rgba(208, 208, 208, 0.5);
@@ -3764,14 +3773,14 @@ onBeforeUnmount(() => {
 .danger {
   background: var(--danger);
   color: #cecece;
-  border-color: var(--danger);
+  border: none !important;
 }
 
 .btn-delete-token,
 .inspector-actions .danger {
   background: #340c0e !important;
   color: #f85149 !important;
-  border: 1px solid #da3633 !important;
+  border: none !important;
   box-shadow: 0 0 6px rgba(218, 54, 51, 0.25);
   transition: all 0.15s ease-in-out;
 }
@@ -3779,7 +3788,7 @@ onBeforeUnmount(() => {
 .btn-delete-token:hover:not(:disabled),
 .inspector-actions .danger:hover:not(:disabled) {
   background: #4a1316 !important;
-  border-color: #ff6b6b !important;
+  border: none !important;
   color: #ff8585 !important;
   box-shadow: 0 0 10px rgba(248, 81, 73, 0.45);
 }
@@ -3881,7 +3890,7 @@ onBeforeUnmount(() => {
 
 .btn-audio-toggle {
   background: transparent !important;
-  border: 1px solid rgba(0, 128, 128, 0.5) !important;
+  border: none !important;
   color: #00ffff !important;
   -webkit-text-fill-color: #00ffff;
   font-size: 11px;
@@ -3897,13 +3906,13 @@ onBeforeUnmount(() => {
 
 .btn-audio-toggle:hover {
   background: #051414 !important;
-  border-color: aqua !important;
+  border: none !important;
   box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
 }
 
 .btn-audio-toggle-pill {
   background: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.7) !important;
+  border: none !important;
   color: #00ffff !important;
   -webkit-text-fill-color: #00ffff;
   padding: 6px 10px;
@@ -3917,13 +3926,13 @@ onBeforeUnmount(() => {
 
 .btn-audio-toggle-pill:hover {
   background: #051414 !important;
-  border-color: aqua !important;
+  border: none !important;
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
 }
 
 .btn-roll-log-pill {
   background: #000000 !important;
-  border: 1px solid rgba(0, 128, 128, 0.7) !important;
+  border: none !important;
   color: #00ffff !important;
   -webkit-text-fill-color: #00ffff;
   padding: 6px 12px;
@@ -3937,7 +3946,7 @@ onBeforeUnmount(() => {
 
 .btn-roll-log-pill:hover {
   background: #051414 !important;
-  border-color: aqua !important;
+  border: none !important;
   box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
 }
 
@@ -3977,7 +3986,7 @@ onBeforeUnmount(() => {
 
 .btn-roll-log-clear {
   background: transparent !important;
-  border: 1px solid rgba(0, 128, 128, 0.5) !important;
+  border: none !important;
   color: #8b949e !important;
   -webkit-text-fill-color: #8b949e;
   font-size: 10px;
@@ -3986,7 +3995,7 @@ onBeforeUnmount(() => {
 }
 
 .btn-roll-log-clear:hover:not(:disabled) {
-  border-color: #f85149 !important;
+  border: none !important;
   color: #f85149 !important;
   -webkit-text-fill-color: #f85149;
 }
@@ -4173,7 +4182,7 @@ onBeforeUnmount(() => {
 
 .btn-toggle-visibility {
   background: rgba(16, 185, 129, 0.14);
-  border: 1px solid rgba(16, 185, 129, 0.5);
+  border: none !important;
   color: #34d399;
   font-size: 0.8rem;
   font-weight: 600;
@@ -4185,16 +4194,18 @@ onBeforeUnmount(() => {
 
 .btn-toggle-visibility:hover {
   background: rgba(16, 185, 129, 0.25);
+  border: none !important;
 }
 
 .btn-toggle-visibility.is-hidden {
   background: rgba(245, 158, 11, 0.16);
-  border-color: rgba(245, 158, 11, 0.6);
+  border: none !important;
   color: #fbbf24;
 }
 
 .btn-toggle-visibility.is-hidden:hover {
   background: rgba(245, 158, 11, 0.28);
+  border: none !important;
 }
 
 .token-row-hidden {
@@ -4214,7 +4225,7 @@ onBeforeUnmount(() => {
 
 .btn-token-list-visibility {
   background: transparent;
-  border: 1px solid rgba(148, 163, 184, 0.3);
+  border: none !important;
   border-radius: 4px;
   padding: 2px 5px;
   font-size: 0.75rem;
@@ -4223,7 +4234,7 @@ onBeforeUnmount(() => {
 }
 
 .btn-token-list-visibility.is-hidden {
-  border-color: rgba(245, 158, 11, 0.5);
+  border: none !important;
   background: rgba(245, 158, 11, 0.12);
 }
 
