@@ -2985,9 +2985,9 @@ export default {
 }
 
 .btn-reorder {
-  background: transparent;
-  border: none;
-  color: var(--theme-stepper-arrow, #8b949e);
+  background: transparent !important;
+  border: none !important;
+  color: #555b62 !important;
   cursor: pointer;
   padding: 1px 4px;
   font-size: 9px;
@@ -2996,18 +2996,20 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s, background 0.15s, box-shadow 0.15s;
+  transition: color 0.15s, background 0.15s;
+  box-shadow: none !important;
 }
 
 .btn-reorder:hover:not(:disabled) {
-  color: var(--theme-bright-hover, var(--theme-bright, #00e5ff));
-  background: var(--theme-glow-bg, rgba(0, 229, 255, 0.15));
-  box-shadow: var(--theme-glow-subtle);
+  color: #8b949e !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: none !important;
 }
 
 .btn-reorder:disabled {
   opacity: 0.25;
   cursor: not-allowed;
+  color: #383e47 !important;
 }
 
 .char-name {
@@ -3843,25 +3845,37 @@ export default {
 
 .select-official-skill,
 .select-official-skill option {
-  background-color: #000000 !important;
-  color: var(--theme-bright, aqua) !important;
-  -webkit-text-fill-color: var(--theme-bright, aqua);
+  background-color: #0d1117 !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece !important;
+}
+
+.select-official-skill option {
   background-image: none !important;
 }
 
 .select-official-skill {
   flex: 1;
-  border: 1px solid var(--theme-border-subtle, rgba(0, 255, 255, 0.4)) !important;
+  border: 1px solid #30363d !important;
   border-radius: 4px;
   padding: 6px 24px 6px 8px !important;
   padding-right: 24px !important;
   font-size: 0.85rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 12px 14px !important;
+}
+
+.select-official-skill:hover {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  border-color: #484f58 !important;
 }
 
 .select-official-skill:focus {
   outline: none;
-  border-color: var(--theme-bright, aqua) !important;
-  box-shadow: var(--theme-glow-hover, 0 0 6px rgba(0, 255, 255, 0.4));
+  border-color: #484f58 !important;
+  box-shadow: none !important;
 }
 
 .skill-chance-badge {
@@ -3879,26 +3893,27 @@ export default {
 }
 
 .btn-xp-upgrade {
-  background: #000000;
-  border: 1px solid var(--theme-bright, rgba(16, 185, 129, 0.4));
-  color: var(--theme-bright, #34d399);
+  background: linear-gradient(135deg, #065f46 0%, #059669 100%) !important;
+  border: 1px solid #10b981 !important;
+  color: #ecfdf5 !important;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 6px;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: var(--theme-glow-subtle);
+  box-shadow: var(--sci-glow-green) !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   transition: all 0.15s ease-in-out;
 }
 .btn-xp-upgrade:hover {
-  border-color: var(--theme-bright-hover, var(--theme-bright));
-  color: var(--theme-bright-hover, var(--theme-bright));
-  box-shadow: var(--theme-glow-hover);
+  box-shadow: var(--sci-glow-green-hover) !important;
+  border-color: #34d399 !important;
+  color: #ecfdf5 !important;
 }
 .btn-xp-upgrade:active {
   transform: translateY(1px);
-  box-shadow: var(--theme-glow-strong);
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6) !important;
 }
 
 .item-name-input {
@@ -3927,6 +3942,7 @@ export default {
   text-align: center;
   padding: 6px 4px;
   border-radius: 4px;
+  color-scheme: dark;
 }
 
 .item-level-input {
@@ -3937,6 +3953,25 @@ export default {
   text-align: center;
   padding: 6px 4px;
   border-radius: 4px;
+  color-scheme: dark;
+}
+
+.item-level-input::-webkit-inner-spin-button,
+.item-level-input::-webkit-outer-spin-button,
+.item-weight-input::-webkit-inner-spin-button,
+.item-weight-input::-webkit-outer-spin-button {
+  cursor: pointer;
+  opacity: 0.6;
+  filter: grayscale(100%) brightness(0.7) !important;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+}
+
+.item-level-input:hover::-webkit-inner-spin-button,
+.item-level-input:focus::-webkit-inner-spin-button,
+.item-weight-input:hover::-webkit-inner-spin-button,
+.item-weight-input:focus::-webkit-inner-spin-button {
+  opacity: 0.9;
+  filter: grayscale(100%) brightness(1.0) !important;
 }
 
 .btn-remove {
