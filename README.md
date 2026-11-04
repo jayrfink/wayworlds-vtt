@@ -4,6 +4,30 @@ A full-stack, real-time multiplayer Virtual Tabletop (VTT), overland campaign at
 
 ---
 
+## 📸 Screenshots & UI Tour
+
+<p align="center">
+  <img src="docs/screenshots/rpg_vtt.png" alt="Tactical RPG VTT Canvas" width="100%" />
+  <em>Tactical RPG VTT Canvas: Square battle grid with custom tokens, distance ruler, dice rollers, and collapsible inspector.</em>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/world_vtt.png" alt="World VTT Overland Atlas" width="100%" />
+  <em>World VTT (Overland & Regional Atlas): Hex map with interactive markers, distance calculations, and linked tactical scenes.</em>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/character_sheet.png" alt="Interactive Digital Character Sheet" width="100%" />
+  <em>Interactive Character Sheet: Wayworlds d100 stats, stamina/essence gauges, grimoire & martial techniques, and equipment forge.</em>
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/rulebooks.png" alt="In-App Rulebooks & Reference Compendium" width="100%" />
+  <em>Rulebooks & Compendium: Searchable reference documentation and rules lookup integrated directly into the tabletop.</em>
+</p>
+
+---
+
 ## ✨ Features
 
 ### 🗺️ Dual Tactical & World VTT Engines
