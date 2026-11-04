@@ -18,15 +18,15 @@ import LoginView from '../src/views/LoginView.vue';
 import CharacterSheetsView from '../src/views/CharacterSheetsView.vue';
 import NavBar from '../src/components/NavBar.vue';
 
-describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => {
+describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
   it('defines silver as the default theme package for unauthenticated / new users', () => {
     expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
   });
 
-  it('includes silver, dark-grey, emerald, azure, plum, copper, rust, oceanic, crimson, forest, indiglo, fire, and lime in COLOR_PACKAGES', () => {
+  it('includes silver, shadow, emerald, azure, plum, copper, rust, oceanic, crimson, forest, indiglo, fire, lime, and brighteal in COLOR_PACKAGES', () => {
     const keys = COLOR_PACKAGES.map((p) => p.key);
     expect(keys).toContain('silver');
-    expect(keys).toContain('dark-grey');
+    expect(keys).toContain('shadow');
     expect(keys).toContain('emerald');
     expect(keys).toContain('azure');
     expect(keys).toContain('plum');
@@ -38,7 +38,13 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(keys).toContain('indiglo');
     expect(keys).toContain('fire');
     expect(keys).toContain('lime');
+    expect(keys).toContain('brighteal');
     expect(keys).not.toContain('blues-greens');
+
+    const shadowPkg = COLOR_PACKAGES.find((p) => p.key === 'shadow');
+    expect(shadowPkg.label).toBe('Shadow');
+    expect(shadowPkg.widgetColor).toBe('#545d68');
+    expect(shadowPkg.borderColor).toBe('#30363d');
 
     const rustPkg = COLOR_PACKAGES.find((p) => p.key === 'rust');
     expect(rustPkg.label).toBe('Rust');
@@ -84,6 +90,10 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     const limePkg = COLOR_PACKAGES.find((p) => p.key === 'lime');
     expect(limePkg.label).toBe('Lime');
     expect(limePkg.widgetColor).toBe('#bdff7a');
+
+    const brightealPkg = COLOR_PACKAGES.find((p) => p.key === 'brighteal');
+    expect(brightealPkg.label).toBe('Brighteal');
+    expect(brightealPkg.widgetColor).toBe('#bffff7');
   });
 
   it('sets data-color-pkg="silver" on index.html', () => {
@@ -133,7 +143,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(select.exists()).toBe(true);
     const optionValues = select.findAll('option').map((o) => o.element.value);
     expect(optionValues).toContain('silver');
-    expect(optionValues).toContain('dark-grey');
+    expect(optionValues).toContain('shadow');
     expect(optionValues).toContain('emerald');
     expect(optionValues).toContain('azure');
     expect(optionValues).toContain('plum');
@@ -145,6 +155,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('indiglo');
     expect(optionValues).toContain('fire');
     expect(optionValues).toContain('lime');
+    expect(optionValues).toContain('brighteal');
     expect(optionValues).not.toContain('blues-greens');
   });
 
@@ -189,7 +200,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     const optionValues = select.findAll('option').map((o) => o.element.value);
     expect(optionValues).toContain(''); // Default (App Theme)
     expect(optionValues).toContain('silver');
-    expect(optionValues).toContain('dark-grey');
+    expect(optionValues).toContain('shadow');
     expect(optionValues).toContain('emerald');
     expect(optionValues).toContain('azure');
     expect(optionValues).toContain('plum');
@@ -201,6 +212,7 @@ describe('Theme Packages: Silver, Dark Grey, Dark Emerald, and Defaults', () => 
     expect(optionValues).toContain('indiglo');
     expect(optionValues).toContain('fire');
     expect(optionValues).toContain('lime');
+    expect(optionValues).toContain('brighteal');
     expect(optionValues).not.toContain('blues-greens');
 
     // Scoped container receives data-color-pkg="silver"

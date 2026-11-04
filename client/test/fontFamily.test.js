@@ -79,9 +79,9 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).not.toMatch(/color-scheme:\s*light/i);
   });
 
-  it('defines all 13 data-color-pkg theme packages (silver, dark-grey, emerald, azure, plum, copper, rust, oceanic, crimson, forest, indiglo, fire, lime) in main.css', () => {
+  it('defines all 14 data-color-pkg theme packages (silver, shadow, emerald, azure, plum, copper, rust, oceanic, crimson, forest, indiglo, fire, lime, brighteal) in main.css', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="silver"\]\s*\{[\s\S]*?--widget-color:\s*#7d8590;[\s\S]*?--border-color:\s*#484f58;[\s\S]*?--widget-track:\s*#161b22;/);
-    expect(mainCss).toMatch(/\[data-color-pkg="dark-grey"\]\s*\{[\s\S]*?--widget-color:\s*#545d68;[\s\S]*?--border-color:\s*#30363d;[\s\S]*?--widget-track:\s*#111418;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="shadow"\]\s*\{[\s\S]*?--widget-color:\s*#545d68;[\s\S]*?--border-color:\s*#30363d;[\s\S]*?--widget-track:\s*#111418;/);
     expect(mainCss).toMatch(/\[data-color-pkg="emerald"\]\s*\{[\s\S]*?--widget-color:\s*#1b7a4d;[\s\S]*?--border-color:\s*#0d3822;[\s\S]*?--widget-track:\s*#081a10;/);
     expect(mainCss).toMatch(/\[data-color-pkg="azure"\]\s*\{[\s\S]*?--widget-color:\s*#4cb2d4;[\s\S]*?--border-color:\s*#347b93;[\s\S]*?--widget-track:\s*#1c4452;/);
     expect(mainCss).not.toMatch(/\[data-color-pkg="blues-greens"\]/);
@@ -94,6 +94,7 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(mainCss).toMatch(/\[data-color-pkg="indiglo"\]\s*\{[\s\S]*?--widget-color:\s*#2d798a;[\s\S]*?--border-color:\s*#1b4a55;[\s\S]*?--widget-track:\s*#0b1e23;/);
     expect(mainCss).toMatch(/\[data-color-pkg="fire"\]\s*\{[\s\S]*?--widget-color:\s*#fa982f;[\s\S]*?--border-color:\s*#9e4e0c;[\s\S]*?--widget-track:\s*#251205;/);
     expect(mainCss).toMatch(/\[data-color-pkg="lime"\]\s*\{[\s\S]*?--widget-color:\s*#bdff7a;[\s\S]*?--border-color:\s*#578f1e;[\s\S]*?--widget-track:\s*#172509;/);
+    expect(mainCss).toMatch(/\[data-color-pkg="brighteal"\]\s*\{[\s\S]*?--widget-color:\s*#bffff7;[\s\S]*?--border-color:\s*#236b65;[\s\S]*?--widget-track:\s*#092321;/);
   });
 
   it('applies --widget-color to checkboxes, radios, and range inputs in main.css', () => {
@@ -119,7 +120,7 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
 
     expect(COLOR_PACKAGES.map((p) => p.key)).toEqual([
       'silver',
-      'dark-grey',
+      'shadow',
       'emerald',
       'azure',
       'plum',
@@ -131,9 +132,11 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
       'indiglo',
       'fire',
       'lime',
+      'brighteal',
     ]);
     expect(DEFAULT_COLOR_PACKAGE).toBe('silver');
     expect(isValidColorPackage('silver')).toBe(true);
+    expect(isValidColorPackage('shadow')).toBe(true);
     expect(isValidColorPackage('dark-grey')).toBe(true);
     expect(isValidColorPackage('emerald')).toBe(true);
     expect(isValidColorPackage('azure')).toBe(true);
@@ -146,6 +149,7 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
     expect(isValidColorPackage('indiglo')).toBe(true);
     expect(isValidColorPackage('fire')).toBe(true);
     expect(isValidColorPackage('lime')).toBe(true);
+    expect(isValidColorPackage('brighteal')).toBe(true);
     expect(isValidColorPackage('oranges-maroon')).toBe(true);
     expect(isValidColorPackage('blues-greens')).toBe(false);
     expect(isValidColorPackage('light-mode')).toBe(false);

@@ -171,7 +171,9 @@
 }
 
 :root[data-color-pkg="dark-grey"],
-[data-color-pkg="dark-grey"] {
+[data-color-pkg="dark-grey"],
+:root[data-color-pkg="shadow"],
+[data-color-pkg="shadow"] {
   --widget-color: #545d68;
   --border-color: #30363d;
   --widget-track: #111418;
@@ -608,6 +610,42 @@
   --theme-sta-glow: 0 0 12px rgba(204, 247, 161, 0.7);
   --theme-ess-color: #bdff7a;
   --theme-ess-glow: 0 0 12px rgba(189, 255, 122, 0.75);
+}
+
+:root[data-color-pkg="brighteal"],
+[data-color-pkg="brighteal"] {
+  --widget-color: #bffff7;
+  --border-color: #236b65;
+  --widget-track: #092321;
+  --border: #236b65;
+  --theme-primary: #bffff7;
+  --theme-secondary: #236b65;
+  --theme-accent: #7afff0;
+  --theme-bright: #bffff7;
+  --theme-bright-hover: #dffffb;
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
+  --theme-surface-active: #0d3330;
+  --theme-surface-hover: #082220;
+  --theme-surface-hover-active: #124440;
+  --theme-border-subtle: rgba(191, 255, 247, 0.35);
+  --theme-glow-bg: rgba(191, 255, 247, 0.12);
+  --theme-glow: rgba(191, 255, 247, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(191, 255, 247, 0.22);
+  --theme-glow-hover: 0 0 14px rgba(223, 255, 251, 0.7);
+  --theme-glow-strong: 0 0 18px rgba(223, 255, 251, 0.85);
+  --theme-btn-border: #236b65;
+  --theme-btn-color: #bffff7;
+  --theme-secondary-btn-border: #236b65;
+  --theme-secondary-btn-color: #bffff7;
+  --theme-stepper-arrow: #bffff7;
+  --theme-stepper-filter: sepia(100%) saturate(300%) hue-rotate(135deg) brightness(1.3);
+  --theme-stepper-filter-hover: sepia(100%) saturate(500%) hue-rotate(135deg) brightness(1.6) drop-shadow(0 0 3px #bffff7);
+  --theme-select-arrow: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%23bffff7' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E");
+  --theme-sta-color: #bffff7;
+  --theme-sta-glow: 0 0 12px rgba(191, 255, 247, 0.7);
+  --theme-ess-color: #7afff0;
+  --theme-ess-glow: 0 0 12px rgba(122, 255, 240, 0.75);
 }
 
 * {

@@ -6,6 +6,8 @@ export const THEME_KEY_ALIASES = {
   maroons: 'plum',
   'oranges-maroon': 'copper',
   'blues-greens': 'silver',
+  'dark-grey': 'shadow',
+  dark_grey: 'shadow',
 };
 
 export const COLOR_PACKAGES = [
@@ -21,8 +23,8 @@ export const COLOR_PACKAGES = [
     essColor: '#a8b4c0',
   },
   {
-    key: 'dark-grey',
-    label: 'Dark Grey',
+    key: 'shadow',
+    label: 'Shadow',
     widgetColor: '#545d68',
     borderColor: '#30363d',
     widgetTrack: '#111418',
@@ -151,6 +153,17 @@ export const COLOR_PACKAGES = [
     headerColor: '#c8c8c8',
     staColor: '#ccf7a1',
     essColor: '#bdff7a',
+  },
+  {
+    key: 'brighteal',
+    label: 'Brighteal',
+    widgetColor: '#bffff7',
+    borderColor: '#236b65',
+    widgetTrack: '#092321',
+    brightColor: '#bffff7',
+    headerColor: '#c8c8c8',
+    staColor: '#bffff7',
+    essColor: '#7afff0',
   },
 ];
 
