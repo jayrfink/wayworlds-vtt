@@ -2148,6 +2148,62 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(vueFile).not.toMatch(/\.encumbrance-bar-bg\s*\{[^}]*border:\s*1px\s*solid\s*var\(--border-color/);
     });
   });
+
+  describe('Character Navigation Bar Collapsing and Rollup', () => {
+    it('provides controls to hide character navigation bar by rolling up or collapsing to the left', async () => {
+      setActivePinia(createPinia());
+      const wrapper = mount(CharacterSheetsView, {
+        global: {
+          stubs: {
+            ImageBrowserModal: true,
+          },
+        },
+      });
+
+      // Initially sidebar is visible and unrolled
+      const sidebar = wrapper.find('aside.sidebar');
+      expect(sidebar.exists()).toBe(true);
+      expect(sidebar.classes()).not.toContain('sidebar-collapsed-left');
+      expect(sidebar.classes()).not.toContain('sidebar-rolled-up');
+      expect(wrapper.find('.btn-sidebar-edge-toggle').exists()).toBe(false);
+
+      const btnCollapseLeft = wrapper.find('.btn-sidebar-collapse-left');
+      const btnRollup = wrapper.find('.btn-sidebar-rollup');
+      expect(btnCollapseLeft.exists()).toBe(true);
+      expect(btnRollup.exists()).toBe(true);
+      expect(btnRollup.text()).toBe('▲');
+
+      // 1. Collapse to the left
+      await btnCollapseLeft.trigger('click');
+      expect(wrapper.vm.isSidebarCollapsedLeft).toBe(true);
+      expect(sidebar.classes()).toContain('sidebar-collapsed-left');
+
+      // Edge toggle button appears
+      const edgeToggle = wrapper.find('.btn-sidebar-edge-toggle');
+      expect(edgeToggle.exists()).toBe(true);
+      expect(edgeToggle.text()).toContain('Characters');
+
+      // Click edge toggle to restore
+      await edgeToggle.trigger('click');
+      expect(wrapper.vm.isSidebarCollapsedLeft).toBe(false);
+      expect(sidebar.classes()).not.toContain('sidebar-collapsed-left');
+      expect(wrapper.find('.btn-sidebar-edge-toggle').exists()).toBe(false);
+
+      // 2. Roll up
+      await btnRollup.trigger('click');
+      expect(wrapper.vm.isSidebarRolledUp).toBe(true);
+      expect(sidebar.classes()).toContain('sidebar-rolled-up');
+      expect(wrapper.find('.sidebar-body-wrap').classes()).toContain('rolled-up');
+      expect(btnRollup.text()).toBe('▼');
+
+      // Roll back down
+      await btnRollup.trigger('click');
+      expect(wrapper.vm.isSidebarRolledUp).toBe(false);
+      expect(sidebar.classes()).not.toContain('sidebar-rolled-up');
+      expect(wrapper.find('.sidebar-body-wrap').classes()).not.toContain('rolled-up');
+      expect(btnRollup.text()).toBe('▲');
+    });
+  });
 });
 
 

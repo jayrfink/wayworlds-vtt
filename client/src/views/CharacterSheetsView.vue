@@ -1,64 +1,107 @@
 <template>
   <div class="sheets-layout">
+    <!-- Edge Toggle Button (when sidebar is hidden to the left) -->
+    <button
+      v-if="isSidebarCollapsedLeft"
+      type="button"
+      class="btn-sidebar-edge-toggle"
+      @click="toggleSidebarLeft"
+      title="Show Character Navigation (Slide to Right)"
+      aria-label="Show Character Navigation"
+    >
+      ▶ <span class="edge-toggle-text">Characters</span>
+    </button>
+
     <!-- Sidebar -->
-    <aside class="sidebar">
+    <aside
+      class="sidebar"
+      :class="{
+        'sidebar-collapsed-left': isSidebarCollapsedLeft,
+        'sidebar-rolled-up': isSidebarRolledUp
+      }"
+      aria-label="Characters Navigation"
+    >
       <div class="sidebar-header">
         <h3>Characters</h3>
-        <button class="btn-primary btn-new-character" @click="openCreateModal">+ New</button>
+        <div class="sidebar-header-actions">
+          <button v-show="!isSidebarRolledUp" class="btn-primary btn-new-character" @click="openCreateModal">+ New</button>
+          <div class="sidebar-toggle-group">
+            <button
+              type="button"
+              class="btn-sidebar-ctrl btn-sidebar-rollup"
+              @click="toggleSidebarRollup"
+              :title="isSidebarRolledUp ? 'Expand Characters Navigation (Roll Down)' : 'Roll Up Characters Navigation'"
+              :aria-label="isSidebarRolledUp ? 'Expand Characters Navigation' : 'Roll Up Characters Navigation'"
+            >
+              {{ isSidebarRolledUp ? '▼' : '▲' }}
+            </button>
+            <button
+              type="button"
+              class="btn-sidebar-ctrl btn-sidebar-collapse-left"
+              @click="toggleSidebarLeft"
+              title="Hide Character Navigation (Slide to Left)"
+              aria-label="Hide Character Navigation to Left"
+            >
+              ◀
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div v-if="loading" class="sidebar-loading">Loading characters...</div>
-      <div v-else-if="characters.length === 0" class="sidebar-empty">
-        No characters found. Create one to get started!
-      </div>
-      <ul v-else ref="sidebarList" class="character-list sheet-list" @scroll="onScrollSave">
-        <li
-          v-for="(char, index) in characters"
-          :key="char.id"
-          :class="{
-            active: selectedChar && selectedChar.id === char.id,
-            dragging: draggedCharIndex === index,
-            'drag-over': dragOverCharIndex === index && draggedCharIndex !== index
-          }"
-          :draggable="canReorder(char)"
-          @dragstart="onDragStart($event, index)"
-          @dragover="onDragOver($event, index)"
-          @dragleave="onDragLeave($event, index)"
-          @drop="onDrop($event, index)"
-          @dragend="onDragEnd"
-          @click="selectCharacter(char)"
-        >
-          <span
-            v-if="canReorder(char)"
-            class="drag-handle"
-            title="Drag to reorder"
-            @click.stop
-          >⋮⋮</span>
-          <div class="char-item-info">
-            <span class="char-name">{{ char.name || 'Unnamed' }}</span>
-            <span class="char-sub">{{ char.race || 'Unknown Species' }} • Tier {{ getCharTier(char) }} • STA {{ char.current_stamina }}/{{ char.max_stamina }}</span>
-          </div>
-          <div class="char-item-actions">
-            <div v-if="canReorder(char)" class="reorder-actions">
-              <button
-                type="button"
-                class="btn-reorder btn-move-up"
-                title="Move Up"
-                :disabled="index === 0"
-                @click.stop="moveCharacter(index, -1)"
-              >▲</button>
-              <button
-                type="button"
-                class="btn-reorder btn-move-down"
-                title="Move Down"
-                :disabled="index === characters.length - 1"
-                @click.stop="moveCharacter(index, 1)"
-              >▼</button>
+      <div class="sidebar-body-wrap" :class="{ 'rolled-up': isSidebarRolledUp }">
+        <div v-if="loading" class="sidebar-loading">Loading characters...</div>
+        <div v-else-if="characters.length === 0" class="sidebar-empty">
+          No characters found. Create one to get started!
+        </div>
+        <ul v-else ref="sidebarList" class="character-list sheet-list" @scroll="onScrollSave">
+          <li
+            v-for="(char, index) in characters"
+            :key="char.id"
+            :class="{
+              active: selectedChar && selectedChar.id === char.id,
+              dragging: draggedCharIndex === index,
+              'drag-over': dragOverCharIndex === index && draggedCharIndex !== index
+            }"
+            :draggable="canReorder(char)"
+            @dragstart="onDragStart($event, index)"
+            @dragover="onDragOver($event, index)"
+            @dragleave="onDragLeave($event, index)"
+            @drop="onDrop($event, index)"
+            @dragend="onDragEnd"
+            @click="selectCharacter(char)"
+          >
+            <span
+              v-if="canReorder(char)"
+              class="drag-handle"
+              title="Drag to reorder"
+              @click.stop
+            >⋮⋮</span>
+            <div class="char-item-info">
+              <span class="char-name">{{ char.name || 'Unnamed' }}</span>
+              <span class="char-sub">{{ char.race || 'Unknown Species' }} • Tier {{ getCharTier(char) }} • STA {{ char.current_stamina }}/{{ char.max_stamina }}</span>
             </div>
-            <button class="btn-delete-small" title="Delete Character" @click.stop="deleteCharacter(char.id)">✕</button>
-          </div>
-        </li>
-      </ul>
+            <div class="char-item-actions">
+              <div v-if="canReorder(char)" class="reorder-actions">
+                <button
+                  type="button"
+                  class="btn-reorder btn-move-up"
+                  title="Move Up"
+                  :disabled="index === 0"
+                  @click.stop="moveCharacter(index, -1)"
+                >▲</button>
+                <button
+                  type="button"
+                  class="btn-reorder btn-move-down"
+                  title="Move Down"
+                  :disabled="index === characters.length - 1"
+                  @click.stop="moveCharacter(index, 1)"
+                >▼</button>
+              </div>
+              <button class="btn-delete-small" title="Delete Character" @click.stop="deleteCharacter(char.id)">✕</button>
+            </div>
+          </li>
+        </ul>
+      </div>
     </aside>
 
     <!-- Main Content Area -->
@@ -1332,6 +1375,8 @@ export default {
       loading: true,
       creating: false,
       errorMessage: '',
+      isSidebarCollapsedLeft: false,
+      isSidebarRolledUp: false,
       draggedCharIndex: null,
       dragOverCharIndex: null,
       draggedSkillIndex: null,
@@ -1556,6 +1601,14 @@ export default {
     },
   },
   mounted() {
+    if (typeof localStorage !== 'undefined') {
+      try {
+        this.isSidebarCollapsedLeft = localStorage.getItem('wayworlds_char_sidebar_left') === 'true';
+        this.isSidebarRolledUp = localStorage.getItem('wayworlds_char_sidebar_rollup') === 'true';
+      } catch {
+        // Ignore localStorage error
+      }
+    }
     if (this.isGm) {
       this.fetchUsers();
     }
@@ -1572,6 +1625,26 @@ export default {
     this.removeSocketListeners();
   },
   methods: {
+    toggleSidebarLeft() {
+      this.isSidebarCollapsedLeft = !this.isSidebarCollapsedLeft;
+      if (typeof localStorage !== 'undefined') {
+        try {
+          localStorage.setItem('wayworlds_char_sidebar_left', String(this.isSidebarCollapsedLeft));
+        } catch {
+          // Ignore quota error
+        }
+      }
+    },
+    toggleSidebarRollup() {
+      this.isSidebarRolledUp = !this.isSidebarRolledUp;
+      if (typeof localStorage !== 'undefined') {
+        try {
+          localStorage.setItem('wayworlds_char_sidebar_rollup', String(this.isSidebarRolledUp));
+        } catch {
+          // Ignore quota error
+        }
+      }
+    },
     getCharTier(char) {
       return calcCharacterTier(char);
     },
@@ -2883,6 +2956,7 @@ export default {
 
 <style scoped>
 .sheets-layout {
+  position: relative;
   display: flex;
   height: 100%;
   background: var(--bg-main, #0d0f12);
@@ -2893,18 +2967,115 @@ export default {
 /* Sidebar */
 .sidebar {
   width: 280px;
+  min-width: 280px;
   background: #161b22;
   border-right: 1px solid #30363d;
   display: flex;
   flex-direction: column;
+  flex-shrink: 0;
+  transition: margin-left 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.25s ease;
+  z-index: 10;
+  position: relative;
+}
+
+.sidebar.sidebar-collapsed-left {
+  margin-left: -280px;
+  transform: translateX(-100%);
+  pointer-events: none;
+}
+
+.sidebar.sidebar-rolled-up {
+  height: auto;
+  align-self: flex-start;
+  border-bottom: 1px solid #30363d;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.sidebar-body-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  transition: max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+}
+
+.sidebar-body-wrap.rolled-up {
+  max-height: 0 !important;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .sidebar-header {
-  padding: 16px;
+  padding: 12px 14px;
   border-bottom: 1px solid #30363d;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
+}
+
+.sidebar-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar-toggle-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-sidebar-ctrl {
+  background-color: #000000;
+  border: 1px solid var(--border-color, #484f58);
+  color: var(--theme-bright, #c0c0c0);
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.22));
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-sidebar-ctrl:hover {
+  background-color: #14171c;
+  border-color: var(--theme-bright, #c0c0c0);
+  color: var(--theme-bright-hover, #d4d4d4);
+  box-shadow: 0 0 10px var(--theme-glow, rgba(208, 208, 208, 0.35));
+}
+
+.btn-sidebar-edge-toggle {
+  position: absolute;
+  left: 0;
+  top: 16px;
+  z-index: 20;
+  background-color: #000000;
+  border: 1px solid var(--border-color, #484f58);
+  border-left: none;
+  border-radius: 0 6px 6px 0;
+  color: var(--theme-bright, #c0c0c0);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 0 8px var(--theme-glow, rgba(208, 208, 208, 0.22)), 2px 2px 8px rgba(0, 0, 0, 0.6);
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-sidebar-edge-toggle:hover {
+  background-color: #14171c;
+  color: var(--theme-bright-hover, #d4d4d4);
+  box-shadow: 0 0 12px var(--theme-glow, rgba(208, 208, 208, 0.35)), 2px 2px 10px rgba(0, 0, 0, 0.7);
+  transform: translateX(2px);
 }
 
 .sidebar-header h3 {
