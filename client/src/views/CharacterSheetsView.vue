@@ -75,7 +75,7 @@
         <p>Choose a character sheet from the sidebar or build a new Wayworlds hero.</p>
       </div>
 
-      <div v-else class="sheet-container">
+      <div v-else class="sheet-container" :data-color-pkg="characterSheetColorPkg">
         <!-- Header Info -->
         <header class="sheet-header">
           <div class="header-main">
@@ -154,6 +154,20 @@
                     <option value="Combat">Combat</option>
                     <option value="Magic">Magic</option>
                     <option value="Theurgy">Theurgy</option>
+                  </select>
+                </div>
+                <div class="char-theme-select-wrap">
+                  <label>Theme:</label>
+                  <select
+                    v-model="selectedChar.color_theme"
+                    @change="onCharThemeChange"
+                    class="select-char-theme"
+                    aria-label="Character Sheet Theme"
+                  >
+                    <option value="">Default (App Theme)</option>
+                    <option v-for="pkg in colorPackages" :key="pkg.key" :value="pkg.key">
+                      {{ pkg.label }}
+                    </option>
                   </select>
                 </div>
                 <div v-if="isGm && registeredUsers.length > 0" class="player-select-wrap">
@@ -1274,6 +1288,7 @@ import {
 import ImageBrowserModal from '../components/ImageBrowserModal.vue';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { downloadCharacterAscii } from '../utils/characterExport.js';
+import { COLOR_PACKAGES } from '../utils/themeManager.js';
 
 export function parseCharacterNotePanels(notes) {
   if (Array.isArray(notes)) {
@@ -1328,6 +1343,7 @@ export default {
       showCreateModal: false,
       showImageBrowser: false,
       imageBrowserTarget: 'char',
+      colorPackages: COLOR_PACKAGES,
       racesData: RACES_DATA,
       officialSkills: OFFICIAL_SKILLS,
       equipmentList: [],
@@ -1343,6 +1359,7 @@ export default {
         race: 'Dawn Elves',
         customRaceName: '',
         psa: 'Combat',
+        color_theme: '',
         avatar_url: '',
         user_id: null,
         str: 50,
@@ -1386,6 +1403,9 @@ export default {
     };
   },
   computed: {
+    characterSheetColorPkg() {
+      return (this.selectedChar && this.selectedChar.color_theme) || null;
+    },
     characterTier() {
       return this.getCharTier(this.selectedChar);
     },
@@ -1632,6 +1652,11 @@ export default {
       }
       c.avatar_url = c.avatar_url || '';
       c.notes = c.notes || '';
+      if (!c.color_theme && c.id && typeof localStorage !== 'undefined') {
+        c.color_theme = localStorage.getItem(`wayworlds_char_theme_${c.id}`) || '';
+      } else {
+        c.color_theme = c.color_theme || '';
+      }
       if (Array.isArray(c.note_panels)) {
         c.note_panels = parseCharacterNotePanels(c.note_panels);
       } else {
@@ -1760,6 +1785,7 @@ export default {
         race: defaultLineage,
         customRaceName: '',
         psa: 'Combat',
+        color_theme: '',
         avatar_url: '',
         user_id: defaultUserId,
         str: base.str,
@@ -1866,6 +1892,18 @@ export default {
         this.creating = false;
       }
     },
+    onCharThemeChange() {
+      if (this.selectedChar) {
+        if (this.selectedChar.id && typeof localStorage !== 'undefined') {
+          try {
+            localStorage.setItem(`wayworlds_char_theme_${this.selectedChar.id}`, this.selectedChar.color_theme || '');
+          } catch {
+            // Ignore quota errors
+          }
+        }
+        this.updateCharacter();
+      }
+    },
     async updateCharacter() {
       if (!this.selectedChar || !this.selectedChar.id) return;
       this.errorMessage = '';
@@ -1875,6 +1913,7 @@ export default {
         }
         const payload = {
           ...this.selectedChar,
+          color_theme: this.selectedChar.color_theme || '',
           int_stat: this.selectedChar.int,
           log_stat: this.selectedChar.log,
           sta: this.selectedChar.sta ?? this.selectedChar.max_stamina ?? 50,
@@ -3132,6 +3171,7 @@ export default {
 
 .race-select-wrap,
 .psa-select-wrap,
+.char-theme-select-wrap,
 .player-select-wrap {
   display: flex;
   align-items: center;
@@ -3142,9 +3182,11 @@ export default {
 
 .select-race,
 .select-psa,
+.select-char-theme,
 .select-player,
 .select-race option,
 .select-psa option,
+.select-char-theme option,
 .select-player option {
   background-color: #000000 !important;
   color: #c9c9c9 !important;
@@ -3154,6 +3196,7 @@ export default {
 
 .select-race,
 .select-psa,
+.select-char-theme,
 .select-player {
   border: 1px solid rgba(201, 201, 201, 0.4) !important;
   border-radius: 4px;
@@ -3162,8 +3205,16 @@ export default {
   font-size: 0.855rem;
 }
 
+.select-char-theme {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 8px center !important;
+  background-size: 10px 12px !important;
+}
+
 .select-race:hover:not(:disabled),
 .select-psa:hover:not(:disabled),
+.select-char-theme:hover:not(:disabled),
 .select-player:hover:not(:disabled) {
   border-color: #c9c9c9 !important;
   box-shadow: 0 0 6px rgba(201, 201, 201, 0.35);
@@ -3171,6 +3222,7 @@ export default {
 
 .select-race:focus,
 .select-psa:focus,
+.select-char-theme:focus,
 .select-player:focus {
   outline: none;
   border-color: #c9c9c9 !important;

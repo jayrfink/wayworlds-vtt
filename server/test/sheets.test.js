@@ -156,6 +156,34 @@ describe('Sheets API & Socket.io', () => {
       expect(legacyRes.body.psa).toBe('Magic');
     });
 
+    it('creates character with color_theme and allows updating color_theme independently', async () => {
+      const agent = request.agent(app);
+      await agent.post('/api/auth/register').send({ username: 'player1', password: 'password123' });
+      await agent.post('/api/auth/login').send({ username: 'player1', password: 'password123' });
+
+      // Create with custom theme
+      const createRes = await agent.post('/api/characters').send({
+        name: 'Themed Hero',
+        race: 'Dawn Elves',
+        color_theme: 'greens',
+      });
+      expect(createRes.status).toBe(201);
+      expect(createRes.body.color_theme).toBe('greens');
+      const charId = createRes.body.id;
+
+      // Update color_theme
+      const updateRes = await agent.put(`/api/characters/${charId}`).send({
+        color_theme: 'oranges-maroon',
+      });
+      expect(updateRes.status).toBe(200);
+      expect(updateRes.body.color_theme).toBe('oranges-maroon');
+
+      // Verify GET returns updated color_theme
+      const getRes = await agent.get(`/api/characters/${charId}`);
+      expect(getRes.status).toBe(200);
+      expect(getRes.body.color_theme).toBe('oranges-maroon');
+    });
+
     it('manages max_ess and current_ess, clamps them, and cascades current_ess to active map tokens', async () => {
       const agent = request.agent(app);
       await agent.post('/api/auth/register').send({ username: 'player1', password: 'password123' });

@@ -2029,6 +2029,108 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(vm.forgeError).toMatch(/conflicts with a core skill/i);
     });
   });
+
+  describe('Character Sheet Independent Theme Selector', () => {
+    it('computes characterSheetColorPkg correctly from selectedChar', () => {
+      const vmNoChar = { selectedChar: null };
+      expect(CharacterSheetsView.computed.characterSheetColorPkg.call(vmNoChar)).toBeNull();
+
+      const vmDefault = { selectedChar: { color_theme: '' } };
+      expect(CharacterSheetsView.computed.characterSheetColorPkg.call(vmDefault)).toBeNull();
+
+      const vmGreens = { selectedChar: { color_theme: 'greens' } };
+      expect(CharacterSheetsView.computed.characterSheetColorPkg.call(vmGreens)).toBe('greens');
+
+      const vmOranges = { selectedChar: { color_theme: 'oranges-maroon' } };
+      expect(CharacterSheetsView.computed.characterSheetColorPkg.call(vmOranges)).toBe('oranges-maroon');
+    });
+
+    it('onCharThemeChange saves to localStorage and calls updateCharacter', () => {
+      localStorage.removeItem('wayworlds_char_theme_42');
+      const updateSpy = vi.fn();
+      const vm = {
+        selectedChar: { id: 42, color_theme: 'blues' },
+        updateCharacter: updateSpy,
+      };
+
+      CharacterSheetsView.methods.onCharThemeChange.call(vm);
+      expect(localStorage.getItem('wayworlds_char_theme_42')).toBe('blues');
+      expect(updateSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('normalizes character data and falls back to localStorage if color_theme is empty', () => {
+      localStorage.setItem('wayworlds_char_theme_99', 'maroons');
+
+      const normalized = CharacterSheetsView.methods.normalizeCharacterData({
+        id: 99,
+        name: 'Themed Scout',
+        race: 'Dawn Elves',
+        color_theme: '',
+      });
+
+      expect(normalized.color_theme).toBe('maroons');
+      localStorage.removeItem('wayworlds_char_theme_99');
+    });
+
+    it('mounts and renders the theme selector dropdown to the right of PSA and sets data-color-pkg on sheet-container', async () => {
+      const pinia = createPinia();
+      setActivePinia(pinia);
+
+      const wrapper = mount(CharacterSheetsView, {
+        global: {
+          plugins: [pinia],
+          stubs: {
+            ImageBrowserModal: true,
+          },
+        },
+      });
+
+      await flushPromises();
+
+      wrapper.vm.characters = [
+        {
+          id: 1,
+          name: 'Hero A',
+          race: 'Dawn Elves',
+          psa: 'Combat',
+          color_theme: 'greens',
+          str: 50,
+          sta: 50,
+          dex: 50,
+          rs: 50,
+          int_stat: 50,
+          log_stat: 50,
+          per: 50,
+          ldr: 50,
+          max_ess: 50,
+          current_ess: 50,
+          current_xp: 0,
+        },
+      ];
+      wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
+      await wrapper.vm.$nextTick();
+
+      // Check sheet container has data-color-pkg="greens"
+      const sheetContainer = wrapper.find('.sheet-container');
+      expect(sheetContainer.exists()).toBe(true);
+      expect(sheetContainer.attributes('data-color-pkg')).toBe('greens');
+
+      // Check theme dropdown is present next to PSA
+      const psaWrap = wrapper.find('.psa-select-wrap');
+      const themeWrap = wrapper.find('.char-theme-select-wrap');
+      expect(psaWrap.exists()).toBe(true);
+      expect(themeWrap.exists()).toBe(true);
+
+      const themeSelect = wrapper.find('.select-char-theme');
+      expect(themeSelect.exists()).toBe(true);
+
+      // Verify options include Default plus color packages
+      const options = themeSelect.findAll('option');
+      expect(options.length).toBeGreaterThanOrEqual(6); // 1 default + 5 packages
+      expect(options[0].text()).toContain('Default');
+      expect(themeSelect.element.value).toBe('greens');
+    });
+  });
 });
 
 

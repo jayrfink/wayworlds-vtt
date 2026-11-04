@@ -42,6 +42,7 @@ function formatCharacterSheet(row) {
     skills: safeJsonParse(row.skills, []),
     inventory: safeJsonParse(row.inventory, []),
     grimoire: safeJsonParse(row.grimoire, []),
+    color_theme: row.color_theme || '',
   };
 }
 
@@ -148,6 +149,7 @@ export function createCharacterRouter(db, io) {
         skills = [],
         inventory = [],
         grimoire = [],
+        color_theme = '',
         notes = '',
       } = req.body;
 
@@ -187,6 +189,7 @@ export function createCharacterRouter(db, io) {
       const skillsStr = typeof skills === 'string' ? skills : JSON.stringify(skills);
       const inventoryStr = typeof inventory === 'string' ? inventory : JSON.stringify(inventory);
       const grimoireStr = typeof grimoire === 'string' ? grimoire : JSON.stringify(grimoire);
+      const colorThemeStr = typeof color_theme === 'string' ? color_theme.trim() : '';
 
       const nextSortOrder = (db.prepare('SELECT COALESCE(MAX(sort_order), 0) + 1 AS next_order FROM character_sheets').get()?.next_order) || 1;
 
@@ -194,18 +197,18 @@ export function createCharacterRouter(db, io) {
         INSERT INTO character_sheets (
           user_id, name, race, psa, gender, height, weight,
           str, sta, current_sta, max_ess, current_ess, current_xp, dex, rs, int_stat, log_stat, per, ldr,
-          racial_abilities, skills, inventory, grimoire, notes, avatar_url, sort_order
+          racial_abilities, skills, inventory, grimoire, color_theme, notes, avatar_url, sort_order
         ) VALUES (
           ?, ?, ?, ?, ?, ?, ?,
           ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,
-          ?, ?, ?, ?, ?, ?, ?
+          ?, ?, ?, ?, ?, ?, ?, ?
         )
       `);
 
       const result = stmt.run(
         ownerId, characterName, race, characterPsa, gender, height, weight,
         strVal, staVal, curStaVal, maxEssVal, curEssVal, curXpVal, dexVal, rsVal, intVal, logVal, perVal, ldrVal,
-        racialAbilitiesStr, skillsStr, inventoryStr, grimoireStr, notes, req.body.avatar_url || '', nextSortOrder
+        racialAbilitiesStr, skillsStr, inventoryStr, grimoireStr, colorThemeStr, notes, req.body.avatar_url || '', nextSortOrder
       );
 
       const created = db.prepare(`
@@ -308,13 +311,16 @@ export function createCharacterRouter(db, io) {
       const skillsStr = typeof skills === 'string' ? skills : JSON.stringify(skills);
       const inventoryStr = typeof inventory === 'string' ? inventory : JSON.stringify(inventory);
       const grimoireStr = typeof grimoire === 'string' ? grimoire : JSON.stringify(grimoire);
+      const colorThemeStr = req.body.color_theme !== undefined
+        ? (typeof req.body.color_theme === 'string' ? req.body.color_theme.trim() : '')
+        : (existing.color_theme || '');
 
       const stmt = db.prepare(`
         UPDATE character_sheets SET
           user_id = ?, name = ?, race = ?, psa = ?, gender = ?, height = ?, weight = ?,
           str = ?, sta = ?, current_sta = ?, max_ess = ?, current_ess = ?, current_xp = ?, dex = ?, rs = ?,
           int_stat = ?, log_stat = ?, per = ?, ldr = ?,
-          racial_abilities = ?, skills = ?, inventory = ?, grimoire = ?, notes = ?, avatar_url = ?,
+          racial_abilities = ?, skills = ?, inventory = ?, grimoire = ?, color_theme = ?, notes = ?, avatar_url = ?,
           updated_at = CURRENT_TIMESTAMP
         WHERE id = ?
       `);
@@ -325,7 +331,7 @@ export function createCharacterRouter(db, io) {
         ownerId, name, race, characterPsa, gender, height, weight,
         strVal, staVal, curStaVal, maxEssVal, curEssVal, curXpVal, dexVal, rsVal,
         intVal, logVal, perVal, ldrVal,
-        racialAbilitiesStr, skillsStr, inventoryStr, grimoireStr, notes, avatarUrl,
+        racialAbilitiesStr, skillsStr, inventoryStr, grimoireStr, colorThemeStr, notes, avatarUrl,
         req.params.id
       );
 
