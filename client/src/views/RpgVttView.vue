@@ -3891,8 +3891,8 @@ onBeforeUnmount(() => {
 .btn-audio-toggle {
   background: transparent !important;
   border: none !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   font-size: 11px;
   padding: 2px 6px;
   border-radius: 4px;
@@ -3905,58 +3905,67 @@ onBeforeUnmount(() => {
 }
 
 .btn-audio-toggle:hover {
-  background: #051414 !important;
+  background: #000000 !important;
   border: none !important;
-  box-shadow: 0 0 8px rgba(0, 255, 255, 0.3);
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  box-shadow: 0 0 8px rgba(206, 206, 206, 0.4);
 }
 
 .btn-audio-toggle-pill {
-  background: #000000 !important;
+  background: rgba(22, 27, 34, 0.92) !important;
   border: none !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   padding: 6px 10px;
   font-size: 12px;
   font-weight: 600;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
 }
 
 .btn-audio-toggle-pill:hover {
-  background: #051414 !important;
+  background: #000000 !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   border: none !important;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 10px rgba(206, 206, 206, 0.5);
 }
 
 .btn-roll-log-pill {
-  background: #000000 !important;
+  background: rgba(22, 27, 34, 0.92) !important;
   border: none !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
 }
 
 .btn-roll-log-pill:hover {
-  background: #051414 !important;
+  background: #000000 !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   border: none !important;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
+  box-shadow: 0 0 10px rgba(206, 206, 206, 0.5);
 }
 
 .roll-log-card {
   width: 290px;
   max-height: 290px;
-  background: #000000;
-  border: 1px solid rgba(0, 128, 128, 0.8);
-  border-radius: 6px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.85);
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -3967,15 +3976,16 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: #051414;
-  border-bottom: 1px solid rgba(0, 128, 128, 0.5);
+  background: rgba(13, 17, 23, 0.85);
+  border-bottom: 1px solid var(--border);
 }
 
 .roll-log-title {
   font-size: 12px;
   font-weight: 700;
-  color: #00ffff;
+  color: #cecece;
   letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
 }
 
 .roll-log-actions {
@@ -4003,10 +4013,18 @@ onBeforeUnmount(() => {
 .btn-roll-log-toggle {
   background: transparent !important;
   border: none !important;
-  color: #00ffff !important;
-  -webkit-text-fill-color: #00ffff;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
   font-size: 11px;
   padding: 2px 4px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
+.btn-roll-log-toggle:hover {
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+  text-shadow: 0 0 6px rgba(206, 206, 206, 0.6);
 }
 
 .roll-log-body {
@@ -4059,13 +4077,13 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: 4px 6px;
-  background: rgba(10, 25, 25, 0.5);
-  border: 1px solid rgba(0, 128, 128, 0.25);
+  background: rgba(22, 27, 34, 0.7);
+  border: 1px solid var(--border);
   border-radius: 4px;
 }
 
 .roll-log-item.percentile {
-  border-left: 3px solid #00ffff;
+  border-left: 3px solid #cecece;
 }
 
 .roll-log-item.damage {
@@ -4093,15 +4111,17 @@ onBeforeUnmount(() => {
   font-weight: 700;
   padding: 1px 4px;
   border-radius: 3px;
-  background: #021a1e;
-  color: #a8ffea;
-  border: 1px solid rgba(0, 128, 128, 0.5);
+  background: rgba(0, 0, 0, 0.6);
+  color: #cecece;
+  border: 1px solid var(--border);
+  box-shadow: 0 0 4px rgba(206, 206, 206, 0.25);
 }
 
 .roll-log-item.damage .roll-item-badge {
   background: #140409;
   color: #f29249;
   border-color: rgba(242, 146, 73, 0.5);
+  box-shadow: 0 0 4px rgba(242, 146, 73, 0.25);
 }
 
 .roll-log-item.initiative .roll-item-badge {
@@ -4120,7 +4140,8 @@ onBeforeUnmount(() => {
 .roll-item-total {
   font-size: 14px;
   font-weight: 800;
-  color: #00ffff;
+  color: #cecece;
+  text-shadow: 0 0 8px rgba(206, 206, 206, 0.5);
 }
 
 .roll-log-item.damage .roll-item-total {
