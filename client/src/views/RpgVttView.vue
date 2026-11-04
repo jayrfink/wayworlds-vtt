@@ -657,7 +657,7 @@
                 v-for="t in tokens"
                 :key="t.id"
                 :class="{ active: selectedTokenId === t.id, 'token-row-hidden': t.layer === 'gm' }"
-                @click="selectedTokenId = t.id"
+                @click="onTokenSelected(t)"
                 @dblclick="onTokenListDblClick(t)"
               >
                 <span class="token-dot" :style="{ backgroundColor: t.color || '#666666' }"></span>
@@ -1332,6 +1332,13 @@ function closeTokenSidebar() {
 watch([panX, panY, zoomLevel, activeTool, selectedTokenId, isRollLogOpen, showTokenSidebar, isTokenSidebarRolledUp], () => {
   persistVttState();
 });
+
+watch(selectedTokenId, (newId) => {
+  if (newId) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+  }
+});
 const showCreateMapModal = ref(false);
 const createMapError = ref('');
 const showAddTokenModal = ref(false);
@@ -1808,6 +1815,9 @@ async function submitAddToken() {
       const exists = tokens.value.some((t) => t.id === created.id);
       if (!exists) tokens.value.push(created);
       selectedTokenId.value = created.id;
+      showTokenSidebar.value = true;
+      isTokenSidebarRolledUp.value = false;
+      persistVttState();
     } else {
       const data = await res.json().catch(() => ({}));
       createTokenError.value = data.error || `Failed to create token (HTTP ${res.status})`;
@@ -1863,11 +1873,19 @@ function onTokenSelected(token) {
     updateSelectedToken();
   }
   selectedTokenId.value = token ? token.id : null;
+  if (token) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+    persistVttState();
+  }
 }
 
 function onTokenDblClick(token) {
   if (!token) return;
   selectedTokenId.value = token.id;
+  showTokenSidebar.value = true;
+  isTokenSidebarRolledUp.value = false;
+  persistVttState();
   if (token.template || token.template_id || token.vehicle_data) {
     openHudTokenId.value = token.id;
   }
@@ -1876,6 +1894,9 @@ function onTokenDblClick(token) {
 function onTokenListDblClick(token) {
   if (!token) return;
   selectedTokenId.value = token.id;
+  showTokenSidebar.value = true;
+  isTokenSidebarRolledUp.value = false;
+  persistVttState();
   if (token.template || token.template_id || token.vehicle_data) {
     openHudTokenId.value = token.id;
   }
@@ -2161,6 +2182,9 @@ async function onDeployVehicle(payload) {
       const exists = tokens.value.some((t) => t.id === created.id);
       if (!exists) tokens.value.push(created);
       selectedTokenId.value = created.id;
+      showTokenSidebar.value = true;
+      isTokenSidebarRolledUp.value = false;
+      persistVttState();
     }
   } catch (err) {
     console.error('Failed to deploy vehicle token:', err);

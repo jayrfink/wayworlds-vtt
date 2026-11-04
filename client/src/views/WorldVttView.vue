@@ -1232,6 +1232,13 @@ watch([panX, panY, zoomLevel, activeTool, selectedMarkerId, isRollLogOpen, showT
   persistVttState();
 });
 
+watch(selectedMarkerId, (newId) => {
+  if (newId) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+  }
+});
+
 const showCreateMapModal = ref(false);
 const createMapError = ref('');
 const showAddTokenModal = ref(false);
@@ -1606,6 +1613,9 @@ async function submitAddMarker() {
         markers.value = [...markers.value, created];
       }
       selectedMarkerId.value = created.id;
+      showTokenSidebar.value = true;
+      isTokenSidebarRolledUp.value = false;
+      persistVttState();
       showAddTokenModal.value = false;
     } else {
       const data = await res.json().catch(() => ({}));
@@ -1635,6 +1645,11 @@ async function onMarkerMoved({ id, hex_q, hex_r }) {
 
 function onMarkerSelected(marker) {
   selectedMarkerId.value = marker ? marker.id : null;
+  if (marker) {
+    showTokenSidebar.value = true;
+    isTokenSidebarRolledUp.value = false;
+    persistVttState();
+  }
 }
 
 async function toggleMarkerVisibility(marker) {

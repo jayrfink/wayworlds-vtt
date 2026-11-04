@@ -45,6 +45,11 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
     it('uses closeTokenSidebar method on sidebar close button', () => {
       expect(rpgViewSrc).toMatch(/<button[^>]*class="close-btn"[^>]*@click="closeTokenSidebar"/);
     });
+
+    it('unrolls and opens token inspector when a token is selected or clicked', () => {
+      expect(rpgViewSrc).toMatch(/function onTokenSelected\(token\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+      expect(rpgViewSrc).toMatch(/watch\(selectedTokenId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+    });
   });
 
   describe('WorldVttView token sidebar persistence', () => {
@@ -64,6 +69,11 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
 
     it('uses closeTokenSidebar method on sidebar close button', () => {
       expect(spaceViewSrc).toMatch(/<button[^>]*class="close-btn"[^>]*@click="closeTokenSidebar"/);
+    });
+
+    it('unrolls and opens marker inspector when a marker is selected or clicked', () => {
+      expect(spaceViewSrc).toMatch(/function onMarkerSelected\(marker\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+      expect(spaceViewSrc).toMatch(/watch\(selectedMarkerId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
     });
   });
 
