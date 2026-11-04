@@ -107,8 +107,8 @@
   --theme-surface-hover-active: #262c36;
   --theme-border-subtle: rgba(192, 192, 192, 0.35);
   --theme-glow-bg: rgba(192, 192, 192, 0.12);
-  --theme-glow: rgba(192, 192, 192, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(192, 192, 192, 0.35);
+  --theme-glow: rgba(192, 192, 192, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(192, 192, 192, 0.22);
   --theme-glow-hover: 0 0 14px rgba(212, 212, 212, 0.7);
   --theme-glow-strong: 0 0 18px rgba(212, 212, 212, 0.85);
   --theme-btn-border: #484f58;
@@ -152,8 +152,8 @@
   --theme-surface-hover-active: #262c36;
   --theme-border-subtle: rgba(192, 192, 192, 0.35);
   --theme-glow-bg: rgba(192, 192, 192, 0.12);
-  --theme-glow: rgba(192, 192, 192, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(192, 192, 192, 0.35);
+  --theme-glow: rgba(192, 192, 192, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(192, 192, 192, 0.22);
   --theme-glow-hover: 0 0 14px rgba(212, 212, 212, 0.7);
   --theme-glow-strong: 0 0 18px rgba(212, 212, 212, 0.85);
   --theme-btn-border: #484f58;
@@ -188,8 +188,8 @@
   --theme-surface-hover-active: #1f2329;
   --theme-border-subtle: rgba(139, 148, 158, 0.35);
   --theme-glow-bg: rgba(139, 148, 158, 0.12);
-  --theme-glow: rgba(139, 148, 158, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(139, 148, 158, 0.35);
+  --theme-glow: rgba(139, 148, 158, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(139, 148, 158, 0.22);
   --theme-glow-hover: 0 0 14px rgba(173, 181, 189, 0.7);
   --theme-glow-strong: 0 0 18px rgba(173, 181, 189, 0.85);
   --theme-btn-border: #30363d;
@@ -224,8 +224,8 @@
   --theme-surface-hover-active: #3d111c;
   --theme-border-subtle: rgba(226, 91, 122, 0.35);
   --theme-glow-bg: rgba(226, 91, 122, 0.12);
-  --theme-glow: rgba(226, 91, 122, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(226, 91, 122, 0.35);
+  --theme-glow: rgba(226, 91, 122, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(226, 91, 122, 0.22);
   --theme-glow-hover: 0 0 14px rgba(255, 117, 151, 0.7);
   --theme-glow-strong: 0 0 18px rgba(255, 117, 151, 0.85);
   --theme-btn-border: #853146;
@@ -260,8 +260,8 @@
   --theme-surface-hover-active: #0e301e;
   --theme-border-subtle: rgba(16, 185, 129, 0.35);
   --theme-glow-bg: rgba(16, 185, 129, 0.12);
-  --theme-glow: rgba(16, 185, 129, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(16, 185, 129, 0.35);
+  --theme-glow: rgba(16, 185, 129, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(16, 185, 129, 0.22);
   --theme-glow-hover: 0 0 14px rgba(52, 211, 153, 0.7);
   --theme-glow-strong: 0 0 18px rgba(52, 211, 153, 0.85);
   --theme-btn-border: #0d3822;
@@ -296,8 +296,8 @@
   --theme-surface-hover-active: #113f52;
   --theme-border-subtle: rgba(56, 189, 248, 0.35);
   --theme-glow-bg: rgba(56, 189, 248, 0.12);
-  --theme-glow: rgba(56, 189, 248, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(56, 189, 248, 0.35);
+  --theme-glow: rgba(56, 189, 248, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(56, 189, 248, 0.22);
   --theme-glow-hover: 0 0 14px rgba(125, 211, 252, 0.7);
   --theme-glow-strong: 0 0 18px rgba(125, 211, 252, 0.85);
   --theme-btn-border: #347b93;
@@ -332,8 +332,8 @@
   --theme-surface-hover-active: #0a3424;
   --theme-border-subtle: rgba(16, 185, 129, 0.35);
   --theme-glow-bg: rgba(16, 185, 129, 0.12);
-  --theme-glow: rgba(16, 185, 129, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(16, 185, 129, 0.35);
+  --theme-glow: rgba(16, 185, 129, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(16, 185, 129, 0.22);
   --theme-glow-hover: 0 0 14px rgba(52, 211, 153, 0.7);
   --theme-glow-strong: 0 0 18px rgba(52, 211, 153, 0.85);
   --theme-btn-border: #0d3822;
@@ -368,8 +368,8 @@
   --theme-surface-hover-active: #471b0e;
   --theme-border-subtle: rgba(251, 146, 60, 0.35);
   --theme-glow-bg: rgba(251, 146, 60, 0.12);
-  --theme-glow: rgba(251, 146, 60, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(251, 146, 60, 0.35);
+  --theme-glow: rgba(251, 146, 60, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(251, 146, 60, 0.22);
   --theme-glow-hover: 0 0 14px rgba(253, 186, 116, 0.7);
   --theme-glow-strong: 0 0 18px rgba(253, 186, 116, 0.85);
   --theme-btn-border: #853146;
@@ -404,8 +404,8 @@
   --theme-surface-hover-active: #381f16;
   --theme-border-subtle: rgba(194, 122, 89, 0.35);
   --theme-glow-bg: rgba(194, 122, 89, 0.12);
-  --theme-glow: rgba(194, 122, 89, 0.55);
-  --theme-glow-subtle: 0 0 8px 1px rgba(194, 122, 89, 0.35);
+  --theme-glow: rgba(194, 122, 89, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(194, 122, 89, 0.22);
   --theme-glow-hover: 0 0 14px rgba(212, 138, 104, 0.7);
   --theme-glow-strong: 0 0 18px rgba(212, 138, 104, 0.85);
   --theme-btn-border: #543325;
