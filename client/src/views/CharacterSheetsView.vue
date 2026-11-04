@@ -756,16 +756,6 @@
                   class="item-name-input spell-name-input"
                 />
                 <select
-                  v-model="spell.tradition"
-                  @change="onSpellTraditionChange(spell)"
-                  class="select-official-skill spell-tradition-select"
-                  title="Magic or Ki Tradition"
-                >
-                  <option v-for="trad in magicTraditions" :key="trad.name" :value="trad.name">
-                    {{ trad.label }}
-                  </option>
-                </select>
-                <select
                   v-model="spell.category"
                   @change="updateGrimoire"
                   class="select-official-skill spell-category-select"
@@ -2924,22 +2914,24 @@ export default {
 }
 
 .character-list li.active {
-  background: var(--theme-surface-active, #05282e);
-  border-left: 4px solid var(--theme-bright, aquamarine);
-  box-shadow: inset 4px 0 12px var(--theme-glow-subtle, rgba(0, 0, 0, 0.5));
+  background: #cccccc !important;
+  border-left: 4px solid #aaaaaa !important;
+  box-shadow: none !important;
+  color: #f9f9f9 !important;
 }
 
 .character-list li.active:hover {
-  background: var(--theme-surface-hover-active, #083841);
+  background: #cccccc !important;
 }
 
 .character-list li.active .char-name {
-  color: var(--theme-bright, #a8ffea);
-  text-shadow: 0 0 8px var(--theme-glow, rgba(0, 229, 255, 0.4));
+  color: #f9f9f9 !important;
+  text-shadow: none !important;
 }
 
 .character-list li.active .char-sub {
-  color: var(--theme-accent, #80cbc4);
+  color: #f9f9f9 !important;
+  text-shadow: none !important;
 }
 
 .drag-handle {
@@ -3247,9 +3239,9 @@ export default {
 .tactical-value {
   font-size: 1.1rem;
   font-weight: 700;
-  color: var(--theme-bright, #45acba);
-  text-shadow: 0 0 8px var(--theme-glow, rgba(69, 172, 186, 0.4));
-  transition: color 0.2s ease, text-shadow 0.2s ease;
+  color: #c8c8c8 !important;
+  text-shadow: none !important;
+  transition: color 0.2s ease;
 }
 
 .encumbrance-stat {
@@ -3879,16 +3871,16 @@ export default {
 }
 
 .skill-chance-badge {
-  background: var(--theme-surface-active, rgba(6, 182, 212, 0.12));
-  color: var(--theme-bright, #45acba);
-  text-shadow: 0 0 6px var(--theme-glow-subtle);
+  background: rgba(200, 200, 200, 0.08) !important;
+  color: #cecece !important;
+  text-shadow: none !important;
   font-weight: 700;
   font-size: 0.8rem;
   font-family: monospace;
   padding: 4px 6px;
   border-radius: 4px;
-  border: 1px solid var(--theme-border-subtle, rgba(6, 182, 212, 0.4));
-  box-shadow: var(--theme-glow-subtle);
+  border: 1px solid #484f58 !important;
+  box-shadow: none !important;
   letter-spacing: 0.5px;
 }
 
@@ -4042,11 +4034,11 @@ export default {
 }
 
 .btn-secondary {
-  background-color: #000000 !important;
-  background: #000000 !important;
-  color: #00a8a8 !important;
-  -webkit-text-fill-color: #00a8a8;
-  border: 1px solid #00a8a8 !important;
+  background-color: #666666 !important;
+  background: #666666 !important;
+  color: #e0e0e0 !important;
+  -webkit-text-fill-color: #e0e0e0 !important;
+  border: 1px solid #777777 !important;
   padding: 5px 12px;
   border-radius: 4px;
   font-size: 0.85rem;
@@ -4054,17 +4046,18 @@ export default {
   cursor: pointer;
   letter-spacing: 0.3px;
   transition: all 0.15s ease-in-out;
+  box-shadow: none !important;
 }
 .btn-secondary:hover:not(:disabled) {
-  background-color: #082020 !important;
-  border-color: #00dada !important;
-  color: #00dada !important;
-  -webkit-text-fill-color: #00dada;
-  box-shadow: 0 0 8px rgba(0, 218, 218, 0.4);
+  background-color: #777777 !important;
+  background: #777777 !important;
+  border-color: #888888 !important;
+  color: #e0e0e0 !important;
+  -webkit-text-fill-color: #e0e0e0 !important;
+  box-shadow: 0 0 6px rgba(224, 224, 224, 0.25) !important;
 }
 .btn-secondary:active:not(:disabled) {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(0, 128, 128, 0.6);
 }
 
 /* Modal */
