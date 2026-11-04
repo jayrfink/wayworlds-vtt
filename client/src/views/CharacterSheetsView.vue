@@ -371,7 +371,11 @@
               <div class="stamina-bar-bg">
                 <div
                   class="stamina-bar-fill"
-                  :style="{ width: staminaPercentage + '%' }"
+                  :style="{
+                    width: staminaPercentage + '%',
+                    background: staminaColor,
+                    boxShadow: staminaGlow
+                  }"
                 ></div>
               </div>
               <div class="stamina-controls">
@@ -419,7 +423,11 @@
               <div class="ess-bar-bg">
                 <div
                   class="ess-bar-fill"
-                  :style="{ width: essPercentage + '%' }"
+                  :style="{
+                    width: essPercentage + '%',
+                    background: essColor,
+                    boxShadow: essGlow
+                  }"
                 ></div>
               </div>
               <div class="ess-controls">
@@ -1446,9 +1454,16 @@ export default {
       return Math.max(0, Math.min(100, pct));
     },
     staminaColor() {
-      if (this.staminaPercentage > 50) return '#4caf50';
-      if (this.staminaPercentage > 25) return '#ff9800';
-      return '#f44336';
+      const pct = typeof this.staminaPercentage === 'number' ? this.staminaPercentage : (this.selectedChar?.max_stamina ? (this.selectedChar.current_stamina / this.selectedChar.max_stamina) * 100 : 0);
+      if (pct > 50) return '#86efac';
+      if (pct > 25) return '#fb923c';
+      return '#ef4444';
+    },
+    staminaGlow() {
+      const pct = typeof this.staminaPercentage === 'number' ? this.staminaPercentage : (this.selectedChar?.max_stamina ? (this.selectedChar.current_stamina / this.selectedChar.max_stamina) * 100 : 0);
+      if (pct > 50) return '0 0 10px rgba(134, 239, 172, 0.7)';
+      if (pct > 25) return '0 0 10px rgba(251, 146, 60, 0.7)';
+      return '0 0 10px rgba(239, 68, 68, 0.7)';
     },
     essPercentage() {
       if (!this.selectedChar || !this.selectedChar.max_ess) return 0;
@@ -1457,9 +1472,15 @@ export default {
     },
     essColor() {
       const pct = typeof this.essPercentage === 'number' ? this.essPercentage : (this.selectedChar?.max_ess ? (this.selectedChar.current_ess / this.selectedChar.max_ess) * 100 : 0);
-      if (pct > 50) return '#4caf50';
-      if (pct > 25) return '#ff9800';
-      return '#f44336';
+      if (pct > 50) return '#7dd3fc';
+      if (pct > 25) return '#fdba74';
+      return '#fca5a5';
+    },
+    essGlow() {
+      const pct = typeof this.essPercentage === 'number' ? this.essPercentage : (this.selectedChar?.max_ess ? (this.selectedChar.current_ess / this.selectedChar.max_ess) * 100 : 0);
+      if (pct > 50) return '0 0 10px rgba(125, 211, 252, 0.7)';
+      if (pct > 25) return '0 0 10px rgba(253, 186, 116, 0.7)';
+      return '0 0 10px rgba(252, 165, 165, 0.7)';
     },
     derivedIM() {
       if (!this.selectedChar) return 5;
@@ -3380,15 +3401,15 @@ export default {
 .stamina-bar-fill {
   height: 100%;
   transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  background: var(--theme-sta-color, #e25b7a);
-  box-shadow: var(--theme-sta-glow, 0 0 10px rgba(226, 91, 122, 0.7));
+  background: #86efac;
+  box-shadow: 0 0 10px rgba(134, 239, 172, 0.7);
 }
 
 .ess-bar-fill {
   height: 100%;
   transition: width 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
-  background: var(--theme-ess-color, #ff7597);
-  box-shadow: var(--theme-ess-glow, 0 0 10px rgba(255, 117, 151, 0.7));
+  background: #7dd3fc;
+  box-shadow: 0 0 10px rgba(125, 211, 252, 0.7);
 }
 
 .stamina-values .current,
@@ -3555,16 +3576,22 @@ export default {
 .btn-xp:active {
   transform: translateY(1px);
 }
-.btn-sub {
+.btn-sub,
+.btn-sta.btn-sub,
+.btn-ess.btn-sub,
+.btn-delta.btn-sub {
   background: #000000;
-  color: #ff2222 !important;
-  border: 1px solid rgba(255, 34, 34, 0.5) !important;
+  color: #fca5a5 !important;
+  border: 1px solid rgba(252, 165, 165, 0.45) !important;
 }
-.btn-sub:hover:not(:disabled) {
+.btn-sub:hover:not(:disabled),
+.btn-sta.btn-sub:hover:not(:disabled),
+.btn-ess.btn-sub:hover:not(:disabled),
+.btn-delta.btn-sub:hover:not(:disabled) {
   background: #000000;
-  border-color: #ff3333 !important;
-  color: #ff5555 !important;
-  box-shadow: 0 0 8px rgba(255, 34, 34, 0.6) !important;
+  border-color: #fca5a5 !important;
+  color: #fecaca !important;
+  box-shadow: 0 0 8px rgba(252, 165, 165, 0.55) !important;
 }
 .btn-add,
 .btn-sta.btn-add,

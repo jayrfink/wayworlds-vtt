@@ -724,30 +724,56 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         updateCharacter: vi.fn(),
       };
 
-      // Compute percentage: 40/50 = 80%
+      // Compute percentage: 40/50 = 80% (pale azure)
       expect(CharacterSheetsView.computed.essPercentage.call(vm)).toBe(80);
-      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#4caf50');
+      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#7dd3fc');
+      expect(CharacterSheetsView.computed.essGlow.call(vm)).toBe('0 0 10px rgba(125, 211, 252, 0.7)');
 
       // Adjust ESS: -5
       CharacterSheetsView.methods.adjustEss.call(vm, -5);
       expect(vm.selectedChar.current_ess).toBe(35);
       expect(vm.updateCharacter).toHaveBeenCalled();
 
-      // Freeform burn: 35 - 10 = 25 (50% -> orange)
+      // Freeform burn: 35 - 10 = 25 (50% -> pale orange)
       CharacterSheetsView.methods.applyEssBurn.call(vm);
       expect(vm.selectedChar.current_ess).toBe(25);
       expect(CharacterSheetsView.computed.essPercentage.call(vm)).toBe(50);
-      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#ff9800');
+      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#fdba74');
+      expect(CharacterSheetsView.computed.essGlow.call(vm)).toBe('0 0 10px rgba(253, 186, 116, 0.7)');
 
-      // Critical low (< 25% -> red)
+      // Critical low (< 25% -> pale red)
       vm.selectedChar.current_ess = 5;
       expect(CharacterSheetsView.computed.essPercentage.call(vm)).toBe(10);
-      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#f44336');
+      expect(CharacterSheetsView.computed.essColor.call(vm)).toBe('#fca5a5');
+      expect(CharacterSheetsView.computed.essGlow.call(vm)).toBe('0 0 10px rgba(252, 165, 165, 0.7)');
 
       // Freeform recharge: 5 + 20 = 25
       vm.essDelta = 20;
       CharacterSheetsView.methods.applyEssRecharge.call(vm);
       expect(vm.selectedChar.current_ess).toBe(25);
+    });
+
+    it('computes staminaPercentage, staminaColor, and staminaGlow dynamically across health tiers', () => {
+      const vm = {
+        selectedChar: { current_stamina: 50, max_stamina: 50 },
+      };
+
+      // Full / healthy (> 50% -> pale green)
+      expect(CharacterSheetsView.computed.staminaPercentage.call(vm)).toBe(100);
+      expect(CharacterSheetsView.computed.staminaColor.call(vm)).toBe('#86efac');
+      expect(CharacterSheetsView.computed.staminaGlow.call(vm)).toBe('0 0 10px rgba(134, 239, 172, 0.7)');
+
+      // Getting low (50% -> orange)
+      vm.selectedChar.current_stamina = 25;
+      expect(CharacterSheetsView.computed.staminaPercentage.call(vm)).toBe(50);
+      expect(CharacterSheetsView.computed.staminaColor.call(vm)).toBe('#fb923c');
+      expect(CharacterSheetsView.computed.staminaGlow.call(vm)).toBe('0 0 10px rgba(251, 146, 60, 0.7)');
+
+      // Dangerously low (20% -> red)
+      vm.selectedChar.current_stamina = 10;
+      expect(CharacterSheetsView.computed.staminaPercentage.call(vm)).toBe(20);
+      expect(CharacterSheetsView.computed.staminaColor.call(vm)).toBe('#ef4444');
+      expect(CharacterSheetsView.computed.staminaGlow.call(vm)).toBe('0 0 10px rgba(239, 68, 68, 0.7)');
     });
   });
 
