@@ -253,7 +253,7 @@ These 10 core secular skills exist across all Wayworlds fantasy settings and all
 2. **Ranged Weapons** (`Base: 1/2 DEX`): Bows, crossbows, javelins, slings, thrown weapons (ranges measured in **feet**, e.g., Short `30 ft`, Medium `60 ft`, Long `120 ft`).
    * **Lvl 4 (Tier 4):** Unlocks **2 attacks per Attack action** at full accuracy.
    * **Lvl 6 (Tier 6):** Unlocks **3 attacks per Attack action** at full accuracy.
-3. **Armor & Shield Mastery** (`Base: 1/2 STR`): Negates heavy armor speed penalties and powers **Shield Deflection** (decreases an attacker's hit percentage on a sliding scale: `-5%` base shield penalty plus `-5%` per *Armor & Shield Mastery* Skill Level, plus any magic shield tier bonus).
+3. **Armor & Shield Mastery** (`Base: 1/2 STR`): Negates heavy armor speed penalties and powers **Shield Deflection** (decreases an attacker's hit percentage on a sliding scale: `-10%` base shield penalty plus `-5%` per *Armor & Shield Mastery* Skill Level, plus any magic shield tier bonus).
 4. **Striker & Grappler** (`Base: 1/2 STR or DEX`): Unarmed martial arts, pugilism, precision striking (`1d10` base unarmed damage at `Lvl 1+`), joint locks, pinning (`Pinned` condition), and throws/knockdowns (`Prone` condition).
    * **Lvl 4 (Tier 4):** Unlocks **2 unarmed/grapple attacks per Attack action** at full accuracy.
    * **Lvl 6 (Tier 6):** Unlocks **3 unarmed/grapple attacks per Attack action** at full accuracy.
@@ -336,8 +336,8 @@ To keep combat fast, Armor provides **Damage Reduction (DR)** or **Damage Halvin
 * **Halves any non-magical damage:** **Chain Mail** (`35 lbs`), **Breastplate** (`20 lbs`), **Scale Mail** (`30 lbs`), **Banded Mail** (`35 lbs`).
 * **Halves any damage and -10% to attackers roll of any non-magical attack:** **Mythril Armor** (`25 lbs`), **Full Plate Armor / Full Plate** (`50 lbs`).
 * **Shields (`6 lbs` — Torpedo-Style Attacker % Penalty):** Equipping a shield directly reduces incoming melee and ranged attackers' target hit percentage:
-  * **Formula:** `Attacker Hit % Penalty = -5% (Base Shield) - (5% * Armor & Shield Mastery Skill Lvl) - (Magic Shield Tier Bonus %)`
-  * *Example:* A warrior with a Tier 1 Magic Shield (`-5%`) and *Armor & Shield Mastery Lvl 2* (`-10%`) imposes a **`-20%` hit penalty** on all incoming attacks.
+  * **Formula:** `Attacker Hit % Penalty = -10% (Base Shield) - (5% * Armor & Shield Mastery Skill Lvl) - (Magic Shield Tier Bonus %)`
+  * *Example:* A warrior with a Tier 1 Magic Shield (`-5%`) and *Armor & Shield Mastery Lvl 2* (`-10%`) imposes a **`-25%` hit penalty** on all incoming attacks.
 * **Active Wards:** Absorbs a flat pool of damage or halves Elemental/Magic damage for the scene.
 
 ---

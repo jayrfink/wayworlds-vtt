@@ -22,7 +22,7 @@
   { "name": "Full Plate", "category": "Armor", "weight_lbs": 50, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
   { "name": "Full Plate Armor", "category": "Armor", "weight_lbs": 50, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
   { "name": "Mythril Armor", "category": "Armor", "weight_lbs": 25, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
-  { "name": "Shield", "category": "Shield", "weight_lbs": 6, "attacker_pct_penalty": -5, "properties": "Shield Deflection (-5% to incoming attacks, stacks with Mastery)" },
+  { "name": "Shield", "category": "Shield", "weight_lbs": 6, "attacker_pct_penalty": -10, "properties": "Shield Deflection (-10% to incoming attacks, stacks with Mastery)" },
   { "name": "Herbalism Kit", "category": "Kit", "weight_lbs": 3, "properties": "Used with Herbalism & Medicine to heal 2d10 STA during short rests" },
   { "name": "Medic Kit", "category": "Kit", "weight_lbs": 2, "properties": "Combat field kit to stop bleeding and bind wounds for 1d10 + Skill STA" },
   { "name": "Artisan Tool Kit", "category": "Kit", "weight_lbs": 5, "properties": "Required for Tradecraft field repairs and equipment forging" }

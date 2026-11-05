@@ -1209,10 +1209,10 @@
             <div class="form-group">
               <label>Attacker Hit % Penalty</label>
               <select v-model.number="forgeForm.attacker_pct_penalty" class="char-create-select forge-shield-penalty-select">
-                <option :value="-5">-5% (Base Shield)</option>
-                <option :value="-10" :disabled="!isGm && forgeForm.item_tier < 2">-10% (Tier 2+ Reinforced)</option>
-                <option :value="-15" :disabled="!isGm && forgeForm.item_tier < 3">-15% (Tier 3+ Masterwork)</option>
-                <option :value="-20" :disabled="!isGm && forgeForm.item_tier < 5">-20% (Tier 5 Runeforged)</option>
+                <option :value="-10">-10% (Base Shield)</option>
+                <option :value="-15" :disabled="!isGm && forgeForm.item_tier < 2">-15% (Tier 2+ Reinforced)</option>
+                <option :value="-20" :disabled="!isGm && forgeForm.item_tier < 3">-20% (Tier 3+ Masterwork)</option>
+                <option :value="-25" :disabled="!isGm && forgeForm.item_tier < 5">-25% (Tier 5 Runeforged)</option>
               </select>
             </div>
             <div class="form-group">
@@ -2670,7 +2670,7 @@ export default {
         this.forgeForm.weight_lbs = 25;
       } else if (this.forgeForm.category === 'shield') {
         this.forgeForm.required_tradecraft = 'Armorer';
-        this.forgeForm.attacker_pct_penalty = -5;
+        this.forgeForm.attacker_pct_penalty = -10;
         this.forgeForm.weight_lbs = 6;
       } else {
         this.forgeForm.required_tradecraft = 'Jeweler';
@@ -2682,7 +2682,7 @@ export default {
       if (this.forgeForm.category === 'weapon') {
         this.forgeForm.attack_pct_bonus = t === 1 ? 0 : (t === 2 ? 5 : (t === 3 ? 10 : (t === 4 ? 15 : 20)));
       } else if (this.forgeForm.category === 'shield') {
-        this.forgeForm.attacker_pct_penalty = t === 1 ? -5 : (t === 2 ? -10 : (t <= 4 ? -15 : -20));
+        this.forgeForm.attacker_pct_penalty = t === 1 ? -10 : (t === 2 ? -15 : (t <= 4 ? -20 : -25));
       }
     },
     validateForgeForm(formOverride = null) {

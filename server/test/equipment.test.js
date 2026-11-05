@@ -122,7 +122,7 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
 
     const shield = itemMap.get('Shield');
     expect(shield.category).toBe('Shield');
-    expect(shield.attacker_pct_penalty).toBe(-5);
+    expect(shield.attacker_pct_penalty).toBe(-10);
 
     const medic = itemMap.get('Medic Kit');
     expect(medic.category).toBe('Kit');

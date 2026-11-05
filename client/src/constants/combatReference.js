@@ -208,8 +208,8 @@ export const RANGED_COMBAT_REF = {
     {
       name: 'Shields (Wood / Iron / Runeforged)',
       type: 'Shield',
-      protection: '-5% to Attacker Hit Roll',
-      notes: 'Imposes -5% to incoming melee/ranged attacker hit rolls (stacks with Armor & Shield Mastery).',
+      protection: '-10% to Attacker Hit Roll',
+      notes: 'Imposes -10% to incoming melee/ranged attacker hit rolls (stacks with Armor & Shield Mastery).',
     },
     {
       name: 'Magical Wards (Arcane Shield, Barkskin, Blood Aegis)',
