@@ -13,11 +13,8 @@ export const RANGED_COMBAT_REF = {
 
   sequenceOfPlay: [
     { step: 1, name: 'Initiative', description: 'Roll 1d10 + IM (floor(RS / 10)). Highest acts first; ties go to higher RS.' },
-    { step: 2, name: 'Movement & Action Economy', description: 'Spend Movement (Walk / Dash in ft) and up to 2 Actions (or 1 Full-Round Action) on your turn.' },
-    { step: 3, name: 'Declare Ranged Attack', description: 'Name target, verify Line of Sight, measure range band, and check ammunition/loading state.' },
-    { step: 4, name: 'Resolve Ranged Attacks', description: 'Compute Modified Hit Chance (Base + range, cover, aim, and movement modifiers), then roll d100.' },
-    { step: 5, name: 'Apply Damage & Armor DR', description: 'Roll weapon damage dice and subtract target Armor Soak (DR). Remaining damage reduces STA.' },
-    { step: 6, name: 'Reactions & End of Turn', description: 'Resolve Shield Block or Dodge reactions (up to 2 Reactions per round) and track spent arrows/bolts.' },
+    { step: 2, name: 'First Spotlight: Any 2 Actions', description: 'Valid actions are: Attack, Move, Spell, Shield, Move, Dodge, Disengage, Utilize, Hide.' },
+    { step: 3, name: 'Second Spotlight: Any 2 Actions', description: 'Valid actions are: Attack, Move, Spell, Shield, Move, Dodge, Disengage, Utilize, Hide.' },
   ],
 
   weapons: [
@@ -229,11 +226,8 @@ export const MELEE_COMBAT_REF = {
 
   sequenceOfPlay: [
     { step: 1, name: 'Initiative', description: 'Roll 1d10 + IM (floor(RS / 10)). Highest acts first; ties go to higher RS.' },
-    { step: 2, name: 'Close Distance & Position', description: 'Spend Movement (Walk / Dash in ft) to enter melee reach (5 ft, or 10 ft for polearms/reach). Check charging (>= 20 ft straight line) or flanking.' },
-    { step: 3, name: 'Declare Melee Attack & Maneuver', description: 'Name target within melee reach, select weapon grip (One-Handed vs Versatile Two-Handed), or declare a Grapple, Shove, or Disarm maneuver.' },
-    { step: 4, name: 'Resolve Melee Attack Roll', description: 'Compute Modified Hit Chance (Base 1/2 STR or 1/2 DEX for Finesse + 10 x Skill Rank + Weapon Accuracy + High Ground/Flanking/Charge modifiers), then roll d100.' },
-    { step: 5, name: 'Apply Damage, STR Mod & Armor DR', description: 'Roll weapon damage dice + STR Damage Modifier. Target subtracts Armor DR (or halves damage if wearing matching Medium/Heavy armor). Remaining damage reduces STA.' },
-    { step: 6, name: 'Reactions, Parry & Opportunity Attacks', description: 'Target may spend 1 Reaction to Parry with weapon or Shield Block (-10% or more). Moving out of an engaged enemy\'s reach provokes an Opportunity Attack.' },
+    { step: 2, name: 'First Spotlight: Any 2 Actions', description: 'Valid actions are: Attack, Move, Spell, Shield, Move, Dodge, Disengage, Utilize, Hide.' },
+    { step: 3, name: 'Second Spotlight: Any 2 Actions', description: 'Valid actions are: Attack, Move, Spell, Shield, Move, Dodge, Disengage, Utilize, Hide.' },
   ],
 
   unarmedDamage: [
@@ -329,7 +323,7 @@ export const MELEE_COMBAT_REF = {
     { situation: 'Target Stunned, Restrained, or Blinded', modifier: '+20%', notes: 'Target cannot take Opportunity Attacks while Stunned/Blinded' },
     { situation: 'Defensive Stance / Fighting Defensively', modifier: '-15% Hit', notes: 'Grants +15% to Parry and Dodge reactions until start of next turn' },
     { situation: 'Dual-Wielding (Two Light Melee Weapons)', modifier: '-10% / -15%', notes: 'Allows 1 bonus off-hand attack; reduced by 5% at Melee Rank 3+' },
-    { situation: 'Parry or Shield Block Reaction', modifier: '-10% to -(10 x Rank)%', notes: 'Spends 1 Reaction to impose penalty on incoming melee attack' },
+    { situation: 'Shield', modifier: '-10% to -(10 x Rank)%', notes: 'Impose penalty on incoming attack' },
     { situation: 'Improvised Melee Weapon (torch, chair, rock)', modifier: '-15%', notes: 'Base 1d5 + STR Mod damage; breaks on Fumble' },
   ],
 };

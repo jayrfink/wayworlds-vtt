@@ -56,8 +56,8 @@ describe('QuickReferenceTables.vue', () => {
       // Turn sequence
       expect(html).toContain('Turn Sequence');
       expect(html).toContain('Tactical Flow');
-      expect(html).toContain('Close Distance &amp; Position');
-      expect(html).toContain('Declare Melee Attack &amp; Maneuver');
+      expect(html).toContain('First Spotlight: Any 2 Actions');
+      expect(html).toContain('Second Spotlight: Any 2 Actions');
 
       // Formula callout
       expect(html).toContain('1/2 STR');

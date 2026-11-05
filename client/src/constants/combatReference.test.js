@@ -73,7 +73,7 @@ describe('combatReference', () => {
       expect(MELEE_COMBAT_REF.attackBaseFormula).toBeDefined();
       expect(typeof MELEE_COMBAT_REF.attackBaseFormula).toBe('string');
       expect(Array.isArray(MELEE_COMBAT_REF.sequenceOfPlay)).toBe(true);
-      expect(MELEE_COMBAT_REF.sequenceOfPlay.length).toBe(6);
+      expect(MELEE_COMBAT_REF.sequenceOfPlay.length).toBe(3);
       expect(Array.isArray(MELEE_COMBAT_REF.unarmedDamage)).toBe(true);
       expect(MELEE_COMBAT_REF.unarmedDamage.length).toBeGreaterThanOrEqual(5);
       expect(Array.isArray(MELEE_COMBAT_REF.weapons)).toBe(true);
@@ -91,11 +91,8 @@ describe('combatReference', () => {
 
       const stepNames = MELEE_COMBAT_REF.sequenceOfPlay.map((s) => s.name);
       expect(stepNames).toContain('Initiative');
-      expect(stepNames).toContain('Close Distance & Position');
-      expect(stepNames).toContain('Declare Melee Attack & Maneuver');
-      expect(stepNames).toContain('Resolve Melee Attack Roll');
-      expect(stepNames).toContain('Apply Damage, STR Mod & Armor DR');
-      expect(stepNames).toContain('Reactions, Parry & Opportunity Attacks');
+      expect(stepNames).toContain('First Spotlight: Any 2 Actions');
+      expect(stepNames).toContain('Second Spotlight: Any 2 Actions');
     });
 
     it('verifies unarmed damage brackets and fantasy melee weapons', () => {
