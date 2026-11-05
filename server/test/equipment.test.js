@@ -63,7 +63,7 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
 
   it('verifies representative armor, shields, and kits', () => {
     const names = response.body.map(i => i.name);
-    for (const n of ['Leather Armor', 'Chainmail', 'Full Plate', 'Shield',
+    for (const n of ['Padded Armor', 'Leather Armor', 'Hide Armor', 'Studded Leather Armor', 'Chain Mail', 'Chainmail', 'Breastplate', 'Scale Mail', 'Banded Mail', 'Full Plate', 'Full Plate Armor', 'Mythril Armor', 'Shield',
       'Herbalism Kit', 'Medic Kit', 'Artisan Tool Kit']) {
       expect(names).toContain(n);
     }
@@ -82,14 +82,43 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
     expect(greatsword.damage_dice).toBe('3d10');
     expect(greatsword.weight_lbs).toBe(6);
 
+    const padded = itemMap.get('Padded Armor');
+    expect(padded.category).toBe('Armor');
+    expect(padded.armor_dr).toBe(2);
+    expect(padded.properties).toBe('-2 any non-magical attack');
+
     const leather = itemMap.get('Leather Armor');
     expect(leather.category).toBe('Armor');
-    expect(leather.armor_dr).toBe(2);
+    expect(leather.armor_dr).toBe(4);
     expect(leather.weight_lbs).toBe(10);
+    expect(leather.properties).toBe('-4 any non magical attack');
+
+    const hide = itemMap.get('Hide Armor');
+    expect(hide.category).toBe('Armor');
+    expect(hide.armor_dr).toBe(4);
+    expect(hide.properties).toBe('-4 any non magical attack');
+
+    const studded = itemMap.get('Studded Leather Armor');
+    expect(studded.category).toBe('Armor');
+    expect(studded.armor_dr).toBe(5);
+    expect(studded.properties).toBe('-5 any non magic attack');
+
+    const chain = itemMap.get('Chain Mail');
+    expect(chain.category).toBe('Armor');
+    expect(chain.armor_dr).toBe('half_nonmagical');
+    expect(chain.properties).toBe('Halves any non magical damage');
 
     const plate = itemMap.get('Full Plate');
     expect(plate.armor_dr).toBe('half_all');
+    expect(plate.attacker_pct_penalty).toBe(-10);
     expect(plate.weight_lbs).toBe(50);
+    expect(plate.properties).toBe('Halves any damage and -10% to attackers roll of any non magical attack');
+
+    const mythril = itemMap.get('Mythril Armor');
+    expect(mythril.category).toBe('Armor');
+    expect(mythril.armor_dr).toBe('half_all');
+    expect(mythril.attacker_pct_penalty).toBe(-10);
+    expect(mythril.properties).toBe('Halves any damage and -10% to attackers roll of any non magical attack');
 
     const shield = itemMap.get('Shield');
     expect(shield.category).toBe('Shield');

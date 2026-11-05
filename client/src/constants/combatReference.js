@@ -176,28 +176,40 @@ export const RANGED_COMBAT_REF = {
 
   armor: [
     {
-      name: 'Light Armor (Padded, Leather, Studded Leather, Hide)',
+      name: 'Padded Armor',
       type: 'Light Armor',
-      protection: '2 - 4 DR per hit',
-      notes: 'Padded (2 DR), Leather (3 DR), Studded Leather / Hide (4 DR). Full movement; no stealth or casting penalty.',
+      protection: '-2 any non-magical attack',
+      notes: 'Light quilted linen/wool armor (8 lbs). Absorbs 2 damage from any non-magical attack.',
     },
     {
-      name: 'Medium Armor (Chain Shirt, Scale Mail, Chainmail, Brigandine)',
+      name: 'Leather Armor / Hide Armor',
+      type: 'Light Armor',
+      protection: '-4 any non-magical attack',
+      notes: 'Cured boiled leather or thick beast pelts (10–15 lbs). Absorbs 4 damage from any non-magical attack.',
+    },
+    {
+      name: 'Studded Leather Armor',
+      type: 'Light Armor',
+      protection: '-5 any non-magical attack',
+      notes: 'Reinforced leather lined with metal rivets (13 lbs). Absorbs 5 damage from any non-magic attack.',
+    },
+    {
+      name: 'Chain Mail / Breastplate / Scale Mail / Banded Mail',
       type: 'Medium Armor',
-      protection: '5 - 7 DR per hit',
-      notes: 'Chain Shirt (5 DR), Scale Mail / Breastplate (6 DR), Chainmail / Brigandine (7 DR). -10% Stealth on heavy chain/scale.',
+      protection: 'Halves any non-magical damage',
+      notes: 'Interlocking metal links, shaped cuirass, or overlapping lamellar plates (20–35 lbs). Cuts all non-magical attack damage in half.',
     },
     {
-      name: 'Heavy Armor (Splint, Half-Plate, Full Plate, Runeforged)',
+      name: 'Mythril Armor / Full Plate Armor (Full Plate)',
       type: 'Heavy Armor',
-      protection: '8 - 12 DR per hit',
-      notes: 'Splint (8 DR), Half-Plate (9 DR), Full Plate (10 DR), Dwarven Stone-Plate (11 DR), Runeforged Plate (12 DR). Min STR 55-65.',
+      protection: 'Halves any damage & -10% to attacker roll of non-magical attack',
+      notes: 'Mastercrafted articulated suits (25–50 lbs). Halves any damage taken and imposes a -10% penalty to attackers\' rolls on any non-magical attack.',
     },
     {
-      name: 'Shields (Buckler, Wooden, Iron Heater, Tower, Runeforged)',
+      name: 'Shields (Wood / Iron / Runeforged)',
       type: 'Shield',
-      protection: '+1 to +3 DR & Shield Block',
-      notes: 'Buckler (+1 DR, +5% Block), Wooden/Iron Shield (+2 DR, +10% Block), Tower Shield (+3 DR, +15% Block vs ranged).',
+      protection: '-5% to Attacker Hit Roll',
+      notes: 'Imposes -5% to incoming melee/ranged attacker hit rolls (stacks with Armor & Shield Mastery).',
     },
     {
       name: 'Magical Wards (Arcane Shield, Barkskin, Blood Aegis)',

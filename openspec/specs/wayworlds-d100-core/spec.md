@@ -330,9 +330,11 @@ Wayworlds seeds its standard equipment catalog from the **CC-BY-4.0 5e SRD** (pr
 
 To keep combat fast, Armor provides **Damage Reduction (DR)** or **Damage Halving**, while Shields actively reduce the attacker's hit percentage:
 
-* **Light Armor (Leather, Hide, Padded — `10–15 lbs`):** `-2` damage per die rolled against Slashing/Piercing.
-* **Medium Armor (Chainmail, Scale, Brigandine — `25–35 lbs`):** **Halves** Slashing damage; `-2` per die against Piercing/Bludgeoning.
-* **Heavy Armor (Plate, Runeforged, Stone-Plate — `45–60 lbs`):** **Halves** all physical damage (Slashing, Piercing, Bludgeoning); `-5 ft` movement speed and `-10%` penalty to *Stealth & Secrecy* and *Athletics & Acrobatics* checks unless trained in *Armor & Shield Mastery Lvl 2+*.
+* **-2 any non-magical attack:** **Padded Armor** (`8 lbs`).
+* **-4 any non-magical attack:** **Leather Armor** (`10 lbs`), **Hide Armor** (`15 lbs`).
+* **-5 any non-magical attack:** **Studded Leather Armor** (`13 lbs`).
+* **Halves any non-magical damage:** **Chain Mail** (`35 lbs`), **Breastplate** (`20 lbs`), **Scale Mail** (`30 lbs`), **Banded Mail** (`35 lbs`).
+* **Halves any damage and -10% to attackers roll of any non-magical attack:** **Mythril Armor** (`25 lbs`), **Full Plate Armor / Full Plate** (`50 lbs`).
 * **Shields (`6 lbs` — Torpedo-Style Attacker % Penalty):** Equipping a shield directly reduces incoming melee and ranged attackers' target hit percentage:
   * **Formula:** `Attacker Hit % Penalty = -5% (Base Shield) - (5% * Armor & Shield Mastery Skill Lvl) - (Magic Shield Tier Bonus %)`
   * *Example:* A warrior with a Tier 1 Magic Shield (`-5%`) and *Armor & Shield Mastery Lvl 2* (`-10%`) imposes a **`-20%` hit penalty** on all incoming attacks.
