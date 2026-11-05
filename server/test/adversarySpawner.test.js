@@ -107,8 +107,8 @@ describe('Adversary Database Storage, REST API & Spawner', () => {
       // Verify none of the spawned tokens clobbered the existing token at (10, 10)
       for (const t of spawnResult.tokens) {
         expect(t.template_id).toBe(template.template_id);
-        expect(t.current_hp).toBe(50);
-        expect(t.max_hp).toBe(50);
+        expect(t.current_hp).toBe(template.hp_max);
+        expect(t.max_hp).toBe(template.hp_max);
         expect(t.ess_current).toBe(50);
         expect(t.x !== 10 || t.y !== 10).toBe(true);
       }

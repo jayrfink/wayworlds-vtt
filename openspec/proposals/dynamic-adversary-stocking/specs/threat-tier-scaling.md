@@ -31,13 +31,15 @@ Adversaries branch into two distinct procedural generation paths:
 
 ### 2.2 Sentient NPC Threat Tier Benchmark Table
 
+*Note: Default generator baseline incorporates a -10% attack and -10 STA adjustment. GMs can customize and alter these parameters on adversary creation.*
+
 | Tier | Label | Ability Score Range | Primary Combat Skill | Stamina (STA / HP) | Defenses & Armor | Weapons & Tactical Gear |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Green / Minion** | 35 – 45 | Level 0 – 1 (+0% to +10%) | 30 – 40 | Unarmored (0 DR) | Sonic Sword (1d10), Automatic Pistol (1d10), Laser Pistol (1d10 per 1 SEU), 20 SEU clip. |
-| **2** | **Regular / Soldier** | 45 – 55 | Level 2 (+20%) | 45 – 55 | Skein Suit (half damage vs kinetic/fall/explosion) | Laser Rifle (1d10 to 5d10), Automatic Rifle (1d10 to 4d10 burst), 50 SEU clip, 1 Frag Grenade. |
-| **3** | **Veteran / Sergeant** | 55 – 65 | Level 3 – 4 (+30% to +40%) | 60 – 75 | Albedo Screen (absorbs 40 pts beam) or Inertia Screen (absorbs 30 pts kinetic) + Skein Suit | Heavy Laser (2d10 to 10d10), Needler Pistol, Doze/Stun Grenades, 100 SEU belt pack. |
-| **4** | **Elite / Officer** | 65 – 75 | Level 4 – 5 (+40% to +50%) | 80 – 100 | Powered Combat Armor (-20 to -30 damage reduction) or Dual Screen harness | Gyrojet Rifle with Explosive Shells (3d10), Heavy Laser, Vibroknife, smoke/gas countermeasures. |
-| **5** | **Boss / Commander** | 75 – 85+ | Level 5 – 6 (+50% to +60%) | 100 – 130+ | Dual Deflection Screens + Powered Battle Armor + Cybernetic Sub-dermal plating | Customized Gauss/Particle Cannon, Electro-Stunner, Multi-Grenade Launcher, Tactical Command aura. |
+| **1** | **Green / Minion** | 35 – 45 | Level 0 – 1 (25% to 35% Hit) | 20 – 30 | Unarmored (0 DR) | Sonic Sword (1d10), Automatic Pistol (1d10), Laser Pistol (1d10 per 1 SEU), 20 SEU clip. |
+| **2** | **Regular / Soldier** | 45 – 55 | Level 2 (35% to 45% Hit) | 35 – 45 | Skein Suit (half damage vs kinetic/fall/explosion) | Laser Rifle (1d10 to 5d10), Automatic Rifle (1d10 to 4d10 burst), 50 SEU clip, 1 Frag Grenade. |
+| **3** | **Veteran / Sergeant** | 55 – 65 | Level 3 – 4 (45% to 55% Hit) | 50 – 65 | Albedo Screen (absorbs 40 pts beam) or Inertia Screen (absorbs 30 pts kinetic) + Skein Suit | Heavy Laser (2d10 to 10d10), Needler Pistol, Doze/Stun Grenades, 100 SEU belt pack. |
+| **4** | **Elite / Officer** | 65 – 75 | Level 4 – 5 (55% to 65% Hit) | 70 – 90 | Powered Combat Armor (-20 to -30 damage reduction) or Dual Screen harness | Gyrojet Rifle with Explosive Shells (3d10), Heavy Laser, Vibroknife, smoke/gas countermeasures. |
+| **5** | **Boss / Commander** | 75 – 85+ | Level 5 – 6 (65% to 75% Hit) | 90 – 120+ | Dual Deflection Screens + Powered Battle Armor + Cybernetic Sub-dermal plating | Customized Gauss/Particle Cannon, Electro-Stunner, Multi-Grenade Launcher, Tactical Command aura. |
 
 ---
 
@@ -60,11 +62,11 @@ Alien creatures do not use NPC weapon skill ratings or standard ability pairs. I
 
 | Tier | Label | Base Attack % | Stamina (STA / HP) | Attacks per Turn | Base Damage Formula | Special Abilities / Traits |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Vermin / Lesser** | 35% – 45% | 15 – 35 | 1 attack | 1d10 or 1d6 | Pack tactics, agile dodge (+10% defense). |
-| **2** | **Predator / Swarm** | 50% – 60% | 40 – 75 | 1 – 2 attacks | 2d10 | Pounce / knockdown (requires DEX check or fall prone). |
-| **3** | **Apex Stalker** | 65% – 75% | 80 – 130 | 2 – 3 attacks | 3d10 | 1 Special Trait: Paralytic Venom (S12) or Acid Blood (1d10 on melee attackers). |
-| **4** | **Behemoth / Terror** | 75% – 85% | 140 – 220 | 3 – 4 attacks | 4d10 | Chitinous Plating (reduces all damage by 10), Trample (area attack), Subterranean Burrowing. |
-| **5** | **Gargantuan Boss** | 85% – 95% | 250 – 400+ | 4+ attacks | 5d10 to 6d10+ | Bio-Electric Shockwave (cone 15m, 4d10 stun/damage), Regenerating Flesh (10 STA/turn), Fearsome Roar. |
+| **1** | **Vermin / Lesser** | 25% – 35% | 10 – 25 | 1 attack | 1d10 or 1d6 | Pack tactics, agile dodge (+10% defense). |
+| **2** | **Predator / Swarm** | 40% – 50% | 30 – 65 | 1 – 2 attacks | 2d10 | Pounce / knockdown (requires DEX check or fall prone). |
+| **3** | **Apex Stalker** | 55% – 65% | 70 – 120 | 2 – 3 attacks | 3d10 | 1 Special Trait: Paralytic Venom (S12) or Acid Blood (1d10 on melee attackers). |
+| **4** | **Behemoth / Terror** | 65% – 75% | 130 – 210 | 3 – 4 attacks | 4d10 | Chitinous Plating (reduces all damage by 10), Trample (area attack), Subterranean Burrowing. |
+| **5** | **Gargantuan Boss** | 75% – 85% | 240 – 390+ | 4+ attacks | 5d10 to 6d10+ | Bio-Electric Shockwave (cone 15m, 4d10 stun/damage), Regenerating Flesh (10 STA/turn), Fearsome Roar. |
 
 ---
 

@@ -76,14 +76,14 @@ describe('Adversary Math Engine & Validator', () => {
 
       expect(template.threat_tier).toBe(2);
       expect(template.category).toBe('npc');
-      expect(template.hp_max).toBe(50);
+      expect(template.hp_max).toBe(40);
       expect(template.defense_summary).toContain('Chainmail');
       expect(template.actions.length).toBeGreaterThan(0);
 
       const mainAction = template.actions[0];
       expect(mainAction.name).toBe('Broadsword');
-      // DEX 50 (25%) + Skill 2 (20%) = 45%
-      expect(mainAction.target_pct).toBe(45);
+      // DEX 50 (25%) + Skill 2 (20%) - 10% adjustment = 35%
+      expect(mainAction.target_pct).toBe(35);
       expect(mainAction.damage).toBe('1d10+2');
       expect(mainAction.ess_cost).toBe(0);
 
@@ -111,12 +111,12 @@ describe('Adversary Math Engine & Validator', () => {
 
       expect(creature.threat_tier).toBe(3);
       expect(creature.category).toBe('creature');
-      expect(creature.hp_max).toBeGreaterThanOrEqual(80);
+      expect(creature.hp_max).toBe(90);
       expect(creature.actions.length).toBeGreaterThanOrEqual(2);
 
       const bite = creature.actions.find(a => a.name === 'Bite');
       expect(bite).toBeDefined();
-      expect(bite.target_pct).toBeGreaterThanOrEqual(65);
+      expect(bite.target_pct).toBe(60);
       expect(bite.damage).toBe('3d10');
 
       const acid = creature.actions.find(a => a.name === 'Acid Spit');

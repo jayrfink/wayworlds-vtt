@@ -80,19 +80,21 @@ node scripts/stock-encounter.js \
 
 ## Threat Tier Scaling Benchmark (Quick Reference)
 
+*Note: Default adversary generation uses these balanced baselines (-10% attack and -10 STA points). GMs can customize and alter these parameters on adversary creation.*
+
 ### Path A: Sentient NPCs
-- **Tier 1 (Green):** Stats 35–45, Skill Rank 1 (+10%), STA 30–40, Leather Armor (3 DR), Basic Weapons.
-- **Tier 2 (Regular / Blue):** Stats 45–55, Skill Rank 2 (+20%), STA 45–55, Chainmail (7 DR), Martial Weapons.
-- **Tier 3 (Veteran / Purple):** Stats 55–65, Skill Rank 3 (+30%), STA 60–75, Half-Plate & Shield (11 DR), Heavy/Masterwork Weapons.
-- **Tier 4 (Elite / Gold):** Stats 65–75, Skill Rank 4 (+40%), STA 80–100, Full Plate + Magical Ward.
-- **Tier 5 (Boss / Crimson):** Stats 75–85+, Skill Rank 5 (+50%), STA 100–130+, Runeforged Plate & Wards.
+- **Tier 1 (Green):** Stats 35–45, Skill Rank 1 (+10%), STA 20–30, Leather Armor (3 DR), Basic Weapons (35–45% Hit).
+- **Tier 2 (Regular / Blue):** Stats 45–55, Skill Rank 2 (+20%), STA 35–50, Chainmail (7 DR), Martial Weapons (45–55% Hit).
+- **Tier 3 (Veteran / Purple):** Stats 55–65, Skill Rank 3 (+30%), STA 50–65, Half-Plate & Shield (11 DR), Heavy/Masterwork Weapons (55–65% Hit).
+- **Tier 4 (Elite / Gold):** Stats 65–75, Skill Rank 4 (+40%), STA 70–90, Full Plate + Magical Ward (65–75% Hit).
+- **Tier 5 (Boss / Crimson):** Stats 75–85+, Skill Rank 5 (+50%), STA 90–120+, Runeforged Plate & Wards (75–85% Hit).
 
 ### Path B: Alien Creatures & Beasts
-- **Tier 1:** Attack 35–45%, STA 15–35, 1 attack (1d10 or 1d6).
-- **Tier 2:** Attack 50–60%, STA 40–75, 1–2 attacks (2d10).
-- **Tier 3:** Attack 65–75%, STA 80–130, 2–3 attacks (3d10) + 1 Special Trait.
-- **Tier 4:** Attack 75–85%, STA 140–220, multi-attack (4d10) + damage reduction/armor.
-- **Tier 5:** Attack 85–95%, STA 250+, multi-attack / apex traits / area attacks (5d10 to 6d10+).
+- **Tier 1:** Attack 25–35%, STA 10–25, 1 attack (1d10 or 1d6).
+- **Tier 2:** Attack 40–50%, STA 30–65, 1–2 attacks (2d10).
+- **Tier 3:** Attack 55–65%, STA 70–120, 2–3 attacks (3d10) + 1 Special Trait.
+- **Tier 4:** Attack 65–75%, STA 130–210, multi-attack (4d10) + damage reduction/armor.
+- **Tier 5:** Attack 75–85%, STA 240+, multi-attack / apex traits / area attacks (5d10 to 6d10+).
 
 ---
 

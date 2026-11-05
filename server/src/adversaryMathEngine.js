@@ -59,7 +59,7 @@ const NPC_TIER_CONFIGS = {
     statRange: [35, 45],
     defaultStat: 40,
     skillLevel: 1,
-    sta: 35,
+    sta: 25,
     armor: 'Leather Armor (3 DR)',
     defaultWeapon: 'Shortsword',
     damage: '1d10',
@@ -70,7 +70,7 @@ const NPC_TIER_CONFIGS = {
     statRange: [45, 55],
     defaultStat: 50,
     skillLevel: 2,
-    sta: 50,
+    sta: 40,
     armor: 'Chainmail (7 DR)',
     defaultWeapon: 'Broadsword',
     damage: '1d10+2',
@@ -81,7 +81,7 @@ const NPC_TIER_CONFIGS = {
     statRange: [55, 65],
     defaultStat: 60,
     skillLevel: 3,
-    sta: 70,
+    sta: 60,
     armor: 'Half-Plate & Shield (11 DR)',
     defaultWeapon: 'Longbow',
     damage: '2d10+2',
@@ -92,7 +92,7 @@ const NPC_TIER_CONFIGS = {
     statRange: [65, 75],
     defaultStat: 70,
     skillLevel: 4,
-    sta: 95,
+    sta: 85,
     armor: 'Full Plate Armor (10 DR) + Magical Ward (+3 DR)',
     defaultWeapon: 'Greatsword',
     damage: '3d10',
@@ -103,7 +103,7 @@ const NPC_TIER_CONFIGS = {
     statRange: [75, 85],
     defaultStat: 80,
     skillLevel: 5,
-    sta: 130,
+    sta: 120,
     armor: 'Runeforged Plate & Ward (15 DR)',
     defaultWeapon: 'Runeforged Greataxe',
     damage: '4d10+4',
@@ -114,36 +114,36 @@ const NPC_TIER_CONFIGS = {
 
 const CREATURE_TIER_CONFIGS = {
   1: {
-    attackPct: 40,
-    sta: 25,
+    attackPct: 30,
+    sta: 15,
     attacksCount: 1,
     damage: '1d10',
     size: 'Small',
   },
   2: {
-    attackPct: 55,
-    sta: 55,
+    attackPct: 45,
+    sta: 45,
     attacksCount: 2,
     damage: '2d10',
     size: 'Medium',
   },
   3: {
-    attackPct: 70,
-    sta: 100,
+    attackPct: 60,
+    sta: 90,
     attacksCount: 2,
     damage: '3d10',
     size: 'Large',
   },
   4: {
-    attackPct: 80,
-    sta: 180,
+    attackPct: 70,
+    sta: 170,
     attacksCount: 3,
     damage: '4d10',
     size: 'Large',
   },
   5: {
-    attackPct: 90,
-    sta: 300,
+    attackPct: 80,
+    sta: 290,
     attacksCount: 4,
     damage: '6d10',
     size: 'Very Large',
@@ -163,7 +163,9 @@ export function generateNpcStats(tier, options = {}) {
   const weapon = options.weapon || cfg.defaultWeapon;
   const armor = options.armor || cfg.armor;
 
-  const hitPct = calculateNpcHitChance(baseStat, cfg.skillLevel, options.equipMod || 0);
+  const hitPct = options.hitPct !== undefined
+    ? Number(options.hitPct)
+    : Math.max(5, calculateNpcHitChance(baseStat, cfg.skillLevel, options.equipMod || 0) - 10);
   const im = calculateInitiativeMod(baseStat);
 
   const isRanged = /bow|crossbow|sling|javelin|thrown|dart/i.test(weapon);
