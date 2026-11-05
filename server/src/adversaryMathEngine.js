@@ -138,14 +138,14 @@ const CREATURE_TIER_CONFIGS = {
     attackPct: 80,
     sta: 180,
     attacksCount: 3,
-    damage: '5d10',
+    damage: '4d10',
     size: 'Large',
   },
   5: {
     attackPct: 90,
     sta: 300,
     attacksCount: 4,
-    damage: '7d10',
+    damage: '6d10',
     size: 'Very Large',
   },
 };

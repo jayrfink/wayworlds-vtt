@@ -419,11 +419,11 @@ The VTT's built-in Adversary Spawner enforces these mathematical bounds (default
 
 | Threat Tier | Archetype Role | Sentient NPCs (Base Stats, Skill/Cast Tier, STA, ESS) | Beasts, Undead & Monsters (Hit %, STA, Attacks/Dmg, Traits) |
 | :--- | :--- | :--- | :--- |
-| **Tier 1 (Minor)** | Minion, Raider, Acolyte, Lesser Undead | Stats: `35–45`, Skill/Magic: **Lvl 1** (`45–55%` hit, `1` atk/action), STA: `30–40`, ESS: `10–20` | Hit: `40–45%`, STA: `20–35`, `1` attack (`2d10` or `2d6`) |
-| **Tier 2 (Regular)** | Trained Soldier, Cultist, Pack Predator | Stats: `45–55`, Skill/Magic: **Lvl 2** (`55–65%` hit, `1` atk/action), STA: `45–60`, ESS: `25–40` | Hit: `50–60%`, STA: `45–75`, `1–2` attacks (`3d10`) + 1 Lineage/Innate Trait |
-| **Tier 3 (Veteran)** | Champion, Battle-Mage, Greater Undead | Stats: `55–65`, Skill/Magic: **Lvl 3** (`65–75%` hit, `1` atk/action + Parry), STA: `65–85`, ESS: `45–65` | Hit: `65–75%`, STA: `80–130`, `2` attacks (`4d10`) + Special Aura/Hex |
-| **Tier 4 (Elite)** | Warlord, Arch-Caster, Behemoth | Stats: `65–75`, Skill/Magic: **Lvl 4** (`75–85%` hit, **2 atks/action**), STA: `90–120`, ESS: `70–100` | Hit: `75–85%`, STA: `140–220`, `2–3` attacks (`5d10`) + Heavy DR / Magic Ward |
-| **Tier 5 (Mythic)** | Demigod, Ancient Wyrm, Avatar | Stats: `75–85+`, Skill/Magic: **Lvl 5–6** (`85–95%` hit, **2–3 atks/action**), STA: `130–180+`, ESS: `120+` | Hit: `85–95%`, STA: `250+`, Area Cataclysms (`6d10+`), Regeneration, Terror |
+| **Tier 1 (Minor)** | Minion, Raider, Acolyte, Lesser Undead | Stats: `35–45`, Skill/Magic: **Lvl 1** (`45–55%` hit, `1` atk/action), STA: `30–40`, ESS: `10–20` | Hit: `40–45%`, STA: `20–35`, `1` attack (`1d10` or `1d6`) |
+| **Tier 2 (Regular)** | Trained Soldier, Cultist, Pack Predator | Stats: `45–55`, Skill/Magic: **Lvl 2** (`55–65%` hit, `1` atk/action), STA: `45–60`, ESS: `25–40` | Hit: `50–60%`, STA: `45–75`, `1–2` attacks (`2d10`) + 1 Lineage/Innate Trait |
+| **Tier 3 (Veteran)** | Champion, Battle-Mage, Greater Undead | Stats: `55–65`, Skill/Magic: **Lvl 3** (`65–75%` hit, `1` atk/action + Parry), STA: `65–85`, ESS: `45–65` | Hit: `65–75%`, STA: `80–130`, `2` attacks (`3d10`) + Special Aura/Hex |
+| **Tier 4 (Elite)** | Warlord, Arch-Caster, Behemoth | Stats: `65–75`, Skill/Magic: **Lvl 4** (`75–85%` hit, **2 atks/action**), STA: `90–120`, ESS: `70–100` | Hit: `75–85%`, STA: `140–220`, `2–3` attacks (`4d10`) + Heavy DR / Magic Ward |
+| **Tier 5 (Mythic)** | Demigod, Ancient Wyrm, Avatar | Stats: `75–85+`, Skill/Magic: **Lvl 5–6** (`85–95%` hit, **2–3 atks/action**), STA: `130–180+`, ESS: `120+` | Hit: `85–95%`, STA: `250+`, Area Cataclysms (`5d10+`), Regeneration, Terror |
 
 ---
 

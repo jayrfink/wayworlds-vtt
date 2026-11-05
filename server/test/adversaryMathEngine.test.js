@@ -117,11 +117,26 @@ describe('Adversary Math Engine & Validator', () => {
       const bite = creature.actions.find(a => a.name === 'Bite');
       expect(bite).toBeDefined();
       expect(bite.target_pct).toBeGreaterThanOrEqual(65);
-      expect(bite.damage).toMatch(/\d+d10/);
+      expect(bite.damage).toBe('3d10');
 
       const acid = creature.actions.find(a => a.name === 'Acid Spit');
       expect(acid).toBeDefined();
+      expect(acid.damage).toBe('3d10');
       expect(creature.system_data.diet).toBe('Carnivore');
+    });
+
+    it('scales down creature damage across tiers 1 through 5 by 1d10', () => {
+      const c1 = generateCreatureStats(1);
+      const c2 = generateCreatureStats(2);
+      const c3 = generateCreatureStats(3);
+      const c4 = generateCreatureStats(4);
+      const c5 = generateCreatureStats(5);
+
+      expect(c1.actions[0].damage).toBe('1d10');
+      expect(c2.actions[0].damage).toBe('2d10');
+      expect(c3.actions[0].damage).toBe('3d10');
+      expect(c4.actions[0].damage).toBe('4d10');
+      expect(c5.actions[0].damage).toBe('6d10');
     });
   });
 

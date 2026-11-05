@@ -60,11 +60,11 @@ Alien creatures do not use NPC weapon skill ratings or standard ability pairs. I
 
 | Tier | Label | Base Attack % | Stamina (STA / HP) | Attacks per Turn | Base Damage Formula | Special Abilities / Traits |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| **1** | **Vermin / Lesser** | 35% – 45% | 15 – 35 | 1 attack | 1d10 or 2d6 | Pack tactics, agile dodge (+10% defense). |
-| **2** | **Predator / Swarm** | 50% – 60% | 40 – 75 | 1 – 2 attacks | 2d10 or 3d10 | Pounce / knockdown (requires DEX check or fall prone). |
-| **3** | **Apex Stalker** | 65% – 75% | 80 – 130 | 2 – 3 attacks | 3d10 to 4d10+ | 1 Special Trait: Paralytic Venom (S12) or Acid Blood (1d10 on melee attackers). |
-| **4** | **Behemoth / Terror** | 75% – 85% | 140 – 220 | 3 – 4 attacks | 4d10 to 6d10 | Chitinous Plating (reduces all damage by 10), Trample (area attack), Subterranean Burrowing. |
-| **5** | **Gargantuan Boss** | 85% – 95% | 250 – 400+ | 4+ attacks | 6d10 to 8d10+ | Bio-Electric Shockwave (cone 15m, 5d10 stun/damage), Regenerating Flesh (10 STA/turn), Fearsome Roar. |
+| **1** | **Vermin / Lesser** | 35% – 45% | 15 – 35 | 1 attack | 1d10 or 1d6 | Pack tactics, agile dodge (+10% defense). |
+| **2** | **Predator / Swarm** | 50% – 60% | 40 – 75 | 1 – 2 attacks | 2d10 | Pounce / knockdown (requires DEX check or fall prone). |
+| **3** | **Apex Stalker** | 65% – 75% | 80 – 130 | 2 – 3 attacks | 3d10 | 1 Special Trait: Paralytic Venom (S12) or Acid Blood (1d10 on melee attackers). |
+| **4** | **Behemoth / Terror** | 75% – 85% | 140 – 220 | 3 – 4 attacks | 4d10 | Chitinous Plating (reduces all damage by 10), Trample (area attack), Subterranean Burrowing. |
+| **5** | **Gargantuan Boss** | 85% – 95% | 250 – 400+ | 4+ attacks | 5d10 to 6d10+ | Bio-Electric Shockwave (cone 15m, 4d10 stun/damage), Regenerating Flesh (10 STA/turn), Fearsome Roar. |
 
 ---
 

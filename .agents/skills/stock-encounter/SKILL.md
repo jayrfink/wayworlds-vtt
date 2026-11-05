@@ -88,11 +88,11 @@ node scripts/stock-encounter.js \
 - **Tier 5 (Boss / Crimson):** Stats 75–85+, Skill Rank 5 (+50%), STA 100–130+, Runeforged Plate & Wards.
 
 ### Path B: Alien Creatures & Beasts
-- **Tier 1:** Attack 35–45%, STA 15–35, 1 attack (1d10 to 2d6).
-- **Tier 2:** Attack 50–60%, STA 40–75, 1–2 attacks (2d10 to 3d10).
-- **Tier 3:** Attack 65–75%, STA 80–130, 2–3 attacks (3d10 to 4d10) + 1 Special Trait.
-- **Tier 4:** Attack 75–85%, STA 140–220, multi-attack + damage reduction/armor.
-- **Tier 5:** Attack 85–95%, STA 250+, apex traits/area attacks.
+- **Tier 1:** Attack 35–45%, STA 15–35, 1 attack (1d10 or 1d6).
+- **Tier 2:** Attack 50–60%, STA 40–75, 1–2 attacks (2d10).
+- **Tier 3:** Attack 65–75%, STA 80–130, 2–3 attacks (3d10) + 1 Special Trait.
+- **Tier 4:** Attack 75–85%, STA 140–220, multi-attack (4d10) + damage reduction/armor.
+- **Tier 5:** Attack 85–95%, STA 250+, multi-attack / apex traits / area attacks (5d10 to 6d10+).
 
 ---
 
