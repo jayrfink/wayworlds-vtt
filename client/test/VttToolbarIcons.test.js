@@ -45,8 +45,8 @@ describe('VttToolbarIcons Wireframe Lined Shapes', () => {
       expect(rpgToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Initiative/);
       // Roll d%
       expect(rpgToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Roll d%/);
-      // DMG Die
-      expect(rpgToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*DMG Die/);
+      // d10s (formerly DMG Die)
+      expect(rpgToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*d10s/);
       // Clear Dice
       expect(rpgToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Clear Dice/);
     });

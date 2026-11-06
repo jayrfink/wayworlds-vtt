@@ -99,9 +99,9 @@
               class="btn-tool btn-dmg-main"
               :class="{ active: showDmgMenu }"
               @click="toggleDmgMenu"
-              title="Click to configure and roll damage dice"
+              title="DMG/HEAL/d10s"
             >
-              <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 20 12 16.5 6.5 20 8 13.5 3 9l6.5-.5L12 2z"/></svg> DMG Die ({{ damageDiceCount }}d10)
+              <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 20 12 16.5 6.5 20 8 13.5 3 9l6.5-.5L12 2z"/></svg> d10s ({{ damageDiceCount }}d10)
             </button>
             <button
               class="btn-dmg-step"
