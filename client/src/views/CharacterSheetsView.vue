@@ -637,7 +637,7 @@
           <!-- Inventory -->
           <section class="card list-card">
             <div class="list-header">
-              <h4>Inventory & Mass</h4>
+              <h4>Inventory</h4>
               <div class="list-header-actions">
                 <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Add Equipment</button>
                 <button class="btn-secondary btn-open-forge" @click="openForgeApplet">+ Item Forge</button>

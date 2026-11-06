@@ -1753,7 +1753,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
     });
   });
 
-  describe('Inventory Reordering in Inventory & Mass List', () => {
+  describe('Inventory Reordering in Inventory List', () => {
     it('reorders inventory items via moveInventoryItem and calls updateCharacter', () => {
       const item1 = { name: 'Rations', quantity: 2, weight: 0.5 };
       const item2 = { name: 'Laser Pistol', quantity: 1, weight: 1.0 };
