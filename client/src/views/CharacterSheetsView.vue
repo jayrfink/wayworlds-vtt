@@ -180,16 +180,7 @@
                       <option value="Mixlanders">Mixlanders</option>
                       <option value="Human">Human</option>
                     </optgroup>
-                    <option value="Custom">Custom</option>
                   </select>
-                  <input
-                    v-if="selectedRaceCategory === 'Custom'"
-                    type="text"
-                    v-model="selectedChar.race"
-                    @change="onCustomRaceChange"
-                    class="input-custom-race"
-                    placeholder="Custom Species Name"
-                  />
                 </div>
                 <div class="psa-select-wrap">
                   <label>PSA:</label>
@@ -1028,7 +1019,6 @@
                 <option value="Mixlanders">Mixlanders (+5 DEX, +5 INT, -5 STA)</option>
                 <option value="Human">Human (+5 INT, +5 PRE)</option>
               </optgroup>
-              <option value="Custom">Custom</option>
             </select>
           </div>
           <div v-if="racesData[newCharForm.race]" class="form-group lineage-preview-box">
@@ -1042,15 +1032,6 @@
               INT {{ newCharForm.int }} / HIST/REL {{ newCharForm.log }} &bull;
               WIL {{ newCharForm.per }} / PRE {{ newCharForm.ldr }}
             </div>
-          </div>
-          <div v-if="newCharForm.race === 'Custom'" class="form-group custom-race-input-group">
-            <label>Custom Species Name</label>
-            <input
-              type="text"
-              v-model="newCharForm.customRaceName"
-              class="char-create-input"
-              placeholder="Enter custom species name..."
-            />
           </div>
           <div class="form-group">
             <label>Primary System Area (PSA)</label>
@@ -1558,21 +1539,14 @@ export default {
     selectedRaceCategory: {
       get() {
         if (!this.selectedChar) return 'Dawn Elves';
-        if (!this.selectedChar.race) return 'Custom';
-        return this.isCustomRace(this.selectedChar.race) ? 'Custom' : this.selectedChar.race;
+        if (!this.selectedChar.race || this.isCustomRace(this.selectedChar.race)) return 'Human';
+        return this.selectedChar.race;
       },
       set(val) {
         if (!this.selectedChar) return;
-        if (val === 'Custom') {
-          if (!this.isCustomRace(this.selectedChar.race) || !this.selectedChar.race?.trim()) {
-            this.selectedChar.race = 'Custom';
-            this.updateCharacter();
-          }
-        } else {
-          this.selectedChar.race = val;
-          this.applyLineageStatsToCharacter(this.selectedChar, val);
-          this.updateCharacter();
-        }
+        this.selectedChar.race = val;
+        this.applyLineageStatsToCharacter(this.selectedChar, val);
+        this.updateCharacter();
       },
     },
     movementRates() {

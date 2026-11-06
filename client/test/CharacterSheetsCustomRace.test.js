@@ -90,20 +90,12 @@ describe('CharacterSheetsView - Custom Race', () => {
     }));
   });
 
-  it('renders Custom option in the create character modal race select', () => {
+  it('does not render Custom option in the create character modal race select', () => {
     const wrapper = shallowMount(CharacterSheetsView);
     wrapper.vm.showCreateModal = true;
     const options = wrapper.findAll('.char-create-select option');
     const values = options.map((o) => o.attributes('value'));
-    expect(values).toContain('Custom');
-  });
-
-  it('shows custom race input when Custom is selected in create modal', async () => {
-    const wrapper = shallowMount(CharacterSheetsView);
-    wrapper.vm.showCreateModal = true;
-    wrapper.vm.newCharForm.race = 'Custom';
-    await wrapper.vm.$nextTick();
-    expect(wrapper.find('.custom-race-input-group').exists()).toBe(true);
+    expect(values).not.toContain('Custom');
   });
 
   it('recognizes custom race and falls back to default movement rates', async () => {
@@ -128,32 +120,24 @@ describe('CharacterSheetsView - Custom Race', () => {
     expect(wrapper.vm.isCustomRace('Saurian')).toBe(true);
     expect(wrapper.vm.isCustomRace('Human')).toBe(false);
     expect(wrapper.vm.movementRates).toEqual({ walk: 30, run: 60, glide: 0 });
-    expect(wrapper.find('.input-custom-race').exists()).toBe(true);
   });
 
-  it('submits create character with custom race name or falls back to Custom', async () => {
+  it('submits create character with race intact', async () => {
     const wrapper = shallowMount(CharacterSheetsView);
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ id: 101, name: 'Alien', race: 'Gigglebug' }),
+      json: () => Promise.resolve({ id: 101, name: 'Hero', race: 'Human' }),
     });
     vi.stubGlobal('fetch', mockFetch);
 
-    wrapper.vm.newCharForm.name = 'Alien';
-    wrapper.vm.newCharForm.race = 'Custom';
-    wrapper.vm.newCharForm.customRaceName = 'Gigglebug';
+    wrapper.vm.newCharForm.name = 'Hero';
+    wrapper.vm.newCharForm.race = 'Human';
 
     await wrapper.vm.createCharacter();
 
     expect(mockFetch).toHaveBeenCalled();
     const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(postBody.race).toBe('Gigglebug');
-
-    // Blank custom race name defaults to 'Custom'
-    wrapper.vm.newCharForm.customRaceName = '   ';
-    await wrapper.vm.createCharacter();
-    const secondPostBody = JSON.parse(mockFetch.mock.calls[1][1].body);
-    expect(secondPostBody.race).toBe('Custom');
+    expect(postBody.race).toBe('Human');
   });
 
   it('updates selectedRaceCategory and updates character correctly', () => {
@@ -167,28 +151,23 @@ describe('CharacterSheetsView - Custom Race', () => {
 
     expect(wrapper.vm.selectedRaceCategory).toBe('Dawn Elves');
 
-    // Switch to Custom
-    wrapper.vm.selectedRaceCategory = 'Custom';
-    expect(wrapper.vm.selectedChar.race).toBe('Custom');
-    expect(wrapper.vm.updateCharacter).toHaveBeenCalled();
-
     // Switch to Frost Urkai
     wrapper.vm.selectedRaceCategory = 'Frost Urkai';
     expect(wrapper.vm.selectedChar.race).toBe('Frost Urkai');
+    expect(wrapper.vm.updateCharacter).toHaveBeenCalled();
   });
 
-  it('preserves Custom category when race is empty string mid-editing', () => {
+  it('defaults selectedRaceCategory to Human when race is empty string', () => {
     const wrapper = shallowMount(CharacterSheetsView);
     wrapper.vm.selectedChar = {
       id: 50,
       name: 'Hero',
       race: '',
     };
-    expect(wrapper.vm.selectedRaceCategory).toBe('Custom');
-    expect(wrapper.find('.input-custom-race').exists()).toBe(true);
+    expect(wrapper.vm.selectedRaceCategory).toBe('Human');
   });
 
-  it('sets race to Custom when selectedRaceCategory is set to Custom on empty race', () => {
+  it('sets race and calls updateCharacter when selectedRaceCategory changes on empty race', () => {
     const wrapper = shallowMount(CharacterSheetsView);
     wrapper.vm.updateCharacter = vi.fn();
     wrapper.vm.selectedChar = {
@@ -196,8 +175,8 @@ describe('CharacterSheetsView - Custom Race', () => {
       name: 'Hero',
       race: '',
     };
-    wrapper.vm.selectedRaceCategory = 'Custom';
-    expect(wrapper.vm.selectedChar.race).toBe('Custom');
+    wrapper.vm.selectedRaceCategory = 'Frost Urkai';
+    expect(wrapper.vm.selectedChar.race).toBe('Frost Urkai');
     expect(wrapper.vm.updateCharacter).toHaveBeenCalled();
   });
 
