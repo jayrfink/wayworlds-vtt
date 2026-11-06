@@ -100,4 +100,42 @@ describe('RPG VTT fog wiring', () => {
     expect(viewSrc).toContain('fogEraser.size');
     expect(viewSrc).toContain('@fog-changed="onFogChanged"');
   });
+
+  it('view has Fog All checkbox in create map modal and handles dropped map files', () => {
+    expect(viewSrc).toContain('newMapForm.fog_all');
+    expect(viewSrc).toMatch(/<input\s+type="checkbox"[^>]*v-model="newMapForm\.fog_all"[^>]*class="fog-all-checkbox"/);
+    expect(viewSrc).toContain('onMapDragOver');
+    expect(viewSrc).toContain('onMapFileDrop');
+    expect(viewSrc).toMatch(/fog_enabled:\s*newMapForm\.fog_all\s*\?\s*1\s*:\s*0/);
+  });
+});
+
+describe('World VTT hex crawl fog wiring', () => {
+  const worldCanvasSrc = fs.readFileSync(path.resolve(__dirname, '../src/components/WorldVttCanvas.vue'), 'utf-8');
+  const worldViewSrc = fs.readFileSync(path.resolve(__dirname, '../src/views/WorldVttView.vue'), 'utf-8');
+
+  it('WorldVttCanvas draws fog above markers, only erases for GM, and emits fog-changed', () => {
+    expect(worldCanvasSrc).toContain("'fog-changed'");
+    expect(worldCanvasSrc).toMatch(/drawFogLayer\(/);
+    expect(worldCanvasSrc.indexOf('drawMarkers(ctx);')).toBeLessThan(worldCanvasSrc.indexOf('drawFogOverlay(ctx'));
+    expect(worldCanvasSrc).toMatch(/activeTool === 'fog_erase'\s*&&\s*props\.isGm/);
+    expect(worldCanvasSrc).toContain('cursor-fog');
+  });
+
+  it('WorldVttView exposes GM-only fog controls with circle/square, hex size, and cover all', () => {
+    expect(worldViewSrc).toMatch(/v-if="isGm"[^>]*\n?[^>]*toggleFog/);
+    expect(worldViewSrc).toContain("activeTool = 'fog_erase'");
+    expect(worldViewSrc).toContain('fogEraser.shape');
+    expect(worldViewSrc).toContain('fogEraser.size');
+    expect(worldViewSrc).toContain('@fog-changed="onFogChanged"');
+    expect(worldViewSrc).toContain('coverAllFog');
+  });
+
+  it('WorldVttView has Fog All checkbox in create map modal and handles dropped map files', () => {
+    expect(worldViewSrc).toContain('newMapForm.fog_all');
+    expect(worldViewSrc).toMatch(/<input\s+type="checkbox"[^>]*v-model="newMapForm\.fog_all"[^>]*class="fog-all-checkbox"/);
+    expect(worldViewSrc).toContain('onMapDragOver');
+    expect(worldViewSrc).toContain('onMapFileDrop');
+    expect(worldViewSrc).toMatch(/fog_enabled:\s*newMapForm\.fog_all\s*\?\s*1\s*:\s*0/);
+  });
 });

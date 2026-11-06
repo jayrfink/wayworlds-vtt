@@ -69,6 +69,56 @@
           <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/></svg> Clear All Pings
         </button>
 
+        <!-- GM Fog of War controls -->
+        <button
+          v-if="isGm"
+          class="btn-tool btn-fog-toggle"
+          :class="{ active: fogEnabled }"
+          :title="fogEnabled ? 'Turn Fog of War off (reveals the whole map)' : 'Turn Fog of War on (hides the map from players)'"
+          @click="toggleFog"
+        >
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A4.5 4.5 0 0 1 17 18H6z"/></svg> {{ fogEnabled ? 'Fog Off' : 'Fog On' }}
+        </button>
+        <button
+          v-if="isGm && fogEnabled"
+          class="btn-tool btn-fog-erase"
+          :class="{ active: activeTool === 'fog_erase' }"
+          title="Erase Fog (click or drag on the map to reveal)"
+          @click="activeTool = 'fog_erase'"
+        >
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15l8-8 7 7-5 5H8l-4-4zM9 10l7 7"/></svg> Erase Fog
+        </button>
+        <div v-if="isGm && fogEnabled && activeTool === 'fog_erase'" class="fog-eraser-options">
+          <div class="fog-shape-row">
+            <button
+              type="button"
+              class="fog-shape-btn"
+              :class="{ selected: fogEraser.shape === 'circle' }"
+              title="Circular eraser"
+              @click="fogEraser.shape = 'circle'"
+            >● Circle</button>
+            <button
+              type="button"
+              class="fog-shape-btn"
+              :class="{ selected: fogEraser.shape === 'square' }"
+              title="Square eraser"
+              @click="fogEraser.shape = 'square'"
+            >■ Square</button>
+          </div>
+          <label class="fog-size-label">
+            Size: {{ fogEraser.size }} hex
+            <input
+              type="range"
+              class="fog-size-slider"
+              min="0.5"
+              max="20"
+              step="0.5"
+              v-model.number="fogEraser.size"
+            />
+          </label>
+          <button type="button" class="fog-cover-btn" title="Cover the whole map in fog again" @click="coverAllFog">Cover All</button>
+        </div>
+
         <button v-if="isGm" class="btn-tool btn-initiative" @click="rollInitiative" title="Roll Combat Initiative (Players vs. Opposition 2d10)">
           <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Initiative
         </button>
@@ -151,7 +201,20 @@
       </nav>
 
       <!-- Canvas Container -->
-      <div class="vtt-canvas-wrapper">
+      <div
+        class="vtt-canvas-wrapper"
+        @dragover.prevent="onMapDragOver"
+        @dragleave.prevent="onMapDragLeave"
+        @drop.prevent="onMapFileDrop"
+      >
+        <!-- Map Drop Overlay for GM -->
+        <div v-if="isDraggingMapFile && isGm" class="map-drop-zone-overlay">
+          <div class="map-drop-zone-content">
+            <span class="map-drop-zone-icon">🗺️</span>
+            <strong>Drop Map to Create &amp; Fog</strong>
+            <small>Image will be uploaded to a new world map</small>
+          </div>
+        </div>
         <!-- Bottom-Left Collapsible Die Roll Log HUD -->
         <div class="roll-log-hud" :class="{ open: isRollLogOpen }">
           <div v-if="!isRollLogOpen" class="roll-log-pill-row">
@@ -303,12 +366,15 @@
           v-model:pan-x="panX"
           v-model:pan-y="panY"
           :selected-marker-id="selectedMarkerId"
+          :is-gm="isGm"
+          :fog-eraser="fogEraser"
           @marker-moved="onMarkerMoved"
           @marker-selected="onMarkerSelected"
           @markers-updated="markers = $event"
           @map-updated="activeMap = $event"
           @ping-update="onPingUpdate"
           @ping-dismiss="onPingDismiss"
+          @fog-changed="onFogChanged"
         />
 
         <!-- No Active Map Overlay -->
@@ -455,6 +521,16 @@
                   <input type="file" accept="image/*" @change="onActiveMapUpload" class="map-file-input" />
                   <button type="button" class="btn-browse-avatar" @click="openMapImageBrowser('active_map')">Browse Uploads</button>
                 </div>
+              </div>
+              <div class="form-group">
+                <label class="checkbox-label">
+                  <input
+                    type="checkbox"
+                    v-model="activeMapForm.fog_enabled"
+                    @change="updateActiveMapSettings"
+                  />
+                  Enable Fog of War
+                </label>
               </div>
             </div>
 
@@ -686,6 +762,12 @@
             <input type="file" accept="image/*" @change="uploadMapImage($event, newMapForm)" class="map-file-input" />
             <button type="button" class="btn-browse-avatar" @click="openMapImageBrowser('new_map')">Browse Uploads</button>
           </div>
+        </div>
+        <div class="form-group checkbox-group">
+          <label class="checkbox-label">
+            <input type="checkbox" v-model="newMapForm.fog_all" class="fog-all-checkbox" />
+            <span>Fog All (fog the whole map at initial loading)</span>
+          </label>
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-modal-cancel" @click="showCreateMapModal = false">Cancel</button>
@@ -1243,6 +1325,7 @@ const activeMapForm = reactive({
   grid_line_width: 1,
   grid_color: '#334155',
   background_url: '',
+  fog_enabled: false,
 });
 
 const newMapForm = reactive({
@@ -1256,7 +1339,53 @@ const newMapForm = reactive({
   grid_line_width: 1,
   grid_color: '#334155',
   background_url: '',
+  fog_all: false,
 });
+
+// Fog of War (GM controls)
+const fogEraser = reactive({
+  shape: 'circle',
+  size: 3,
+});
+
+const fogEnabled = computed(() => Boolean(activeMap.value?.fog_enabled));
+
+async function saveFogPatch(patch) {
+  if (!isGm.value || !activeMap.value?.id) return;
+  const previous = activeMap.value;
+  activeMap.value = { ...previous, ...patch };
+  try {
+    const res = await fetch(`/api/maps/${previous.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(patch),
+    });
+    if (res.ok) {
+      activeMap.value = await res.json();
+    } else {
+      activeMap.value = previous;
+    }
+  } catch (err) {
+    console.error('Failed to save fog:', err);
+    activeMap.value = previous;
+  }
+}
+
+function toggleFog() {
+  const next = !fogEnabled.value;
+  if (!next && activeTool.value === 'fog_erase') activeTool.value = 'select';
+  saveFogPatch({ fog_enabled: next });
+}
+
+function onFogChanged(fogData) {
+  saveFogPatch({ fog_data: fogData });
+}
+
+function coverAllFog() {
+  if (typeof window !== 'undefined' && !window.confirm('Cover the entire world map in fog again?')) return;
+  saveFogPatch({ fog_data: [] });
+}
 
 const newTokenForm = reactive({
   name: '',
@@ -1350,6 +1479,7 @@ function syncActiveMapForm(map) {
   activeMapForm.grid_line_width = map.grid_line_width || 1;
   activeMapForm.grid_color = map.grid_color || '#334155';
   activeMapForm.background_url = map.background_url || '';
+  activeMapForm.fog_enabled = Boolean(map.fog_enabled);
 }
 
 watch(activeMap, (map) => {
@@ -1440,6 +1570,7 @@ async function updateActiveMapSettings() {
       grid_line_width: clampGridLineWidth(activeMapForm.grid_line_width),
       grid_color: activeMapForm.grid_color,
       background_url: activeMapForm.background_url,
+      fog_enabled: activeMapForm.fog_enabled ? 1 : 0,
     };
     const res = await fetch(`/api/maps/${activeMap.value.id}`, {
       method: 'PUT',
@@ -1481,6 +1612,50 @@ async function onActiveMapUpload(e) {
   updateActiveMapSettings();
 }
 
+const isDraggingMapFile = ref(false);
+
+function onMapDragOver(e) {
+  if (!isGm.value) return;
+  if (e.dataTransfer?.types?.includes('Files')) {
+    e.dataTransfer.dropEffect = 'copy';
+    isDraggingMapFile.value = true;
+  }
+}
+
+function onMapDragLeave(e) {
+  if (!e.currentTarget || !e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+    isDraggingMapFile.value = false;
+  }
+}
+
+async function onMapFileDrop(e) {
+  isDraggingMapFile.value = false;
+  if (!isGm.value) return;
+  const file = e.dataTransfer?.files?.[0];
+  if (!file || !file.type.startsWith('image/')) return;
+
+  openCreateMapModal();
+  const rawName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]+/g, ' ').trim();
+  newMapForm.name = rawName ? rawName.charAt(0).toUpperCase() + rawName.slice(1) : 'New World Map';
+  newMapForm.fog_all = true;
+
+  const formData = new FormData();
+  formData.append('file', file);
+  try {
+    const res = await fetch('/api/upload', {
+      method: 'POST',
+      credentials: 'include',
+      body: formData,
+    });
+    if (res.ok) {
+      const data = await res.json();
+      newMapForm.background_url = data.url;
+    }
+  } catch (err) {
+    console.error('Failed to upload dropped map file:', err);
+  }
+}
+
 function openCreateMapModal() {
   createMapError.value = '';
   newMapForm.name = '';
@@ -1490,6 +1665,7 @@ function openCreateMapModal() {
   newMapForm.grid_size = 40;
   newMapForm.hex_miles = 6;
   newMapForm.background_url = '';
+  newMapForm.fog_all = false;
   showCreateMapModal.value = true;
 }
 
@@ -1500,7 +1676,13 @@ async function submitCreateMap() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
-      body: JSON.stringify({ ...newMapForm, map_type: 'world', is_active: 1 }),
+      body: JSON.stringify({
+        ...newMapForm,
+        map_type: 'world',
+        is_active: 1,
+        fog_enabled: newMapForm.fog_all ? 1 : 0,
+        fog_data: [],
+      }),
     });
     if (res.ok) {
       const created = await res.json();
@@ -1717,6 +1899,7 @@ let onSocketMapActivated = null;
 let onSocketMapUpdated = null;
 let onSocketMapCreated = null;
 let onSocketMapDeleted = null;
+let onSocketFogUpdated = null;
 let onSocketMarkerCreated = null;
 let onSocketMarkerUpdated = null;
 let onSocketMarkerDeleted = null;
@@ -1756,6 +1939,12 @@ function setupSocketListeners() {
       markers.value = [];
       selectedMarkerId.value = null;
       activePings.value = {};
+    }
+  });
+
+  socket.on('fog:updated', onSocketFogUpdated = ({ mapId, fog_data }) => {
+    if (activeMap.value && activeMap.value.id === mapId) {
+      activeMap.value = { ...activeMap.value, fog_data };
     }
   });
 
@@ -1895,6 +2084,7 @@ function cleanupSocketListeners() {
   if (onSocketMapUpdated) socket.off('map:updated', onSocketMapUpdated);
   if (onSocketMapCreated) socket.off('map:created', onSocketMapCreated);
   if (onSocketMapDeleted) socket.off('map:deleted', onSocketMapDeleted);
+  if (onSocketFogUpdated) socket.off('fog:updated', onSocketFogUpdated);
   if (onSocketMarkerCreated) socket.off('world-marker:created', onSocketMarkerCreated);
   if (onSocketMarkerUpdated) socket.off('world-marker:updated', onSocketMarkerUpdated);
   if (onSocketMarkerDeleted) socket.off('world-marker:deleted', onSocketMarkerDeleted);
@@ -2054,6 +2244,102 @@ onBeforeUnmount(() => {
   color: #cecece;
   font-weight: 600;
   border: 1px solid #cecece;
+}
+
+.fog-eraser-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.fog-shape-row {
+  display: flex;
+  gap: 4px;
+}
+
+.vtt-toolbar .fog-shape-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 5px 6px;
+  font-size: 12px;
+}
+
+.vtt-toolbar .fog-shape-btn.selected {
+  background: #000000;
+  color: #cecece;
+  font-weight: 600;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
+}
+
+.fog-size-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #cecece;
+}
+
+.fog-size-slider {
+  width: 100%;
+  accent-color: #cecece;
+}
+
+.vtt-toolbar .fog-cover-btn {
+  justify-content: center;
+  padding: 5px 6px;
+  font-size: 12px;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-primary, #cecece);
+  user-select: none;
+}
+
+.checkbox-label input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.map-drop-zone-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(13, 17, 23, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  pointer-events: none;
+  border: 3px dashed var(--accent, #4fc3f7);
+  margin: 12px;
+  border-radius: 12px;
+}
+
+.map-drop-zone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #cecece;
+  font-size: 16px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.map-drop-zone-icon {
+  font-size: 42px;
 }
 
 .tool-icon {

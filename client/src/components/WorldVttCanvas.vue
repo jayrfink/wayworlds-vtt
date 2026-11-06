@@ -2,11 +2,11 @@
   <div
     ref="containerRef"
     class="world-vtt-canvas-container"
-    :class="{ 'cursor-pan': isPanning || activeTool === 'pan', 'cursor-ping': activeTool === 'ping' }"
+    :class="{ 'cursor-pan': isPanning || activeTool === 'pan', 'cursor-ping': activeTool === 'ping', 'cursor-fog': activeTool === 'fog_erase' }"
     @mousedown="onMouseDown"
     @mousemove="onMouseMove"
     @mouseup="onMouseUp"
-    @mouseleave="onMouseUp"
+    @mouseleave="onMouseLeave"
     @wheel.prevent="onWheel"
   >
     <canvas ref="canvasRef"></canvas>
@@ -17,6 +17,15 @@
 import { ref, onMounted, onBeforeUnmount, watch, computed } from 'vue';
 import { socket } from '../services/socket.js';
 import { drawAllPings, isPingDismissHit } from '../utils/pingRenderer.js';
+import {
+  clampEraserCells,
+  createFogStamp,
+  normalizeFogData,
+  shouldAddFogStamp,
+  appendFogStamps,
+  traceFogStamp,
+  drawFogLayer,
+} from '../utils/fogOfWar.js';
 
 const MARKER_TYPE_GLYPHS = {
   party: '⛺',
@@ -59,6 +68,14 @@ const props = defineProps({
     type: [Number, String],
     default: null,
   },
+  isGm: {
+    type: Boolean,
+    default: false,
+  },
+  fogEraser: {
+    type: Object,
+    default: () => ({ shape: 'circle', size: 3 }),
+  },
 });
 
 const emit = defineEmits([
@@ -71,6 +88,7 @@ const emit = defineEmits([
   'map-updated',
   'ping-update',
   'ping-dismiss',
+  'fog-changed',
 ]);
 
 const containerRef = ref(null);
@@ -103,6 +121,16 @@ watch(() => props.map, () => {
 watch(() => props.selectedMarkerId, () => {
   requestRender();
 });
+
+// Fog of War eraser state (GM only)
+const isErasingFog = ref(false);
+const pendingFogStamps = ref([]);
+const fogHoverWorld = ref(null);
+let fogScratchCanvas = null;
+
+watch(() => props.fogEraser, () => {
+  requestRender();
+}, { deep: true });
 
 // Ping state & animation
 const isPingDragging = ref(false);
@@ -384,9 +412,78 @@ function drawCanvas() {
     drawGhostMarker(ctx, draggingMarker.value, dragCell.value);
   }
 
+  // Draw Fog of War (above markers so players cannot see hidden areas)
+  drawFogOverlay(ctx, mapW, mapH, dpr);
+
   drawAllPings(ctx, props.pings, performance.now());
 
+  // GM eraser cursor preview
+  drawFogEraserPreview(ctx);
+
   ctx.restore();
+}
+
+function fogEraserSizePx() {
+  return clampEraserCells(props.fogEraser?.size) * hexW.value;
+}
+
+function drawFogOverlay(ctx, mapW, mapH, dpr) {
+  if (!props.map || !props.map.fog_enabled) return;
+  const canvas = canvasRef.value;
+  if (!canvas || typeof document === 'undefined') return;
+  if (!fogScratchCanvas) fogScratchCanvas = document.createElement('canvas');
+  if (fogScratchCanvas.width !== canvas.width) fogScratchCanvas.width = canvas.width;
+  if (fogScratchCanvas.height !== canvas.height) fogScratchCanvas.height = canvas.height;
+
+  const stamps = pendingFogStamps.value.length
+    ? [...normalizeFogData(props.map.fog_data), ...pendingFogStamps.value]
+    : normalizeFogData(props.map.fog_data);
+
+  drawFogLayer({
+    ctx,
+    scratch: fogScratchCanvas,
+    transform: [
+      dpr * props.zoomLevel, 0, 0, dpr * props.zoomLevel,
+      dpr * panX.value, dpr * panY.value,
+    ],
+    mapW,
+    mapH,
+    stamps,
+    isGm: props.isGm,
+  });
+}
+
+function drawFogEraserPreview(ctx) {
+  if (!props.isGm || props.activeTool !== 'fog_erase' || !props.map?.fog_enabled) return;
+  if (!fogHoverWorld.value) return;
+  const size = fogEraserSizePx();
+  ctx.save();
+  ctx.beginPath();
+  traceFogStamp(ctx, createFogStamp(props.fogEraser?.shape, fogHoverWorld.value.x, fogHoverWorld.value.y, size));
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+  ctx.fill();
+  ctx.lineWidth = Math.max(1, 2 / props.zoomLevel);
+  ctx.strokeStyle = '#ffffff';
+  ctx.setLineDash([6 / props.zoomLevel, 4 / props.zoomLevel]);
+  ctx.stroke();
+  ctx.restore();
+}
+
+function addFogStampAt(worldPos) {
+  const size = fogEraserSizePx();
+  const list = pendingFogStamps.value;
+  const last = list.length ? list[list.length - 1] : null;
+  if (!shouldAddFogStamp(last, worldPos.x, worldPos.y, size)) return;
+  list.push(createFogStamp(props.fogEraser?.shape, worldPos.x, worldPos.y, size));
+}
+
+function commitFogErase() {
+  isErasingFog.value = false;
+  if (!pendingFogStamps.value.length) return;
+  const next = appendFogStamps(props.map?.fog_data, pendingFogStamps.value);
+  pendingFogStamps.value = [];
+  emit('fog-changed', next);
+  requestRender();
 }
 
 function drawBackground(ctx, mapW, mapH) {
@@ -556,6 +653,17 @@ function onMouseDown(e) {
       return;
     }
 
+    if (props.activeTool === 'fog_erase' && props.isGm) {
+      if (props.map?.fog_enabled) {
+        isErasingFog.value = true;
+        pendingFogStamps.value = [];
+        fogHoverWorld.value = { x: worldPos.x, y: worldPos.y };
+        addFogStampAt(worldPos);
+        requestRender();
+      }
+      return;
+    }
+
     if (props.activeTool === 'select') {
       const candidates = props.markers.filter((m) => {
         if (cell && m.hex_q === cell.q && m.hex_r === cell.r) return true;
@@ -610,13 +718,29 @@ function onMouseMove(e) {
     return;
   }
 
+  if (props.activeTool === 'fog_erase' && props.isGm) {
+    fogHoverWorld.value = { x: worldPos.x, y: worldPos.y };
+    if (isErasingFog.value) addFogStampAt(worldPos);
+    requestRender();
+    return;
+  }
+
   if (cell && draggingMarker.value) {
     dragCell.value = cell;
     requestRender();
   }
 }
 
+function onMouseLeave(e) {
+  fogHoverWorld.value = null;
+  onMouseUp(e);
+}
+
 function onMouseUp(e) {
+  if (isErasingFog.value) {
+    commitFogErase();
+    return;
+  }
   if (isPingDragging.value) {
     isPingDragging.value = false;
     let posX = lastPingPos.x;
@@ -684,6 +808,17 @@ function onKeyUp(e) {
     isSpacePressed.value = false;
   }
 }
+
+watch(() => props.activeTool, (newTool) => {
+  if (newTool !== 'fog_erase') {
+    commitFogErase();
+    fogHoverWorld.value = null;
+  }
+  if (newTool !== 'ping' && isPingDragging.value) {
+    isPingDragging.value = false;
+    emit('ping-update', { x: lastPingPos.x, y: lastPingPos.y, isDragging: false });
+  }
+});
 
 let resizeObserver = null;
 
@@ -753,6 +888,10 @@ canvas {
 
 .cursor-pan:active {
   cursor: grabbing;
+}
+
+.cursor-fog {
+  cursor: crosshair;
 }
 
 .cursor-ping {
