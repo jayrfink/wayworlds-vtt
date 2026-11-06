@@ -119,7 +119,7 @@
 
           <div v-if="showDmgMenu" class="dmg-popover">
             <div class="dmg-popover-header">
-              <span><svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 20 12 16.5 6.5 20 8 13.5 3 9l6.5-.5L12 2z"/></svg> Damage Dice</span>
+              <span><svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.5 6.5L21 9l-5 4.5L17.5 20 12 16.5 6.5 20 8 13.5 3 9l6.5-.5L12 2z"/></svg> d10 dice</span>
               <button class="dmg-popover-close" @click.stop="showDmgMenu = false">×</button>
             </div>
             <div class="dmg-stepper">
@@ -140,7 +140,7 @@
               </button>
             </div>
             <button type="button" class="btn-roll-dmg-action" @click.stop="rollDamage">
-              <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/></svg> Roll {{ damageDiceCount }}d10 Damage
+              <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/></svg> Roll {{ damageDiceCount }}d10
             </button>
             <div v-if="lastDamageRoll" class="dmg-last-roll-card">
               <div class="last-roll-header">Last Roll ({{ lastDamageRoll.count }}d10):</div>
