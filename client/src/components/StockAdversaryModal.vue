@@ -231,11 +231,11 @@
                     <option value="Goblins">Goblins</option>
                   </optgroup>
                   <optgroup label="Elven Lineages">
-                    <option value="Dawn Elves">Dawn Elves</option>
-                    <option value="Dusk Elves">Dusk Elves</option>
-                    <option value="Sylvan Elves">Sylvan Elves</option>
-                    <option value="Wilder Elves">Wilder Elves</option>
-                    <option value="Twilight Elves">Twilight Elves</option>
+                    <option value="Dawn Elf">Dawn Elf</option>
+                    <option value="Dusk Elf">Dusk Elf</option>
+                    <option value="Sylvan Elf">Sylvan Elf</option>
+                    <option value="Wilder Elf">Wilder Elf</option>
+                    <option value="Twilight Elf">Twilight Elf</option>
                     <option value="Wendhya">Wendhya</option>
                   </optgroup>
                   <optgroup label="Dwarven Lineages">
@@ -243,16 +243,14 @@
                     <option value="Vanir Dwarves">Vanir Dwarves</option>
                   </optgroup>
                   <optgroup label="Giant-Kin & Monstrous">
-                    <option value="True Giants">True Giants</option>
                     <option value="Giantken / Goliath">Giantken / Goliath</option>
                     <option value="Trollkin">Trollkin</option>
                     <option value="Ogre">Ogre</option>
                     <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur</option>
                   </optgroup>
                   <optgroup label="Mortal & Folk Lineages">
-                    <option value="Human">Human</option>
-                    <option value="Mixlanders">Mixlanders</option>
-                    <option value="Whisperlings">Whisperlings</option>
+                    <option value="Mixlander">Mixlander</option>
+                    <option value="Whisperling">Whisperling</option>
                   </optgroup>
                 </select>
               </div>

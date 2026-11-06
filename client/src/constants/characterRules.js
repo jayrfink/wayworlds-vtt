@@ -4,7 +4,7 @@
  * Selecting a lineage automatically applies its modifiers to the 50 baseline.
  */
 export const RACES_DATA = {
-  'Dawn Elves': {
+  'Dawn Elf': {
     category: 'The Norn',
     modifiers: { str: 0, sta: -5, dex: 0, rs: 0, int: 5, log: 5, per: 0, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -15,7 +15,7 @@ export const RACES_DATA = {
     abilities: 'Solar & Arcane Attunement: +5% to Arcane or Spiritual channeling; immune to dazzling/blinding light (30 ft base move).',
     modSummary: '+5 INT (55), +5 HIST/REL (55), -5 STA (45)',
   },
-  'Dusk Elves': {
+  'Dusk Elf': {
     category: 'The Norn',
     modifiers: { str: 0, sta: -5, dex: 5, rs: 0, int: 5, log: 0, per: 0, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -26,7 +26,7 @@ export const RACES_DATA = {
     abilities: 'Gloaming Attunement: +5% to Shadow or Witchcraft casting; darkvision up to 60 ft (no penalty in dim/dark terrain).',
     modSummary: '+5 INT (55), +5 DEX (55), -5 STA (45)',
   },
-  'Sylvan Elves': {
+  'Sylvan Elf': {
     category: 'The Norn',
     modifiers: { str: -5, sta: 0, dex: 5, rs: 5, int: 0, log: 0, per: 0, ldr: 0 },
     movement: { walk: 35, run: 70, glide: 0 },
@@ -37,7 +37,7 @@ export const RACES_DATA = {
     abilities: 'Woodland Stride & Warg Bloodline: Eligible for the Warg skill; 35 ft base movement speed and +10% Stealth & Secrecy / Wilderness in forests.',
     modSummary: '+5 DEX (55), +5 RS (55), -5 STR (45)',
   },
-  'Wilder Elves': {
+  'Wilder Elf': {
     category: 'The Norn',
     modifiers: { str: 0, sta: 0, dex: 5, rs: 0, int: 0, log: -5, per: 5, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -48,7 +48,7 @@ export const RACES_DATA = {
     abilities: 'Feral Instinct & Warg Bloodline: Eligible for the Warg skill; +1 Initiative Modifier (IM) and +5% melee accuracy.',
     modSummary: '+5 DEX (55), +5 WIL (55), -5 HIST/REL (45)',
   },
-  'Twilight Elves': {
+  'Twilight Elf': {
     category: 'The Norn',
     modifiers: { str: -5, sta: 0, dex: 5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -59,6 +59,12 @@ export const RACES_DATA = {
     abilities: 'Veil Sight: Sees invisible/shadow-melded spirits within 60 ft; +10% to resist Hexing, illusions, and mental domination.',
     modSummary: '+5 DEX (55), +5 WIL (55), -5 STR (45)',
   },
+  // Backward-compatibility aliases for plural "Elves"
+  get 'Dawn Elves'() { return this['Dawn Elf']; },
+  get 'Dusk Elves'() { return this['Dusk Elf']; },
+  get 'Sylvan Elves'() { return this['Sylvan Elf']; },
+  get 'Wilder Elves'() { return this['Wilder Elf']; },
+  get 'Twilight Elves'() { return this['Twilight Elf']; },
   'Wendhya': {
     category: 'The Norn',
     modifiers: { str: -5, sta: 0, dex: 0, rs: 5, int: 0, log: 0, per: 5, ldr: 0 },
@@ -169,17 +175,6 @@ export const RACES_DATA = {
     abilities: 'Scurry & Skulk: Small size (3–4 ft tall, 40 lbs); +10% to Stealth & Secrecy; can move through enemy 5 ft spaces and disengage without triggering free strikes (30 ft base move).',
     modSummary: '+10 DEX (60), +5 RS (55), -10 STR (40), -5 STA (45)',
   },
-  'True Giants': {
-    category: 'The Giants',
-    modifiers: { str: 20, sta: 20, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
-    movement: { walk: 40, run: 80, glide: 0 },
-    movement_ft: 40,
-    size: 'Large',
-    warg_eligible: false,
-    trait_name: 'Elder Primordials',
-    abilities: 'Elder Primordials: Large/Huge VTT footprint (10x10 ft or 15x15 ft, 12–20 ft tall); native mastery of Druidic, Arcane, or Ki power matching their lineage; immune to their native energy type (40 ft base move).',
-    modSummary: '+20 STR (70), +20 STA (70)',
-  },
   'Giantken / Goliath': {
     category: 'The Giants',
     modifiers: { str: 10, sta: 10, dex: -10, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
@@ -224,7 +219,7 @@ export const RACES_DATA = {
     abilities: 'Goring Charge: Moving 20 ft+ (4+ grid squares) in a straight line before attacking adds +1d10 damage and knocks target Prone; Nord Minotaur also halves Cold damage (30 ft base move).',
     modSummary: '+10 STR (60), +5 STA (55), -5 INT (45)',
   },
-  'Whisperlings': {
+  'Whisperling': {
     category: 'Hybrid & Spirit-Infected Lineages',
     modifiers: { str: -5, sta: 0, dex: 5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -235,7 +230,7 @@ export const RACES_DATA = {
     abilities: 'Spirit-Infected: Rooted in any Foundation Species and transformed by spirit infection. Gains half-damage resistance to one energy type (Fire, Shadow, or Cold) and +5% to Shadow, Demonology, or Witchcraft casting (30 ft base move).',
     modSummary: '+5 DEX (55), +5 WIL (55), -5 STR (45)',
   },
-  'Mixlanders': {
+  'Mixlander': {
     category: 'Hybrid & Spirit-Infected Lineages',
     modifiers: { str: 0, sta: -5, dex: 5, rs: 0, int: 5, log: 0, per: 0, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -246,28 +241,20 @@ export const RACES_DATA = {
     abilities: 'Elven Amalgam: A mixed-heritage blend of elven lineages (+5 to two stats, -5 to one stat). Inherits flexibility (+5% to any one secular skill check) and adapts easily to diverse regional magic traditions (30 ft base move).',
     modSummary: '+5 DEX (55), +5 INT (55), -5 STA (45)',
   },
-  'Human': {
-    category: 'Foundation Folk',
-    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 5, log: 0, per: 0, ldr: 5 },
-    movement: { walk: 30, run: 60, glide: 0 },
-    movement_ft: 30,
-    size: 'Medium',
-    warg_eligible: false,
-    trait_name: 'Adaptive Versatility',
-    abilities: 'Adaptive Versatility: +5 INT (55), +5 PRE (55); gains +5% to any one chosen secular skill check (30 ft base move).',
-    modSummary: '+5 INT (55), +5 PRE (55)',
-  },
+  // Backward-compatibility aliases
+  get 'Whisperlings'() { return this['Whisperling']; },
+  get 'Mixlanders'() { return this['Mixlander']; },
 };
 
 export const CARTRIDGE_LINEAGE_GROUPS = [
   {
     label: 'The Norn (Elves, Dwarves & Wendhya)',
     lineages: [
-      'Dawn Elves',
-      'Dusk Elves',
-      'Sylvan Elves',
-      'Wilder Elves',
-      'Twilight Elves',
+      'Dawn Elf',
+      'Dusk Elf',
+      'Sylvan Elf',
+      'Wilder Elf',
+      'Twilight Elf',
       'Wendhya',
       'Weirgoth Dwarves',
       'Vanir Dwarves',
@@ -288,7 +275,6 @@ export const CARTRIDGE_LINEAGE_GROUPS = [
   {
     label: 'The Giants & Primordial Kin',
     lineages: [
-      'True Giants',
       'Giantken / Goliath',
       'Trollkin',
       'Ogre',
@@ -298,9 +284,8 @@ export const CARTRIDGE_LINEAGE_GROUPS = [
   {
     label: 'Hybrid, Spirit-Infected & Foundation Folk',
     lineages: [
-      'Whisperlings',
-      'Mixlanders',
-      'Human',
+      'Whisperling',
+      'Mixlander',
     ],
   },
 ];

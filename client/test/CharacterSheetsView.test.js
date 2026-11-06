@@ -2306,11 +2306,11 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(wrapper.vm.newCharForm.sta).toBe(55); // Vanir Dwarves +5 STA
       expect(wrapper.vm.newCharForm.rs).toBe(45);  // Vanir Dwarves -5 RS
 
-      // Change to True Giants
-      wrapper.vm.newCharForm.race = 'True Giants';
+      // Change to Ogre
+      wrapper.vm.newCharForm.race = 'Ogre';
       wrapper.vm.onCreateRaceChange();
-      expect(wrapper.vm.newCharForm.str).toBe(70); // True Giants +20 STR
-      expect(wrapper.vm.newCharForm.sta).toBe(70); // True Giants +20 STA
+      expect(wrapper.vm.newCharForm.str).toBe(65); // Ogre +15 STR
+      expect(wrapper.vm.newCharForm.sta).toBe(65); // Ogre +15 STA
     });
   });
 });

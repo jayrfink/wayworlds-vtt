@@ -118,7 +118,7 @@ describe('CharacterSheetsView - Custom Race', () => {
     };
     await wrapper.vm.$nextTick();
     expect(wrapper.vm.isCustomRace('Saurian')).toBe(true);
-    expect(wrapper.vm.isCustomRace('Human')).toBe(false);
+    expect(wrapper.vm.isCustomRace('Dawn Elf')).toBe(false);
     expect(wrapper.vm.movementRates).toEqual({ walk: 30, run: 60, glide: 0 });
   });
 
@@ -126,18 +126,18 @@ describe('CharacterSheetsView - Custom Race', () => {
     const wrapper = shallowMount(CharacterSheetsView);
     const mockFetch = vi.fn().mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve({ id: 101, name: 'Hero', race: 'Human' }),
+      json: () => Promise.resolve({ id: 101, name: 'Hero', race: 'Dawn Elf' }),
     });
     vi.stubGlobal('fetch', mockFetch);
 
     wrapper.vm.newCharForm.name = 'Hero';
-    wrapper.vm.newCharForm.race = 'Human';
+    wrapper.vm.newCharForm.race = 'Dawn Elf';
 
     await wrapper.vm.createCharacter();
 
     expect(mockFetch).toHaveBeenCalled();
     const postBody = JSON.parse(mockFetch.mock.calls[0][1].body);
-    expect(postBody.race).toBe('Human');
+    expect(postBody.race).toBe('Dawn Elf');
   });
 
   it('updates selectedRaceCategory and updates character correctly', () => {
@@ -146,10 +146,10 @@ describe('CharacterSheetsView - Custom Race', () => {
     wrapper.vm.selectedChar = {
       id: 50,
       name: 'ElfHero',
-      race: 'Dawn Elves',
+      race: 'Dawn Elf',
     };
 
-    expect(wrapper.vm.selectedRaceCategory).toBe('Dawn Elves');
+    expect(wrapper.vm.selectedRaceCategory).toBe('Dawn Elf');
 
     // Switch to Frost Urkai
     wrapper.vm.selectedRaceCategory = 'Frost Urkai';
@@ -157,14 +157,14 @@ describe('CharacterSheetsView - Custom Race', () => {
     expect(wrapper.vm.updateCharacter).toHaveBeenCalled();
   });
 
-  it('defaults selectedRaceCategory to Human when race is empty string', () => {
+  it('defaults selectedRaceCategory to Dawn Elf when race is empty string', () => {
     const wrapper = shallowMount(CharacterSheetsView);
     wrapper.vm.selectedChar = {
       id: 50,
       name: 'Hero',
       race: '',
     };
-    expect(wrapper.vm.selectedRaceCategory).toBe('Human');
+    expect(wrapper.vm.selectedRaceCategory).toBe('Dawn Elf');
   });
 
   it('sets race and calls updateCharacter when selectedRaceCategory changes on empty race', () => {

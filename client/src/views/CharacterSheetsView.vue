@@ -150,11 +150,11 @@
                   <label>Species:</label>
                   <select v-model="selectedRaceCategory" class="select-race">
                     <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
-                      <option value="Dawn Elves">Dawn Elves</option>
-                      <option value="Dusk Elves">Dusk Elves</option>
-                      <option value="Sylvan Elves">Sylvan Elves</option>
-                      <option value="Wilder Elves">Wilder Elves</option>
-                      <option value="Twilight Elves">Twilight Elves</option>
+                      <option value="Dawn Elf">Dawn Elf</option>
+                      <option value="Dusk Elf">Dusk Elf</option>
+                      <option value="Sylvan Elf">Sylvan Elf</option>
+                      <option value="Wilder Elf">Wilder Elf</option>
+                      <option value="Twilight Elf">Twilight Elf</option>
                       <option value="Wendhya">Wendhya</option>
                       <option value="Weirgoth Dwarves">Weirgoth Dwarves</option>
                       <option value="Vanir Dwarves">Vanir Dwarves</option>
@@ -169,16 +169,14 @@
                       <option value="Goblins">Goblins</option>
                     </optgroup>
                     <optgroup label="The Giants & Primordial Kin">
-                      <option value="True Giants">True Giants</option>
                       <option value="Giantken / Goliath">Giantken / Goliath</option>
                       <option value="Trollkin">Trollkin</option>
                       <option value="Ogre">Ogre</option>
                       <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur</option>
                     </optgroup>
                     <optgroup label="Hybrid & Foundation Folk">
-                      <option value="Whisperlings">Whisperlings</option>
-                      <option value="Mixlanders">Mixlanders</option>
-                      <option value="Human">Human</option>
+                      <option value="Whisperling">Whisperling</option>
+                      <option value="Mixlander">Mixlander</option>
                     </optgroup>
                   </select>
                 </div>
@@ -989,11 +987,11 @@
             <label>Species / Lineage</label>
             <select v-model="newCharForm.race" @change="onCreateRaceChange" class="char-create-select">
               <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
-                <option value="Dawn Elves">Dawn Elves (+5 INT, +5 HIST/REL, -5 STA)</option>
-                <option value="Dusk Elves">Dusk Elves (+5 INT, +5 DEX, -5 STA)</option>
-                <option value="Sylvan Elves">Sylvan Elves (+5 DEX, +5 RS, -5 STR)</option>
-                <option value="Wilder Elves">Wilder Elves (+5 DEX, +5 WIL, -5 HIST/REL)</option>
-                <option value="Twilight Elves">Twilight Elves (+5 DEX, +5 WIL, -5 STR)</option>
+                <option value="Dawn Elf">Dawn Elf (+5 INT, +5 HIST/REL, -5 STA)</option>
+                <option value="Dusk Elf">Dusk Elf (+5 INT, +5 DEX, -5 STA)</option>
+                <option value="Sylvan Elf">Sylvan Elf (+5 DEX, +5 RS, -5 STR)</option>
+                <option value="Wilder Elf">Wilder Elf (+5 DEX, +5 WIL, -5 HIST/REL)</option>
+                <option value="Twilight Elf">Twilight Elf (+5 DEX, +5 WIL, -5 STR)</option>
                 <option value="Wendhya">Wendhya (+5 WIL, +5 RS, -5 STR)</option>
                 <option value="Weirgoth Dwarves">Weirgoth Dwarves (+5 STA, +5 WIL, -5 DEX)</option>
                 <option value="Vanir Dwarves">Vanir Dwarves (+5 STR, +5 STA, -5 RS)</option>
@@ -1008,16 +1006,14 @@
                 <option value="Goblins">Goblins (+10 DEX, +5 RS, -10 STR, -5 STA)</option>
               </optgroup>
               <optgroup label="The Giants & Primordial Kin">
-                <option value="True Giants">True Giants (+20 STR, +20 STA)</option>
                 <option value="Giantken / Goliath">Giantken / Goliath (+10 STR, +10 STA, -10 DEX, -5 HIST/REL)</option>
                 <option value="Trollkin">Trollkin (+10 STR, +10 STA, -10 INT, -5 PRE)</option>
                 <option value="Ogre">Ogre (+15 STR, +15 STA, -15 INT, -10 DEX)</option>
                 <option value="Minotaur / Nord Minotaur">Minotaur / Nord Minotaur (+10 STR, +5 STA, -5 INT)</option>
               </optgroup>
               <optgroup label="Hybrid & Foundation Folk">
-                <option value="Whisperlings">Whisperlings (+5 DEX, +5 WIL, -5 STR)</option>
-                <option value="Mixlanders">Mixlanders (+5 DEX, +5 INT, -5 STA)</option>
-                <option value="Human">Human (+5 INT, +5 PRE)</option>
+                <option value="Whisperling">Whisperling (+5 DEX, +5 WIL, -5 STR)</option>
+                <option value="Mixlander">Mixlander (+5 DEX, +5 INT, -5 STA)</option>
               </optgroup>
             </select>
           </div>
@@ -1364,7 +1360,7 @@ export default {
       registeredUsers: [],
       newCharForm: {
         name: '',
-        race: 'Dawn Elves',
+        race: 'Dawn Elf',
         customRaceName: '',
         psa: 'Martial',
         color_theme: '',
@@ -1538,8 +1534,8 @@ export default {
     },
     selectedRaceCategory: {
       get() {
-        if (!this.selectedChar) return 'Dawn Elves';
-        if (!this.selectedChar.race || this.isCustomRace(this.selectedChar.race)) return 'Human';
+        if (!this.selectedChar) return 'Dawn Elf';
+        if (!this.selectedChar.race || this.isCustomRace(this.selectedChar.race)) return 'Dawn Elf';
         return this.selectedChar.race;
       },
       set(val) {
@@ -1820,7 +1816,7 @@ export default {
       } catch {
         defaultUserId = this.registeredUsers?.[0]?.id ?? null;
       }
-      const defaultLineage = 'Dawn Elves';
+      const defaultLineage = 'Dawn Elf';
       const base = getLineageBaselineStats(defaultLineage);
       this.newCharForm = {
         name: '',

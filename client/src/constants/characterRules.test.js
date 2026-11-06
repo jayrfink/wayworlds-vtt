@@ -54,11 +54,12 @@ describe('Skill XP Costs in characterRules.js', () => {
 
 describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
   it('includes all UlvWylde cartridge lineages and excludes legacy sci-fi species', () => {
+    expect(RACES_DATA['Dawn Elf']).toBeDefined();
+    expect(RACES_DATA['Dusk Elf']).toBeDefined();
+    expect(RACES_DATA['Sylvan Elf']).toBeDefined();
+    expect(RACES_DATA['Wilder Elf']).toBeDefined();
+    expect(RACES_DATA['Twilight Elf']).toBeDefined();
     expect(RACES_DATA['Dawn Elves']).toBeDefined();
-    expect(RACES_DATA['Dusk Elves']).toBeDefined();
-    expect(RACES_DATA['Sylvan Elves']).toBeDefined();
-    expect(RACES_DATA['Wilder Elves']).toBeDefined();
-    expect(RACES_DATA['Twilight Elves']).toBeDefined();
     expect(RACES_DATA['Wendhya']).toBeDefined();
     expect(RACES_DATA['Weirgoth Dwarves']).toBeDefined();
     expect(RACES_DATA['Vanir Dwarves']).toBeDefined();
@@ -69,14 +70,18 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(RACES_DATA['Orcish']).toBeDefined();
     expect(RACES_DATA['Hobgoblins']).toBeDefined();
     expect(RACES_DATA['Goblins']).toBeDefined();
-    expect(RACES_DATA['True Giants']).toBeDefined();
     expect(RACES_DATA['Giantken / Goliath']).toBeDefined();
     expect(RACES_DATA['Trollkin']).toBeDefined();
     expect(RACES_DATA['Ogre']).toBeDefined();
     expect(RACES_DATA['Minotaur / Nord Minotaur']).toBeDefined();
+    expect(RACES_DATA['Whisperling']).toBeDefined();
+    expect(RACES_DATA['Mixlander']).toBeDefined();
     expect(RACES_DATA['Whisperlings']).toBeDefined();
     expect(RACES_DATA['Mixlanders']).toBeDefined();
-    expect(RACES_DATA['Human']).toBeDefined();
+
+    // Human and True Giants deleted from setting
+    expect(RACES_DATA['Human']).toBeUndefined();
+    expect(RACES_DATA['True Giants']).toBeUndefined();
 
     // Legacy Star Frontiers species must be removed
     expect(RACES_DATA['Dralasite']).toBeUndefined();
