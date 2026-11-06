@@ -307,7 +307,7 @@ Whenever a PC has `Lvl 1+` in any Magic, Power, or Ki Tradition, their movable C
   * `category`: `"strike"`, `"blast"`, `"ward_heal"`, or `"hex_summon"`
   * `range_area`: Range/radius in feet (e.g., `"60 ft / Single Target"` or `"10 ft Burst"`)
   * `description`: Player's custom flavor text and secondary condition notes
-* **One-Click VTT Execution:** Clicking **[Cast / Channel]** on a Grimoire row automatically deducts `Cast Tier * 2` from the character's `ess_current` (or `hp_current` for Blood Magic), rolls `d100` against their Tradition Target `%`, and rolls the corresponding `Nd10` effect into the VTT combat log.
+* **One-Click VTT Execution:** Clicking **[Cast / Channel]** on a Grimoire row automatically deducts `Cast Tier * 2` from the character's `ess_current` (or `hp_current` for Blood Magic), rolls `d100` against their Tradition Target `%` (Ward / Heal spells always succeed with Target `%` set to `99%`), and rolls the corresponding `Nd10` effect into the VTT combat log.
 
 ---
 

@@ -2619,6 +2619,9 @@ export default {
       return cfg.fuel === 'sta' ? 'STA' : 'ESS';
     },
     getSpellTargetPct(spell) {
+      if (spell?.category === 'ward_heal') {
+        return 99;
+      }
       return calcTraditionTargetPct(this.selectedChar, spell?.tradition || 'Arcane');
     },
     getSpellMagnitudeSummary(spell) {
@@ -2652,10 +2655,11 @@ export default {
       }
 
       const targetPct = this.getSpellTargetPct(spell);
+      const isWardHeal = spell?.category === 'ward_heal';
       const d100Roll = Math.floor(Math.random() * 100) + 1;
       const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
-      const isFumble = d100Roll >= 96;
-      const success = !isFumble && d100Roll <= targetPct;
+      const isFumble = isWardHeal ? false : (d100Roll >= 96);
+      const success = isWardHeal ? true : (!isFumble && d100Roll <= targetPct);
       const outcomeLabel = isCrit ? 'CRITICAL SUCCESS' : (isFumble ? 'FUMBLE' : (success ? 'SUCCESS' : 'FAILURE'));
 
       const mag = getMagnitudeEntry(castTier, spell.category || 'strike');

@@ -1927,6 +1927,15 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(CharacterSheetsView.methods.getSpellMagnitudeSummary.call(vm, added)).toContain('4d10');
       expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
 
+      // Verify ward_heal spells always succeed with target 99%
+      const wardSpell = {
+        name: 'Aegis of Light',
+        tradition: 'Arcane',
+        default_tier: 1,
+        category: 'ward_heal',
+      };
+      expect(CharacterSheetsView.methods.getSpellTargetPct.call(vm, wardSpell)).toBe(99);
+
       vm.removeGrimoireEntry(0);
       expect(vm.selectedChar.grimoire.length).toBe(0);
       expect(vm.updateCharacter).toHaveBeenCalledTimes(2);
@@ -1994,7 +2003,20 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         expect(res2.diceFormula).toBe('2d10');
         expect(vm.selectedChar.current_stamina).toBe(26); // 30 - 4
 
-        // 3. Reject when ESS is insufficient
+        // 3. Cast Tier 1 Ward/Heal spell (target 99%, always succeeds)
+        const wardSpell = {
+          spell_id: 'sp_wrd',
+          name: 'Vital Mending',
+          tradition: 'Arcane',
+          default_tier: 1,
+          category: 'ward_heal',
+        };
+        const resWard = await vm.castGrimoireSpell(wardSpell);
+        expect(resWard).not.toBeNull();
+        expect(resWard.targetPct).toBe(99);
+        expect(resWard.success).toBe(true);
+
+        // 4. Reject when ESS is insufficient
         vm.selectedChar.current_ess = 2;
         const resFail = await vm.castGrimoireSpell(arcaneSpell);
         expect(resFail).toBeNull();
