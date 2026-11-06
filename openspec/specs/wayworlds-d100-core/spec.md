@@ -253,7 +253,7 @@ These 10 core secular skills exist across all Wayworlds fantasy settings and all
 2. **Ranged Weapons** (`Base: 1/2 DEX`): Bows, crossbows, javelins, slings, thrown weapons (ranges measured in **feet**, e.g., Short `30 ft`, Medium `60 ft`, Long `120 ft`).
    * **Lvl 4 (Tier 4):** Unlocks **2 attacks per Attack action** at full accuracy.
    * **Lvl 6 (Tier 6):** Unlocks **3 attacks per Attack action** at full accuracy.
-3. **Armor & Shield Mastery** (`Base: 1/2 STR`): Negates heavy armor speed penalties and powers **Shield Deflection** (decreases an attacker's hit percentage on a sliding scale: `-10%` base shield penalty plus `-5%` per *Armor & Shield Mastery* Skill Level, plus any magic shield tier bonus).
+3. **Defense & Shield** (`Base: 1/2 STR or STA`): Active defensive positioning and shield maneuvers. When a player chooses to take a Defense action or Shield action, they roll against this skill—if they succeed on the roll, they effectively reduce an inbound attack % by 10%. Equipping a shield also provides base and magical deflection penalties to incoming attackers.
 4. **Striker & Grappler** (`Base: 1/2 STR or DEX`): Unarmed martial arts, pugilism, precision striking (`1d10` base unarmed damage at `Lvl 1+`), joint locks, pinning (`Pinned` condition), and throws/knockdowns (`Prone` condition).
    * **Lvl 4 (Tier 4):** Unlocks **2 unarmed/grapple attacks per Attack action** at full accuracy.
    * **Lvl 6 (Tier 6):** Unlocks **3 unarmed/grapple attacks per Attack action** at full accuracy.
@@ -336,8 +336,8 @@ To keep combat fast, Armor provides **Damage Reduction (DR)** or **Damage Halvin
 * **Halves any non-magical damage:** **Chain Mail** (`35 lbs`), **Breastplate** (`20 lbs`), **Scale Mail** (`30 lbs`), **Banded Mail** (`35 lbs`).
 * **Halves any damage and -10% to attackers roll of any non-magical attack:** **Mythril Armor** (`25 lbs`), **Full Plate Armor / Full Plate** (`50 lbs`).
 * **Shields (`6 lbs` — Torpedo-Style Attacker % Penalty):** Equipping a shield directly reduces incoming melee and ranged attackers' target hit percentage:
-  * **Formula:** `Attacker Hit % Penalty = -10% (Base Shield) - (5% * Armor & Shield Mastery Skill Lvl) - (Magic Shield Tier Bonus %)`
-  * *Example:* A warrior with a Tier 1 Magic Shield (`-5%`) and *Armor & Shield Mastery Lvl 2* (`-10%`) imposes a **`-25%` hit penalty** on all incoming attacks.
+  * **Formula:** `Attacker Hit % Penalty = -10% (Base Shield) - (Defense & Shield Success: -10%) - (Magic Shield Tier Bonus %)`
+  * *Example:* A warrior with a Tier 1 Magic Shield (`-5%`) and a successful *Defense & Shield* roll (`-10%`) imposes a **`-25%` hit penalty** on all incoming attacks.
 * **Active Wards:** Absorbs a flat pool of damage or halves Elemental/Magic damage for the scene.
 
 ---
@@ -384,7 +384,7 @@ Whether used by the GM on the fly or by a player rolling a **Tradecraft** check,
 2. **Custom & Magic Armor (Armor Rating / DR Increases):**
    * Defines custom armor weight (`lbs`), base DR (`-2` to `-4` per die), damage-halving categories (Slashing, Piercing, Bludgeoning, or Elemental), or a regenerating `Temp Ward` pool (`10–30 STA`).
 3. **Custom & Magic Shields (Attacker Hit `%` Reduction):**
-   * Sets the shield's base deflection (`-5%`) plus any masterwork/magical tier penalty (`-5%` to `-20%`) that stacks with the bearer's *Armor & Shield Mastery* skill to reduce incoming attackers' hit percentages.
+   * Sets the shield's base deflection (`-5%`) plus any masterwork/magical tier penalty (`-5%` to `-20%`) that stacks with the bearer's *Defense & Shield* skill to reduce incoming attackers' hit percentages.
 4. **Spell/Power Relics & Essence Foci:**
    * Stores external `ESS` (`10–30 ESS`) or triggers a bound `Tier 1–5` effect from the Universal Magnitude Table directly from the Token HUD `actions[]` list.
 
@@ -399,7 +399,7 @@ Whether used by the GM on the fly or by a player rolling a **Tradecraft** check,
 * `weight_lbs`: Weight in pounds (`6`)
 * `attack_pct_bonus`: Flat percentage added to attack rolls (`+10%`)
 * `damage_dice`: Total or bonus `Nd10` damage dice (`"3d10 Slashing + 1d10 Cold"` — never flat `+` numbers)
-* `attacker_pct_penalty`: For shields, percentage subtracted from incoming attack rolls (`-10%` base + magic shield penalty, stacking with `-5%` per *Armor & Shield Mastery* level)
+* `attacker_pct_penalty`: For shields, percentage subtracted from incoming attack rolls (`-10%` base + magic shield penalty, stacking with `-10%` on successful *Defense & Shield* roll)
 * `armor_dr_bonus`: Damage Reduction or damage-halving rule
 * `bound_power`: Optional Tier `1–5` effect from the Universal Magnitude Table
 

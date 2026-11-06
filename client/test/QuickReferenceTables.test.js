@@ -165,7 +165,7 @@ describe('QuickReferenceTables.vue', () => {
       // Areas and Skills
       expect(html).toContain('Martial');
       expect(html).toContain('Melee Weapons');
-      expect(html).toContain('Armor &amp; Shield Mastery');
+      expect(html).toContain('Defense &amp; Shield');
       expect(html).toContain('Shadow');
       expect(html).toContain('Ki');
 
@@ -195,7 +195,7 @@ describe('QuickReferenceTables.vue', () => {
       });
 
       expect(html).toContain('Necromancy');
-      expect(html).not.toContain('Armor &amp; Shield Mastery');
+      expect(html).not.toContain('Defense &amp; Shield');
     });
   });
 

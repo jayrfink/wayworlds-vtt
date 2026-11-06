@@ -342,7 +342,7 @@ export const OFFICIAL_SKILLS = [
   { name: 'Melee Weapons', psa: 'Martial', baseChance: 'Melee Base (STR or DEX / 2)' },
   { name: 'Ranged Weapons', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Striker & Grappler', psa: 'Martial', baseChance: 'Melee Base (STR or DEX / 2)' },
-  { name: 'Armor & Shield Mastery', psa: 'Martial', baseChance: 'Stamina' },
+  { name: 'Defense & Shield', psa: 'Martial', baseChance: 'Stamina' },
   { name: 'Athletics & Acrobatics', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Stealth & Secrecy', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Wilderness & Survival', psa: 'Theurgy', baseChance: 'History & Religion' },
