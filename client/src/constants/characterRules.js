@@ -76,7 +76,7 @@ export const RACES_DATA = {
     abilities: 'Spirit-Kin & Warg Bloodline: Eligible for the Warg skill; can sense nearby spirits, undead, or demonic taint within 30 ft automatically.',
     modSummary: '+5 WIL (55), +5 RS (55), -5 STR (45)',
   },
-  'Weirgoth Dwarves': {
+  'Weirgoth Dwarf': {
     category: 'The Norn',
     modifiers: { str: 0, sta: 5, dex: -5, rs: 0, int: 0, log: 0, per: 5, ldr: 0 },
     movement: { walk: 25, run: 50, glide: 0 },
@@ -87,7 +87,7 @@ export const RACES_DATA = {
     abilities: 'Stone-Blood & Warg Bloodline: Eligible for the Warg skill (cavern/stone beasts); -2 damage per die from Poison and Slashing (25 ft base move).',
     modSummary: '+5 STA (55), +5 WIL (55), -5 DEX (45)',
   },
-  'Vanir Dwarves': {
+  'Vanir Dwarf': {
     category: 'The Norn',
     modifiers: { str: 5, sta: 5, dex: 0, rs: -5, int: 0, log: 0, per: 0, ldr: 0 },
     movement: { walk: 25, run: 50, glide: 0 },
@@ -98,6 +98,8 @@ export const RACES_DATA = {
     abilities: 'Runeforged Resilience: +10% resistance to hostile magic; ignores movement speed penalties of heavy armor (25 ft base move); can forge Runic magic items at Tradecraft Lvl 5+ without a co-caster.',
     modSummary: '+5 STR (55), +5 STA (55), -5 RS (45)',
   },
+  get 'Weirgoth Dwarves'() { return this['Weirgoth Dwarf']; },
+  get 'Vanir Dwarves'() { return this['Vanir Dwarf']; },
   'Frost Urkai': {
     category: 'The Urkai',
     modifiers: { str: 5, sta: 5, dex: 0, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
@@ -153,7 +155,7 @@ export const RACES_DATA = {
     abilities: 'Blood Fury: When Stamina drops below 50% of Max STA, gains +10% to all Melee Attacks and +1d10 melee damage (30 ft base move).',
     modSummary: '+5 STR (55), +5 STA (55), -5 INT (45)',
   },
-  'Hobgoblins': {
+  'Hobgoblin': {
     category: 'The Urkai',
     modifiers: { str: 5, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: -5, ldr: 5 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -164,7 +166,7 @@ export const RACES_DATA = {
     abilities: 'Phalanx Discipline: Gains +5% to hit and -2 damage per die when within 5 ft (adjacent) of at least one allied token on the VTT grid (30 ft base move).',
     modSummary: '+5 STR (55), +5 PRE (55), -5 WIL (45)',
   },
-  'Goblins': {
+  'Goblin': {
     category: 'The Urkai',
     modifiers: { str: -10, sta: -5, dex: 10, rs: 5, int: 0, log: 0, per: 0, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -175,6 +177,8 @@ export const RACES_DATA = {
     abilities: 'Scurry & Skulk: Small size (3–4 ft tall, 40 lbs); +10% to Stealth & Secrecy; can move through enemy 5 ft spaces and disengage without triggering free strikes (30 ft base move).',
     modSummary: '+10 DEX (60), +5 RS (55), -10 STR (40), -5 STA (45)',
   },
+  get 'Hobgoblins'() { return this['Hobgoblin']; },
+  get 'Goblins'() { return this['Goblin']; },
   'Giantken / Goliath': {
     category: 'The Giants',
     modifiers: { str: 10, sta: 10, dex: -10, rs: 0, int: 0, log: -5, per: 0, ldr: 0 },
@@ -256,8 +260,8 @@ export const CARTRIDGE_LINEAGE_GROUPS = [
       'Wilder Elf',
       'Twilight Elf',
       'Wendhya',
-      'Weirgoth Dwarves',
-      'Vanir Dwarves',
+      'Weirgoth Dwarf',
+      'Vanir Dwarf',
     ],
   },
   {
@@ -268,8 +272,8 @@ export const CARTRIDGE_LINEAGE_GROUPS = [
       'Forest Urkai',
       'Stone Urkai',
       'Orcish',
-      'Hobgoblins',
-      'Goblins',
+      'Hobgoblin',
+      'Goblin',
     ],
   },
   {

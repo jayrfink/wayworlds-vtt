@@ -61,6 +61,8 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(RACES_DATA['Twilight Elf']).toBeDefined();
     expect(RACES_DATA['Dawn Elves']).toBeDefined();
     expect(RACES_DATA['Wendhya']).toBeDefined();
+    expect(RACES_DATA['Weirgoth Dwarf']).toBeDefined();
+    expect(RACES_DATA['Vanir Dwarf']).toBeDefined();
     expect(RACES_DATA['Weirgoth Dwarves']).toBeDefined();
     expect(RACES_DATA['Vanir Dwarves']).toBeDefined();
     expect(RACES_DATA['Frost Urkai']).toBeDefined();
@@ -68,6 +70,8 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(RACES_DATA['Forest Urkai']).toBeDefined();
     expect(RACES_DATA['Stone Urkai']).toBeDefined();
     expect(RACES_DATA['Orcish']).toBeDefined();
+    expect(RACES_DATA['Hobgoblin']).toBeDefined();
+    expect(RACES_DATA['Goblin']).toBeDefined();
     expect(RACES_DATA['Hobgoblins']).toBeDefined();
     expect(RACES_DATA['Goblins']).toBeDefined();
     expect(RACES_DATA['Giantken / Goliath']).toBeDefined();

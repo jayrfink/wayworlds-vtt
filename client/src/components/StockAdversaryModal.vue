@@ -227,8 +227,8 @@
                     <option value="Forest Urkai">Forest Urkai</option>
                     <option value="Stone Urkai">Stone Urkai</option>
                     <option value="Orcish">Orcish</option>
-                    <option value="Hobgoblins">Hobgoblins</option>
-                    <option value="Goblins">Goblins</option>
+                    <option value="Hobgoblin">Hobgoblin</option>
+                    <option value="Goblin">Goblin</option>
                   </optgroup>
                   <optgroup label="Elven Lineages">
                     <option value="Dawn Elf">Dawn Elf</option>
@@ -239,8 +239,8 @@
                     <option value="Wendhya">Wendhya</option>
                   </optgroup>
                   <optgroup label="Dwarven Lineages">
-                    <option value="Weirgoth Dwarves">Weirgoth Dwarves</option>
-                    <option value="Vanir Dwarves">Vanir Dwarves</option>
+                    <option value="Weirgoth Dwarf">Weirgoth Dwarf</option>
+                    <option value="Vanir Dwarf">Vanir Dwarf</option>
                   </optgroup>
                   <optgroup label="Giant-Kin & Monstrous">
                     <option value="Giantken / Goliath">Giantken / Goliath</option>

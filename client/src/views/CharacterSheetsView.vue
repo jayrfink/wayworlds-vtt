@@ -156,8 +156,8 @@
                       <option value="Wilder Elf">Wilder Elf</option>
                       <option value="Twilight Elf">Twilight Elf</option>
                       <option value="Wendhya">Wendhya</option>
-                      <option value="Weirgoth Dwarves">Weirgoth Dwarves</option>
-                      <option value="Vanir Dwarves">Vanir Dwarves</option>
+                      <option value="Weirgoth Dwarf">Weirgoth Dwarf</option>
+                      <option value="Vanir Dwarf">Vanir Dwarf</option>
                     </optgroup>
                     <optgroup label="The Urkai & Goblinoid Clans">
                       <option value="Frost Urkai">Frost Urkai</option>
@@ -165,8 +165,8 @@
                       <option value="Forest Urkai">Forest Urkai</option>
                       <option value="Stone Urkai">Stone Urkai</option>
                       <option value="Orcish">Orcish</option>
-                      <option value="Hobgoblins">Hobgoblins</option>
-                      <option value="Goblins">Goblins</option>
+                      <option value="Hobgoblin">Hobgoblin</option>
+                      <option value="Goblin">Goblin</option>
                     </optgroup>
                     <optgroup label="The Giants & Primordial Kin">
                       <option value="Giantken / Goliath">Giantken / Goliath</option>
@@ -993,8 +993,8 @@
                 <option value="Wilder Elf">Wilder Elf (+5 DEX, +5 WIL, -5 HIST/REL)</option>
                 <option value="Twilight Elf">Twilight Elf (+5 DEX, +5 WIL, -5 STR)</option>
                 <option value="Wendhya">Wendhya (+5 WIL, +5 RS, -5 STR)</option>
-                <option value="Weirgoth Dwarves">Weirgoth Dwarves (+5 STA, +5 WIL, -5 DEX)</option>
-                <option value="Vanir Dwarves">Vanir Dwarves (+5 STR, +5 STA, -5 RS)</option>
+                <option value="Weirgoth Dwarf">Weirgoth Dwarf (+5 STA, +5 WIL, -5 DEX)</option>
+                <option value="Vanir Dwarf">Vanir Dwarf (+5 STR, +5 STA, -5 RS)</option>
               </optgroup>
               <optgroup label="The Urkai & Goblinoid Clans">
                 <option value="Frost Urkai">Frost Urkai (+5 STR, +5 STA, -5 HIST/REL)</option>
@@ -1002,8 +1002,8 @@
                 <option value="Forest Urkai">Forest Urkai (+5 STR, +5 DEX, -5 HIST/REL)</option>
                 <option value="Stone Urkai">Stone Urkai (+5 STR, +10 STA, -5 DEX, -5 HIST/REL)</option>
                 <option value="Orcish">Orcish (+5 STR, +5 STA, -5 INT)</option>
-                <option value="Hobgoblins">Hobgoblins (+5 STR, +5 PRE, -5 WIL)</option>
-                <option value="Goblins">Goblins (+10 DEX, +5 RS, -10 STR, -5 STA)</option>
+                <option value="Hobgoblin">Hobgoblin (+5 STR, +5 PRE, -5 WIL)</option>
+                <option value="Goblin">Goblin (+10 DEX, +5 RS, -10 STR, -5 STA)</option>
               </optgroup>
               <optgroup label="The Giants & Primordial Kin">
                 <option value="Giantken / Goliath">Giantken / Goliath (+10 STR, +10 STA, -10 DEX, -5 HIST/REL)</option>
