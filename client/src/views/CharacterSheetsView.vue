@@ -640,7 +640,7 @@
               <h4>Inventory & Mass</h4>
               <div class="list-header-actions">
                 <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Add Equipment</button>
-                <button class="btn-secondary btn-open-forge" @click="openForgeApplet">⚒️ Item Forge</button>
+                <button class="btn-secondary btn-open-forge" @click="openForgeApplet">+ Item Forge</button>
                 <button class="btn-secondary btn-add-custom-item" @click="addInventoryItem">+ Custom Item</button>
               </div>
             </div>
@@ -4341,23 +4341,10 @@ export default {
   transform: translateY(1px);
 }
 
-.btn-open-forge {
-  background: rgba(200, 200, 200, 0.1) !important;
-  background-color: rgba(200, 200, 200, 0.1) !important;
-  border: 1px solid rgba(200, 200, 200, 0.3) !important;
-  box-shadow: none !important;
-}
-
-.btn-open-forge:hover:not(:disabled) {
-  background: rgba(200, 200, 200, 0.18) !important;
-  background-color: rgba(200, 200, 200, 0.18) !important;
-  border-color: rgba(200, 200, 200, 0.45) !important;
-  box-shadow: none !important;
-}
-
 /* Add buttons share the Species Traits & Abilities badge styling */
 .btn-add-skill,
 .btn-add-equipment,
+.btn-open-forge,
 .btn-add-custom-item,
 .btn-add-spell,
 .btn-add-note-panel {
@@ -4372,6 +4359,7 @@ export default {
 
 .btn-add-skill:hover:not(:disabled),
 .btn-add-equipment:hover:not(:disabled),
+.btn-open-forge:hover:not(:disabled),
 .btn-add-custom-item:hover:not(:disabled),
 .btn-add-spell:hover:not(:disabled),
 .btn-add-note-panel:hover:not(:disabled) {
