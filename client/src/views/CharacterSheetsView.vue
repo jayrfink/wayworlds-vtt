@@ -4150,8 +4150,13 @@ export default {
 /* Lists */
 .two-column-lists {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 16px;
+}
+
+.two-column-lists .list-card {
+  min-width: 0;
+  max-width: 100%;
 }
 
 .list-header {
@@ -4351,7 +4356,7 @@ export default {
   color: #f85149;
 }
 
-/* Inventory Row & Text Badge (1-Row Seamless Design) */
+/* Inventory Row & Text Badge (Seamless Design with Attribute Line Wrapping) */
 .inventory-row {
   min-height: 28px;
   padding: 3px 6px;
@@ -4364,32 +4369,32 @@ export default {
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px;
+  column-gap: 6px;
+  row-gap: 2px;
   background: transparent;
   border: none;
   padding: 2px 2px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   cursor: default;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .inventory-item-name {
   font-weight: 600;
   font-size: 0.85rem;
   color: #cecece;
-  white-space: nowrap;
   flex-shrink: 0;
 }
 
 .inventory-item-traits {
   font-size: 0.78rem;
   color: #8b949e;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  flex: 1;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  flex: 1 1 auto;
   min-width: 0;
 }
 

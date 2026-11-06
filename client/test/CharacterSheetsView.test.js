@@ -1923,6 +1923,27 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       const tooltip = CharacterSheetsView.methods.getInventoryItemTooltip.call(vm, added);
       expect(tooltip).toBe('Elven Cloak (1.5 lbs) — +10% Stealth in foliage');
     });
+
+    it('allows inventory attributes to wrap lines and constrains list cards within grid columns', () => {
+      const fs = require('fs');
+      const path = require('path');
+      const vueFile = fs.readFileSync(path.resolve(__dirname, '../src/views/CharacterSheetsView.vue'), 'utf-8');
+
+      // Grid columns must use minmax(0, 1fr) to prevent content blowout past other cards
+      expect(vueFile).toMatch(/\.two-column-lists\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s*minmax\(0,\s*1fr\)/);
+      // List card must have min-width: 0
+      expect(vueFile).toMatch(/\.two-column-lists\s+\.list-card\s*\{[^}]*min-width:\s*0/);
+      // Traits must allow line wrapping
+      expect(vueFile).toMatch(/\.inventory-item-traits\s*\{[^}]*white-space:\s*normal/);
+      expect(vueFile).toMatch(/\.inventory-item-traits\s*\{[^}]*word-break:\s*break-word/);
+
+      // Verify Artisan Tool Kit description is shortened in cartridge equipment
+      const cartEquip = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../cartridges/ulvwylde/equipment.json'), 'utf-8'));
+      const artisanItem = cartEquip.find(i => i.name.includes('Artisan Tool Kit'));
+      expect(artisanItem).toBeDefined();
+      expect(artisanItem.properties).toBe('Tradecraft repairs etc');
+      expect(artisanItem.capabilities).toBe('Tradecraft repairs etc');
+    });
   });
 
   describe('Grimoire & Techniques Tab', () => {

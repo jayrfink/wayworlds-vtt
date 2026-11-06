@@ -25,5 +25,5 @@
   { "name": "Shield", "category": "Shield", "weight_lbs": 6, "attacker_pct_penalty": -10, "properties": "Shield Deflection (-10% to incoming attacks, stacks with Mastery)" },
   { "name": "Herbalism Kit", "category": "Kit", "weight_lbs": 3, "properties": "Used with Herbalism & Medicine to heal 2d10 STA during short rests" },
   { "name": "Medic Kit", "category": "Kit", "weight_lbs": 2, "properties": "Combat field kit to stop bleeding and bind wounds for 1d10 + Skill STA" },
-  { "name": "Artisan Tool Kit", "category": "Kit", "weight_lbs": 5, "properties": "Required for Tradecraft field repairs and equipment forging" }
+  { "name": "Artisan Tool Kit", "category": "Kit", "weight_lbs": 5, "properties": "Tradecraft repairs etc" }
 ]
