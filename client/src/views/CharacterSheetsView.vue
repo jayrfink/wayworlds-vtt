@@ -4342,16 +4342,17 @@ export default {
 }
 
 .btn-open-forge {
-  background-color: #1d1d1d !important;
-  background: #1d1d1d !important;
-  border-color: #383838 !important;
+  background: rgba(200, 200, 200, 0.1) !important;
+  background-color: rgba(200, 200, 200, 0.1) !important;
+  border: 1px solid rgba(200, 200, 200, 0.3) !important;
+  box-shadow: none !important;
 }
 
 .btn-open-forge:hover:not(:disabled) {
-  background-color: #2d2d2d !important;
-  background: #2d2d2d !important;
-  border-color: #505050 !important;
-  box-shadow: 0 0 6px rgba(192, 192, 192, 0.25) !important;
+  background: rgba(200, 200, 200, 0.18) !important;
+  background-color: rgba(200, 200, 200, 0.18) !important;
+  border-color: rgba(200, 200, 200, 0.45) !important;
+  box-shadow: none !important;
 }
 
 /* Add buttons share the Species Traits & Abilities badge styling */
