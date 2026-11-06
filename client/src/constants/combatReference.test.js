@@ -195,18 +195,18 @@ describe('combatReference', () => {
       expect(martial.secularSkills.length).toBe(6);
       expect(martial.traditions.length).toBe(2);
 
-      // 2 secular + 2 traditions in Mystic = 4
+      // 2 secular + 3 traditions in Mystic = 5
       const mystic = PSA_RULES_REF.areas.find((a) => a.name === 'Mystic');
       expect(mystic.secularSkills.length).toBe(2);
-      expect(mystic.traditions.length).toBe(2);
+      expect(mystic.traditions.length).toBe(3);
 
       // 3 secular + 6 traditions in Theurgy = 9
       const theurgy = PSA_RULES_REF.areas.find((a) => a.name === 'Theurgy');
       expect(theurgy.secularSkills.length).toBe(3);
       expect(theurgy.traditions.length).toBe(6);
 
-      // Total skills in summary matrix: 21 (11 secular + 10 traditions)
-      expect(PSA_RULES_REF.summaryTable.length).toBe(21);
+      // Total skills in summary matrix: 22 (11 secular + 11 traditions)
+      expect(PSA_RULES_REF.summaryTable.length).toBe(22);
     });
 
     it('validates universal XP cost point-buy rules (3x in-PSA vs 6x out-of-PSA)', () => {

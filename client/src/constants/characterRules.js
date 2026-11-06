@@ -357,6 +357,7 @@ export const OFFICIAL_SKILLS = [
   { name: 'Shadow', psa: 'Martial', baseChance: 'Agility' },
   { name: 'Demonology', psa: 'Theurgy', baseChance: 'Willpower' },
   { name: 'Necromancy', psa: 'Mystic', baseChance: 'Intellect' },
+  { name: 'Eldritch', psa: 'Mystic', baseChance: 'History & Religion' },
   { name: 'Druidic', psa: 'Theurgy', baseChance: 'Willpower' },
   { name: 'Spiritual', psa: 'Theurgy', baseChance: 'History & Religion' },
   { name: 'Ki', psa: 'Martial', baseChance: 'Willpower' },
@@ -370,6 +371,7 @@ export const MAGIC_TRADITIONS = [
   { name: 'Shadow', baseStat: 'int_or_dex', baseStatLabel: 'INT or DEX', fuel: 'ess', description: 'Shadow-stepping, darkness generation, illusions, and umbral strikes.' },
   { name: 'Demonology', baseStat: 'per_or_ldr', baseStatLabel: 'WIL or PRE', fuel: 'ess', description: 'Infernal pacts and hellfire; can sacrifice 2 STA per 1 ESS to upcast.' },
   { name: 'Necromancy', baseStat: 'int_or_log', baseStatLabel: 'INT or HIST/REL', fuel: 'ess', description: 'Soul-draining, bone armor, raising undead thralls, and necrotic decay.' },
+  { name: 'Eldritch', baseStat: 'log', baseStatLabel: 'HIST/REL', fuel: 'ess', description: 'Void sorcery, aberrant reality warping, tentacles, otherworldly madness, and cosmic horror.' },
   { name: 'Druidic', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'ess', description: 'Primal weather, entangling roots, stone-shaping, and natural regeneration.' },
   { name: 'Spiritual', baseStat: 'log_or_per', baseStatLabel: 'HIST/REL or WIL', fuel: 'ess', description: 'Ancestral/divine invocation, spirit-warding, radiant smiting, and soul-mending.' },
   { name: 'Ki', baseStat: 'sta_or_per', baseStatLabel: 'STA or WIL', fuel: 'ess', description: 'Internal martial energy enhancing unarmed/melee strikes, iron-body deflection, and speed.' },
@@ -513,6 +515,8 @@ export function calcTraditionBaseStatValue(char, traditionName) {
   switch (cfg.baseStat) {
     case 'int':
       return int;
+    case 'log':
+      return log;
     case 'per':
       return wil;
     case 'int_or_dex':

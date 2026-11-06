@@ -686,6 +686,15 @@ export const PSA_RULES_REF = {
           description: 'Mastery over death, souls, and decay: soul-draining, crafting bone armor, summoning skeletal/undead thralls, and inflicting debilitating wasting curses.',
           keyUse: 'Raising undead thralls, soul drain, bone wards, necrosis',
         },
+        {
+          name: 'Eldritch',
+          type: 'Tradition',
+          baseChance: 'ceil(HIST/REL / 2)',
+          baseStat: 'HIST/REL',
+          fuel: 'Essence (ESS)',
+          description: 'Void sorcery, aberrant reality warping, tentacles, otherworldly madness, and cosmic horror channeled through ancient planar lore and esoteric rites.',
+          keyUse: 'Aberrant tentacles, mind fractures, void rifts, cosmic dread',
+        },
       ],
     },
     {
@@ -792,6 +801,7 @@ export const PSA_RULES_REF = {
     { name: 'Tradecraft', psa: 'Mystic', category: 'Secular Skill', baseStat: 'INT', baseChance: 'ceil(INT / 2)', fuel: '—', keyUse: 'Artisan crafting, lock-picking, trap disarming, repair' },
     { name: 'Arcane', psa: 'Mystic', category: 'Tradition', baseStat: 'INT', baseChance: 'ceil(INT / 2)', fuel: 'Essence (ESS)', keyUse: 'Elemental blasts, telekinesis, force shields' },
     { name: 'Necromancy', psa: 'Mystic', category: 'Tradition', baseStat: 'INT or HIST/REL', baseChance: 'ceil(INT or HIST/REL / 2)', fuel: 'Essence (ESS)', keyUse: 'Raising undead, soul drain, bone wards' },
+    { name: 'Eldritch', psa: 'Mystic', category: 'Tradition', baseStat: 'HIST/REL', baseChance: 'ceil(HIST/REL / 2)', fuel: 'Essence (ESS)', keyUse: 'Void rifts, cosmic dread, aberrant tentacles, madness' },
     { name: 'Wilderness & Survival', psa: 'Theurgy', category: 'Secular Skill', baseStat: 'HIST/REL', baseChance: 'ceil(HIST/REL / 2)', fuel: '—', keyUse: 'Tracking, foraging, outdoor navigation, beast handling' },
     { name: 'Influence & Deception', psa: 'Theurgy', category: 'Secular Skill', baseStat: 'PRE', baseChance: 'ceil(PRE / 2)', fuel: '—', keyUse: 'Persuasion, deceit, diplomatic negotiation, intimidation' },
     { name: 'Herbalism & Medicine', psa: 'Theurgy', category: 'Secular Skill', baseStat: 'INT', baseChance: 'ceil(INT / 2)', fuel: '—', keyUse: 'First aid, wound treatment, antidote brewing' },

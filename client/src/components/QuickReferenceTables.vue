@@ -568,7 +568,7 @@
         <section v-if="filteredPsaSummary.length > 0" class="ref-section">
           <h2 class="section-title">
             <span class="title-badge">Matrix</span>
-            Complete Skills &amp; Traditions Reference (21 Total)
+            Complete Skills &amp; Traditions Reference (22 Total)
           </h2>
           <div class="rules-note-banner">
             <span class="note-icon">💡</span>

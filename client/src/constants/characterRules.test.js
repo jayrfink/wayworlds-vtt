@@ -196,13 +196,16 @@ describe('Wayworlds Character Tier, Universal Magnitude, & Tradecraft Forge Rule
 
     const mage = {
       int: 60,
+      log: 70,
       per: 50,
-      skills: [{ name: 'Arcane', level: 3 }, { name: 'Blood', level: 2 }],
+      skills: [{ name: 'Arcane', level: 3 }, { name: 'Blood', level: 2 }, { name: 'Eldritch', level: 2 }],
     };
     // 60 / 2 = 30 + (3 * 10) = 60%
     expect(calcTraditionTargetPct(mage, 'Arcane')).toBe(60);
     // 50 / 2 = 25 + (2 * 10) = 45%
     expect(calcTraditionTargetPct(mage, 'Blood')).toBe(45);
+    // Eldritch uses HIST/REL (log): 70 / 2 = 35 + (2 * 10) = 55%
+    expect(calcTraditionTargetPct(mage, 'Eldritch')).toBe(55);
   });
 
   it('caps Custom Equipment & Magic Item Forge tier by Lvl 1-6 Tradecraft rank', () => {

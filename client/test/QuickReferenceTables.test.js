@@ -174,6 +174,7 @@ describe('QuickReferenceTables.vue', () => {
       expect(html).toContain('Tradecraft');
       expect(html).toContain('Arcane');
       expect(html).toContain('Necromancy');
+      expect(html).toContain('Eldritch');
 
       expect(html).toContain('Theurgy');
       expect(html).toContain('Wilderness &amp; Survival');
@@ -183,7 +184,7 @@ describe('QuickReferenceTables.vue', () => {
       expect(html).toContain('Druidic');
 
       // Summary Table
-      expect(html).toContain('Complete Skills &amp; Traditions Reference (21 Total)');
+      expect(html).toContain('Complete Skills &amp; Traditions Reference (22 Total)');
       expect(html).toContain('Multi-Magic Fuel Rule:');
       expect(html).toContain('highest governing attribute to fuel their');
     });
