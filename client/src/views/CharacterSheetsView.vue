@@ -149,13 +149,13 @@
                 <div class="race-select-wrap">
                   <label>Species:</label>
                   <select v-model="selectedRaceCategory" class="select-race">
-                    <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
+                    <optgroup label="The Norn (Elves, Dwarves & Wendhyan)">
                       <option value="Dawn Elf">Dawn Elf</option>
                       <option value="Dusk Elf">Dusk Elf</option>
                       <option value="Sylvan Elf">Sylvan Elf</option>
                       <option value="Wilder Elf">Wilder Elf</option>
                       <option value="Twilight Elf">Twilight Elf</option>
-                      <option value="Wendhya">Wendhya</option>
+                      <option value="Wendhyan">Wendhyan</option>
                       <option value="Weirgoth Dwarf">Weirgoth Dwarf</option>
                       <option value="Vanir Dwarf">Vanir Dwarf</option>
                     </optgroup>
@@ -986,13 +986,13 @@
           <div class="form-group">
             <label>Species / Lineage</label>
             <select v-model="newCharForm.race" @change="onCreateRaceChange" class="char-create-select">
-              <optgroup label="The Norn (Elves, Dwarves & Wendhya)">
+              <optgroup label="The Norn (Elves, Dwarves & Wendhyan)">
                 <option value="Dawn Elf">Dawn Elf (+5 INT, +5 HIST/REL, -5 STA)</option>
                 <option value="Dusk Elf">Dusk Elf (+5 INT, +5 DEX, -5 STA)</option>
                 <option value="Sylvan Elf">Sylvan Elf (+5 DEX, +5 RS, -5 STR)</option>
                 <option value="Wilder Elf">Wilder Elf (+5 DEX, +5 WIL, -5 HIST/REL)</option>
                 <option value="Twilight Elf">Twilight Elf (+5 DEX, +5 WIL, -5 STR)</option>
-                <option value="Wendhya">Wendhya (+5 WIL, +5 RS, -5 STR)</option>
+                <option value="Wendhyan">Wendhyan (+5 WIL, +5 RS, -5 STR)</option>
                 <option value="Weirgoth Dwarf">Weirgoth Dwarf (+5 STA, +5 WIL, -5 DEX)</option>
                 <option value="Vanir Dwarf">Vanir Dwarf (+5 STR, +5 STA, -5 RS)</option>
               </optgroup>

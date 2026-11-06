@@ -65,7 +65,8 @@ export const RACES_DATA = {
   get 'Sylvan Elves'() { return this['Sylvan Elf']; },
   get 'Wilder Elves'() { return this['Wilder Elf']; },
   get 'Twilight Elves'() { return this['Twilight Elf']; },
-  'Wendhya': {
+  get 'Wendhya'() { return this['Wendhyan']; },
+  'Wendhyan': {
     category: 'The Norn',
     modifiers: { str: -5, sta: 0, dex: 0, rs: 5, int: 0, log: 0, per: 5, ldr: 0 },
     movement: { walk: 30, run: 60, glide: 0 },
@@ -252,14 +253,14 @@ export const RACES_DATA = {
 
 export const CARTRIDGE_LINEAGE_GROUPS = [
   {
-    label: 'The Norn (Elves, Dwarves & Wendhya)',
+    label: 'The Norn (Elves, Dwarves & Wendhyan)',
     lineages: [
       'Dawn Elf',
       'Dusk Elf',
       'Sylvan Elf',
       'Wilder Elf',
       'Twilight Elf',
-      'Wendhya',
+      'Wendhyan',
       'Weirgoth Dwarf',
       'Vanir Dwarf',
     ],
@@ -364,7 +365,7 @@ export const MAGIC_TRADITIONS = [
   { name: 'Druidic', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'ess', description: 'Primal weather, entangling roots, stone-shaping, and natural regeneration.' },
   { name: 'Spiritual', baseStat: 'log_or_per', baseStatLabel: 'HIST/REL or WIL', fuel: 'ess', description: 'Ancestral/divine invocation, spirit-warding, radiant smiting, and soul-mending.' },
   { name: 'Ki', baseStat: 'sta_or_per', baseStatLabel: 'STA or WIL', fuel: 'ess', description: 'Internal martial energy enhancing unarmed/melee strikes, iron-body deflection, and speed.' },
-  { name: 'Warg', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'sta', description: 'Skin-changing and beast-bonding (Sylvan/Wilder Elves, Wendhya, Weirgoth Dwarves).' },
+  { name: 'Warg', baseStat: 'per', baseStatLabel: 'WIL', fuel: 'sta', description: 'Skin-changing and beast-bonding (Sylvan/Wilder Elves, Wendhyan, Weirgoth Dwarves).' },
   { name: 'Witchcraft', baseStat: 'int_or_per', baseStatLabel: 'INT or WIL', fuel: 'ess', description: 'Hexes, evil-eye curses, fate-twisting, poultices/brews, and folk charms.' },
 ];
 

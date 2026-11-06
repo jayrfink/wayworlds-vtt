@@ -236,7 +236,7 @@
                     <option value="Sylvan Elf">Sylvan Elf</option>
                     <option value="Wilder Elf">Wilder Elf</option>
                     <option value="Twilight Elf">Twilight Elf</option>
-                    <option value="Wendhya">Wendhya</option>
+                    <option value="Wendhyan">Wendhyan</option>
                   </optgroup>
                   <optgroup label="Dwarven Lineages">
                     <option value="Weirgoth Dwarf">Weirgoth Dwarf</option>

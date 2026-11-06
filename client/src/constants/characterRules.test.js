@@ -60,7 +60,7 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(RACES_DATA['Wilder Elf']).toBeDefined();
     expect(RACES_DATA['Twilight Elf']).toBeDefined();
     expect(RACES_DATA['Dawn Elves']).toBeDefined();
-    expect(RACES_DATA['Wendhya']).toBeDefined();
+    expect(RACES_DATA['Wendhyan']).toBeDefined();
     expect(RACES_DATA['Weirgoth Dwarf']).toBeDefined();
     expect(RACES_DATA['Vanir Dwarf']).toBeDefined();
     expect(RACES_DATA['Weirgoth Dwarves']).toBeDefined();
