@@ -131,7 +131,7 @@ export const RANGED_COMBAT_REF = {
     {
       name: 'Dart',
       category: 'Thrown',
-      damage: '1d5 + STR Mod',
+      damage: '1d10/2 + STR Mod',
       rof: '1 / Thrown',
       shortRange: '0-20ft',
       medRange: '21-40ft',
@@ -142,7 +142,7 @@ export const RANGED_COMBAT_REF = {
     {
       name: 'Bolas / Entangling Net',
       category: 'Thrown',
-      damage: '1d5 (Snare)',
+      damage: '1d10/2 (Snare)',
       rof: '1 / Thrown',
       shortRange: '0-15ft',
       medRange: '16-30ft',
@@ -231,19 +231,19 @@ export const MELEE_COMBAT_REF = {
   ],
 
   unarmedDamage: [
-    { strBracket: '01 - 29', punchDamage: '1d5 - 2 (min 1)', kickDamage: '1d5 - 1 (min 1)' },
-    { strBracket: '30 - 39', punchDamage: '1d5 - 1 (min 1)', kickDamage: '1d5' },
-    { strBracket: '40 - 49 (Baseline)', punchDamage: '1d5', kickDamage: '1d5 + 1' },
-    { strBracket: '50 - 59 (Baseline)', punchDamage: '1d5 + 1', kickDamage: '1d5 + 2' },
-    { strBracket: '60 - 69', punchDamage: '1d5 + 2', kickDamage: '1d5 + 3' },
-    { strBracket: '70 - 79', punchDamage: '1d5 + 3', kickDamage: '1d10' },
+    { strBracket: '01 - 29', punchDamage: '1d10/2 - 2 (min 1)', kickDamage: '1d10/2 - 1 (min 1)' },
+    { strBracket: '30 - 39', punchDamage: '1d10/2 - 1 (min 1)', kickDamage: '1d10/2' },
+    { strBracket: '40 - 49 (Baseline)', punchDamage: '1d10/2', kickDamage: '1d10/2 + 1' },
+    { strBracket: '50 - 59 (Baseline)', punchDamage: '1d10/2 + 1', kickDamage: '1d10/2 + 2' },
+    { strBracket: '60 - 69', punchDamage: '1d10/2 + 2', kickDamage: '1d10/2 + 3' },
+    { strBracket: '70 - 79', punchDamage: '1d10/2 + 3', kickDamage: '1d10' },
     { strBracket: '80+', punchDamage: '1d10 + 1', kickDamage: '1d10 + 3' },
   ],
 
   weapons: [
     {
       name: 'Unarmed Strike / Brawling / Grapple',
-      damage: '1d5 + STR Mod',
+      damage: '1d10/2 + STR Mod',
       weight: '0 lbs',
       special: 'Natural weapon; Ki adepts and Minotaur Horns (1d10) deal lethal damage without penalty',
     },
@@ -316,7 +316,7 @@ export const MELEE_COMBAT_REF = {
   ],
 
   modifiers: [
-    { situation: 'Charging Attack (move >= 20 ft in straight line)', modifier: '+10% Hit, +1d5 Dmg', notes: 'Grants -10% to attacker Defense until next turn' },
+    { situation: 'Charging Attack (move >= 20 ft in straight line)', modifier: '+10% Hit, +1d10/2 Dmg', notes: 'Grants -10% to attacker Defense until next turn' },
     { situation: 'Flanking / Rear Attack (ally opposite target)', modifier: '+15%', notes: 'Requires an active ally threatening the opposite side of target' },
     { situation: 'High Ground Advantage (elevated terrain / mounted)', modifier: '+10%', notes: 'Attacker on higher elevation or mounted vs infantry' },
     { situation: 'Target Prone (vs Melee Attack)', modifier: '+20%', notes: 'Standing up from Prone costs half of base Walk speed' },
@@ -324,7 +324,7 @@ export const MELEE_COMBAT_REF = {
     { situation: 'Defensive Stance / Fighting Defensively', modifier: '-15% Hit', notes: 'Grants +15% to Parry and Dodge reactions until start of next turn' },
     { situation: 'Dual-Wielding (Two Light Melee Weapons)', modifier: '-10% / -15%', notes: 'Allows 1 bonus off-hand attack; reduced by 5% at Melee Rank 3+' },
     { situation: 'Shield', modifier: '-10% to -(10 x Rank)%', notes: 'Impose penalty on incoming attack' },
-    { situation: 'Improvised Melee Weapon (torch, chair, rock)', modifier: '-15%', notes: 'Base 1d5 + STR Mod damage; breaks on Fumble' },
+    { situation: 'Improvised Melee Weapon (torch, chair, rock)', modifier: '-15%', notes: 'Base 1d10/2 + STR Mod damage; breaks on Fumble' },
   ],
 };
 

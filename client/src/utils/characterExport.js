@@ -4,6 +4,8 @@
  * Strictly excludes equipment and inventory per player export requirements.
  */
 
+import { calcMaxCarry } from '../constants/characterRules.js';
+
 /**
  * Format a character object into a clean ASCII text document.
  * @param {Object} char - Wayworlds character record
@@ -36,7 +38,7 @@ export function formatCharacterAscii(char = {}) {
   const maxEss = char.max_ess ?? 50;
 
   const punchScore = Math.floor(str / 10) + Math.floor(dex / 10);
-  const maxCarry = Math.floor(str / 2);
+  const maxCarry = calcMaxCarry(str);
 
   const divider = '='.repeat(80);
   const subDivider = '-'.repeat(80);
@@ -64,7 +66,7 @@ export function formatCharacterAscii(char = {}) {
     `WIL / PRE:   ${per} / ${ldr}`,
     `Energy Pool: ${currentEss} / ${maxEss} ESS`,
     `Base Punching Score:   +${punchScore}%`,
-    `Max Carry Weight:      ${maxCarry} kg`,
+    `Max Carry Weight:      ${maxCarry} lbs`,
     '',
     '[ SPECIES ABILITIES ]',
     subDivider,

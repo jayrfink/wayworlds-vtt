@@ -692,7 +692,7 @@
                   />
                 </div>
                 <div class="item-weight-wrap">
-                  <label>Kg:</label>
+                  <label>Lbs:</label>
                   <input
                     type="number"
                     step="0.1"
@@ -2641,6 +2641,9 @@ export default {
           const r = Math.floor(Math.random() * (mag.sides || 10)) + 1;
           diceList.push(r);
           effectTotal += r;
+        }
+        if (mag.divisor && mag.divisor > 1) {
+          effectTotal = Math.ceil(effectTotal / mag.divisor);
         }
       } else if (mag.flatHeal) {
         effectTotal = mag.flatHeal;

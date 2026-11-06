@@ -99,7 +99,7 @@
                 </div>
                 <div class="spec-item">
                   <span class="spec-label">Cargo</span>
-                  <span class="spec-value">{{ selectedVehicle.cargo_kg }} kg ({{ selectedVehicle.cargo_m3 || 1.0 }} m³)</span>
+                  <span class="spec-value">{{ selectedVehicle.cargo_kg }} lbs ({{ selectedVehicle.cargo_m3 || 1.0 }} cu ft)</span>
                 </div>
                 <div class="spec-item">
                   <span class="spec-label">Battery / Power</span>
@@ -232,11 +232,11 @@
 
                 <div class="form-row">
                   <div class="form-group flex-1">
-                    <label>Cargo (kg)</label>
+                    <label>Cargo (lbs)</label>
                     <input v-model.number="customForm.cargo_kg" type="number" min="0" />
                   </div>
                   <div class="form-group flex-1">
-                    <label>Cargo (m³)</label>
+                    <label>Cargo (cu ft)</label>
                     <input v-model.number="customForm.cargo_m3" type="number" step="0.1" min="0" />
                   </div>
                   <div class="form-group flex-2">

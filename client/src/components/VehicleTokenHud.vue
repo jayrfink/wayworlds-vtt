@@ -209,7 +209,7 @@
           </div>
           <div class="overview-item">
             <span class="item-label">Cargo</span>
-            <span class="item-value">{{ vehicleData.cargo_kg ? `${vehicleData.cargo_kg} kg` : '-' }}</span>
+            <span class="item-value">{{ vehicleData.cargo_kg ? `${vehicleData.cargo_kg} lbs` : '-' }}</span>
           </div>
           <div class="overview-item">
             <span class="item-label">Battery Type</span>

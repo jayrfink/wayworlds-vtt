@@ -60,6 +60,7 @@ describe('formatCharacterAscii Utility', () => {
     expect(text).toContain('INT / HIST/REL: 45 / 55');
     expect(text).toContain('WIL / PRE:   40 / 50');
     expect(text).toContain('Energy Pool: 42 / 50 ESS');
+    expect(text).toContain('Max Carry Weight:      55 lbs');
 
     // Species abilities
     expect(text).toContain('Ambidexterity');

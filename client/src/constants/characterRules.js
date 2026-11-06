@@ -373,10 +373,10 @@ export const UNIVERSAL_MAGNITUDE_TABLE = [
   {
     tier: 0,
     cost: 0,
-    strike: { dice: '1d6', count: 1, sides: 6, summary: 'Single Target (Up to 60 ft)' },
-    blast_heal: { dice: '1d6', count: 1, sides: 6, flatHeal: 5, summary: '5 ft Burst OR Restore 5 STA' },
-    ward_buff: { dice: '1d6', count: 1, sides: 6, summary: '+5% Skill/Defense OR 5 Temp Ward STA' },
-    hex_summon: { dice: '1d6', count: 1, sides: 6, summary: '-5% Penalty (1 Round) OR Minor Illusion' },
+    strike: { dice: '1d10/2', count: 1, sides: 10, divisor: 2, summary: 'Single Target (Up to 60 ft)' },
+    blast_heal: { dice: '1d10/2', count: 1, sides: 10, divisor: 2, flatHeal: 5, summary: '5 ft Burst OR Restore 5 STA' },
+    ward_buff: { dice: '1d10/2', count: 1, sides: 10, divisor: 2, summary: '+5% Skill/Defense OR 5 Temp Ward STA' },
+    hex_summon: { dice: '1d10/2', count: 1, sides: 10, divisor: 2, summary: '-5% Penalty (1 Round) OR Minor Illusion' },
   },
   {
     tier: 1,
@@ -587,7 +587,7 @@ export function calcMaxForgeTier(tradecraftRank = 0, isGm = false) {
 }
 
 /**
- * Validate clean Nd10 (or 1d6) damage formula without flat + or - numeric modifiers.
+ * Validate clean Nd10 (or 1d10/2) damage formula without flat + or - numeric modifiers.
  */
 export function validateForgeDamageFormula(formula) {
   const str = String(formula || '').trim();
@@ -598,22 +598,31 @@ export function validateForgeDamageFormula(formula) {
   if (/[+-]\s*\d+(?!\s*d)/i.test(str) || /^\d+$/.test(str)) {
     return {
       valid: false,
-      error: `Invalid damage_dice "${str}". Flat damage modifiers (like +1 or +3) are prohibited; use clean Nd10 or 1d6.`,
+      error: `Invalid damage_dice "${str}". Flat damage modifiers (like +1 or +3) are prohibited; use clean Nd10 or 1d10/2.`,
     };
   }
-  // Must contain at least one Nd10 or 1d6 term and no d4/d8/d12/d20 or multi-d6
-  const diceMatches = str.match(/\d+d\d+/gi);
+  // Must contain at least one Nd10 or 1d10/2 term and no non-d10 dice
+  const diceMatches = str.match(/\d+d\d+(?:\/\d+)?/gi);
   if (!diceMatches || diceMatches.length === 0) {
     return {
       valid: false,
-      error: `Invalid damage_dice "${str}". Use clean Nd10 or 1d6 dice.`,
+      error: `Invalid damage_dice "${str}". Use clean Nd10 or 1d10/2 dice.`,
     };
   }
   for (const dm of diceMatches) {
-    if (!/^([1-9]\d*d10|1d6)$/i.test(dm)) {
+    if (!/^([1-9]\d*d10|1d10\/2)$/i.test(dm)) {
       return {
         valid: false,
-        error: `Invalid damage_dice "${str}". Flat damage modifiers and non-d10 dice are prohibited; use clean Nd10 or 1d6.`,
+        error: `Invalid damage_dice "${str}". Flat damage modifiers and non-d10 dice are prohibited; use clean Nd10 or 1d10/2.`,
+      };
+    }
+  }
+  const rawDice = str.match(/\d+d\d+/gi) || [];
+  for (const rd of rawDice) {
+    if (!/^[1-9]\d*d10$/i.test(rd)) {
+      return {
+        valid: false,
+        error: `Invalid damage_dice "${str}". Non-d10 dice are prohibited; use clean Nd10 or 1d10/2.`,
       };
     }
   }

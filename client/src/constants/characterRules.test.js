@@ -187,7 +187,10 @@ describe('Wayworlds Character Tier, Universal Magnitude, & Tradecraft Forge Rule
 
     const t0Strike = getMagnitudeEntry(0, 'strike');
     expect(t0Strike.cost).toBe(0);
-    expect(t0Strike.dice).toBe('1d6');
+    expect(t0Strike.dice).toBe('1d10/2');
+    expect(t0Strike.count).toBe(1);
+    expect(t0Strike.sides).toBe(10);
+    expect(t0Strike.divisor).toBe(2);
 
     const t2Strike = getMagnitudeEntry(2, 'strike');
     expect(t2Strike.cost).toBe(4);
@@ -247,15 +250,18 @@ describe('Wayworlds Character Tier, Universal Magnitude, & Tradecraft Forge Rule
   it('enforces clean Nd10 damage formulas and rejects any flat + or - damage numbers', () => {
     expect(validateForgeDamageFormula('1d10').valid).toBe(true);
     expect(validateForgeDamageFormula('2d10').valid).toBe(true);
+    expect(validateForgeDamageFormula('1d10/2').valid).toBe(true);
     expect(validateForgeDamageFormula('3d10 Slashing + 1d10 Cold').valid).toBe(true);
 
-    // Reject flat numeric modifiers
+    // Reject flat numeric modifiers and non-d10 dice
     expect(validateForgeDamageFormula('2d10+3').valid).toBe(false);
     expect(validateForgeDamageFormula('1d10 + 2').valid).toBe(false);
     expect(validateForgeDamageFormula('2d10 - 1').valid).toBe(false);
     expect(validateForgeDamageFormula('+4').valid).toBe(false);
     expect(validateForgeDamageFormula('5').valid).toBe(false);
+    expect(validateForgeDamageFormula('1d6').valid).toBe(false);
     expect(validateForgeDamageFormula('2d6').valid).toBe(false);
+    expect(validateForgeDamageFormula('1d5').valid).toBe(false);
 
     // Validate full forged item against Tradecraft rank
     const validSword = {
