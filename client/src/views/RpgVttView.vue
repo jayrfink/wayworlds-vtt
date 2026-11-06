@@ -84,6 +84,56 @@
           <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5.5 5.5l13 13"/></svg> Clear All Pings
         </button>
 
+        <!-- GM Fog of War controls -->
+        <button
+          v-if="isGm"
+          class="btn-tool btn-fog-toggle"
+          :class="{ active: fogEnabled }"
+          :title="fogEnabled ? 'Fog of War is ON - click to turn off (reveals the whole map)' : 'Fog of War is OFF - click to hide the map from players'"
+          @click="toggleFog"
+        >
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A4.5 4.5 0 0 1 17 18H6z"/></svg> Fog {{ fogEnabled ? 'On' : 'Off' }}
+        </button>
+        <button
+          v-if="isGm && fogEnabled"
+          class="btn-tool btn-fog-erase"
+          :class="{ active: activeTool === 'fog_erase' }"
+          title="Erase Fog (click or drag on the map to reveal)"
+          @click="activeTool = 'fog_erase'"
+        >
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 15l8-8 7 7-5 5H8l-4-4zM9 10l7 7"/></svg> Erase Fog
+        </button>
+        <div v-if="isGm && fogEnabled && activeTool === 'fog_erase'" class="fog-eraser-options">
+          <div class="fog-shape-row">
+            <button
+              type="button"
+              class="fog-shape-btn"
+              :class="{ selected: fogEraser.shape === 'circle' }"
+              title="Circular eraser"
+              @click="fogEraser.shape = 'circle'"
+            >● Circle</button>
+            <button
+              type="button"
+              class="fog-shape-btn"
+              :class="{ selected: fogEraser.shape === 'square' }"
+              title="Square eraser"
+              @click="fogEraser.shape = 'square'"
+            >■ Square</button>
+          </div>
+          <label class="fog-size-label">
+            Size: {{ fogEraser.size }} sq
+            <input
+              type="range"
+              class="fog-size-slider"
+              min="0.5"
+              max="20"
+              step="0.5"
+              v-model.number="fogEraser.size"
+            />
+          </label>
+          <button type="button" class="fog-cover-btn" title="Cover the whole map in fog again" @click="coverAllFog">Cover All</button>
+        </div>
+
         <button v-if="isGm" class="btn-tool btn-initiative" @click="rollInitiative" title="Roll Combat Initiative (Players vs. Opposition 2d10)">
           <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Initiative
         </button>
@@ -328,6 +378,8 @@
           @map-updated="activeMap = $event"
           @ping-update="onPingUpdate"
           @ping-dismiss="onPingDismiss"
+          :fog-eraser="fogEraser"
+          @fog-changed="onFogChanged"
         />
 
         <!-- Click-to-Open Adversary Token HUD (Double Click) -->
@@ -1255,6 +1307,47 @@ function clearMyPing() {
     delete next[currentUserId];
     activePings.value = next;
   }
+}
+
+// Fog of War (GM controls; fog_enabled / fog_data live on the map record)
+const fogEraser = reactive({ shape: 'circle', size: 3 });
+const fogEnabled = computed(() => Boolean(activeMap.value?.fog_enabled));
+
+async function saveFogPatch(patch) {
+  if (!isGm.value || !activeMap.value?.id) return;
+  const previous = activeMap.value;
+  activeMap.value = { ...previous, ...patch };
+  try {
+    const res = await fetch(`/api/maps/${previous.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(patch),
+    });
+    if (res.ok) {
+      activeMap.value = await res.json();
+    } else {
+      activeMap.value = previous;
+    }
+  } catch (err) {
+    console.error('Failed to save fog:', err);
+    activeMap.value = previous;
+  }
+}
+
+function toggleFog() {
+  const next = !fogEnabled.value;
+  if (!next && activeTool.value === 'fog_erase') activeTool.value = 'select';
+  saveFogPatch({ fog_enabled: next });
+}
+
+function onFogChanged(fogData) {
+  saveFogPatch({ fog_data: fogData });
+}
+
+function coverAllFog() {
+  if (typeof window !== 'undefined' && !window.confirm('Cover the entire map in fog again?')) return;
+  saveFogPatch({ fog_data: [] });
 }
 
 function clearAllPings() {
@@ -2884,6 +2977,54 @@ onBeforeUnmount(() => {
   border-radius: 4px;
   text-align: left;
   border: none !important;
+}
+
+.fog-eraser-options {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.35);
+}
+
+.fog-shape-row {
+  display: flex;
+  gap: 4px;
+}
+
+.vtt-toolbar .fog-shape-btn {
+  flex: 1;
+  justify-content: center;
+  padding: 5px 6px;
+  font-size: 12px;
+}
+
+.vtt-toolbar .fog-shape-btn.selected {
+  background: #000000;
+  color: #cecece;
+  font-weight: 600;
+  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
+}
+
+.fog-size-label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: #cecece;
+}
+
+.fog-size-slider {
+  width: 100%;
+  accent-color: #cecece;
+}
+
+.vtt-toolbar .fog-cover-btn {
+  justify-content: center;
+  padding: 5px 6px;
+  font-size: 12px;
 }
 
 .vtt-toolbar > button.active {
