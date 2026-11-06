@@ -460,10 +460,23 @@
             <!-- ESS Energy Pool Tracker -->
             <div class="tracker-item ess-section">
               <div class="ess-header">
-                <span class="tracker-label">ESS ENERGY POOL</span>
+                <span class="tracker-label">ESSENCE/MANA</span>
                 <div class="ess-header-right">
-                  <button class="btn-action-reload" @click="reloadEss" title="Reload: Restore ESS to maximum">
-                    Reload
+                  <div class="ess-pin-wrap">
+                    <label class="ess-pin-label" title="Pin Max to Attribute">Pin:</label>
+                    <select
+                      v-model="selectedChar.ess_pin"
+                      @change="onEssPinChange"
+                      class="select-ess-pin"
+                      title="Pin Max ESSENCE/MANA to HIST/REL or WIL"
+                    >
+                      <option value="">None</option>
+                      <option value="log">HIST/REL</option>
+                      <option value="per">WIL</option>
+                    </select>
+                  </div>
+                  <button class="btn-action-reload" @click="reloadEss" title="Recharge: Restore ESS to maximum">
+                    Recharge
                   </button>
                   <div class="ess-values">
                     <span class="current">{{ selectedChar.current_ess ?? 50 }}</span> /
@@ -1671,6 +1684,7 @@ export default {
       if (c.sta === undefined) c.sta = c.max_stamina !== undefined ? c.max_stamina : (c.str_sta || 50);
       c.max_stamina = c.sta;
       c.current_stamina = c.current_sta !== undefined ? c.current_sta : (c.current_stamina !== undefined ? c.current_stamina : c.sta);
+      c.ess_pin = c.ess_pin || (c.racial_abilities?.ess_pin || '');
       c.max_ess = c.max_ess !== undefined ? Number(c.max_ess) : 50;
       c.current_ess = c.current_ess !== undefined ? Number(c.current_ess) : c.max_ess;
       c.current_xp = Number(c.current_xp || 0);
@@ -1683,6 +1697,15 @@ export default {
       c.log = c.log_stat ?? c.log ?? c.int_log ?? 50;
       if (c.per === undefined) c.per = c.per_ldr || 50;
       if (c.ldr === undefined) c.ldr = c.per_ldr || 50;
+
+      // Automatically sync pinned attribute to max_ess if pin is active
+      if (c.ess_pin === 'log' && typeof c.log === 'number') {
+        c.max_ess = c.log;
+        if (c.current_ess > c.max_ess) c.current_ess = c.max_ess;
+      } else if (c.ess_pin === 'per' && typeof c.per === 'number') {
+        c.max_ess = c.per;
+        if (c.current_ess > c.max_ess) c.current_ess = c.max_ess;
+      }
 
       if (!c.skills) c.skills = [];
       if (!c.inventory) c.inventory = [];
@@ -2010,11 +2033,43 @@ export default {
       if (this.selectedChar.current_stamina > this.selectedChar.max_stamina) {
         this.selectedChar.current_stamina = this.selectedChar.max_stamina;
       }
+      if (typeof this.syncEssFromPin === 'function') {
+        this.syncEssFromPin();
+      }
       this.updateCharacter();
     },
     onStatChange(statName) {
       if (statName === 'sta' && this.selectedChar) {
         this.selectedChar.max_stamina = this.selectedChar.sta;
+      }
+      if (typeof this.syncEssFromPin === 'function') {
+        this.syncEssFromPin();
+      }
+      this.updateCharacter();
+    },
+    syncEssFromPin() {
+      if (!this.selectedChar) return;
+      const pin = this.selectedChar.ess_pin;
+      if (pin === 'log' && typeof this.selectedChar.log === 'number') {
+        this.selectedChar.max_ess = this.selectedChar.log;
+        if ((this.selectedChar.current_ess || 0) > this.selectedChar.max_ess) {
+          this.selectedChar.current_ess = this.selectedChar.max_ess;
+        }
+      } else if (pin === 'per' && typeof this.selectedChar.per === 'number') {
+        this.selectedChar.max_ess = this.selectedChar.per;
+        if ((this.selectedChar.current_ess || 0) > this.selectedChar.max_ess) {
+          this.selectedChar.current_ess = this.selectedChar.max_ess;
+        }
+      }
+    },
+    onEssPinChange() {
+      if (!this.selectedChar) return;
+      if (!this.selectedChar.racial_abilities || typeof this.selectedChar.racial_abilities !== 'object') {
+        this.selectedChar.racial_abilities = {};
+      }
+      this.selectedChar.racial_abilities.ess_pin = this.selectedChar.ess_pin || '';
+      if (typeof this.syncEssFromPin === 'function') {
+        this.syncEssFromPin();
       }
       this.updateCharacter();
     },
@@ -3706,13 +3761,51 @@ export default {
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.15s ease;
-  min-width: 58px;
+  width: 68px;
+  min-width: 68px;
+  box-sizing: border-box;
   text-align: center;
   box-shadow: none !important;
 }
 
 .btn-action-reset {
-  padding: 2px 14px;
+  padding: 2px 8px;
+}
+
+.ess-pin-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ess-pin-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #8b949e;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.select-ess-pin {
+  background-color: #000000 !important;
+  color: #c8c8c8 !important;
+  border: 1px solid rgba(200, 200, 200, 0.4) !important;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 2px 20px 2px 6px !important;
+  height: 24px;
+  cursor: pointer;
+}
+
+.select-ess-pin:hover {
+  border-color: #c8c8c8 !important;
+}
+
+.select-ess-pin:focus {
+  outline: none;
+  border-color: #38bdf8 !important;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.4);
 }
 .btn-action-reset:hover,
 .btn-action-reload:hover {

@@ -759,6 +759,45 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(vm.selectedChar.current_ess).toBe(25);
     });
 
+    it('pins max_ess to HIST/REL (log) or WIL (per) and automatically updates on attribute change', () => {
+      const vm = {
+        selectedChar: {
+          log: 60,
+          per: 55,
+          max_ess: 50,
+          current_ess: 50,
+          ess_pin: 'log',
+          racial_abilities: {},
+        },
+        updateCharacter: vi.fn(),
+      };
+      vm.syncEssFromPin = CharacterSheetsView.methods.syncEssFromPin.bind(vm);
+      vm.onEssPinChange = CharacterSheetsView.methods.onEssPinChange.bind(vm);
+      vm.onStatChange = CharacterSheetsView.methods.onStatChange.bind(vm);
+      vm.shiftStat = CharacterSheetsView.methods.shiftStat.bind(vm);
+
+      // Test onEssPinChange when pinned to log
+      vm.onEssPinChange();
+      expect(vm.selectedChar.max_ess).toBe(60);
+      expect(vm.selectedChar.racial_abilities.ess_pin).toBe('log');
+      expect(vm.updateCharacter).toHaveBeenCalled();
+
+      // Test onStatChange when log increases
+      vm.selectedChar.log = 65;
+      vm.onStatChange('log');
+      expect(vm.selectedChar.max_ess).toBe(65);
+
+      // Change pin to per (WIL)
+      vm.selectedChar.ess_pin = 'per';
+      vm.onEssPinChange();
+      expect(vm.selectedChar.max_ess).toBe(55);
+
+      // Increase WIL via shiftStat
+      vm.shiftStat('per', 'ldr', 5);
+      expect(vm.selectedChar.per).toBe(60);
+      expect(vm.selectedChar.max_ess).toBe(60);
+    });
+
     it('computes staminaPercentage, staminaColor, and staminaGlow dynamically across health tiers', () => {
       const vm = {
         selectedChar: { current_stamina: 50, max_stamina: 50 },
@@ -1053,12 +1092,12 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       }
     });
 
-    it('displays "Characters" in sidebar header and no mini icon in ESS Energy Pool header', () => {
+    it('displays "Characters" in sidebar header and no mini icon in ESSENCE/MANA header', () => {
       const fs = require('fs');
       const path = require('path');
       const content = fs.readFileSync(path.resolve(__dirname, '../src/views/CharacterSheetsView.vue'), 'utf-8');
       expect(content).toMatch(/<div class="sidebar-header">\s*<h3>Characters<\/h3>/);
-      expect(content).toMatch(/<div class="ess-header">[\s\S]*?<span class="tracker-label">ESS ENERGY POOL<\/span>/);
+      expect(content).toMatch(/<div class="ess-header">[\s\S]*?<span class="tracker-label">ESSENCE\/MANA<\/span>/);
       expect(content).not.toMatch(/<span class="tracker-label">⚡/);
     });
   });
@@ -1410,11 +1449,11 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         // ESS tracker
         const essItem = trackersSection.find('.ess-section');
         expect(essItem.exists()).toBe(true);
-        expect(essItem.find('.tracker-label').text()).toBe('ESS ENERGY POOL');
+        expect(essItem.find('.tracker-label').text()).toBe('ESSENCE/MANA');
         expect(essItem.find('.ess-bar-bg').exists()).toBe(true);
         const reloadBtn = essItem.find('.btn-action-reload');
         expect(reloadBtn.exists()).toBe(true);
-        expect(reloadBtn.text()).toBe('Reload');
+        expect(reloadBtn.text()).toBe('Recharge');
         expect(reloadBtn.text()).not.toContain('⚡');
 
         // XP tracker
