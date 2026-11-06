@@ -108,29 +108,39 @@ describe('PDF Rulebooks & Quick Reference Scrollbars (RulebooksView.vue)', () =>
   });
 });
 
-describe('Character Sheet Inventory & Skills Scrollbars (CharacterSheetsView.vue)', () => {
+describe('Character Sheet Inventory, Skills & Grimoire Scrollbars (CharacterSheetsView.vue)', () => {
   const viewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
   const content = fs.readFileSync(viewPath, 'utf-8');
 
-  it('defines sitewide dark-color scrollbar parameters on inventory and skills lists', () => {
-    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list\s*\{[^}]*scrollbar-width:\s*thin;/);
-    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list\s*\{[^}]*scrollbar-color:\s*#484f58\s*#000000\s*!important;/);
+  it('defines sitewide dark-color scrollbar parameters on inventory, skills, and grimoire lists', () => {
+    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list[\s\S]*?\.grimoire-list\s*\{[^}]*scrollbar-width:\s*thin;/);
+    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list[\s\S]*?\.grimoire-list\s*\{[^}]*scrollbar-color:\s*#484f58\s*#000000\s*!important;/);
   });
 
-  it('defines sitewide dark WebKit scrollbar track and thumb on inventory and skills lists', () => {
-    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-track[\s\S]*?\{[^}]*background:\s*#000000\s*!important;/);
-    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb[\s\S]*?\{[^}]*background:\s*#484f58\s*!important;/);
-    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb:hover[\s\S]*?\{[^}]*background:\s*#586069\s*!important;/);
+  it('defines sitewide dark WebKit scrollbar track and thumb on inventory, skills, and grimoire lists', () => {
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-track[\s\S]*?\.grimoire-list::-webkit-scrollbar-track[\s\S]*?\{[^}]*background:\s*#000000\s*!important;/);
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb[\s\S]*?\.grimoire-list::-webkit-scrollbar-thumb[\s\S]*?\{[^}]*background:\s*#484f58\s*!important;/);
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb:hover[\s\S]*?\.grimoire-list::-webkit-scrollbar-thumb:hover[\s\S]*?\{[^}]*background:\s*#586069\s*!important;/);
   });
 
-  it('caps inventory list at 5-item height and skills list to reach matching card height', () => {
+  it('caps inventory list at 5-item height, skills list to matching card height, and grimoire list at 3-record height', () => {
     expect(content).toMatch(/\.inventory-items-list\s*\{[^}]*max-height:\s*206px;/);
     expect(content).toMatch(/\.skills-items-list\s*\{[^}]*max-height:\s*255px;/);
+    expect(content).toMatch(/\.grimoire-list\s*\{[^}]*max-height:\s*232px;/);
   });
 
   it('styles character name input and border to match the card background so the box is seamless', () => {
     expect(content).toMatch(/\.input-name\s*\{[^}]*background:\s*var\(--bg-panel,\s*#14171c\)\s*!important;/);
     expect(content).toMatch(/\.input-name\s*\{[^}]*border:\s*1px\s*solid\s*var\(--bg-panel,\s*#14171c\)\s*!important;/);
+  });
+
+  it('prevents inventory row compression and text overlap with flex-shrink: 0 and align-items: flex-start', () => {
+    expect(content).toMatch(/\.item-row\s*\{[^}]*flex-shrink:\s*0;/);
+    expect(content).toMatch(/\.inventory-row\s*\{[^}]*flex-shrink:\s*0;/);
+    expect(content).toMatch(/\.inventory-row\s*\{[^}]*align-items:\s*flex-start;/);
+    expect(content).toMatch(/\.inventory-item-badge\s*\{[^}]*line-height:\s*1\.35;/);
+    expect(content).toMatch(/\.inventory-item-name\s*\{[^}]*line-height:\s*1\.35;/);
+    expect(content).toMatch(/\.inventory-item-traits\s*\{[^}]*line-height:\s*1\.35;/);
   });
 });
 

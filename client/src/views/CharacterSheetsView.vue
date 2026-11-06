@@ -4195,9 +4195,10 @@ export default {
   gap: 8px;
 }
 
-/* Sitewide dark-color scrollbars for Inventory (> 5 items) and Skills (matching card height) */
+/* Sitewide dark-color scrollbars for Inventory (> 5 items), Skills, and Grimoire / Martial Techniques (> 3 records) */
 .inventory-items-list,
-.skills-items-list {
+.skills-items-list,
+.grimoire-list {
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
@@ -4213,19 +4214,26 @@ export default {
   max-height: 255px;
 }
 
+.grimoire-list {
+  max-height: 232px;
+}
+
 .inventory-items-list::-webkit-scrollbar,
-.skills-items-list::-webkit-scrollbar {
+.skills-items-list::-webkit-scrollbar,
+.grimoire-list::-webkit-scrollbar {
   width: 8px;
 }
 
 .inventory-items-list::-webkit-scrollbar-track,
-.skills-items-list::-webkit-scrollbar-track {
+.skills-items-list::-webkit-scrollbar-track,
+.grimoire-list::-webkit-scrollbar-track {
   background: #000000 !important;
   border-radius: 4px;
 }
 
 .inventory-items-list::-webkit-scrollbar-thumb,
-.skills-items-list::-webkit-scrollbar-thumb {
+.skills-items-list::-webkit-scrollbar-thumb,
+.grimoire-list::-webkit-scrollbar-thumb {
   background: #484f58 !important;
   border-radius: 4px;
   border: 1px solid #30363d !important;
@@ -4233,36 +4241,42 @@ export default {
 }
 
 .inventory-items-list::-webkit-scrollbar-thumb:hover,
-.skills-items-list::-webkit-scrollbar-thumb:hover {
+.skills-items-list::-webkit-scrollbar-thumb:hover,
+.grimoire-list::-webkit-scrollbar-thumb:hover {
   background: #586069 !important;
   border-color: #6e7681 !important;
   box-shadow: none !important;
 }
 
 .inventory-items-list::-webkit-scrollbar-corner,
-.skills-items-list::-webkit-scrollbar-corner {
+.skills-items-list::-webkit-scrollbar-corner,
+.grimoire-list::-webkit-scrollbar-corner {
   background: #000000 !important;
 }
 
 [data-color-pkg] .inventory-items-list,
-[data-color-pkg] .skills-items-list {
+[data-color-pkg] .skills-items-list,
+[data-color-pkg] .grimoire-list {
   scrollbar-color: #484f58 #000000 !important;
 }
 
 [data-color-pkg] .inventory-items-list::-webkit-scrollbar-track,
-[data-color-pkg] .skills-items-list::-webkit-scrollbar-track {
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-track,
+[data-color-pkg] .grimoire-list::-webkit-scrollbar-track {
   background: #000000 !important;
 }
 
 [data-color-pkg] .inventory-items-list::-webkit-scrollbar-thumb,
-[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb {
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb,
+[data-color-pkg] .grimoire-list::-webkit-scrollbar-thumb {
   background: #484f58 !important;
   border-color: #30363d !important;
   box-shadow: none !important;
 }
 
 [data-color-pkg] .inventory-items-list::-webkit-scrollbar-thumb:hover,
-[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb:hover {
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb:hover,
+[data-color-pkg] .grimoire-list::-webkit-scrollbar-thumb:hover {
   background: #586069 !important;
   border-color: #6e7681 !important;
 }
@@ -4275,6 +4289,7 @@ export default {
   border-radius: 4px;
   border: 1px solid transparent;
   transition: border-color 0.15s, background-color 0.15s;
+  flex-shrink: 0;
 }
 
 .item-row.drag-over {
@@ -4438,11 +4453,25 @@ export default {
 
 /* Inventory Row & Text Badge (Seamless Design with Attribute Line Wrapping) */
 .inventory-row {
+  flex-shrink: 0;
   min-height: 28px;
-  padding: 3px 6px;
+  padding: 4px 6px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
+  box-sizing: border-box;
+}
+
+.inventory-row .drag-handle {
+  margin-top: 2px;
+}
+
+.inventory-row .reorder-actions {
+  margin-top: 2px;
+}
+
+.inventory-row .btn-remove {
+  margin-top: 1px;
 }
 
 .inventory-item-badge {
@@ -4459,6 +4488,7 @@ export default {
   cursor: default;
   word-break: break-word;
   overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 
 .inventory-item-name {
@@ -4466,6 +4496,7 @@ export default {
   font-size: 0.85rem;
   color: #cecece;
   flex-shrink: 0;
+  line-height: 1.35;
 }
 
 .inventory-item-traits {
@@ -4476,6 +4507,7 @@ export default {
   overflow-wrap: anywhere;
   flex: 1 1 auto;
   min-width: 0;
+  line-height: 1.35;
 }
 
 .inventory-qty-wrap {
@@ -4485,6 +4517,7 @@ export default {
   font-size: 0.72rem;
   color: #8b949e;
   flex-shrink: 0;
+  margin-top: 1px;
 }
 
 .inventory-qty-wrap label {
@@ -5285,6 +5318,7 @@ export default {
   flex-direction: column;
   gap: 4px;
   box-shadow: none !important;
+  flex-shrink: 0;
 }
 
 .grimoire-row-top,
