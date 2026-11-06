@@ -89,10 +89,10 @@
           v-if="isGm"
           class="btn-tool btn-fog-toggle"
           :class="{ active: fogEnabled }"
-          :title="fogEnabled ? 'Fog of War is ON - click to turn off (reveals the whole map)' : 'Fog of War is OFF - click to hide the map from players'"
+          :title="fogEnabled ? 'Turn Fog of War off (reveals the whole map)' : 'Turn Fog of War on (hides the map from players)'"
           @click="toggleFog"
         >
-          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A4.5 4.5 0 0 1 17 18H6z"/></svg> Fog {{ fogEnabled ? 'On' : 'Off' }}
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 18a4 4 0 0 1 0-8 5 5 0 0 1 9.6-1A4.5 4.5 0 0 1 17 18H6z"/></svg> {{ fogEnabled ? 'Fog Off' : 'Fog On' }}
         </button>
         <button
           v-if="isGm && fogEnabled"
