@@ -566,7 +566,7 @@
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
             </div>
-            <ul v-else class="items-list">
+            <ul v-else class="items-list skills-items-list">
               <li
                 v-for="(skill, index) in selectedChar.skills"
                 :key="skill.id || index"
@@ -656,7 +656,7 @@
             <div v-if="!filteredInventory || filteredInventory.length === 0" class="empty-list">
               {{ searchInventoryQuery ? 'No matching items in inventory.' : 'No equipment in inventory. Search available equipment or add a custom item!' }}
             </div>
-            <ul v-else class="items-list">
+            <ul v-else class="items-list inventory-items-list">
               <li
                 v-for="(item, index) in filteredInventory"
                 :key="item.id || index"
@@ -3431,21 +3431,29 @@ export default {
 .input-name {
   flex: 1;
   min-width: 180px;
-  background: var(--bg-input, #1c2026);
-  border: none !important;
-  color: #c9c9c9 !important;
-  -webkit-text-fill-color: #c9c9c9 !important;
+  background: var(--bg-panel, #14171c) !important;
+  background-color: var(--bg-panel, #14171c) !important;
+  border: 1px solid var(--bg-panel, #14171c) !important;
+  border-color: var(--bg-panel, #14171c) !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece !important;
   text-shadow: none !important;
   font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', sans-serif);
   font-size: 1.4rem;
   font-weight: 700;
   padding: 8px 12px;
   border-radius: 4px;
+  box-shadow: none !important;
+  cursor: text;
 }
 
+.input-name:hover,
 .input-name:focus {
   outline: none;
-  border: none !important;
+  background: var(--bg-panel, #14171c) !important;
+  background-color: var(--bg-panel, #14171c) !important;
+  border: 1px solid var(--bg-panel, #14171c) !important;
+  border-color: var(--bg-panel, #14171c) !important;
   box-shadow: none !important;
 }
 
@@ -4185,6 +4193,78 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+}
+
+/* Sitewide dark-color scrollbars for Inventory (> 5 items) and Skills (matching card height) */
+.inventory-items-list,
+.skills-items-list {
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: thin;
+  scrollbar-color: #484f58 #000000 !important;
+  padding-right: 4px;
+}
+
+.inventory-items-list {
+  max-height: 206px;
+}
+
+.skills-items-list {
+  max-height: 255px;
+}
+
+.inventory-items-list::-webkit-scrollbar,
+.skills-items-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.inventory-items-list::-webkit-scrollbar-track,
+.skills-items-list::-webkit-scrollbar-track {
+  background: #000000 !important;
+  border-radius: 4px;
+}
+
+.inventory-items-list::-webkit-scrollbar-thumb,
+.skills-items-list::-webkit-scrollbar-thumb {
+  background: #484f58 !important;
+  border-radius: 4px;
+  border: 1px solid #30363d !important;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.inventory-items-list::-webkit-scrollbar-thumb:hover,
+.skills-items-list::-webkit-scrollbar-thumb:hover {
+  background: #586069 !important;
+  border-color: #6e7681 !important;
+  box-shadow: none !important;
+}
+
+.inventory-items-list::-webkit-scrollbar-corner,
+.skills-items-list::-webkit-scrollbar-corner {
+  background: #000000 !important;
+}
+
+[data-color-pkg] .inventory-items-list,
+[data-color-pkg] .skills-items-list {
+  scrollbar-color: #484f58 #000000 !important;
+}
+
+[data-color-pkg] .inventory-items-list::-webkit-scrollbar-track,
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-track {
+  background: #000000 !important;
+}
+
+[data-color-pkg] .inventory-items-list::-webkit-scrollbar-thumb,
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb {
+  background: #484f58 !important;
+  border-color: #30363d !important;
+  box-shadow: none !important;
+}
+
+[data-color-pkg] .inventory-items-list::-webkit-scrollbar-thumb:hover,
+[data-color-pkg] .skills-items-list::-webkit-scrollbar-thumb:hover {
+  background: #586069 !important;
+  border-color: #6e7681 !important;
 }
 
 .item-row {

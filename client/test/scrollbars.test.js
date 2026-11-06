@@ -108,3 +108,29 @@ describe('PDF Rulebooks & Quick Reference Scrollbars (RulebooksView.vue)', () =>
   });
 });
 
+describe('Character Sheet Inventory & Skills Scrollbars (CharacterSheetsView.vue)', () => {
+  const viewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
+  const content = fs.readFileSync(viewPath, 'utf-8');
+
+  it('defines sitewide dark-color scrollbar parameters on inventory and skills lists', () => {
+    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list\s*\{[^}]*scrollbar-width:\s*thin;/);
+    expect(content).toMatch(/\.inventory-items-list[\s\S]*?\.skills-items-list\s*\{[^}]*scrollbar-color:\s*#484f58\s*#000000\s*!important;/);
+  });
+
+  it('defines sitewide dark WebKit scrollbar track and thumb on inventory and skills lists', () => {
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-track[\s\S]*?\{[^}]*background:\s*#000000\s*!important;/);
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb[\s\S]*?\{[^}]*background:\s*#484f58\s*!important;/);
+    expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb:hover[\s\S]*?\{[^}]*background:\s*#586069\s*!important;/);
+  });
+
+  it('caps inventory list at 5-item height and skills list to reach matching card height', () => {
+    expect(content).toMatch(/\.inventory-items-list\s*\{[^}]*max-height:\s*206px;/);
+    expect(content).toMatch(/\.skills-items-list\s*\{[^}]*max-height:\s*255px;/);
+  });
+
+  it('styles character name input and border to match the card background so the box is seamless', () => {
+    expect(content).toMatch(/\.input-name\s*\{[^}]*background:\s*var\(--bg-panel,\s*#14171c\)\s*!important;/);
+    expect(content).toMatch(/\.input-name\s*\{[^}]*border:\s*1px\s*solid\s*var\(--bg-panel,\s*#14171c\)\s*!important;/);
+  });
+});
+
