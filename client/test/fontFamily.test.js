@@ -124,6 +124,7 @@ describe('Permanent Dark UI Backdrop & data-color-pkg Theme Switcher', () => {
       'emerald',
       'azure',
       'ice',
+      'deepblue',
       'plum',
       'copper',
       'rust',

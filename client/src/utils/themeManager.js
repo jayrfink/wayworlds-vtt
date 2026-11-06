@@ -67,6 +67,17 @@ export const COLOR_PACKAGES = [
     essColor: '#95effb',
   },
   {
+    key: 'deepblue',
+    label: 'DeepBlue',
+    widgetColor: '#357d94',
+    borderColor: '#245667',
+    widgetTrack: '#143039',
+    brightColor: '#2784ae',
+    headerColor: '#5894b0',
+    staColor: '#2784ae',
+    essColor: '#48a2ae',
+  },
+  {
     key: 'plum',
     label: 'Plum',
     widgetColor: '#bc3846',

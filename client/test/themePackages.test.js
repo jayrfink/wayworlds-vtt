@@ -69,6 +69,10 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
     expect(icePkg.widgetColor).toBe('#82c9e1');
     expect(icePkg.borderColor).toBe('#71a3b3');
 
+    const deepPkg = COLOR_PACKAGES.find((p) => p.key === 'deepblue');
+    expect(deepPkg.label).toBe('DeepBlue');
+    expect(deepPkg.widgetColor).toBe('#357d94');
+
     const copperPkg = COLOR_PACKAGES.find((p) => p.key === 'copper');
     expect(copperPkg.label).toBe('Copper');
 
