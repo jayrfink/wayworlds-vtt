@@ -759,14 +759,15 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(vm.selectedChar.current_ess).toBe(25);
     });
 
-    it('pins max_ess to HIST/REL (log) or WIL (per) and automatically updates on attribute change', () => {
+    it('pins max_ess to INT (int), HIST/REL (log), or WIL (per) and automatically updates on attribute change', () => {
       const vm = {
         selectedChar: {
+          int: 62,
           log: 60,
           per: 55,
           max_ess: 50,
           current_ess: 50,
-          ess_pin: 'log',
+          ess_pin: 'int',
           racial_abilities: {},
         },
         updateCharacter: vi.fn(),
@@ -776,16 +777,21 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       vm.onStatChange = CharacterSheetsView.methods.onStatChange.bind(vm);
       vm.shiftStat = CharacterSheetsView.methods.shiftStat.bind(vm);
 
-      // Test onEssPinChange when pinned to log
+      // Test onEssPinChange when pinned to int
       vm.onEssPinChange();
-      expect(vm.selectedChar.max_ess).toBe(60);
-      expect(vm.selectedChar.racial_abilities.ess_pin).toBe('log');
+      expect(vm.selectedChar.max_ess).toBe(62);
+      expect(vm.selectedChar.racial_abilities.ess_pin).toBe('int');
       expect(vm.updateCharacter).toHaveBeenCalled();
 
-      // Test onStatChange when log increases
-      vm.selectedChar.log = 65;
-      vm.onStatChange('log');
-      expect(vm.selectedChar.max_ess).toBe(65);
+      // Test onStatChange when int increases
+      vm.selectedChar.int = 70;
+      vm.onStatChange('int');
+      expect(vm.selectedChar.max_ess).toBe(70);
+
+      // Change pin to log (HIST/REL)
+      vm.selectedChar.ess_pin = 'log';
+      vm.onEssPinChange();
+      expect(vm.selectedChar.max_ess).toBe(60);
 
       // Change pin to per (WIL)
       vm.selectedChar.ess_pin = 'per';

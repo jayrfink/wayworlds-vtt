@@ -468,9 +468,10 @@
                       v-model="selectedChar.ess_pin"
                       @change="onEssPinChange"
                       class="select-ess-pin"
-                      title="Pin Max ESSENCE/MANA to HIST/REL or WIL"
+                      title="Pin Max ESSENCE/MANA to INT, HIST/REL, or WIL"
                     >
                       <option value="">None</option>
+                      <option value="int">INT</option>
                       <option value="log">HIST/REL</option>
                       <option value="per">WIL</option>
                     </select>
@@ -1699,7 +1700,10 @@ export default {
       if (c.ldr === undefined) c.ldr = c.per_ldr || 50;
 
       // Automatically sync pinned attribute to max_ess if pin is active
-      if (c.ess_pin === 'log' && typeof c.log === 'number') {
+      if (c.ess_pin === 'int' && typeof c.int === 'number') {
+        c.max_ess = c.int;
+        if (c.current_ess > c.max_ess) c.current_ess = c.max_ess;
+      } else if (c.ess_pin === 'log' && typeof c.log === 'number') {
         c.max_ess = c.log;
         if (c.current_ess > c.max_ess) c.current_ess = c.max_ess;
       } else if (c.ess_pin === 'per' && typeof c.per === 'number') {
@@ -2050,7 +2054,12 @@ export default {
     syncEssFromPin() {
       if (!this.selectedChar) return;
       const pin = this.selectedChar.ess_pin;
-      if (pin === 'log' && typeof this.selectedChar.log === 'number') {
+      if (pin === 'int' && typeof this.selectedChar.int === 'number') {
+        this.selectedChar.max_ess = this.selectedChar.int;
+        if ((this.selectedChar.current_ess || 0) > this.selectedChar.max_ess) {
+          this.selectedChar.current_ess = this.selectedChar.max_ess;
+        }
+      } else if (pin === 'log' && typeof this.selectedChar.log === 'number') {
         this.selectedChar.max_ess = this.selectedChar.log;
         if ((this.selectedChar.current_ess || 0) > this.selectedChar.max_ess) {
           this.selectedChar.current_ess = this.selectedChar.max_ess;

@@ -184,6 +184,8 @@ describe('QuickReferenceTables.vue', () => {
 
       // Summary Table
       expect(html).toContain('Complete Skills &amp; Traditions Reference (21 Total)');
+      expect(html).toContain('Multi-Magic Fuel Rule:');
+      expect(html).toContain('highest governing attribute to fuel their');
     });
 
     it('filters PSA tab based on search query', async () => {

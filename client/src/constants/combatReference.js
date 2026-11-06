@@ -519,7 +519,7 @@ export const ATTRIBUTES_RULES_REF = {
     { acronym: 'RS', name: 'Reflex Speed', pair: 'DEX', baseRole: 'Combat Alertness, Initiative, Reaction Speed', formulaRole: 'Initiative Modifier: IM = ceil(RS / 10)' },
     { acronym: 'INT', name: 'Intellect', pair: 'HIST/REL', baseRole: 'Arcane Spells, Tradecraft, Field Medicine', formulaRole: 'Base Arcane Hit: ceil(INT / 2)' },
     { acronym: 'HIST/REL', name: 'History & Religion', pair: 'INT', baseRole: 'Ancient Lore, Faith, Divine Magic, Rituals', formulaRole: 'Base Spiritual Hit: ceil(HIST/REL / 2)' },
-    { acronym: 'WIL', name: 'Willpower', pair: 'PRE', baseRole: 'Essence Pool, Mental Fortitude, Tradition Channeling', formulaRole: 'Max Essence: max(WIL, HIST/REL, STA)' },
+    { acronym: 'WIL', name: 'Willpower', pair: 'PRE', baseRole: 'Essence Pool, Mental Fortitude, Tradition Channeling', formulaRole: 'Max Essence: max(INT, WIL, HIST/REL, STA)' },
     { acronym: 'PRE', name: 'Presence', pair: 'WIL', baseRole: 'Leadership, Intimidation, Persuasion, Social Force', formulaRole: 'Social & Command Resolution' },
   ],
   resourcePools: [
@@ -533,9 +533,9 @@ export const ATTRIBUTES_RULES_REF = {
     {
       name: 'Essence (ESS)',
       acronym: 'ESS',
-      metric: 'Max = Highest of adjusted WIL, HIST/REL, or STA (for Ki)',
+      metric: 'Max = Highest of adjusted INT, WIL, HIST/REL, or STA (for Ki)',
       description:
-        'The supernatural energy and focus pool used to cast spells, channel Ki, or manifest traditions. Standard cast cost is strictly Cast Tier x 2 ESS (0 for Cantrips/Minor moves). Fully restored upon a Full Rest.',
+        'The supernatural energy and focus pool used to cast spells, channel Ki, or manifest traditions. Multi-magic skilled players can choose the highest attribute among their magic skills to fuel their ESSENCE/MANA (e.g., Necromancy and Demonology uses the higher of the two). Standard cast cost is strictly Cast Tier x 2 ESS (0 for Cantrips/Minor moves). Fully restored upon a Full Rest.',
     },
   ],
 };

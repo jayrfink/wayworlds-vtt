@@ -570,6 +570,12 @@
             <span class="title-badge">Matrix</span>
             Complete Skills &amp; Traditions Reference (21 Total)
           </h2>
+          <div class="rules-note-banner">
+            <span class="note-icon">💡</span>
+            <div class="note-text">
+              <strong>Multi-Magic Fuel Rule:</strong> Players with multiple magic skills or traditions may choose the highest governing attribute to fuel their <strong>ESSENCE/MANA</strong> pool (for example, a caster with Necromancy [INT/HIST] and Demonology [WIL/PRE] uses the higher of the two attributes).
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="ref-table">
               <thead>
@@ -1661,5 +1667,31 @@ const noResults = computed(() => {
   color: var(--theme-bright, #cecece);
   margin: 0;
   letter-spacing: 0.3px;
+}
+
+.rules-note-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  border-radius: var(--radius);
+}
+
+.rules-note-banner .note-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.rules-note-banner .note-text {
+  font-size: 13px;
+  line-height: 1.4;
+  color: var(--text-primary);
+}
+
+.rules-note-banner .note-text strong {
+  color: #38bdf8;
 }
 </style>
