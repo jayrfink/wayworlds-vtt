@@ -1027,16 +1027,24 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(getCharTier({ tier: 3 })).toBe(3);
       expect(getCharTier({ threat_tier: 4 })).toBe(4);
 
-      // Tier 1: No skills or max level 1
+      // Tier 1: No skills, max level 1, or up to 3 level 1 skills
       expect(getCharTier({ skills: [{ name: 'Beam Weapons', level: 1 }] })).toBe(1);
+      expect(getCharTier({
+        skills: [
+          { name: 'Beam Weapons', level: 1 },
+          { name: 'Melee Weapons', level: 1 },
+          { name: 'Technician', level: 1 },
+        ],
+      })).toBe(1);
 
-      // Tier 2: Max level 2 or total >= 3
+      // Tier 2: Max level 2 or total >= 4
       expect(getCharTier({ skills: [{ name: 'Beam Weapons', level: 2 }] })).toBe(2);
       expect(getCharTier({
         skills: [
           { name: 'Beam Weapons', level: 1 },
           { name: 'Melee Weapons', level: 1 },
           { name: 'Technician', level: 1 },
+          { name: 'Stealth', level: 1 },
         ],
       })).toBe(2);
 

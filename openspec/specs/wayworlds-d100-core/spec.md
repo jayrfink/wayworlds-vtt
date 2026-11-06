@@ -183,7 +183,7 @@ Wayworlds inherits the exact starting skill allocation and XP point-buy engine f
    * **Tier 4 (Elite / Master):** Skills at Lvl 4–5 (unlocking multi-attacks); attributes around 65–75.
    * **Tier 5 (Mythic / Legend):** Skills at Lvl 6 (Apex mastery); attributes at 75–85+.
 2. **Starting Skill Allocation at Character Creation:**
-   * A newly created character starts with **two Level 1 skills** OR **one Level 2 skill** chosen from any Core Secular Skill, Tradecraft, or eligible Magic/Ki Tradition (the flexible character sheet also allows the GM or player to adjust starting skills directly if a campaign starts at a higher tier).
+   * A newly created character starts with **three Level 1 skills** chosen from any Core Secular Skill, Tradecraft, or eligible Magic/Ki Tradition (the flexible character sheet also allows the GM or player to adjust starting skills directly if a campaign starts at a higher tier).
 3. **Universal PSA-Scaled Skill & Magic Tradition XP Costs (`Lvl 1` to `Lvl 6`):**
    Every Core Skill, Tradecraft, and Magic/Ki Tradition costs **`3 * Next Level` XP** to advance by `+1 Level`:
 

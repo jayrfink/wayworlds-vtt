@@ -716,7 +716,7 @@ export function calcCharacterTier(char) {
   if (maxLevel >= 6 || totalLevels >= 15) return 5;
   if (maxLevel >= 5 || totalLevels >= 10) return 4;
   if (maxLevel >= 3 || totalLevels >= 6) return 3;
-  if (maxLevel >= 2 || totalLevels >= 3) return 2;
+  if (maxLevel >= 2 || totalLevels >= 4) return 2;
   return 1;
 }
 

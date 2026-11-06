@@ -159,7 +159,9 @@ describe('Wayworlds Character Tier, Universal Magnitude, & Tradecraft Forge Rule
     expect(calcCharacterTier(null)).toBe(1);
     expect(calcCharacterTier({})).toBe(1);
     expect(calcCharacterTier({ skills: [{ name: 'Melee Weapons', level: 1 }] })).toBe(1);
+    expect(calcCharacterTier({ skills: [{ name: 'Melee Weapons', level: 1 }, { name: 'Stealth', level: 1 }, { name: 'Arcane', level: 1 }] })).toBe(1);
     expect(calcCharacterTier({ skills: [{ name: 'Arcane', level: 2 }] })).toBe(2);
+    expect(calcCharacterTier({ skills: [{ name: 'Melee Weapons', level: 1 }, { name: 'Stealth', level: 1 }, { name: 'Arcane', level: 1 }, { name: 'Ride', level: 1 }] })).toBe(2);
     expect(calcCharacterTier({ grimoire: [{ name: 'Rime Bolt', default_tier: 3 }] })).toBe(3);
     expect(calcCharacterTier({ skills: [{ name: 'Ki', level: 4 }] })).toBe(3);
     expect(calcCharacterTier({ skills: [{ name: 'Necromancy', level: 5 }] })).toBe(4);

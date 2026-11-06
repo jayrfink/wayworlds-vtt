@@ -557,8 +557,8 @@ export const PSA_RULES_REF = {
     { level: 6, bonus: '+60%', inPsaCost: 18, outPsaCost: 36, cumInPsa: 63, cumOutPsa: 126, rank: 'Grandmaster / Paragon' },
   ],
   characterTiers: [
-    { tier: 'Tier 1', title: 'Local Novice', req: 'Level 1 Skill or <3 Total Levels', benchmark: 'Hedge mages, town militia, apprentice cutpurses, fledgling squires' },
-    { tier: 'Tier 2', title: 'Seasoned Adventurer', req: 'Level 2+ Skill or 3+ Total Levels', benchmark: 'Mercenary veterans, hedge wizards, seasoned rangers, guild thieves' },
+    { tier: 'Tier 1', title: 'Local Novice', req: '3 Level 1 Skills or <=3 Total Levels', benchmark: 'Hedge mages, town militia, apprentice cutpurses, fledgling squires' },
+    { tier: 'Tier 2', title: 'Seasoned Adventurer', req: 'Level 2+ Skill or 4+ Total Levels', benchmark: 'Mercenary veterans, hedge wizards, seasoned rangers, guild thieves' },
     { tier: 'Tier 3', title: 'Veteran Hero', req: 'Level 3+ Skill or 6+ Total Levels', benchmark: 'Knight commanders, master mages, royal assassins, renown heroes' },
     { tier: 'Tier 4', title: 'Master Champion', req: 'Level 5+ Skill or 10+ Total Levels', benchmark: 'Archmages, realm warlords, high inquisitors, heroic champions' },
     { tier: 'Tier 5', title: 'Legendary Paragon', req: 'Level 6 Skill or 15+ Total Levels', benchmark: 'Demigods, chosen of the gods, realm saviors, living legends' },
