@@ -64,6 +64,11 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
     const azurePkg = COLOR_PACKAGES.find((p) => p.key === 'azure');
     expect(azurePkg.label).toBe('Azure');
 
+    const icePkg = COLOR_PACKAGES.find((p) => p.key === 'ice');
+    expect(icePkg.label).toBe('Ice');
+    expect(icePkg.widgetColor).toBe('#82c9e1');
+    expect(icePkg.borderColor).toBe('#71a3b3');
+
     const copperPkg = COLOR_PACKAGES.find((p) => p.key === 'copper');
     expect(copperPkg.label).toBe('Copper');
 

@@ -56,6 +56,17 @@ export const COLOR_PACKAGES = [
     essColor: '#67e8f9',
   },
   {
+    key: 'ice',
+    label: 'Ice',
+    widgetColor: '#82c9e1',
+    borderColor: '#71a3b3',
+    widgetTrack: '#335763',
+    brightColor: '#74d1fa',
+    headerColor: '#a4e0fd',
+    staColor: '#74d1fa',
+    essColor: '#95effb',
+  },
+  {
     key: 'plum',
     label: 'Plum',
     widgetColor: '#bc3846',
