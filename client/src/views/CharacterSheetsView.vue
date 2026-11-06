@@ -641,7 +641,7 @@
               <div class="list-header-actions">
                 <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Add Equipment</button>
                 <button class="btn-secondary btn-open-forge" @click="openForgeApplet">+ Item Forge</button>
-                <button class="btn-secondary btn-add-custom-item" @click="addInventoryItem">+ Custom Item</button>
+                <button class="btn-secondary btn-add-custom-item" @click="openCustomItemModal">+ Custom Item</button>
               </div>
             </div>
             <div class="inventory-search-wrap" style="margin-bottom: 12px;">
@@ -674,42 +674,18 @@
                   title="Drag to reorder item"
                   @click.stop
                 >⋮⋮</span>
-                <div style="flex: 1; display: flex; flex-direction: column; gap: 4px;">
-                  <input
-                    type="text"
-                    v-model="item.name"
-                    @change="updateCharacter"
-                    placeholder="Item Name"
-                    class="item-name-input"
-                  />
-                  <input 
-                    type="text"
-                    v-model="item.notes"
-                    @change="updateCharacter"
-                    placeholder="Notes / Capabilities"
-                    class="item-name-input"
-                    style="font-size: 0.8rem; color: #8b949e; background: transparent; border: 1px dashed #30363d;"
-                  />
+                <div class="inventory-item-badge" :title="getInventoryItemTooltip(item)">
+                  <span class="inventory-item-name">{{ item.name }}</span>
+                  <span v-if="item.notes" class="inventory-item-traits">— {{ item.notes }}</span>
                 </div>
-                <div class="item-weight-wrap">
-                  <label>Lbs:</label>
-                  <input
-                    type="number"
-                    step="0.1"
-                    v-model.number="item.weight"
-                    @change="updateCharacter"
-                    min="0"
-                    class="item-weight-input"
-                  />
-                </div>
-                <div class="level-wrap">
+                <div class="level-wrap inventory-qty-wrap">
                   <label>Qty:</label>
                   <input
                     type="number"
                     v-model.number="item.quantity"
                     @change="updateCharacter"
                     min="1"
-                    class="item-level-input"
+                    class="item-level-input inventory-qty-input"
                   />
                 </div>
                 <div class="reorder-actions">
@@ -1252,6 +1228,70 @@
       </div>
     </div>
 
+    <!-- Add Custom Item Modal -->
+    <div v-if="showCustomItemModal" class="modal-backdrop" @click.self="showCustomItemModal = false">
+      <div class="modal-card equipment-modal custom-item-modal" style="max-width: 480px;">
+        <div class="equipment-modal-header">
+          <h3>+ Add Custom Item</h3>
+          <button class="btn-close-modal" title="Close" @click="showCustomItemModal = false">✕</button>
+        </div>
+        <p class="equipment-modal-desc">
+          Add an item, tool, or equipment to your character's inventory with its traits and weight.
+        </p>
+        <form @submit.prevent="submitCustomItem" class="forge-form">
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>Item Name *</label>
+              <input
+                type="text"
+                v-model="customItemForm.name"
+                class="forge-name-input"
+                placeholder="e.g. Silk Rope (50 ft), Silver Pendant"
+                required
+                autofocus
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>Traits / Capabilities / Notes</label>
+              <input
+                type="text"
+                v-model="customItemForm.notes"
+                class="forge-name-input"
+                placeholder="e.g. Holds 500 lbs, +10% climbing"
+              />
+            </div>
+          </div>
+          <div class="form-row" style="display: flex; gap: 12px;">
+            <div class="form-group" style="flex: 1;">
+              <label>Weight (lbs)</label>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                v-model.number="customItemForm.weight"
+                class="forge-name-input"
+              />
+            </div>
+            <div class="form-group" style="flex: 1;">
+              <label>Quantity</label>
+              <input
+                type="number"
+                min="1"
+                v-model.number="customItemForm.quantity"
+                class="forge-name-input"
+              />
+            </div>
+          </div>
+          <div class="modal-actions" style="margin-top: 16px;">
+            <button type="button" class="btn-modal-cancel" @click="showCustomItemModal = false">Cancel</button>
+            <button type="submit" class="btn-modal-create" :disabled="!customItemForm.name || !customItemForm.name.trim()">+ Add to Inventory</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Image Browser Modal -->
     <ImageBrowserModal
       v-model="showImageBrowser"
@@ -1403,6 +1443,13 @@ export default {
         armor_dr_bonus: 'Light Armor (-2 DR per die)',
         weight_lbs: 3,
         bound_power: '',
+      },
+      showCustomItemModal: false,
+      customItemForm: {
+        name: '',
+        notes: '',
+        weight: 1.0,
+        quantity: 1,
       },
     };
   },
@@ -2340,11 +2387,58 @@ export default {
         this.recentlyAddedMap = copy;
       }, 1500);
     },
-    addInventoryItem() {
+    openCustomItemModal() {
+      this.customItemForm = {
+        name: '',
+        notes: '',
+        weight: 1.0,
+        quantity: 1,
+      };
+      this.showCustomItemModal = true;
+    },
+    submitCustomItem() {
       if (!this.selectedChar) return;
-      if (!this.selectedChar.inventory) this.selectedChar.inventory = [];
-      this.selectedChar.inventory.push({ name: 'New Item', quantity: 1, weight: 1.0, notes: '' });
+      const name = (this.customItemForm.name || '').trim();
+      if (!name) return;
+      if (!Array.isArray(this.selectedChar.inventory)) {
+        this.selectedChar.inventory = [];
+      }
+      this.selectedChar.inventory.push({
+        name,
+        notes: (this.customItemForm.notes || '').trim(),
+        weight: Math.max(0, Number(this.customItemForm.weight) || 0),
+        quantity: Math.max(1, Number(this.customItemForm.quantity) || 1),
+      });
+      this.showCustomItemModal = false;
       this.updateCharacter();
+    },
+    addInventoryItem(customItem = null) {
+      if (!this.selectedChar) return;
+      if (!Array.isArray(this.selectedChar.inventory)) {
+        this.selectedChar.inventory = [];
+      }
+      if (customItem && typeof customItem === 'object' && customItem.name && typeof customItem.name === 'string') {
+        this.selectedChar.inventory.push({
+          name: customItem.name,
+          quantity: Math.max(1, Number(customItem.quantity) || 1),
+          weight: Math.max(0, Number(customItem.weight) || 0),
+          notes: customItem.notes || '',
+        });
+        this.updateCharacter();
+        return;
+      }
+      this.openCustomItemModal();
+    },
+    getInventoryItemTooltip(item) {
+      if (!item) return '';
+      const parts = [item.name];
+      if (item.weight !== undefined && item.weight !== null && item.weight !== '') {
+        parts.push(`(${item.weight} lbs)`);
+      }
+      if (item.notes) {
+        parts.push(`— ${item.notes}`);
+      }
+      return parts.join(' ');
     },
     removeInventoryItem(itemOrIndex) {
       if (!this.selectedChar || !this.selectedChar.inventory) return;
@@ -4255,6 +4349,71 @@ export default {
 }
 .btn-remove:hover {
   color: #f85149;
+}
+
+/* Inventory Row & Text Badge (1-Row Seamless Design) */
+.inventory-row {
+  min-height: 28px;
+  padding: 3px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.inventory-item-badge {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  padding: 2px 2px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+
+.inventory-item-name {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #cecece;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inventory-item-traits {
+  font-size: 0.78rem;
+  color: #8b949e;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+
+.inventory-qty-wrap {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.72rem;
+  color: #8b949e;
+  flex-shrink: 0;
+}
+
+.inventory-qty-wrap label {
+  font-size: 0.72rem;
+  color: #8b949e;
+}
+
+.inventory-qty-input {
+  width: 38px !important;
+  height: 24px !important;
+  padding: 2px 2px !important;
+  font-size: 0.75rem !important;
+  line-height: 1 !important;
+  box-sizing: border-box;
 }
 
 /* Buttons & Controls */

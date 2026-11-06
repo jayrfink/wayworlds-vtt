@@ -1866,6 +1866,20 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         expect(firstUp.attributes('disabled')).toBeDefined(); // disabled at top
         expect(firstDown.attributes('disabled')).toBeUndefined(); // enabled to move down
 
+        // First row: Name and Traits rendered in seamless text badge, without editable inputs
+        const firstBadge = invRows[0].find('.inventory-item-badge');
+        expect(firstBadge.exists()).toBe(true);
+        expect(firstBadge.find('.inventory-item-name').text()).toBe('Chronocom');
+        expect(firstBadge.find('.inventory-item-traits').text()).toBe('— Wrist comm');
+        expect(invRows[0].findAll('input[placeholder="Item Name"]').length).toBe(0);
+        expect(invRows[0].findAll('input[placeholder="Notes / Capabilities"]').length).toBe(0);
+        expect(invRows[0].findAll('.item-weight-input').length).toBe(0);
+
+        // Qty up/down input remains present and uses 10% smaller inventory sizing
+        const qtyInput = invRows[0].find('.inventory-qty-input');
+        expect(qtyInput.exists()).toBe(true);
+        expect(qtyInput.element.value).toBe('1');
+
         // Second row: Move Down should be disabled at bottom
         const secondUp = invRows[1].find('.btn-move-up');
         const secondDown = invRows[1].find('.btn-move-down');
@@ -1881,6 +1895,33 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       const path = require('path');
       const vueFile = fs.readFileSync(path.resolve(__dirname, '../src/views/CharacterSheetsView.vue'), 'utf-8');
       expect(vueFile).toMatch(/<button[^>]*class="[^"]*btn-new-character[^"]*"[^>]*>\s*\+\s*New\s*<\/button>/);
+    });
+
+    it('creates custom inventory items via modal submit and formats tooltip', () => {
+      const vm = {
+        selectedChar: { inventory: [] },
+        customItemForm: {
+          name: 'Elven Cloak',
+          notes: '+10% Stealth in foliage',
+          weight: 1.5,
+          quantity: 1,
+        },
+        showCustomItemModal: true,
+        updateCharacter: vi.fn(),
+      };
+
+      CharacterSheetsView.methods.submitCustomItem.call(vm);
+      expect(vm.selectedChar.inventory.length).toBe(1);
+      const added = vm.selectedChar.inventory[0];
+      expect(added.name).toBe('Elven Cloak');
+      expect(added.notes).toBe('+10% Stealth in foliage');
+      expect(added.weight).toBe(1.5);
+      expect(added.quantity).toBe(1);
+      expect(vm.showCustomItemModal).toBe(false);
+      expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
+
+      const tooltip = CharacterSheetsView.methods.getInventoryItemTooltip.call(vm, added);
+      expect(tooltip).toBe('Elven Cloak (1.5 lbs) — +10% Stealth in foliage');
     });
   });
 
