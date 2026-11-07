@@ -4165,7 +4165,7 @@ export default {
 
 /* Species Traits Banner (styled after Ship Sheets Standard Flip Capable banner) */
 .racial-panel.species-traits-banner {
-  margin-bottom: 20px;
+  margin-bottom: 0;
   padding: 10px 14px;
   border-radius: 6px;
   background: rgba(200, 200, 200, 0.04) !important;
