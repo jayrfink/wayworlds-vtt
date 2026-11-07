@@ -66,7 +66,7 @@ describe('NavBar.vue', () => {
     expect(html).toContain('/dashboard/world-vtt');
     expect(html).toContain('Character Sheets');
     expect(html).toContain('/dashboard/character-sheets');
-    expect(html).toContain('Rulebooks');
+    expect(html).toContain('Guides');
     expect(html).toContain('/dashboard/rulebooks');
   });
 

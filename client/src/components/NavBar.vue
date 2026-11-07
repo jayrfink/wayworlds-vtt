@@ -122,7 +122,7 @@ const baseTabs = [
   { path: '/dashboard/rpg-vtt', label: 'RPG VTT', icon: '🗺️' },
   { path: '/dashboard/world-vtt', label: 'World VTT', icon: '🧭' },
   { path: '/dashboard/character-sheets', label: 'Character Sheets', icon: '📋' },
-  { path: '/dashboard/rulebooks', label: 'Rulebooks', icon: '📖' },
+  { path: '/dashboard/rulebooks', label: 'Guides', icon: '📖' },
 ];
 
 const tabs = computed(() => {

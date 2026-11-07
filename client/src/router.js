@@ -59,7 +59,7 @@ const routes = [
       { path: 'rpg-vtt', name: 'RpgVtt', component: RpgVttView, meta: { title: 'RPG VTT' } },
       { path: 'world-vtt', name: 'WorldVtt', component: WorldVttView, meta: { title: 'World VTT' } },
       { path: 'character-sheets', name: 'CharacterSheets', component: CharacterSheetsView, meta: { title: 'Character Sheets' } },
-      { path: 'rulebooks', name: 'Rulebooks', component: RulebooksView, meta: { title: 'Rulebooks' } },
+      { path: 'rulebooks', name: 'Rulebooks', component: RulebooksView, meta: { title: 'Guides' } },
       { path: 'gm-notes', name: 'GmNotes', component: GmNotesView, meta: { requiresAuth: true, requiresGm: true, title: 'GM Notes' } },
       { path: 'admin', name: 'Admin', component: AdminView, meta: { requiresAuth: true, requiresGm: true, title: 'Admin' } },
     ],

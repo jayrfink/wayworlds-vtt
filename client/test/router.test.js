@@ -31,7 +31,7 @@ describe('Router Dynamic Tab Titles', () => {
       'RpgVtt': 'RPG VTT',
       'WorldVtt': 'World VTT',
       'CharacterSheets': 'Character Sheets',
-      'Rulebooks': 'Rulebooks',
+      'Rulebooks': 'Guides',
       'GmNotes': 'GM Notes',
       'Admin': 'Admin',
     };
