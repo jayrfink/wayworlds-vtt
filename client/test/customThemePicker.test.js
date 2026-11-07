@@ -79,7 +79,7 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
   });
 
   describe('CharacterSheetsView Custom Color Picker Button', () => {
-    it('renders Colors Scheme button and hidden picker, applying custom theme variables to sheet-container', async () => {
+    it('renders Color Scheme button and hidden picker, applying custom theme variables to sheet-container', async () => {
       const pinia = createPinia();
       setActivePinia(pinia);
 
@@ -116,10 +116,10 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
       // Old preset theme dropdown must NOT exist
       expect(wrapper.find('.select-char-theme').exists()).toBe(false);
 
-      // Colors Scheme button is rendered
+      // Color Scheme button is rendered
       const schemeBtn = wrapper.find('.btn-char-color-scheme');
       expect(schemeBtn.exists()).toBe(true);
-      expect(schemeBtn.text()).toBe('Colors Scheme');
+      expect(schemeBtn.text()).toBe('Color Scheme');
 
       // Hidden color input is bound
       const colorInput = wrapper.find('.hidden-color-input');
@@ -134,7 +134,7 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
   });
 
   describe('NavBar Site Custom Color Picker Button', () => {
-    it('renders Colors Scheme button and hidden picker in top row without preset dropdown', async () => {
+    it('renders Color Scheme button and hidden picker in top row without preset dropdown', async () => {
       const pinia = createPinia();
       setActivePinia(pinia);
 
@@ -151,10 +151,10 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
       // Old preset select dropdown must NOT exist
       expect(wrapper.find('#nav-color-pkg-select').exists()).toBe(false);
 
-      // Colors Scheme button exists
+      // Color Scheme button exists
       const schemeBtn = wrapper.find('.btn-color-scheme');
       expect(schemeBtn.exists()).toBe(true);
-      expect(schemeBtn.text()).toBe('Colors Scheme');
+      expect(schemeBtn.text()).toBe('Color Scheme');
 
       // Hidden color input exists
       const navColorPicker = wrapper.find('#nav-custom-color-picker');

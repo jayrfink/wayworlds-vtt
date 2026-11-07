@@ -21,7 +21,7 @@
           @click="openSiteColorPicker"
           title="Click to customize site color scheme"
         >
-          Colors Scheme
+          Color Scheme
         </button>
         <input
           ref="siteColorInput"

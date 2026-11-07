@@ -134,7 +134,7 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
     expect(card.attributes('data-color-pkg')).toBe('silver');
   });
 
-  it('makes Colors Scheme button available in NavBar sitewide selector', () => {
+  it('makes Color Scheme button available in NavBar sitewide selector', () => {
     const pinia = createPinia();
     setActivePinia(pinia);
 
@@ -150,15 +150,15 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
 
     // Preset dropdown deleted
     expect(wrapper.find('#nav-color-pkg-select').exists()).toBe(false);
-    // Colors Scheme button exists
+    // Color Scheme button exists
     const btn = wrapper.find('.btn-color-scheme');
     expect(btn.exists()).toBe(true);
-    expect(btn.text()).toBe('Colors Scheme');
+    expect(btn.text()).toBe('Color Scheme');
     // Color picker input exists
     expect(wrapper.find('#nav-custom-color-picker').exists()).toBe(true);
   });
 
-  it('makes Colors Scheme button available in CharacterSheetsView', async () => {
+  it('makes Color Scheme button available in CharacterSheetsView', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
 
@@ -196,10 +196,10 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
 
     // Preset dropdown deleted
     expect(wrapper.find('.select-char-theme').exists()).toBe(false);
-    // Colors Scheme button exists
+    // Color Scheme button exists
     const btn = wrapper.find('.btn-char-color-scheme');
     expect(btn.exists()).toBe(true);
-    expect(btn.text()).toBe('Colors Scheme');
+    expect(btn.text()).toBe('Color Scheme');
 
     // Scoped container receives style with custom theme variables
     const sheetContainer = wrapper.find('.sheet-container');

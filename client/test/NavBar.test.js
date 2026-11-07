@@ -150,11 +150,11 @@ describe('NavBar.vue', () => {
     expect(exposed.showPasswordModal.value).toBe(true);
   });
 
-  it('renders Colors Scheme button and color picker in navbar and does not render preset dropdown', async () => {
+  it('renders Color Scheme button and color picker in navbar and does not render preset dropdown', async () => {
     const html = await renderNavBar({ username: 'PlayerOne', role: 'Player' });
     expect(html).not.toContain('color-pkg-select');
     expect(html).toContain('btn-color-scheme');
-    expect(html).toContain('Colors Scheme');
+    expect(html).toContain('Color Scheme');
     expect(html).toContain('nav-custom-color-picker');
   });
 });

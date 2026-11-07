@@ -2351,7 +2351,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
 
       const themeBtn = wrapper.find('.btn-char-color-scheme');
       expect(themeBtn.exists()).toBe(true);
-      expect(themeBtn.text()).toBe('Colors Scheme');
+      expect(themeBtn.text()).toBe('Color Scheme');
 
       // Verify old dropdown does not exist
       expect(wrapper.find('.select-char-theme').exists()).toBe(false);

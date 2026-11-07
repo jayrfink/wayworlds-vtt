@@ -213,7 +213,7 @@
                     @click="openCharColorPicker"
                     title="Click to customize character sheet color scheme"
                   >
-                    Colors Scheme
+                    Color Scheme
                   </button>
                   <input
                     ref="charColorInput"
