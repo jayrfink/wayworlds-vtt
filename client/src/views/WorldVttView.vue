@@ -306,24 +306,19 @@
           <div
             v-if="showDamageHud && lastDamageRoll"
             class="damage-hud-banner"
-            :style="{
-              borderColor: activeDiceColors.damage,
-              color: activeDiceColors.damage,
-              boxShadow: `0 0 20px ${activeDiceColors.damage}66, 0 8px 32px rgba(0, 0, 0, 0.8)`
-            }"
             @click="showDamageHud = false"
           >
             <div class="hud-header">
-              <div class="hud-title" :style="{ color: `${activeDiceColors.damage}cc` }">
+              <div class="hud-title">
                 <span v-if="lastDamageRoll.username" class="hud-user-tag" :class="lastDamageRoll.role?.toLowerCase()">
                   {{ lastDamageRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastDamageRoll.username }}
                 </span>
                 💥 Damage Roll ({{ lastDamageRoll.count }}d10)
               </div>
-              <button class="hud-close" :style="{ color: activeDiceColors.damage }" @click.stop="showDamageHud = false">&times;</button>
+              <button class="hud-close" @click.stop="showDamageHud = false">&times;</button>
             </div>
             <div class="hud-body">
-              <span class="hud-total" :style="{ color: activeDiceColors.damage, textShadow: `0 0 10px ${activeDiceColors.damage}b3` }">{{ lastDamageRoll.total }}</span>
+              <span class="hud-total">{{ lastDamageRoll.total }}</span>
               <span class="hud-dice">({{ lastDamageRoll.dice?.length ? lastDamageRoll.dice.join(' + ') : lastDamageRoll.breakdown }})</span>
             </div>
           </div>
@@ -334,24 +329,20 @@
           <div
             v-if="showPercentileHud && lastPercentileRoll"
             class="percentile-hud-banner"
-            :style="{
-              borderColor: activeDiceColors.percentileTens,
-              boxShadow: `0 0 20px ${activeDiceColors.percentileTens}66, 0 8px 32px rgba(0, 0, 0, 0.8)`
-            }"
             @click="showPercentileHud = false"
           >
             <div class="hud-header">
-              <div class="hud-title" :style="{ color: `${activeDiceColors.percentileTens}cc` }">
+              <div class="hud-title">
                 <span v-if="lastPercentileRoll.username" class="hud-user-tag" :class="lastPercentileRoll.role?.toLowerCase()">
                   {{ lastPercentileRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastPercentileRoll.username }}
                 </span>
                 🎲 Percentile Roll (d%)
               </div>
-              <button class="hud-close" :style="{ color: activeDiceColors.percentileTens }" @click.stop="showPercentileHud = false">&times;</button>
+              <button class="hud-close" @click.stop="showPercentileHud = false">&times;</button>
             </div>
             <div class="hud-body">
-              <span class="hud-total" :style="{ color: activeDiceColors.percentileTens, textShadow: `0 0 10px ${activeDiceColors.percentileTens}b3` }">{{ lastPercentileRoll.total }}</span>
-              <span class="hud-dice">(<span class="hud-tens-val" :style="{ color: activeDiceColors.percentileTens }">Tens: {{ lastPercentileRoll.tens }}</span>, <span class="hud-ones-val" :style="{ color: activeDiceColors.percentileOnes }">Ones: {{ lastPercentileRoll.ones }}</span>)</span>
+              <span class="hud-total">{{ lastPercentileRoll.total }}</span>
+              <span class="hud-dice">(<span class="hud-tens-val">Tens: {{ lastPercentileRoll.tens }}</span>, <span class="hud-ones-val">Ones: {{ lastPercentileRoll.ones }}</span>)</span>
             </div>
           </div>
         </transition>
@@ -373,30 +364,14 @@
               <button class="hud-close" @click.stop="showInitiativeHud = false">&times;</button>
             </div>
             <div class="hud-body init-hud-body">
-              <div
-                class="init-die-box init-player-die"
-                :style="{
-                  backgroundColor: activeDiceColors.initiativePlayer,
-                  borderColor: getContrastingNumberColor(activeDiceColors.initiativePlayer),
-                  color: getContrastingNumberColor(activeDiceColors.initiativePlayer),
-                  boxShadow: `0 0 16px ${activeDiceColors.initiativePlayer}88, inset 0 2px 4px rgba(255, 255, 255, 0.15)`
-                }"
-              >
+              <div class="init-die-box init-player-die">
                 <span class="init-label">PLAYERS</span>
-                <span class="init-val" :style="{ textShadow: `0 0 10px ${getContrastingNumberColor(activeDiceColors.initiativePlayer)}88` }">{{ lastInitiativeRoll.playerRoll }}</span>
+                <span class="init-val">{{ lastInitiativeRoll.playerRoll }}</span>
               </div>
               <span class="init-vs">VS</span>
-              <div
-                class="init-die-box init-opp-die"
-                :style="{
-                  backgroundColor: activeDiceColors.initiativeOpp,
-                  borderColor: getContrastingNumberColor(activeDiceColors.initiativeOpp),
-                  color: getContrastingNumberColor(activeDiceColors.initiativeOpp),
-                  boxShadow: `0 0 16px ${activeDiceColors.initiativeOpp}88, inset 0 2px 4px rgba(255, 255, 255, 0.15)`
-                }"
-              >
+              <div class="init-die-box init-opp-die">
                 <span class="init-label">OPPOSITION</span>
-                <span class="init-val" :style="{ textShadow: `0 0 10px ${getContrastingNumberColor(activeDiceColors.initiativeOpp)}88` }">{{ lastInitiativeRoll.oppRoll }}</span>
+                <span class="init-val">{{ lastInitiativeRoll.oppRoll }}</span>
               </div>
             </div>
           </div>
@@ -2519,8 +2494,8 @@ onBeforeUnmount(() => {
   top: 70px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(11, 34, 46, 0.95);
-  border: 2px solid #b5eeff;
+  background: rgba(13, 17, 23, 0.95);
+  border: 2px solid var(--theme-bright, #b5eeff);
   box-shadow: 0 0 20px rgba(181, 238, 255, 0.45), 0 8px 32px rgba(0, 0, 0, 0.8);
   border-radius: 8px;
   padding: 12px 18px;
@@ -2528,6 +2503,35 @@ onBeforeUnmount(() => {
   cursor: pointer;
   z-index: 250;
   backdrop-filter: blur(8px);
+}
+.initiative-hud-banner .hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+.initiative-hud-banner .hud-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--theme-bright, rgba(181, 238, 255, 0.85));
+  text-transform: uppercase;
+  text-shadow: 0 0 8px var(--theme-glow, rgba(181, 238, 255, 0.4));
+}
+.initiative-hud-banner .hud-close {
+  background: transparent;
+  border: none;
+  color: var(--theme-bright, #b5eeff);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  text-shadow: 0 0 8px var(--theme-glow, rgba(181, 238, 255, 0.5));
+  transition: color 0.15s ease;
+}
+.initiative-hud-banner .hud-close:hover {
+  color: var(--theme-bright-hover, #ffffff);
 }
 .init-hud-body {
   display: flex;
@@ -2544,22 +2548,44 @@ onBeforeUnmount(() => {
   width: 72px;
   height: 72px;
   border-radius: 8px;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.1), 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 .init-player-die {
-  background: #0b222e;
-  border: 2px solid #b5eeff;
-  color: #b5eeff;
+  background: var(--theme-btn-bg, #0b222e);
+  border: 2px solid var(--theme-bright, #b5eeff);
+  color: var(--theme-bright, #b5eeff);
+  box-shadow: 0 0 12px var(--theme-glow, rgba(181, 238, 255, 0.4)), inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 .init-player-die .init-val {
+  color: var(--theme-bright, #b5eeff);
   text-shadow: 0 0 10px rgba(181, 238, 255, 0.7);
 }
 .init-opp-die {
   background: #400a22;
   border: 2px solid #c9abb9;
   color: #c9abb9;
+  box-shadow: 0 0 12px rgba(201, 171, 185, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 .init-opp-die .init-val {
   text-shadow: 0 0 10px rgba(201, 171, 185, 0.7);
+}
+.init-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+.init-val {
+  font-size: 32px;
+  font-weight: 800;
+  line-height: 1;
+  font-family: monospace;
+}
+.init-vs {
+  font-size: 14px;
+  font-weight: 900;
+  color: var(--text-secondary, #64748b);
+  text-shadow: 0 0 6px rgba(100, 116, 139, 0.5);
 }
 .init-log-pills {
   display: flex;
@@ -2568,12 +2594,13 @@ onBeforeUnmount(() => {
   font-size: 11px;
 }
 .init-pill-player {
-  background: #0b222e;
-  color: #b5eeff;
-  border: 1px solid #b5eeff;
+  background: var(--theme-btn-bg, #0b222e);
+  color: var(--theme-bright, #b5eeff);
+  border: 1px solid var(--theme-bright, #b5eeff);
   padding: 1px 6px;
   border-radius: 3px;
   font-weight: 700;
+  box-shadow: 0 0 6px var(--theme-glow, rgba(56, 189, 248, 0.35));
 }
 .init-pill-opp {
   background: #400a22;
@@ -2582,6 +2609,7 @@ onBeforeUnmount(() => {
   padding: 1px 6px;
   border-radius: 3px;
   font-weight: 700;
+  box-shadow: 0 0 6px rgba(201, 171, 185, 0.35);
 }
 
 .damage-hud-banner {
@@ -2589,12 +2617,72 @@ onBeforeUnmount(() => {
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(20, 4, 9, 0.94);
-  border: 2px solid #f29249;
+  background: rgba(13, 17, 23, 0.94);
+  border: 2px solid var(--theme-bright, #38bdf8);
   border-radius: 8px;
   padding: 10px 18px;
-  color: #f29249;
+  color: var(--theme-bright, #38bdf8);
   z-index: 250;
+  box-shadow: 0 0 20px var(--theme-glow, rgba(56, 189, 248, 0.45)), 0 8px 32px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(8px);
+}
+
+.damage-hud-banner .hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.damage-hud-banner .hud-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--theme-bright, #38bdf8);
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+.damage-hud-banner .hud-close {
+  background: transparent;
+  border: none;
+  color: var(--theme-bright, #38bdf8);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.damage-hud-banner .hud-close:hover {
+  color: var(--theme-bright-hover, #7dd3fc);
+}
+
+.damage-hud-banner .hud-body {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.damage-hud-banner .hud-total {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--theme-bright, #38bdf8);
+  text-shadow: 0 0 12px var(--theme-glow, rgba(56, 189, 248, 0.7));
+  line-height: 1;
+}
+
+.damage-hud-banner .hud-dice {
+  font-size: 13px;
+  color: var(--theme-accent, #7dd3fc);
+  font-weight: 600;
 }
 
 .percentile-hud-banner {
@@ -2602,12 +2690,116 @@ onBeforeUnmount(() => {
   top: 24px;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(34, 56, 74, 0.94);
-  border: 2px solid #77d19e;
+  background: rgba(13, 17, 23, 0.94);
+  border: 2px solid var(--theme-bright, #38bdf8);
   border-radius: 8px;
   padding: 10px 18px;
-  color: #77d19e;
+  color: var(--theme-bright, #38bdf8);
   z-index: 250;
+  box-shadow: 0 0 20px var(--theme-glow, rgba(56, 189, 248, 0.45)), 0 8px 32px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  user-select: none;
+  backdrop-filter: blur(8px);
+}
+
+.percentile-hud-banner .hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 16px;
+}
+
+.percentile-hud-banner .hud-title {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--theme-bright, #38bdf8);
+  opacity: 0.85;
+  text-transform: uppercase;
+}
+
+.percentile-hud-banner .hud-close {
+  background: transparent;
+  border: none;
+  color: var(--theme-bright, #38bdf8);
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0 4px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.percentile-hud-banner .hud-close:hover {
+  color: var(--theme-bright-hover, #7dd3fc);
+}
+
+.percentile-hud-banner .hud-body {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.percentile-hud-banner .hud-total {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--theme-bright, #38bdf8);
+  text-shadow: 0 0 12px var(--theme-glow, rgba(56, 189, 248, 0.7));
+  line-height: 1;
+}
+
+.percentile-hud-banner .hud-dice {
+  font-size: 13px;
+  color: var(--text-secondary, #8b949e);
+  font-weight: 600;
+}
+
+.percentile-hud-banner .hud-tens-val {
+  color: var(--theme-bright, #38bdf8);
+  font-weight: 700;
+}
+
+.percentile-hud-banner .hud-ones-val {
+  color: var(--theme-accent, #7dd3fc);
+  font-weight: 700;
+}
+
+.dmg-last-roll-card {
+  margin-top: 8px;
+  padding: 6px 8px;
+  background: rgba(13, 17, 23, 0.9);
+  border: 1px solid var(--theme-border-subtle, var(--border));
+  border-radius: 4px;
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dmg-last-roll-card .last-roll-header {
+  color: var(--text-secondary, #8b949e);
+}
+
+.dmg-last-roll-card .last-roll-result {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.dmg-last-roll-card .last-roll-total {
+  color: var(--theme-bright, #38bdf8);
+  font-weight: 800;
+  font-size: 14px;
+  text-shadow: 0 0 6px var(--theme-glow, rgba(56, 189, 248, 0.4));
+}
+
+.dmg-last-roll-card .last-roll-breakdown {
+  color: var(--theme-accent, #7dd3fc);
+  font-size: 11px;
 }
 
 .vtt-canvas-wrapper {

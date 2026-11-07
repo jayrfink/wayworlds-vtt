@@ -1,0 +1,67 @@
+import { describe, it, expect } from 'vitest';
+import fs from 'fs';
+import path from 'path';
+
+describe('Die Roll Results use site ColorScheme', () => {
+  const rpgPath = path.resolve(__dirname, '../src/views/RpgVttView.vue');
+  const worldPath = path.resolve(__dirname, '../src/views/WorldVttView.vue');
+  const rpgContent = fs.readFileSync(rpgPath, 'utf8');
+  const worldContent = fs.readFileSync(worldPath, 'utf8');
+
+  describe('RpgVttView Die Roll Results', () => {
+    it('does not bind inline styles with activeDiceColors on damage, percentile, or initiative HUD banners', () => {
+      // Banners should use scoped CSS variables, avoiding dynamic inline styles for better performance & contrast
+      expect(rpgContent).not.toMatch(/class="damage-hud-banner"[^>]*:style/);
+      expect(rpgContent).not.toMatch(/class="percentile-hud-banner"[^>]*:style/);
+      expect(rpgContent).not.toMatch(/class="init-die-box init-player-die"[^>]*:style/);
+      expect(rpgContent).not.toMatch(/class="init-die-box init-opp-die"[^>]*:style/);
+    });
+
+    it('styles damage-hud-banner with site theme variables', () => {
+      expect(rpgContent).toMatch(/\.damage-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.damage-hud-banner\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.damage-hud-banner \.hud-total\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+
+    it('styles percentile-hud-banner with site theme variables', () => {
+      expect(rpgContent).toMatch(/\.percentile-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.percentile-hud-banner\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.percentile-hud-banner \.hud-total\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.percentile-hud-banner \.hud-tens-val\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+
+    it('styles initiative HUD with site theme variables', () => {
+      expect(rpgContent).toMatch(/\.initiative-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+  });
+
+  describe('WorldVttView Die Roll Results', () => {
+    it('does not bind inline styles with activeDiceColors on damage, percentile, or initiative HUD banners', () => {
+      expect(worldContent).not.toMatch(/class="damage-hud-banner"[^>]*:style/);
+      expect(worldContent).not.toMatch(/class="percentile-hud-banner"[^>]*:style/);
+      expect(worldContent).not.toMatch(/class="init-die-box init-player-die"[^>]*:style/);
+      expect(worldContent).not.toMatch(/class="init-die-box init-opp-die"[^>]*:style/);
+    });
+
+    it('styles damage-hud-banner with site theme variables', () => {
+      expect(worldContent).toMatch(/\.damage-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.damage-hud-banner\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.damage-hud-banner \.hud-total\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+
+    it('styles percentile-hud-banner with site theme variables', () => {
+      expect(worldContent).toMatch(/\.percentile-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.percentile-hud-banner\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.percentile-hud-banner \.hud-total\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.percentile-hud-banner \.hud-tens-val\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+
+    it('styles initiative HUD with site theme variables', () => {
+      expect(worldContent).toMatch(/\.initiative-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+  });
+});
