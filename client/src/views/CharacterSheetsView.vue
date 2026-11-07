@@ -118,7 +118,12 @@
         <p>Choose a character sheet from the sidebar or build a new Wayworlds hero.</p>
       </div>
 
-      <div v-else class="sheet-container" :data-color-pkg="characterSheetColorPkg">
+      <div
+        v-else
+        class="sheet-container"
+        :data-color-pkg="characterSheetColorPkg"
+        :style="characterSheetCustomStyles"
+      >
         <!-- Header Info -->
         <header class="sheet-header">
           <div class="header-main">
@@ -191,16 +196,26 @@
                 <div class="char-theme-select-wrap">
                   <label>Theme:</label>
                   <select
-                    v-model="selectedChar.color_theme"
-                    @change="onCharThemeChange"
+                    v-model="charThemeSelectValue"
                     class="select-char-theme"
                     aria-label="Character Sheet Theme"
                   >
                     <option value="">Default (App Theme)</option>
+                    <option value="custom">🎨 Custom Color...</option>
                     <option v-for="pkg in colorPackages" :key="pkg.key" :value="pkg.key">
                       {{ pkg.label }}
                     </option>
                   </select>
+                  <input
+                    v-if="isCharCustomColorActive"
+                    type="color"
+                    v-model="charCustomHex"
+                    class="input-char-custom-color"
+                    aria-label="Custom Sheet Color Picker"
+                    title="Pick character sheet custom color"
+                    @input="onCharCustomColorInput"
+                    @change="onCharCustomColorChange"
+                  />
                 </div>
                 <div v-if="isGm && registeredUsers.length > 0" class="player-select-wrap">
                   <label>Player:</label>
@@ -1329,7 +1344,12 @@ import {
 import ImageBrowserModal from '../components/ImageBrowserModal.vue';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { downloadCharacterAscii } from '../utils/characterExport.js';
-import { COLOR_PACKAGES } from '../utils/themeManager.js';
+import {
+  COLOR_PACKAGES,
+  isCustomColor,
+  generateThemeVariablesFromHex,
+  DEFAULT_CUSTOM_COLOR,
+} from '../utils/themeManager.js';
 
 export function parseCharacterNotePanels(notes) {
   if (Array.isArray(notes)) {
@@ -1452,11 +1472,58 @@ export default {
         weight: 1.0,
         quantity: 1,
       },
+      _charCustomHex: '#38bdf8',
     };
   },
   computed: {
+    charThemeSelectValue: {
+      get() {
+        if (!this.selectedChar || !this.selectedChar.color_theme) return '';
+        if (isCustomColor(this.selectedChar.color_theme)) return 'custom';
+        return this.selectedChar.color_theme;
+      },
+      set(val) {
+        if (!this.selectedChar) return;
+        if (val === 'custom') {
+          const hex = (this.selectedChar.color_theme && isCustomColor(this.selectedChar.color_theme) && this.selectedChar.color_theme.startsWith('#'))
+            ? this.selectedChar.color_theme
+            : (this._charCustomHex || DEFAULT_CUSTOM_COLOR);
+          this.selectedChar.color_theme = hex;
+          this._charCustomHex = hex;
+        } else {
+          this.selectedChar.color_theme = val;
+        }
+        this.onCharThemeChange();
+      },
+    },
+    charCustomHex: {
+      get() {
+        if (this.selectedChar && this.selectedChar.color_theme && isCustomColor(this.selectedChar.color_theme) && this.selectedChar.color_theme.startsWith('#')) {
+          return this.selectedChar.color_theme;
+        }
+        return this._charCustomHex || DEFAULT_CUSTOM_COLOR;
+      },
+      set(val) {
+        this._charCustomHex = val;
+        if (this.selectedChar && isCustomColor(this.selectedChar.color_theme)) {
+          this.selectedChar.color_theme = val;
+        }
+      },
+    },
+    isCharCustomColorActive() {
+      return !!(this.selectedChar && isCustomColor(this.selectedChar.color_theme));
+    },
     characterSheetColorPkg() {
-      return (this.selectedChar && this.selectedChar.color_theme) || null;
+      if (!this.selectedChar || !this.selectedChar.color_theme) return null;
+      if (isCustomColor(this.selectedChar.color_theme)) return 'custom';
+      return this.selectedChar.color_theme;
+    },
+    characterSheetCustomStyles() {
+      if (!this.selectedChar || !this.selectedChar.color_theme) return {};
+      if (isCustomColor(this.selectedChar.color_theme)) {
+        return generateThemeVariablesFromHex(this.selectedChar.color_theme);
+      }
+      return {};
     },
     characterTier() {
       return this.getCharTier(this.selectedChar);
@@ -1989,6 +2056,19 @@ export default {
         }
         this.updateCharacter();
       }
+    },
+    onCharCustomColorInput(e) {
+      if (!this.selectedChar) return;
+      const hex = e?.target?.value || this.charCustomHex;
+      this._charCustomHex = hex;
+      this.selectedChar.color_theme = hex;
+    },
+    onCharCustomColorChange(e) {
+      if (!this.selectedChar) return;
+      const hex = e?.target?.value || this.charCustomHex;
+      this._charCustomHex = hex;
+      this.selectedChar.color_theme = hex;
+      this.onCharThemeChange();
     },
     async updateCharacter() {
       if (!this.selectedChar || !this.selectedChar.id) return;
@@ -3567,6 +3647,27 @@ export default {
   outline: none;
   border-color: #c9c9c9 !important;
   box-shadow: 0 0 8px rgba(201, 201, 201, 0.5);
+}
+
+.input-char-custom-color {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #484f58;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.input-char-custom-color::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.input-char-custom-color::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
 }
 
 .player-badge-wrap {

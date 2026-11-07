@@ -23,10 +23,22 @@
           aria-label="Color Package Theme"
           @change="onColorPkgChange"
         >
+          <option value="custom">🎨 Custom Color...</option>
           <option v-for="pkg in colorPackages" :key="pkg.key" :value="pkg.key">
             {{ pkg.label }}
           </option>
         </select>
+        <input
+          v-if="selectedColorPkg === 'custom'"
+          id="nav-custom-color-picker"
+          type="color"
+          v-model="siteCustomColor"
+          class="nav-custom-color-picker"
+          aria-label="Custom Theme Color Picker"
+          title="Pick custom site theme color"
+          @input="onCustomColorInput"
+          @change="onCustomColorChange"
+        />
       </div>
       <span
         class="role-badge"
@@ -57,31 +69,62 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth.js';
 import ChangePasswordModal from './ChangePasswordModal.vue';
-import { COLOR_PACKAGES, getSavedColorPackage, applyColorPackage } from '../utils/themeManager.js';
+import {
+  COLOR_PACKAGES,
+  getSavedColorPackage,
+  getSavedCustomColor,
+  applyColorPackage,
+  setSavedCustomColor,
+  isCustomColor,
+} from '../utils/themeManager.js';
 
 const auth = useAuthStore();
 const router = useRouter();
 const showPasswordModal = ref(false);
 const colorPackages = COLOR_PACKAGES;
 const selectedColorPkg = ref(getSavedColorPackage());
+const siteCustomColor = ref(getSavedCustomColor());
 
 function onColorPkgChange() {
-  selectedColorPkg.value = applyColorPackage(selectedColorPkg.value);
+  if (selectedColorPkg.value === 'custom') {
+    applyColorPackage('custom', siteCustomColor.value);
+  } else {
+    selectedColorPkg.value = applyColorPackage(selectedColorPkg.value);
+  }
 }
 
-onMounted(() => {
-  selectedColorPkg.value = applyColorPackage(getSavedColorPackage());
-});
+function onCustomColorInput() {
+  applyColorPackage('custom', siteCustomColor.value);
+}
+
+function onCustomColorChange() {
+  setSavedCustomColor(siteCustomColor.value);
+  applyColorPackage('custom', siteCustomColor.value);
+}
 
 function openPasswordModal() {
   showPasswordModal.value = true;
 }
 
+onMounted(() => {
+  const saved = getSavedColorPackage();
+  if (saved === 'custom' || isCustomColor(saved)) {
+    selectedColorPkg.value = 'custom';
+    siteCustomColor.value = getSavedCustomColor();
+    applyColorPackage('custom', siteCustomColor.value);
+  } else {
+    selectedColorPkg.value = applyColorPackage(saved);
+  }
+});
+
 defineExpose({
   showPasswordModal,
   openPasswordModal,
   selectedColorPkg,
+  siteCustomColor,
   onColorPkgChange,
+  onCustomColorInput,
+  onCustomColorChange,
 });
 
 const baseTabs = [
@@ -279,5 +322,26 @@ async function handleLogout() {
   border-color: #6e7681 !important;
   box-shadow: none !important;
   outline: none;
+}
+
+.nav-custom-color-picker {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid #484f58;
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.nav-custom-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.nav-custom-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 3px;
 }
 </style>

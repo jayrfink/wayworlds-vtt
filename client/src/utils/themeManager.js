@@ -190,14 +190,233 @@ export const COLOR_PACKAGES = [
 ];
 
 export const DEFAULT_COLOR_PACKAGE = 'silver';
+export const CUSTOM_THEME_STORAGE_KEY = 'wayworlds_custom_color';
+export const DEFAULT_CUSTOM_COLOR = '#38bdf8';
+
+export const CUSTOM_CSS_VAR_KEYS = [
+  '--widget-color',
+  '--border-color',
+  '--widget-track',
+  '--border',
+  '--theme-primary',
+  '--theme-secondary',
+  '--theme-accent',
+  '--theme-bright',
+  '--theme-bright-hover',
+  '--theme-header-color',
+  '--theme-header-glow',
+  '--theme-border-subtle',
+  '--theme-glow-bg',
+  '--theme-glow',
+  '--theme-glow-subtle',
+  '--theme-glow-hover',
+  '--theme-glow-strong',
+  '--theme-btn-border',
+  '--theme-btn-color',
+  '--theme-secondary-btn-border',
+  '--theme-secondary-btn-color',
+  '--theme-stepper-arrow',
+  '--theme-sta-color',
+  '--theme-sta-glow',
+  '--theme-ess-color',
+  '--theme-ess-glow',
+];
+
+export function isCustomColor(pkgKey) {
+  if (!pkgKey) return false;
+  if (pkgKey === 'custom') return true;
+  return typeof pkgKey === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(pkgKey.trim());
+}
+
+export function parseHexToRgb(hex) {
+  if (!hex || typeof hex !== 'string') return { r: 56, g: 189, b: 248 };
+  let clean = hex.trim().replace(/^#/, '');
+  if (clean.length === 3) {
+    clean = clean.split('').map((c) => c + c).join('');
+  }
+  if (clean.length !== 6) return { r: 56, g: 189, b: 248 };
+  const num = parseInt(clean, 16);
+  if (isNaN(num)) return { r: 56, g: 189, b: 248 };
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255,
+  };
+}
+
+export function rgbToHsl(r, g, b) {
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case rNorm:
+        h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0);
+        break;
+      case gNorm:
+        h = (bNorm - rNorm) / d + 2;
+        break;
+      case bNorm:
+        h = (rNorm - gNorm) / d + 4;
+        break;
+    }
+    h /= 6;
+  }
+  return { h: Math.round(h * 360), s, l };
+}
+
+export function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(1, s));
+  l = Math.max(0, Math.min(1, l));
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let r = 0, g = 0, b = 0;
+
+  if (h >= 0 && h < 60) {
+    r = c; g = x; b = 0;
+  } else if (h >= 60 && h < 120) {
+    r = x; g = c; b = 0;
+  } else if (h >= 120 && h < 180) {
+    r = 0; g = c; b = x;
+  } else if (h >= 180 && h < 240) {
+    r = 0; g = x; b = c;
+  } else if (h >= 240 && h < 300) {
+    r = x; g = 0; b = c;
+  } else {
+    r = c; g = 0; b = x;
+  }
+
+  const toHex = (n) => {
+    const val = Math.round((n + m) * 255);
+    return Math.max(0, Math.min(255, val)).toString(16).padStart(2, '0');
+  };
+
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
+
+export function clampShadowLuminance(rawHex) {
+  const rgb = parseHexToRgb(rawHex);
+  const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+  // If already in the safe luminance zone, preserve the exact input hex
+  const inSafeLightness = l >= 0.42 && l <= 0.88;
+  const inSafeSaturation = !(l < 0.25 && s < 0.1);
+
+  if (inSafeLightness && inSafeSaturation && typeof rawHex === 'string' && /^#[0-9a-f]{6}$/i.test(rawHex.trim())) {
+    return rawHex.trim().toLowerCase();
+  }
+
+  // Shadow clamp: ensure lightness is at least 0.42 and at most 0.88 for crisp visibility against dark backdrops
+  const clampedL = Math.max(0.42, Math.min(0.88, l));
+
+  // If the user picked a pitch dark or completely desaturated color, ensure minimal visible saturation
+  let clampedS = s;
+  if (l < 0.25 && s < 0.1) {
+    clampedS = 0.2;
+  }
+
+  return hslToHex(h, clampedS, clampedL);
+}
+
+export function generateThemeVariablesFromHex(rawHex) {
+  const sanitizedInput = (typeof rawHex === 'string' && rawHex.trim().startsWith('#'))
+    ? rawHex.trim()
+    : DEFAULT_CUSTOM_COLOR;
+
+  // Clamped bright color for accents
+  const brightHex = clampShadowLuminance(sanitizedInput);
+  const brightRgb = parseHexToRgb(brightHex);
+  const { h, s, l } = rgbToHsl(brightRgb.r, brightRgb.g, brightRgb.b);
+
+  // Derive secondary/widget tones
+  const widgetHex = hslToHex(h, Math.max(0.2, s * 0.75), Math.max(0.22, Math.min(0.55, l * 0.65)));
+  const borderHex = hslToHex(h, Math.max(0.15, s * 0.55), Math.max(0.18, Math.min(0.38, l * 0.42)));
+  const trackHex = hslToHex(h, Math.max(0.1, s * 0.45), Math.max(0.05, Math.min(0.12, l * 0.18)));
+  const brightHoverHex = hslToHex(h, s, Math.min(0.96, l + 0.12));
+  const accentHex = hslToHex(h, Math.max(0.2, s * 0.7), Math.max(0.35, Math.min(0.75, l * 0.8)));
+
+  // Essence tone (25-degree hue shift for stamina/essence distinction)
+  const essHex = hslToHex((h + 25) % 360, s, Math.max(0.40, Math.min(0.85, l)));
+  const essRgb = parseHexToRgb(essHex);
+
+  const r = brightRgb.r;
+  const g = brightRgb.g;
+  const b = brightRgb.b;
+
+  return {
+    '--widget-color': widgetHex,
+    '--border-color': borderHex,
+    '--widget-track': trackHex,
+    '--border': borderHex,
+    '--theme-primary': widgetHex,
+    '--theme-secondary': borderHex,
+    '--theme-accent': accentHex,
+    '--theme-bright': brightHex,
+    '--theme-bright-hover': brightHoverHex,
+    '--theme-header-color': '#c8c8c8',
+    '--theme-header-glow': 'none',
+    '--theme-border-subtle': `rgba(${r}, ${g}, ${b}, 0.35)`,
+    '--theme-glow-bg': `rgba(${r}, ${g}, ${b}, 0.12)`,
+    '--theme-glow': `rgba(${r}, ${g}, ${b}, 0.33)`,
+    '--theme-glow-subtle': `0 0 6px rgba(${r}, ${g}, ${b}, 0.22)`,
+    '--theme-glow-hover': `0 0 14px rgba(${r}, ${g}, ${b}, 0.7)`,
+    '--theme-glow-strong': `0 0 18px rgba(${r}, ${g}, ${b}, 0.85)`,
+    '--theme-btn-border': borderHex,
+    '--theme-btn-color': brightHex,
+    '--theme-secondary-btn-border': borderHex,
+    '--theme-secondary-btn-color': brightHex,
+    '--theme-stepper-arrow': brightHex,
+    '--theme-sta-color': brightHex,
+    '--theme-sta-glow': `0 0 12px rgba(${r}, ${g}, ${b}, 0.7)`,
+    '--theme-ess-color': essHex,
+    '--theme-ess-glow': `0 0 12px rgba(${essRgb.r}, ${essRgb.g}, ${essRgb.b}, 0.75)`,
+  };
+}
+
+export function getSavedCustomColor() {
+  try {
+    if (typeof localStorage !== 'undefined') {
+      const saved = localStorage.getItem(CUSTOM_THEME_STORAGE_KEY);
+      if (saved && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(saved.trim())) {
+        return saved.trim();
+      }
+    }
+  } catch {
+    // Ignore storage errors
+  }
+  return DEFAULT_CUSTOM_COLOR;
+}
+
+export function setSavedCustomColor(hex) {
+  try {
+    if (typeof localStorage !== 'undefined' && hex) {
+      localStorage.setItem(CUSTOM_THEME_STORAGE_KEY, hex);
+    }
+  } catch {
+    // Ignore storage errors
+  }
+}
 
 export function normalizeColorPackage(pkgKey) {
   if (!pkgKey) return DEFAULT_COLOR_PACKAGE;
+  if (isCustomColor(pkgKey)) return 'custom';
   return THEME_KEY_ALIASES[pkgKey] || pkgKey;
 }
 
 export function isValidColorPackage(pkgKey) {
   if (pkgKey === 'blues-greens') return false;
+  if (isCustomColor(pkgKey)) return true;
   const normalized = normalizeColorPackage(pkgKey);
   return COLOR_PACKAGES.some((p) => p.key === normalized);
 }
@@ -216,7 +435,38 @@ export function getSavedColorPackage() {
   return DEFAULT_COLOR_PACKAGE;
 }
 
-export function applyColorPackage(pkgKey) {
+export function applyColorPackage(pkgKey, customHex = null) {
+  const isCustom = isCustomColor(pkgKey);
+  if (isCustom) {
+    const hexToUse = (typeof pkgKey === 'string' && pkgKey.startsWith('#'))
+      ? pkgKey
+      : (customHex || getSavedCustomColor());
+    setSavedCustomColor(hexToUse);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.setItem(COLOR_PKG_STORAGE_KEY, 'custom');
+      }
+    } catch {
+      // Ignore storage errors
+    }
+
+    const vars = generateThemeVariablesFromHex(hexToUse);
+    if (typeof document !== 'undefined') {
+      const targets = [document.documentElement, document.body].filter(Boolean);
+      targets.forEach((el) => {
+        if (typeof el.setAttribute === 'function') {
+          el.setAttribute('data-color-pkg', 'custom');
+        }
+        if (el.style && typeof el.style.setProperty === 'function') {
+          Object.entries(vars).forEach(([prop, val]) => {
+            el.style.setProperty(prop, val);
+          });
+        }
+      });
+    }
+    return 'custom';
+  }
+
   const normalized = normalizeColorPackage(pkgKey);
   const validKey = isValidColorPackage(normalized) ? normalized : DEFAULT_COLOR_PACKAGE;
   try {
@@ -227,12 +477,17 @@ export function applyColorPackage(pkgKey) {
     // Ignore storage errors
   }
   if (typeof document !== 'undefined') {
-    if (document.documentElement) {
-      document.documentElement.setAttribute('data-color-pkg', validKey);
-    }
-    if (document.body) {
-      document.body.setAttribute('data-color-pkg', validKey);
-    }
+    const targets = [document.documentElement, document.body].filter(Boolean);
+    targets.forEach((el) => {
+      if (typeof el.setAttribute === 'function') {
+        el.setAttribute('data-color-pkg', validKey);
+      }
+      if (el.style && typeof el.style.removeProperty === 'function') {
+        CUSTOM_CSS_VAR_KEYS.forEach((prop) => {
+          el.style.removeProperty(prop);
+        });
+      }
+    });
   }
   return validKey;
 }

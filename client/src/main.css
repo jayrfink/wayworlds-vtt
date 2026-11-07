@@ -134,6 +134,36 @@
 }
 
 /* Color Packages (data-color-pkg) - Full System Theming */
+:root[data-color-pkg="custom"],
+[data-color-pkg="custom"] {
+  --widget-color: #38bdf8;
+  --border-color: #1e3a47;
+  --widget-track: #0c181e;
+  --border: #1e3a47;
+  --theme-primary: #38bdf8;
+  --theme-secondary: #1e3a47;
+  --theme-accent: #7dd3fc;
+  --theme-bright: #38bdf8;
+  --theme-bright-hover: #7dd3fc;
+  --theme-header-color: #c8c8c8;
+  --theme-header-glow: none;
+  --theme-border-subtle: rgba(56, 189, 248, 0.35);
+  --theme-glow-bg: rgba(56, 189, 248, 0.12);
+  --theme-glow: rgba(56, 189, 248, 0.33);
+  --theme-glow-subtle: 0 0 6px rgba(56, 189, 248, 0.22);
+  --theme-glow-hover: 0 0 14px rgba(56, 189, 248, 0.7);
+  --theme-glow-strong: 0 0 18px rgba(56, 189, 248, 0.85);
+  --theme-btn-border: #1e3a47;
+  --theme-btn-color: #38bdf8;
+  --theme-secondary-btn-border: #1e3a47;
+  --theme-secondary-btn-color: #38bdf8;
+  --theme-stepper-arrow: #38bdf8;
+  --theme-sta-color: #38bdf8;
+  --theme-sta-glow: 0 0 12px rgba(56, 189, 248, 0.7);
+  --theme-ess-color: #67e8f9;
+  --theme-ess-glow: 0 0 12px rgba(103, 232, 249, 0.75);
+}
+
 :root[data-color-pkg="silver"],
 [data-color-pkg="silver"] {
   --widget-color: #7d8590;
