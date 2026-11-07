@@ -205,6 +205,10 @@
         <button class="btn-tool" @click="clearDice">
           <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 9l6 6M15 9l-6 6"/></svg> Clear Dice
         </button>
+
+        <button class="btn-tool btn-dice-colors" @click="showDiceColorModal = true" title="Configure 3D Dice Colors">
+          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg> Dice Colors
+        </button>
       </nav>
 
       <!-- Canvas Area -->
@@ -301,19 +305,24 @@
           <div
             v-if="showDamageHud && lastDamageRoll"
             class="damage-hud-banner"
+            :style="{
+              borderColor: activeDiceColors.damage,
+              color: activeDiceColors.damage,
+              boxShadow: `0 0 20px ${activeDiceColors.damage}66, 0 8px 32px rgba(0, 0, 0, 0.8)`
+            }"
             @click="showDamageHud = false"
           >
             <div class="hud-header">
-              <div class="hud-title">
+              <div class="hud-title" :style="{ color: `${activeDiceColors.damage}cc` }">
                 <span v-if="lastDamageRoll.username" class="hud-user-tag" :class="lastDamageRoll.role?.toLowerCase()">
                   {{ lastDamageRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastDamageRoll.username }}
                 </span>
                 💥 Damage Roll ({{ lastDamageRoll.count }}d10)
               </div>
-              <button class="hud-close" @click.stop="showDamageHud = false">&times;</button>
+              <button class="hud-close" :style="{ color: activeDiceColors.damage }" @click.stop="showDamageHud = false">&times;</button>
             </div>
             <div class="hud-body">
-              <span class="hud-total">{{ lastDamageRoll.total }}</span>
+              <span class="hud-total" :style="{ color: activeDiceColors.damage, textShadow: `0 0 10px ${activeDiceColors.damage}b3` }">{{ lastDamageRoll.total }}</span>
               <span class="hud-dice">({{ lastDamageRoll.dice?.length ? lastDamageRoll.dice.join(' + ') : lastDamageRoll.breakdown }})</span>
             </div>
           </div>
@@ -324,20 +333,24 @@
           <div
             v-if="showPercentileHud && lastPercentileRoll"
             class="percentile-hud-banner"
+            :style="{
+              borderColor: activeDiceColors.percentileTens,
+              boxShadow: `0 0 20px ${activeDiceColors.percentileTens}66, 0 8px 32px rgba(0, 0, 0, 0.8)`
+            }"
             @click="showPercentileHud = false"
           >
             <div class="hud-header">
-              <div class="hud-title">
+              <div class="hud-title" :style="{ color: `${activeDiceColors.percentileTens}cc` }">
                 <span v-if="lastPercentileRoll.username" class="hud-user-tag" :class="lastPercentileRoll.role?.toLowerCase()">
                   {{ lastPercentileRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastPercentileRoll.username }}
                 </span>
                 🎲 Percentile Roll (d%)
               </div>
-              <button class="hud-close" @click.stop="showPercentileHud = false">&times;</button>
+              <button class="hud-close" :style="{ color: activeDiceColors.percentileTens }" @click.stop="showPercentileHud = false">&times;</button>
             </div>
             <div class="hud-body">
-              <span class="hud-total">{{ lastPercentileRoll.total }}</span>
-              <span class="hud-dice">(<span class="hud-tens-val">Tens: {{ lastPercentileRoll.tens }}</span>, <span class="hud-ones-val">Ones: {{ lastPercentileRoll.ones }}</span>)</span>
+              <span class="hud-total" :style="{ color: activeDiceColors.percentileTens, textShadow: `0 0 10px ${activeDiceColors.percentileTens}b3` }">{{ lastPercentileRoll.total }}</span>
+              <span class="hud-dice">(<span class="hud-tens-val" :style="{ color: activeDiceColors.percentileTens }">Tens: {{ lastPercentileRoll.tens }}</span>, <span class="hud-ones-val" :style="{ color: activeDiceColors.percentileOnes }">Ones: {{ lastPercentileRoll.ones }}</span>)</span>
             </div>
           </div>
         </transition>
@@ -359,12 +372,24 @@
               <button class="hud-close" @click.stop="showInitiativeHud = false">&times;</button>
             </div>
             <div class="hud-body init-hud-body">
-              <div class="init-die-box init-player-die">
+              <div
+                class="init-die-box init-player-die"
+                :style="{
+                  backgroundColor: activeDiceColors.initiativePlayer,
+                  borderColor: '#b5eeff'
+                }"
+              >
                 <span class="init-label">PLAYERS</span>
                 <span class="init-val">{{ lastInitiativeRoll.playerRoll }}</span>
               </div>
               <span class="init-vs">VS</span>
-              <div class="init-die-box init-opp-die">
+              <div
+                class="init-die-box init-opp-die"
+                :style="{
+                  backgroundColor: activeDiceColors.initiativeOpp,
+                  borderColor: '#c9abb9'
+                }"
+              >
                 <span class="init-label">OPPOSITION</span>
                 <span class="init-val">{{ lastInitiativeRoll.oppRoll }}</span>
               </div>
@@ -925,6 +950,12 @@
       :current-image="currentBrowserImage"
       @select="onImageSelected"
     />
+
+    <!-- Dice Colors Configuration Modal -->
+    <DiceColorModal
+      v-model="showDiceColorModal"
+      @change="onDiceColorsChanged"
+    />
   </div>
 </template>
 
@@ -936,6 +967,7 @@ import AdversaryTokenHud from '../components/AdversaryTokenHud.vue';
 import StockAdversaryModal from '../components/StockAdversaryModal.vue';
 import VehicleTokenHud from '../components/VehicleTokenHud.vue';
 import DeployVehicleModal from '../components/DeployVehicleModal.vue';
+import DiceColorModal from '../components/DiceColorModal.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { socket } from '../services/socket.js';
 import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll } from '../utils/diceUtils.js';
@@ -943,6 +975,7 @@ import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
 import { diceRollQueue } from '../utils/diceRollQueue.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { playDiceSound, toggleMute as toggleDiceMute, isMuted as isDiceMuted } from '../services/diceAudio.js';
+import { getSavedDiceColors } from '../utils/diceColorManager.js';
 
 
 const authStore = useAuthStore();
@@ -999,6 +1032,14 @@ async function initDiceBox() {
 async function getReadyDiceBox() {
   return await initDiceBox();
 }
+
+const showDiceColorModal = ref(false);
+const activeDiceColors = ref(getSavedDiceColors());
+
+function onDiceColorsChanged(newColors) {
+  activeDiceColors.value = { ...newColors };
+}
+
 const damageDiceCount = ref(1);
 const showDmgMenu = ref(false);
 const dmgMenuRef = ref(null);
@@ -1108,8 +1149,8 @@ async function rollInitiative() {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-init-player', themeColor: '#0b222e', qty: 1 },
-      { sides: 10, theme: 'custom-init-opp', themeColor: '#400a22', qty: 1 }
+      { sides: 10, theme: 'custom-init-player', themeColor: activeDiceColors.value.initiativePlayer, qty: 1, groupId: 0 },
+      { sides: 10, theme: 'custom-init-opp', themeColor: activeDiceColors.value.initiativeOpp, qty: 1, groupId: 1 }
     ]);
     const initSummary = calculateInitiativeRoll(results);
     if (initSummary.valid) {
@@ -1148,8 +1189,8 @@ async function rollPercentile() {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-tens', themeColor: '#77d19e', qty: 1 }, // Tens (lighter colored die)
-      { sides: 10, theme: 'custom-ones', themeColor: '#22384a', qty: 1 }  // Ones (darker colored die)
+      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1, groupId: 0 }, // Tens
+      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1, groupId: 1 }  // Ones
     ]);
     const rollSummary = calculatePercentileRoll(results);
     if (rollSummary.valid) {
@@ -1186,7 +1227,7 @@ async function rollDamage() {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-dmg', themeColor: '#140409', qty: damageDiceCount.value }
+      { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: damageDiceCount.value }
     ]);
     const rollSummary = calculateDamageRoll(results);
     if (rollSummary.count > 0) {
@@ -2177,8 +2218,8 @@ async function onAdversaryRollAttack({ action, token }) {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-tens', themeColor: '#77d19e', qty: 1 },
-      { sides: 10, theme: 'custom-ones', themeColor: '#22384a', qty: 1 }
+      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1, groupId: 0 },
+      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1, groupId: 1 }
     ]);
     const rollSummary = calculatePercentileRoll(results);
     if (rollSummary.valid) {
@@ -2266,7 +2307,7 @@ async function onAdversaryRollDamage({ action, token }) {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-dmg', themeColor: '#140409', qty: diceCount }
+      { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: diceCount }
     ]);
     const rollSummary = calculateDamageRoll(results);
     if (rollSummary.count > 0) {
