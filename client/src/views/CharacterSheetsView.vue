@@ -193,26 +193,21 @@
                     <option value="Theurgy">Theurgy</option>
                   </select>
                 </div>
-                <div class="char-theme-select-wrap">
-                  <label>Theme:</label>
-                  <select
-                    v-model="charThemeSelectValue"
-                    class="select-char-theme"
-                    aria-label="Character Sheet Theme"
+                <div class="char-theme-wrap">
+                  <button
+                    type="button"
+                    class="btn-color-scheme btn-char-color-scheme"
+                    @click="openCharColorPicker"
+                    title="Click to customize character sheet color scheme"
                   >
-                    <option value="">Default (App Theme)</option>
-                    <option value="custom">🎨 Custom Color...</option>
-                    <option v-for="pkg in colorPackages" :key="pkg.key" :value="pkg.key">
-                      {{ pkg.label }}
-                    </option>
-                  </select>
+                    Colors Scheme
+                  </button>
                   <input
-                    v-if="isCharCustomColorActive"
+                    ref="charColorInput"
                     type="color"
                     v-model="charCustomHex"
-                    class="input-char-custom-color"
-                    aria-label="Custom Sheet Color Picker"
-                    title="Pick character sheet custom color"
+                    class="hidden-color-input"
+                    aria-label="Character Sheet Color Scheme Picker"
                     @input="onCharCustomColorInput"
                     @change="onCharCustomColorChange"
                   />
@@ -1347,6 +1342,7 @@ import { downloadCharacterAscii } from '../utils/characterExport.js';
 import {
   COLOR_PACKAGES,
   isCustomColor,
+  resolveColorToHex,
   generateThemeVariablesFromHex,
   DEFAULT_CUSTOM_COLOR,
 } from '../utils/themeManager.js';
@@ -1476,54 +1472,29 @@ export default {
     };
   },
   computed: {
-    charThemeSelectValue: {
-      get() {
-        if (!this.selectedChar || !this.selectedChar.color_theme) return '';
-        if (isCustomColor(this.selectedChar.color_theme)) return 'custom';
-        return this.selectedChar.color_theme;
-      },
-      set(val) {
-        if (!this.selectedChar) return;
-        if (val === 'custom') {
-          const hex = (this.selectedChar.color_theme && isCustomColor(this.selectedChar.color_theme) && this.selectedChar.color_theme.startsWith('#'))
-            ? this.selectedChar.color_theme
-            : (this._charCustomHex || DEFAULT_CUSTOM_COLOR);
-          this.selectedChar.color_theme = hex;
-          this._charCustomHex = hex;
-        } else {
-          this.selectedChar.color_theme = val;
-        }
-        this.onCharThemeChange();
-      },
-    },
     charCustomHex: {
       get() {
-        if (this.selectedChar && this.selectedChar.color_theme && isCustomColor(this.selectedChar.color_theme) && this.selectedChar.color_theme.startsWith('#')) {
-          return this.selectedChar.color_theme;
+        if (this.selectedChar && this.selectedChar.color_theme) {
+          return resolveColorToHex(this.selectedChar.color_theme);
         }
         return this._charCustomHex || DEFAULT_CUSTOM_COLOR;
       },
       set(val) {
         this._charCustomHex = val;
-        if (this.selectedChar && isCustomColor(this.selectedChar.color_theme)) {
+        if (this.selectedChar) {
           this.selectedChar.color_theme = val;
         }
       },
     },
-    isCharCustomColorActive() {
-      return !!(this.selectedChar && isCustomColor(this.selectedChar.color_theme));
-    },
     characterSheetColorPkg() {
-      if (!this.selectedChar || !this.selectedChar.color_theme) return null;
-      if (isCustomColor(this.selectedChar.color_theme)) return 'custom';
-      return this.selectedChar.color_theme;
+      return (this.selectedChar && this.selectedChar.color_theme) || null;
     },
     characterSheetCustomStyles() {
-      if (!this.selectedChar || !this.selectedChar.color_theme) return {};
-      if (isCustomColor(this.selectedChar.color_theme)) {
-        return generateThemeVariablesFromHex(this.selectedChar.color_theme);
-      }
-      return {};
+      if (!this.selectedChar) return {};
+      const hex = this.selectedChar.color_theme
+        ? resolveColorToHex(this.selectedChar.color_theme)
+        : (this.charCustomHex || DEFAULT_CUSTOM_COLOR);
+      return generateThemeVariablesFromHex(hex);
     },
     characterTier() {
       return this.getCharTier(this.selectedChar);
@@ -2043,6 +2014,20 @@ export default {
         this.errorMessage = err.message || 'Error creating character';
       } finally {
         this.creating = false;
+      }
+    },
+    openCharColorPicker() {
+      const el = this.$refs.charColorInput;
+      if (el) {
+        if (typeof el.showPicker === 'function') {
+          try {
+            el.showPicker();
+            return;
+          } catch {
+            // Fallback
+          }
+        }
+        el.click();
       }
     },
     onCharThemeChange() {
@@ -3591,7 +3576,7 @@ export default {
 
 .race-select-wrap,
 .psa-select-wrap,
-.char-theme-select-wrap,
+.char-theme-wrap,
 .player-select-wrap {
   display: flex;
   align-items: center;
@@ -3602,11 +3587,9 @@ export default {
 
 .select-race,
 .select-psa,
-.select-char-theme,
 .select-player,
 .select-race option,
 .select-psa option,
-.select-char-theme option,
 .select-player option {
   background-color: #000000 !important;
   color: #c9c9c9 !important;
@@ -3616,7 +3599,6 @@ export default {
 
 .select-race,
 .select-psa,
-.select-char-theme,
 .select-player {
   border: 1px solid rgba(201, 201, 201, 0.4) !important;
   border-radius: 4px;
@@ -3625,16 +3607,8 @@ export default {
   font-size: 0.855rem;
 }
 
-.select-char-theme {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 8px center !important;
-  background-size: 10px 12px !important;
-}
-
 .select-race:hover:not(:disabled),
 .select-psa:hover:not(:disabled),
-.select-char-theme:hover:not(:disabled),
 .select-player:hover:not(:disabled) {
   border-color: #c9c9c9 !important;
   box-shadow: 0 0 6px rgba(201, 201, 201, 0.35);
@@ -3642,32 +3616,10 @@ export default {
 
 .select-race:focus,
 .select-psa:focus,
-.select-char-theme:focus,
 .select-player:focus {
   outline: none;
   border-color: #c9c9c9 !important;
   box-shadow: 0 0 8px rgba(201, 201, 201, 0.5);
-}
-
-.input-char-custom-color {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid #484f58;
-  border-radius: 4px;
-  background: transparent;
-  cursor: pointer;
-  box-sizing: border-box;
-  vertical-align: middle;
-}
-
-.input-char-custom-color::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-.input-char-custom-color::-webkit-color-swatch {
-  border: none;
-  border-radius: 3px;
 }
 
 .player-badge-wrap {

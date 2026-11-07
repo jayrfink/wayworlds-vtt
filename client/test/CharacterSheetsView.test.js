@@ -2339,25 +2339,24 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
       await wrapper.vm.$nextTick();
 
-      // Check sheet container has data-color-pkg="emerald"
+      // Check sheet container exists
       const sheetContainer = wrapper.find('.sheet-container');
       expect(sheetContainer.exists()).toBe(true);
-      expect(sheetContainer.attributes('data-color-pkg')).toBe('emerald');
 
-      // Check theme dropdown is present next to PSA
+      // Check theme button is present next to PSA
       const psaWrap = wrapper.find('.psa-select-wrap');
-      const themeWrap = wrapper.find('.char-theme-select-wrap');
+      const themeWrap = wrapper.find('.char-theme-wrap');
       expect(psaWrap.exists()).toBe(true);
       expect(themeWrap.exists()).toBe(true);
 
-      const themeSelect = wrapper.find('.select-char-theme');
-      expect(themeSelect.exists()).toBe(true);
+      const themeBtn = wrapper.find('.btn-char-color-scheme');
+      expect(themeBtn.exists()).toBe(true);
+      expect(themeBtn.text()).toBe('Colors Scheme');
 
-      // Verify options include Default plus color packages
-      const options = themeSelect.findAll('option');
-      expect(options.length).toBeGreaterThanOrEqual(6); // 1 default + packages
-      expect(options[0].text()).toContain('Default');
-      expect(themeSelect.element.value).toBe('emerald');
+      // Verify old dropdown does not exist
+      expect(wrapper.find('.select-char-theme').exists()).toBe(false);
+      // Hidden color input exists
+      expect(wrapper.find('.hidden-color-input').exists()).toBe(true);
     });
 
     it('has no outline or border on the encumbrance bar indicator', () => {

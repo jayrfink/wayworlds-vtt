@@ -211,6 +211,7 @@ export const CUSTOM_CSS_VAR_KEYS = [
   '--theme-glow-subtle',
   '--theme-glow-hover',
   '--theme-glow-strong',
+  '--theme-btn-bg',
   '--theme-btn-border',
   '--theme-btn-color',
   '--theme-secondary-btn-border',
@@ -221,6 +222,35 @@ export const CUSTOM_CSS_VAR_KEYS = [
   '--theme-ess-color',
   '--theme-ess-glow',
 ];
+
+export const THEME_PRESET_HEX_MAP = {
+  silver: '#c0c0c0',
+  shadow: '#8b949e',
+  emerald: '#10b981',
+  azure: '#38bdf8',
+  ice: '#74d1fa',
+  deepblue: '#2784ae',
+  plum: '#f4a9b0',
+  copper: '#fb923c',
+  rust: '#c27a59',
+  oceanic: '#8ee6df',
+  crimson: '#e68e9a',
+  forest: '#abedbd',
+  indiglo: '#69bcce',
+  fire: '#ffb259',
+  lime: '#ccf7a1',
+  brighteal: '#bffff7',
+};
+
+export function resolveColorToHex(colorVal) {
+  if (!colorVal) return DEFAULT_CUSTOM_COLOR;
+  const trimmed = String(colorVal).trim();
+  if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(trimmed)) {
+    return trimmed;
+  }
+  const aliasKey = THEME_KEY_ALIASES[trimmed] || trimmed.toLowerCase();
+  return THEME_PRESET_HEX_MAP[aliasKey] || DEFAULT_CUSTOM_COLOR;
+}
 
 export function isCustomColor(pkgKey) {
   if (!pkgKey) return false;
@@ -310,15 +340,15 @@ export function clampShadowLuminance(rawHex) {
   const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
   // If already in the safe luminance zone, preserve the exact input hex
-  const inSafeLightness = l >= 0.42 && l <= 0.88;
+  const inSafeLightness = l >= 0.38 && l <= 0.88;
   const inSafeSaturation = !(l < 0.25 && s < 0.1);
 
   if (inSafeLightness && inSafeSaturation && typeof rawHex === 'string' && /^#[0-9a-f]{6}$/i.test(rawHex.trim())) {
     return rawHex.trim().toLowerCase();
   }
 
-  // Shadow clamp: ensure lightness is at least 0.42 and at most 0.88 for crisp visibility against dark backdrops
-  const clampedL = Math.max(0.42, Math.min(0.88, l));
+  // Shadow clamp: ensure lightness is at least 0.38 and at most 0.88 for crisp visibility against dark backdrops
+  const clampedL = Math.max(0.38, Math.min(0.88, l));
 
   // If the user picked a pitch dark or completely desaturated color, ensure minimal visible saturation
   let clampedS = s;
@@ -346,6 +376,9 @@ export function generateThemeVariablesFromHex(rawHex) {
   const brightHoverHex = hslToHex(h, s, Math.min(0.96, l + 0.12));
   const accentHex = hslToHex(h, Math.max(0.2, s * 0.7), Math.max(0.35, Math.min(0.75, l * 0.8)));
 
+  // Button background: darker version of the chosen color
+  const btnBgHex = hslToHex(h, Math.max(0.18, s * 0.55), Math.max(0.08, Math.min(0.20, l * 0.25)));
+
   // Essence tone (25-degree hue shift for stamina/essence distinction)
   const essHex = hslToHex((h + 25) % 360, s, Math.max(0.40, Math.min(0.85, l)));
   const essRgb = parseHexToRgb(essHex);
@@ -372,7 +405,8 @@ export function generateThemeVariablesFromHex(rawHex) {
     '--theme-glow-subtle': `0 0 6px rgba(${r}, ${g}, ${b}, 0.22)`,
     '--theme-glow-hover': `0 0 14px rgba(${r}, ${g}, ${b}, 0.7)`,
     '--theme-glow-strong': `0 0 18px rgba(${r}, ${g}, ${b}, 0.85)`,
-    '--theme-btn-border': borderHex,
+    '--theme-btn-bg': btnBgHex,
+    '--theme-btn-border': brightHex,
     '--theme-btn-color': brightHex,
     '--theme-secondary-btn-border': borderHex,
     '--theme-secondary-btn-color': brightHex,

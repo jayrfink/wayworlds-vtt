@@ -78,8 +78,8 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
     });
   });
 
-  describe('CharacterSheetsView Custom Color Picker', () => {
-    it('renders custom color option and picker input, and applies styles to sheet-container', async () => {
+  describe('CharacterSheetsView Custom Color Picker Button', () => {
+    it('renders Colors Scheme button and hidden picker, applying custom theme variables to sheet-container', async () => {
       const pinia = createPinia();
       setActivePinia(pinia);
 
@@ -113,24 +113,28 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
       wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
       await wrapper.vm.$nextTick();
 
-      const themeSelect = wrapper.find('.select-char-theme');
-      expect(themeSelect.exists()).toBe(true);
-      
-      const options = themeSelect.findAll('option').map((o) => o.element.value);
-      expect(options).toContain('custom');
+      // Old preset theme dropdown must NOT exist
+      expect(wrapper.find('.select-char-theme').exists()).toBe(false);
 
-      const colorInput = wrapper.find('.input-char-custom-color');
+      // Colors Scheme button is rendered
+      const schemeBtn = wrapper.find('.btn-char-color-scheme');
+      expect(schemeBtn.exists()).toBe(true);
+      expect(schemeBtn.text()).toBe('Colors Scheme');
+
+      // Hidden color input is bound
+      const colorInput = wrapper.find('.hidden-color-input');
       expect(colorInput.exists()).toBe(true);
       expect(colorInput.element.value).toBe('#8b5cf6');
 
+      // Styles applied with brighter accent and darker button background
       const sheetContainer = wrapper.find('.sheet-container');
-      expect(sheetContainer.attributes('data-color-pkg')).toBe('custom');
       expect(sheetContainer.attributes('style')).toContain('--theme-bright: #8b5cf6');
+      expect(sheetContainer.attributes('style')).toContain('--theme-btn-bg:');
     });
   });
 
-  describe('NavBar Site Custom Color Picker', () => {
-    it('renders custom color option and input in NavBar theme switcher', async () => {
+  describe('NavBar Site Custom Color Picker Button', () => {
+    it('renders Colors Scheme button and hidden picker in top row without preset dropdown', async () => {
       const pinia = createPinia();
       setActivePinia(pinia);
 
@@ -144,15 +148,15 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
         },
       });
 
-      const select = wrapper.find('#nav-color-pkg-select');
-      expect(select.exists()).toBe(true);
-      const options = select.findAll('option').map((o) => o.element.value);
-      expect(options).toContain('custom');
+      // Old preset select dropdown must NOT exist
+      expect(wrapper.find('#nav-color-pkg-select').exists()).toBe(false);
 
-      // Change to custom
-      wrapper.vm.selectedColorPkg = 'custom';
-      await wrapper.vm.$nextTick();
+      // Colors Scheme button exists
+      const schemeBtn = wrapper.find('.btn-color-scheme');
+      expect(schemeBtn.exists()).toBe(true);
+      expect(schemeBtn.text()).toBe('Colors Scheme');
 
+      // Hidden color input exists
       const navColorPicker = wrapper.find('#nav-custom-color-picker');
       expect(navColorPicker.exists()).toBe(true);
     });

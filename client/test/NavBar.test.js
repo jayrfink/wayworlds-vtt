@@ -150,22 +150,11 @@ describe('NavBar.vue', () => {
     expect(exposed.showPasswordModal.value).toBe(true);
   });
 
-  it('renders data-color-pkg theme switcher with Plum, Emerald, Azure, Copper, and Rust options', async () => {
+  it('renders Colors Scheme button and color picker in navbar and does not render preset dropdown', async () => {
     const html = await renderNavBar({ username: 'PlayerOne', role: 'Player' });
-    expect(html).toContain('color-pkg-select');
-    expect(html).toContain('Plum');
-    expect(html).toContain('Emerald');
-    expect(html).toContain('Azure');
-    expect(html).toContain('Copper');
-    expect(html).toContain('Rust');
-    expect(html).toContain('Oceanic');
-    expect(html).toContain('Crimson');
-    expect(html).toContain('Forest');
-    expect(html).toContain('Indiglo');
-    expect(html).toContain('Fire');
-    expect(html).toContain('Lime');
-    expect(html).not.toContain('Blues &amp; Greens');
-    expect(html).not.toContain('Maroons');
-    expect(html).not.toContain('Rust (Fighter)');
+    expect(html).not.toContain('color-pkg-select');
+    expect(html).toContain('btn-color-scheme');
+    expect(html).toContain('Colors Scheme');
+    expect(html).toContain('nav-custom-color-picker');
   });
 });

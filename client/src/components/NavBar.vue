@@ -14,28 +14,22 @@
       </router-link>
     </div>
     <div class="navbar-user">
-      <div class="color-pkg-switcher" title="Border & Widget Color Package (Dark UI Invariant)">
-        <label for="nav-color-pkg-select" class="color-pkg-label">Theme:</label>
-        <select
-          id="nav-color-pkg-select"
-          v-model="selectedColorPkg"
-          class="color-pkg-select"
-          aria-label="Color Package Theme"
-          @change="onColorPkgChange"
+      <div class="color-scheme-wrap" title="Customize Site Color Scheme">
+        <button
+          type="button"
+          class="btn-color-scheme"
+          @click="openSiteColorPicker"
+          title="Click to customize site color scheme"
         >
-          <option value="custom">🎨 Custom Color...</option>
-          <option v-for="pkg in colorPackages" :key="pkg.key" :value="pkg.key">
-            {{ pkg.label }}
-          </option>
-        </select>
+          Colors Scheme
+        </button>
         <input
-          v-if="selectedColorPkg === 'custom'"
+          ref="siteColorInput"
           id="nav-custom-color-picker"
           type="color"
           v-model="siteCustomColor"
-          class="nav-custom-color-picker"
-          aria-label="Custom Theme Color Picker"
-          title="Pick custom site theme color"
+          class="hidden-color-input"
+          aria-label="Sitewide Color Scheme Picker"
           @input="onCustomColorInput"
           @change="onCustomColorChange"
         />
@@ -70,36 +64,38 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '../stores/auth.js';
 import ChangePasswordModal from './ChangePasswordModal.vue';
 import {
-  COLOR_PACKAGES,
-  getSavedColorPackage,
   getSavedCustomColor,
   applyColorPackage,
   setSavedCustomColor,
-  isCustomColor,
 } from '../utils/themeManager.js';
 
 const auth = useAuthStore();
 const router = useRouter();
 const showPasswordModal = ref(false);
-const colorPackages = COLOR_PACKAGES;
-const selectedColorPkg = ref(getSavedColorPackage());
+const siteColorInput = ref(null);
 const siteCustomColor = ref(getSavedCustomColor());
 
-function onColorPkgChange() {
-  if (selectedColorPkg.value === 'custom') {
-    applyColorPackage('custom', siteCustomColor.value);
-  } else {
-    selectedColorPkg.value = applyColorPackage(selectedColorPkg.value);
+function openSiteColorPicker() {
+  if (siteColorInput.value) {
+    if (typeof siteColorInput.value.showPicker === 'function') {
+      try {
+        siteColorInput.value.showPicker();
+        return;
+      } catch {
+        // Fallback to click
+      }
+    }
+    siteColorInput.value.click();
   }
 }
 
 function onCustomColorInput() {
-  applyColorPackage('custom', siteCustomColor.value);
+  applyColorPackage(siteCustomColor.value);
 }
 
 function onCustomColorChange() {
   setSavedCustomColor(siteCustomColor.value);
-  applyColorPackage('custom', siteCustomColor.value);
+  applyColorPackage(siteCustomColor.value);
 }
 
 function openPasswordModal() {
@@ -107,22 +103,17 @@ function openPasswordModal() {
 }
 
 onMounted(() => {
-  const saved = getSavedColorPackage();
-  if (saved === 'custom' || isCustomColor(saved)) {
-    selectedColorPkg.value = 'custom';
-    siteCustomColor.value = getSavedCustomColor();
-    applyColorPackage('custom', siteCustomColor.value);
-  } else {
-    selectedColorPkg.value = applyColorPackage(saved);
-  }
+  const saved = getSavedCustomColor();
+  siteCustomColor.value = saved;
+  applyColorPackage(saved);
 });
 
 defineExpose({
   showPasswordModal,
   openPasswordModal,
-  selectedColorPkg,
+  siteColorInput,
   siteCustomColor,
-  onColorPkgChange,
+  openSiteColorPicker,
   onCustomColorInput,
   onCustomColorChange,
 });
@@ -280,68 +271,9 @@ async function handleLogout() {
   background-color: #b0b0b0;
 }
 
-.color-pkg-switcher {
+.color-scheme-wrap {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-}
-
-.color-pkg-label {
-  font-size: 12px;
-  color: #8b949e !important;
-  white-space: nowrap;
-}
-
-.color-pkg-select {
-  width: auto;
-  min-width: 132px;
-  padding: 4px 26px 4px 8px;
-  font-size: 12px;
-  background-color: #0d1117 !important;
-  border: 1px solid #484f58 !important;
-  color: #8b949e !important;
-  -webkit-text-fill-color: #8b949e !important;
-  box-shadow: none !important;
-  border-radius: var(--radius);
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 8px center !important;
-  background-size: 10px 12px !important;
-  transition: all 0.15s ease;
-}
-
-.color-pkg-select option {
-  background-color: #0d1117 !important;
-  color: #8b949e !important;
-  -webkit-text-fill-color: #8b949e !important;
-  background-image: none !important;
-}
-
-.color-pkg-select:focus,
-.color-pkg-select:hover {
-  border-color: #6e7681 !important;
-  box-shadow: none !important;
-  outline: none;
-}
-
-.nav-custom-color-picker {
-  width: 24px;
-  height: 24px;
-  padding: 0;
-  border: 1px solid #484f58;
-  border-radius: 4px;
-  background: transparent;
-  cursor: pointer;
-  box-sizing: border-box;
-  vertical-align: middle;
-}
-
-.nav-custom-color-picker::-webkit-color-swatch-wrapper {
-  padding: 0;
-}
-
-.nav-custom-color-picker::-webkit-color-swatch {
-  border: none;
-  border-radius: 3px;
+  position: relative;
 }
 </style>

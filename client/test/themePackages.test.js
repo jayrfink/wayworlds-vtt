@@ -134,7 +134,7 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
     expect(card.attributes('data-color-pkg')).toBe('silver');
   });
 
-  it('makes all themes available in NavBar sitewide selector', () => {
+  it('makes Colors Scheme button available in NavBar sitewide selector', () => {
     const pinia = createPinia();
     setActivePinia(pinia);
 
@@ -148,27 +148,17 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
       },
     });
 
-    const select = wrapper.find('#nav-color-pkg-select');
-    expect(select.exists()).toBe(true);
-    const optionValues = select.findAll('option').map((o) => o.element.value);
-    expect(optionValues).toContain('silver');
-    expect(optionValues).toContain('shadow');
-    expect(optionValues).toContain('emerald');
-    expect(optionValues).toContain('azure');
-    expect(optionValues).toContain('plum');
-    expect(optionValues).toContain('copper');
-    expect(optionValues).toContain('rust');
-    expect(optionValues).toContain('oceanic');
-    expect(optionValues).toContain('crimson');
-    expect(optionValues).toContain('forest');
-    expect(optionValues).toContain('indiglo');
-    expect(optionValues).toContain('fire');
-    expect(optionValues).toContain('lime');
-    expect(optionValues).toContain('brighteal');
-    expect(optionValues).not.toContain('blues-greens');
+    // Preset dropdown deleted
+    expect(wrapper.find('#nav-color-pkg-select').exists()).toBe(false);
+    // Colors Scheme button exists
+    const btn = wrapper.find('.btn-color-scheme');
+    expect(btn.exists()).toBe(true);
+    expect(btn.text()).toBe('Colors Scheme');
+    // Color picker input exists
+    expect(wrapper.find('#nav-custom-color-picker').exists()).toBe(true);
   });
 
-  it('makes all themes available in CharacterSheetsView character sheet theme selector', async () => {
+  it('makes Colors Scheme button available in CharacterSheetsView', async () => {
     const pinia = createPinia();
     setActivePinia(pinia);
 
@@ -187,7 +177,7 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
         name: 'Themed Hero',
         race: 'Dawn Elves',
         psa: 'Combat',
-        color_theme: 'silver',
+        color_theme: '#10b981',
         str: 50,
         sta: 50,
         dex: 50,
@@ -204,28 +194,16 @@ describe('Theme Packages: Silver, Shadow, Dark Emerald, and Defaults', () => {
     wrapper.vm.selectCharacter(wrapper.vm.characters[0]);
     await wrapper.vm.$nextTick();
 
-    const select = wrapper.find('.select-char-theme');
-    expect(select.exists()).toBe(true);
-    const optionValues = select.findAll('option').map((o) => o.element.value);
-    expect(optionValues).toContain(''); // Default (App Theme)
-    expect(optionValues).toContain('silver');
-    expect(optionValues).toContain('shadow');
-    expect(optionValues).toContain('emerald');
-    expect(optionValues).toContain('azure');
-    expect(optionValues).toContain('plum');
-    expect(optionValues).toContain('copper');
-    expect(optionValues).toContain('rust');
-    expect(optionValues).toContain('oceanic');
-    expect(optionValues).toContain('crimson');
-    expect(optionValues).toContain('forest');
-    expect(optionValues).toContain('indiglo');
-    expect(optionValues).toContain('fire');
-    expect(optionValues).toContain('lime');
-    expect(optionValues).toContain('brighteal');
-    expect(optionValues).not.toContain('blues-greens');
+    // Preset dropdown deleted
+    expect(wrapper.find('.select-char-theme').exists()).toBe(false);
+    // Colors Scheme button exists
+    const btn = wrapper.find('.btn-char-color-scheme');
+    expect(btn.exists()).toBe(true);
+    expect(btn.text()).toBe('Colors Scheme');
 
-    // Scoped container receives data-color-pkg="silver"
+    // Scoped container receives style with custom theme variables
     const sheetContainer = wrapper.find('.sheet-container');
-    expect(sheetContainer.attributes('data-color-pkg')).toBe('silver');
+    expect(sheetContainer.exists()).toBe(true);
+    expect(sheetContainer.attributes('style')).toContain('--theme-bright: #10b981');
   });
 });
