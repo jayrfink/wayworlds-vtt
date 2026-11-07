@@ -2096,6 +2096,86 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         global.fetch = origFetch;
       }
     });
+
+    it('reorders spells/martial technique records via moveGrimoireEntry and calls updateGrimoire', () => {
+      const spell1 = { spell_id: 'sp1', name: 'Arcane Bolt', tradition: 'Arcane', default_tier: 1 };
+      const spell2 = { spell_id: 'sp2', name: 'Iron Palm', tradition: 'Ki', default_tier: 2 };
+      const spell3 = { spell_id: 'sp3', name: 'Shadow Cloak', tradition: 'Shadow', default_tier: 1 };
+
+      const vm = {
+        selectedChar: {
+          name: 'Monk Mage',
+          grimoire: [spell1, spell2, spell3],
+          racial_abilities: {},
+        },
+        updateCharacter: vi.fn(),
+      };
+      vm.updateGrimoire = CharacterSheetsView.methods.updateGrimoire.bind(vm);
+      vm.moveGrimoireEntry = CharacterSheetsView.methods.moveGrimoireEntry.bind(vm);
+
+      // Move spell1 down (index 0 -> 1)
+      vm.moveGrimoireEntry(0, 1);
+      expect(vm.selectedChar.grimoire.map(s => s.name)).toEqual(['Iron Palm', 'Arcane Bolt', 'Shadow Cloak']);
+      expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
+
+      // Boundary: Cannot move first item up
+      vm.moveGrimoireEntry(0, -1);
+      expect(vm.selectedChar.grimoire.map(s => s.name)).toEqual(['Iron Palm', 'Arcane Bolt', 'Shadow Cloak']);
+      expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
+
+      // Move last item down: boundary
+      vm.moveGrimoireEntry(2, 1);
+      expect(vm.selectedChar.grimoire.map(s => s.name)).toEqual(['Iron Palm', 'Arcane Bolt', 'Shadow Cloak']);
+      expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
+
+      // Move spell3 up (index 2 -> 1)
+      vm.moveGrimoireEntry(2, -1);
+      expect(vm.selectedChar.grimoire.map(s => s.name)).toEqual(['Iron Palm', 'Shadow Cloak', 'Arcane Bolt']);
+      expect(vm.updateCharacter).toHaveBeenCalledTimes(2);
+    });
+
+    it('reorders spells/martial technique records via drag and drop', () => {
+      const spell1 = { spell_id: 'sp1', name: 'Arcane Bolt' };
+      const spell2 = { spell_id: 'sp2', name: 'Iron Palm' };
+      const spell3 = { spell_id: 'sp3', name: 'Shadow Cloak' };
+
+      const vm = {
+        selectedChar: {
+          name: 'Monk Mage',
+          grimoire: [spell1, spell2, spell3],
+          racial_abilities: {},
+        },
+        draggedGrimoireIndex: null,
+        dragOverGrimoireIndex: null,
+        updateCharacter: vi.fn(),
+      };
+      vm.updateGrimoire = CharacterSheetsView.methods.updateGrimoire.bind(vm);
+      vm.onGrimoireDragStart = CharacterSheetsView.methods.onGrimoireDragStart.bind(vm);
+      vm.onGrimoireDragOver = CharacterSheetsView.methods.onGrimoireDragOver.bind(vm);
+      vm.onGrimoireDrop = CharacterSheetsView.methods.onGrimoireDrop.bind(vm);
+      vm.onGrimoireDragEnd = CharacterSheetsView.methods.onGrimoireDragEnd.bind(vm);
+
+      const fakeEvent = {
+        preventDefault: vi.fn(),
+        target: { tagName: 'LI' },
+        dataTransfer: { effectAllowed: null, setData: vi.fn(), dropEffect: null },
+      };
+
+      // Start drag at index 2
+      vm.onGrimoireDragStart(fakeEvent, 2);
+      expect(vm.draggedGrimoireIndex).toBe(2);
+
+      // Drag over index 0
+      vm.onGrimoireDragOver(fakeEvent, 0);
+      expect(vm.dragOverGrimoireIndex).toBe(0);
+
+      // Drop on index 0
+      vm.onGrimoireDrop(fakeEvent, 0);
+      expect(vm.selectedChar.grimoire.map(s => s.name)).toEqual(['Shadow Cloak', 'Arcane Bolt', 'Iron Palm']);
+      expect(vm.draggedGrimoireIndex).toBeNull();
+      expect(vm.dragOverGrimoireIndex).toBeNull();
+      expect(vm.updateCharacter).toHaveBeenCalled();
+    });
   });
 
   describe('Custom Equipment & Magic Item Forge Applet', () => {

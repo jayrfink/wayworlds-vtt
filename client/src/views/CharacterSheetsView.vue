@@ -753,8 +753,20 @@
               v-for="(spell, sIdx) in selectedChar.grimoire"
               :key="spell.spell_id || sIdx"
               class="grimoire-row card"
+              :class="{ 'drag-over': dragOverGrimoireIndex === sIdx, 'dragging': draggedGrimoireIndex === sIdx }"
+              draggable="true"
+              @dragstart="onGrimoireDragStart($event, sIdx)"
+              @dragover="onGrimoireDragOver($event, sIdx)"
+              @dragleave="onGrimoireDragLeave($event, sIdx)"
+              @drop="onGrimoireDrop($event, sIdx)"
+              @dragend="onGrimoireDragEnd"
             >
               <div class="grimoire-row-top">
+                <span
+                  class="drag-handle"
+                  title="Drag to reorder spell/technique"
+                  @click.stop
+                >⋮⋮</span>
                 <input
                   type="text"
                   v-model="spell.name"
@@ -799,6 +811,22 @@
                 >
                   ⚡ Cast
                 </button>
+                <div class="reorder-actions">
+                  <button
+                    type="button"
+                    class="btn-reorder btn-move-up"
+                    title="Move Spell Up"
+                    :disabled="sIdx === 0"
+                    @click.stop="moveGrimoireEntry(sIdx, -1)"
+                  >▲</button>
+                  <button
+                    type="button"
+                    class="btn-reorder btn-move-down"
+                    title="Move Spell Down"
+                    :disabled="sIdx === (selectedChar.grimoire ? selectedChar.grimoire.length - 1 : 0)"
+                    @click.stop="moveGrimoireEntry(sIdx, 1)"
+                  >▼</button>
+                </div>
                 <button
                   type="button"
                   class="btn-remove btn-remove-spell"
@@ -1353,6 +1381,8 @@ export default {
       dragOverSkillIndex: null,
       draggedInventoryIndex: null,
       dragOverInventoryIndex: null,
+      draggedGrimoireIndex: null,
+      dragOverGrimoireIndex: null,
       draggedNotePanelIndex: null,
       dragOverNotePanelIndex: null,
       showCreateModal: false,
@@ -2604,6 +2634,57 @@ export default {
       if (!this.selectedChar || !Array.isArray(this.selectedChar.grimoire)) return;
       this.selectedChar.grimoire.splice(index, 1);
       this.updateGrimoire();
+    },
+    moveGrimoireEntry(index, direction) {
+      if (!this.selectedChar || !Array.isArray(this.selectedChar.grimoire)) return;
+      const targetIndex = index + direction;
+      if (targetIndex < 0 || targetIndex >= this.selectedChar.grimoire.length) return;
+      const [moved] = this.selectedChar.grimoire.splice(index, 1);
+      this.selectedChar.grimoire.splice(targetIndex, 0, moved);
+      this.updateGrimoire();
+    },
+    onGrimoireDragStart(event, index) {
+      const tag = event.target?.tagName?.toLowerCase();
+      if (['input', 'select', 'textarea', 'button'].includes(tag)) {
+        event.preventDefault();
+        return;
+      }
+      this.draggedGrimoireIndex = index;
+      if (event.dataTransfer) {
+        event.dataTransfer.effectAllowed = 'move';
+        event.dataTransfer.setData('text/plain', String(index));
+      }
+    },
+    onGrimoireDragOver(event, index) {
+      if (this.draggedGrimoireIndex === null) return;
+      event.preventDefault();
+      if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+      }
+      this.dragOverGrimoireIndex = index;
+    },
+    onGrimoireDragLeave(event, index) {
+      if (this.dragOverGrimoireIndex === index) {
+        this.dragOverGrimoireIndex = null;
+      }
+    },
+    onGrimoireDrop(event, targetIndex) {
+      event.preventDefault();
+      const fromIndex = this.draggedGrimoireIndex;
+      this.draggedGrimoireIndex = null;
+      this.dragOverGrimoireIndex = null;
+      if (fromIndex === null || fromIndex === undefined || fromIndex === targetIndex) return;
+      if (!this.selectedChar || !Array.isArray(this.selectedChar.grimoire)) return;
+      if (fromIndex < 0 || fromIndex >= this.selectedChar.grimoire.length) return;
+      if (targetIndex < 0 || targetIndex >= this.selectedChar.grimoire.length) return;
+
+      const [moved] = this.selectedChar.grimoire.splice(fromIndex, 1);
+      this.selectedChar.grimoire.splice(targetIndex, 0, moved);
+      this.updateGrimoire();
+    },
+    onGrimoireDragEnd() {
+      this.draggedGrimoireIndex = null;
+      this.dragOverGrimoireIndex = null;
     },
     updateGrimoire() {
       if (!this.selectedChar) return;
@@ -5291,6 +5372,17 @@ export default {
   gap: 4px;
   box-shadow: none !important;
   flex-shrink: 0;
+  transition: border-color 0.15s, background-color 0.15s;
+}
+
+.grimoire-row.drag-over {
+  border-color: var(--theme-bright, #00e5ff);
+  background: var(--theme-glow-bg, rgba(0, 229, 255, 0.08));
+  box-shadow: var(--theme-glow-hover, 0 0 8px rgba(0, 229, 255, 0.35));
+}
+
+.grimoire-row.dragging {
+  opacity: 0.4;
 }
 
 .grimoire-row-top,
