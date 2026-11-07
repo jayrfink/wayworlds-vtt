@@ -2008,6 +2008,15 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       };
       expect(CharacterSheetsView.methods.getSpellTargetPct.call(vm, wardSpell)).toBe(99);
 
+      // Verify pinned essence attribute updates getSpellTargetPct
+      vm.selectedChar.log = 80;
+      vm.selectedChar.ess_pin = 'log';
+      // When pinned to log (80): Arcane target becomes ceil(80/2) + 30 = 70%
+      expect(CharacterSheetsView.methods.getSpellTargetPct.call(vm, added)).toBe(70);
+      vm.selectedChar.ess_pin = '';
+      // Unpinned: reverts to int (60) -> 60%
+      expect(CharacterSheetsView.methods.getSpellTargetPct.call(vm, added)).toBe(60);
+
       vm.removeGrimoireEntry(0);
       expect(vm.selectedChar.grimoire.length).toBe(0);
       expect(vm.updateCharacter).toHaveBeenCalledTimes(2);
@@ -2057,8 +2066,16 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         expect(res1.cost).toBe(6);
         expect(res1.fuel).toBe('ess');
         expect(res1.diceFormula).toBe('4d10');
+        expect(res1.targetPct).toBe(60);
         expect(vm.selectedChar.current_ess).toBe(14); // 20 - 6
         expect(vm.updateCharacter).toHaveBeenCalledTimes(1);
+
+        // Verify castGrimoireSpell respects pinned essence
+        vm.selectedChar.ess_pin = 'log';
+        vm.selectedChar.log = 80;
+        const resWithPin = await vm.castGrimoireSpell(arcaneSpell);
+        expect(resWithPin.targetPct).toBe(70); // ceil(80/2) + 30
+        vm.selectedChar.ess_pin = '';
 
         // 2. Cast Tier 2 Blood Hex (4 STA, 2d10)
         const bloodSpell = {

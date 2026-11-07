@@ -502,6 +502,26 @@ export function calcTraditionBaseStatValue(char, traditionName) {
   const wil = Number(char.per ?? 50);
   const pre = Number(char.ldr ?? 50);
 
+  // If character has pinned an attribute to their Essence/Mana pool, use it for Essence-fueled traditions
+  const essPin = char.ess_pin || char.racial_abilities?.ess_pin;
+  if (essPin && cfg.fuel === 'ess') {
+    let pinnedVal = int;
+    if (essPin === 'log') pinnedVal = log;
+    else if (essPin === 'per') pinnedVal = wil;
+
+    // Preserves physical alternate stats if higher (e.g. Shadow DEX, Ki STA, Demonology PRE)
+    if (cfg.baseStat === 'int_or_dex') {
+      return Math.max(pinnedVal, dex);
+    }
+    if (cfg.baseStat === 'sta_or_per') {
+      return Math.max(pinnedVal, sta);
+    }
+    if (cfg.baseStat === 'per_or_ldr') {
+      return Math.max(pinnedVal, pre);
+    }
+    return pinnedVal;
+  }
+
   switch (cfg.baseStat) {
     case 'int':
       return int;

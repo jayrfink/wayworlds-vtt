@@ -222,6 +222,65 @@ describe('Wayworlds Character Tier, Universal Magnitude, & Tradecraft Forge Rule
     expect(calcTraditionTargetPct(mage, 'Eldritch')).toBe(55);
   });
 
+  it('uses pinned Essence attribute (int, log, per) for Essence-fueled tradition spell target %', () => {
+    const caster = {
+      int: 80,
+      log: 60,
+      per: 40,
+      dex: 70,
+      sta: 65,
+      ldr: 55,
+      ess_pin: 'int',
+      skills: [
+        { name: 'Arcane', level: 2 },
+        { name: 'Eldritch', level: 2 },
+        { name: 'Druidic', level: 2 },
+        { name: 'Shadow', level: 2 },
+        { name: 'Ki', level: 2 },
+        { name: 'Blood', level: 2 },
+      ],
+    };
+
+    // When pinned to INT (80):
+    // Arcane: ceil(80/2) + 20 = 60%
+    expect(calcTraditionTargetPct(caster, 'Arcane')).toBe(60);
+    // Eldritch (normally log 60 -> 50%): with ess_pin 'int' (80) -> ceil(80/2) + 20 = 60%
+    expect(calcTraditionTargetPct(caster, 'Eldritch')).toBe(60);
+    // Druidic (normally per 40 -> 40%): with ess_pin 'int' (80) -> ceil(80/2) + 20 = 60%
+    expect(calcTraditionTargetPct(caster, 'Druidic')).toBe(60);
+    // Shadow uses Math.max(int 80, dex 70) = 80 -> 60%
+    expect(calcTraditionTargetPct(caster, 'Shadow')).toBe(60);
+    // Ki uses Math.max(int 80, sta 65) = 80 -> 60%
+    expect(calcTraditionTargetPct(caster, 'Ki')).toBe(60);
+    // Blood is Stamina-fueled (STA/WIL): continues to use WIL (per 40) -> ceil(40/2) + 20 = 40%
+    expect(calcTraditionTargetPct(caster, 'Blood')).toBe(40);
+
+    // Now switch ess_pin to 'log' (HIST/REL 60):
+    caster.ess_pin = 'log';
+    // Arcane: ceil(60/2) + 20 = 50%
+    expect(calcTraditionTargetPct(caster, 'Arcane')).toBe(50);
+    // Eldritch: ceil(60/2) + 20 = 50%
+    expect(calcTraditionTargetPct(caster, 'Eldritch')).toBe(50);
+    // Shadow: Math.max(log 60, dex 70) -> dex 70 is higher! ceil(70/2) + 20 = 55%
+    expect(calcTraditionTargetPct(caster, 'Shadow')).toBe(55);
+    // Ki: Math.max(log 60, sta 65) -> sta 65 is higher! ceil(65/2) + 20 = 53%
+    expect(calcTraditionTargetPct(caster, 'Ki')).toBe(53);
+
+    // Now switch ess_pin to 'per' (WIL 40):
+    caster.ess_pin = 'per';
+    // Arcane: ceil(40/2) + 20 = 40%
+    expect(calcTraditionTargetPct(caster, 'Arcane')).toBe(40);
+
+    // Now unpinned (ess_pin = ''): falls back to standard tradition stats
+    caster.ess_pin = '';
+    // Arcane uses int (80) -> 60%
+    expect(calcTraditionTargetPct(caster, 'Arcane')).toBe(60);
+    // Eldritch uses log (60) -> 50%
+    expect(calcTraditionTargetPct(caster, 'Eldritch')).toBe(50);
+    // Druidic uses per (40) -> 40%
+    expect(calcTraditionTargetPct(caster, 'Druidic')).toBe(40);
+  });
+
   it('caps Custom Equipment & Magic Item Forge tier by Lvl 1-6 Tradecraft rank', () => {
     expect(calcMaxForgeTier(0, false)).toBe(0);
     expect(calcMaxForgeTier(1, false)).toBe(1);
