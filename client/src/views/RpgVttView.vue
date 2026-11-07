@@ -376,22 +376,26 @@
                 class="init-die-box init-player-die"
                 :style="{
                   backgroundColor: activeDiceColors.initiativePlayer,
-                  borderColor: '#b5eeff'
+                  borderColor: getContrastingNumberColor(activeDiceColors.initiativePlayer),
+                  color: getContrastingNumberColor(activeDiceColors.initiativePlayer),
+                  boxShadow: `0 0 16px ${activeDiceColors.initiativePlayer}88, inset 0 2px 4px rgba(255, 255, 255, 0.15)`
                 }"
               >
                 <span class="init-label">PLAYERS</span>
-                <span class="init-val">{{ lastInitiativeRoll.playerRoll }}</span>
+                <span class="init-val" :style="{ textShadow: `0 0 10px ${getContrastingNumberColor(activeDiceColors.initiativePlayer)}88` }">{{ lastInitiativeRoll.playerRoll }}</span>
               </div>
               <span class="init-vs">VS</span>
               <div
                 class="init-die-box init-opp-die"
                 :style="{
                   backgroundColor: activeDiceColors.initiativeOpp,
-                  borderColor: '#c9abb9'
+                  borderColor: getContrastingNumberColor(activeDiceColors.initiativeOpp),
+                  color: getContrastingNumberColor(activeDiceColors.initiativeOpp),
+                  boxShadow: `0 0 16px ${activeDiceColors.initiativeOpp}88, inset 0 2px 4px rgba(255, 255, 255, 0.15)`
                 }"
               >
                 <span class="init-label">OPPOSITION</span>
-                <span class="init-val">{{ lastInitiativeRoll.oppRoll }}</span>
+                <span class="init-val" :style="{ textShadow: `0 0 10px ${getContrastingNumberColor(activeDiceColors.initiativeOpp)}88` }">{{ lastInitiativeRoll.oppRoll }}</span>
               </div>
             </div>
           </div>
@@ -975,7 +979,7 @@ import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
 import { diceRollQueue } from '../utils/diceRollQueue.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { playDiceSound, toggleMute as toggleDiceMute, isMuted as isDiceMuted } from '../services/diceAudio.js';
-import { getSavedDiceColors } from '../utils/diceColorManager.js';
+import { getSavedDiceColors, getContrastingNumberColor } from '../utils/diceColorManager.js';
 
 
 const authStore = useAuthStore();

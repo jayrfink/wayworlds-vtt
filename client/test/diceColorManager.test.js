@@ -11,6 +11,8 @@ import {
   getSavedDiceColors,
   saveDiceColors,
   resetDiceColors,
+  getContrastingNumberColor,
+  getContrastRatio,
 } from '../src/utils/diceColorManager.js';
 import DiceColorModal from '../src/components/DiceColorModal.vue';
 
@@ -71,6 +73,28 @@ describe('Dice Color Management & Modal', () => {
       resetDiceColors();
       const loaded = getSavedDiceColors();
       expect(loaded.damage).toBe(DEFAULT_DICE_COLORS.damage);
+    });
+
+    it('automatically calculates readable contrasting number color', () => {
+      // Dark blue background -> light blue number
+      const darkBlueNum = getContrastingNumberColor('#001f3f');
+      expect(getContrastRatio('#001f3f', darkBlueNum)).toBeGreaterThan(4.5);
+
+      // Pitch black background -> near white number
+      const blackNum = getContrastingNumberColor('#000000');
+      expect(getContrastRatio('#000000', blackNum)).toBeGreaterThan(10);
+
+      // Pure white background -> near black number
+      const whiteNum = getContrastingNumberColor('#ffffff');
+      expect(getContrastRatio('#ffffff', whiteNum)).toBeGreaterThan(10);
+
+      // Bright yellow background -> dark yellow/brown number
+      const yellowNum = getContrastingNumberColor('#ffff00');
+      expect(getContrastRatio('#ffff00', yellowNum)).toBeGreaterThan(7);
+
+      // Mint green background -> dark green number
+      const mintNum = getContrastingNumberColor('#77d19e');
+      expect(getContrastRatio('#77d19e', mintNum)).toBeGreaterThan(4.5);
     });
   });
 

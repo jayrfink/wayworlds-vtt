@@ -127,25 +127,69 @@
           </div>
         </div>
 
-        <!-- Live Preview Row -->
+        <!-- Live Die Face & Contrasting Number Preview Row -->
         <div class="dice-preview-strip">
-          <div class="dice-preview-badge" :style="{ borderColor: colors.percentileTens, color: colors.percentileTens }">
+          <div
+            class="dice-preview-badge"
+            :style="{
+              backgroundColor: colors.percentileTens,
+              borderColor: getContrastingNumberColor(colors.percentileTens),
+              color: getContrastingNumberColor(colors.percentileTens)
+            }"
+            title="Tens Die (Face & Contrasting Number)"
+          >
             <span class="dice-badge-label">Tens</span>
             <span class="dice-badge-val">80</span>
           </div>
-          <div class="dice-preview-badge" :style="{ borderColor: colors.percentileOnes, color: colors.percentileOnes }">
+
+          <div
+            class="dice-preview-badge"
+            :style="{
+              backgroundColor: colors.percentileOnes,
+              borderColor: getContrastingNumberColor(colors.percentileOnes),
+              color: getContrastingNumberColor(colors.percentileOnes)
+            }"
+            title="Ones Die (Face & Contrasting Number)"
+          >
             <span class="dice-badge-label">Ones</span>
             <span class="dice-badge-val">4</span>
           </div>
-          <div class="dice-preview-badge" :style="{ borderColor: colors.damage, color: colors.damage }">
+
+          <div
+            class="dice-preview-badge"
+            :style="{
+              backgroundColor: colors.damage,
+              borderColor: getContrastingNumberColor(colors.damage),
+              color: getContrastingNumberColor(colors.damage)
+            }"
+            title="Damage Die (Face & Contrasting Number)"
+          >
             <span class="dice-badge-label">Damage</span>
             <span class="dice-badge-val">7</span>
           </div>
-          <div class="dice-preview-badge" :style="{ borderColor: colors.initiativePlayer, color: colors.initiativePlayer }">
+
+          <div
+            class="dice-preview-badge"
+            :style="{
+              backgroundColor: colors.initiativePlayer,
+              borderColor: getContrastingNumberColor(colors.initiativePlayer),
+              color: getContrastingNumberColor(colors.initiativePlayer)
+            }"
+            title="Party Initiative Die (Face & Contrasting Number)"
+          >
             <span class="dice-badge-label">Party</span>
             <span class="dice-badge-val">9</span>
           </div>
-          <div class="dice-preview-badge" :style="{ borderColor: colors.initiativeOpp, color: colors.initiativeOpp }">
+
+          <div
+            class="dice-preview-badge"
+            :style="{
+              backgroundColor: colors.initiativeOpp,
+              borderColor: getContrastingNumberColor(colors.initiativeOpp),
+              color: getContrastingNumberColor(colors.initiativeOpp)
+            }"
+            title="Opposition Initiative Die (Face & Contrasting Number)"
+          >
             <span class="dice-badge-label">Opposition</span>
             <span class="dice-badge-val">5</span>
           </div>
@@ -171,7 +215,8 @@ import {
   getSavedDiceColors,
   saveDiceColors,
   resetDiceColors,
-  normalizeHexColor
+  normalizeHexColor,
+  getContrastingNumberColor,
 } from '../utils/diceColorManager.js';
 
 const props = defineProps({
@@ -390,11 +435,11 @@ function close() {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: #161b22;
-  border: 1.5px solid currentColor;
+  border: 2px solid currentColor;
   border-radius: 6px;
-  padding: 6px 4px;
+  padding: 8px 4px;
   gap: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
   transition: all 0.15s ease;
 }
 

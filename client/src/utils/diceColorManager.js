@@ -43,6 +43,164 @@ export function normalizeHexColor(hex) {
 }
 
 /**
+ * Converts a hex color to RGB object.
+ * @param {string} hex
+ * @returns {{ r: number, g: number, b: number }}
+ */
+export function parseHexToRgb(hex) {
+  let clean = String(hex || '').trim().replace(/^#/, '');
+  if (clean.length === 3) {
+    clean = clean.split('').map((c) => c + c).join('');
+  }
+  const num = parseInt(clean, 16);
+  if (isNaN(num)) return { r: 119, g: 209, b: 158 };
+  return {
+    r: (num >> 16) & 255,
+    g: (num >> 8) & 255,
+    b: num & 255,
+  };
+}
+
+/**
+ * Computes standard relative luminance per WCAG 2.1 specs.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {number}
+ */
+export function getRelativeLuminance(r, g, b) {
+  const [rs, gs, bs] = [r, g, b].map((c) => {
+    const s = c / 255;
+    return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * rs + 0.7152 * gs + 0.0722 * bs;
+}
+
+/**
+ * Converts RGB to HSL.
+ * @param {number} r
+ * @param {number} g
+ * @param {number} b
+ * @returns {{ h: number, s: number, l: number }}
+ */
+export function rgbToHsl(r, g, b) {
+  const rNorm = r / 255;
+  const gNorm = g / 255;
+  const bNorm = b / 255;
+  const max = Math.max(rNorm, gNorm, bNorm);
+  const min = Math.min(rNorm, gNorm, bNorm);
+  let h = 0;
+  let s = 0;
+  const l = (max + min) / 2;
+
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case rNorm:
+        h = (gNorm - bNorm) / d + (gNorm < bNorm ? 6 : 0);
+        break;
+      case gNorm:
+        h = (bNorm - rNorm) / d + 2;
+        break;
+      case bNorm:
+        h = (rNorm - gNorm) / d + 4;
+        break;
+    }
+    h = Math.round(h * 60);
+  }
+  return { h, s, l };
+}
+
+/**
+ * Converts HSL to 6-digit hex color string.
+ * @param {number} h
+ * @param {number} s
+ * @param {number} l
+ * @returns {string}
+ */
+export function hslToHex(h, s, l) {
+  h = ((h % 360) + 360) % 360;
+  s = Math.max(0, Math.min(1, s));
+  l = Math.max(0, Math.min(1, l));
+
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs(((h / 60) % 2) - 1));
+  const m = l - c / 2;
+  let r1 = 0, g1 = 0, b1 = 0;
+
+  if (h >= 0 && h < 60) {
+    r1 = c; g1 = x; b1 = 0;
+  } else if (h >= 60 && h < 120) {
+    r1 = x; g1 = c; b1 = 0;
+  } else if (h >= 120 && h < 180) {
+    r1 = 0; g1 = c; b1 = x;
+  } else if (h >= 180 && h < 240) {
+    r1 = 0; g1 = x; b1 = c;
+  } else if (h >= 240 && h < 300) {
+    r1 = x; g1 = 0; b1 = c;
+  } else {
+    r1 = c; g1 = 0; b1 = x;
+  }
+
+  const toHex = (n) => Math.max(0, Math.min(255, Math.round((n + m) * 255))).toString(16).padStart(2, '0');
+  return `#${toHex(r1)}${toHex(g1)}${toHex(b1)}`;
+}
+
+/**
+ * Calculates WCAG contrast ratio between two hex colors.
+ * @param {string} hex1
+ * @param {string} hex2
+ * @returns {number}
+ */
+export function getContrastRatio(hex1, hex2) {
+  const { r: r1, g: g1, b: b1 } = parseHexToRgb(hex1);
+  const { r: r2, g: g2, b: b2 } = parseHexToRgb(hex2);
+  const l1 = getRelativeLuminance(r1, g1, b1);
+  const l2 = getRelativeLuminance(r2, g2, b2);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+/**
+ * Automatically computes a high-contrast number color for a given die face background color.
+ * If the die is dark blue, returns light blue. If dark red, returns light red.
+ * If the color is desaturated or extreme (pitch black/white), returns near-white or near-black
+ * to ensure numbers remain readable.
+ *
+ * @param {string} bgHex
+ * @returns {string} High-contrast hex color for die face numbers
+ */
+export function getContrastingNumberColor(bgHex) {
+  const normalized = normalizeHexColor(bgHex);
+  const { r, g, b } = parseHexToRgb(normalized);
+  const { h, s } = rgbToHsl(r, g, b);
+
+  // Candidate 1: Light tint of the same hue (soft pastel / tinted light)
+  const lightCandidate = hslToHex(h, Math.min(s * 0.7, 0.45), 0.94);
+  // Candidate 2: Dark shade of the same hue (deep rich dark)
+  const darkCandidate = hslToHex(h, Math.min(s * 0.85, 0.8), 0.08);
+
+  const ratioLight = getContrastRatio(normalized, lightCandidate);
+  const ratioDark = getContrastRatio(normalized, darkCandidate);
+
+  if (ratioLight >= ratioDark) {
+    // If contrast is below readable threshold (e.g. 4.5:1), push closer to pure white
+    if (ratioLight < 4.5) {
+      return hslToHex(h, Math.min(s * 0.25, 0.15), 0.98);
+    }
+    return lightCandidate;
+  } else {
+    // If contrast is below readable threshold, push closer to pure black
+    if (ratioDark < 4.5) {
+      return hslToHex(h, Math.min(s * 0.25, 0.15), 0.04);
+    }
+    return darkCandidate;
+  }
+}
+
+/**
  * Loads saved dice colors from localStorage, merged with defaults.
  * @param {Storage} [storage=localStorage]
  * @returns {{ percentileTens: string, percentileOnes: string, damage: string, initiativePlayer: string, initiativeOpp: string }}
