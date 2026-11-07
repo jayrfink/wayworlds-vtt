@@ -1618,6 +1618,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*background:\s*rgba\(200,\s*200,\s*200,\s*0\.04\)/);
         expect(vueFile).toMatch(/\.racial-panel\.species-traits-banner\s*\{[^}]*border:\s*1px solid rgba\(200,\s*200,\s*200,\s*0\.2\)/);
         expect(vueFile).toMatch(/\.traits-badge\s*\{[^}]*color:\s*#c8c8c8/);
+        expect(vueFile).toMatch(/\.traits-badge\s*\{[^}]*font-size:\s*0\.8075rem/);
       } finally {
         global.fetch = origFetch;
       }

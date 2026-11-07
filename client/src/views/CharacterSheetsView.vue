@@ -4179,7 +4179,7 @@ export default {
   display: inline-flex;
   align-items: center;
   font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', sans-serif);
-  font-size: 0.85rem;
+  font-size: 0.8075rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
