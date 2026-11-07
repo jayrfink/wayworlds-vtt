@@ -558,7 +558,7 @@
         <!-- Lists: Skills & Inventory -->
         <div class="two-column-lists">
           <!-- Skills -->
-          <section class="card list-card">
+          <section class="card list-card skills-card">
             <div class="list-header">
               <h4>Skills & Experience</h4>
               <button class="btn-secondary btn-add-skill" @click="addSkill">+ Add Skill</button>
@@ -612,6 +612,11 @@
                   >
                     +Lvl ({{ getXPCost(skill.name, skill.level + 1, skill.psa) }} XP)
                   </button>
+                  <span
+                    v-else
+                    class="skill-xp-spacer"
+                    aria-hidden="true"
+                  ></span>
                 </div>
                 <div class="reorder-actions">
                   <button
@@ -635,7 +640,7 @@
           </section>
 
           <!-- Inventory -->
-          <section class="card list-card">
+          <section class="card list-card inventory-card">
             <div class="list-header">
               <h4>Inventory</h4>
               <div class="list-header-actions">
@@ -4167,6 +4172,10 @@ export default {
   max-width: 100%;
 }
 
+.two-column-lists .inventory-card {
+  min-height: 360px;
+}
+
 .list-header {
   display: flex;
   justify-content: space-between;
@@ -4207,7 +4216,7 @@ export default {
 }
 
 .inventory-items-list {
-  max-height: 206px;
+  max-height: 227px;
 }
 
 .skills-items-list {
@@ -4356,6 +4365,12 @@ export default {
   border: 1px solid #484f58 !important;
   box-shadow: none !important;
   letter-spacing: 0.5px;
+  min-width: 46px;
+  text-align: center;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .btn-xp-upgrade {
@@ -4380,6 +4395,28 @@ export default {
 .btn-xp-upgrade:active {
   transform: translateY(1px);
   box-shadow: 0 0 6px rgba(16, 185, 129, 0.6) !important;
+}
+
+/* Skills Card XP Badges - Uniform fixed width with centered text and blank space padding */
+.skill-row .btn-xp-upgrade,
+.skill-row .skill-xp-spacer {
+  width: 100px;
+  min-width: 100px;
+  box-sizing: border-box;
+  text-align: center;
+  justify-content: center;
+}
+
+.skill-row .btn-xp-upgrade {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+}
+
+.skill-row .skill-xp-spacer {
+  display: inline-block;
+  visibility: hidden;
 }
 
 .item-name-input {

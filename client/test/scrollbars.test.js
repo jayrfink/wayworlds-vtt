@@ -123,10 +123,21 @@ describe('Character Sheet Inventory, Skills & Grimoire Scrollbars (CharacterShee
     expect(content).toMatch(/\.inventory-items-list::-webkit-scrollbar-thumb:hover[\s\S]*?\.grimoire-list::-webkit-scrollbar-thumb:hover[\s\S]*?\{[^}]*background:\s*#586069\s*!important;/);
   });
 
-  it('caps inventory list at 5-item height, skills list to matching card height, and grimoire list at 3-record height', () => {
-    expect(content).toMatch(/\.inventory-items-list\s*\{[^}]*max-height:\s*206px;/);
+  it('caps inventory list with 10% height increase (227px), skills list to matching card height, and grimoire list at 3-record height', () => {
+    expect(content).toMatch(/\.inventory-items-list\s*\{[^}]*max-height:\s*227px;/);
     expect(content).toMatch(/\.skills-items-list\s*\{[^}]*max-height:\s*255px;/);
     expect(content).toMatch(/\.grimoire-list\s*\{[^}]*max-height:\s*232px;/);
+  });
+
+  it('makes inventory card height 10% bigger with min-height', () => {
+    expect(content).toMatch(/\.two-column-lists\s+\.inventory-card\s*\{[^}]*min-height:\s*360px;/);
+  });
+
+  it('makes XP badges on Skills card uniform in width with centered text and blank space padding', () => {
+    expect(content).toMatch(/\.skill-row\s+\.btn-xp-upgrade[\s\S]*?\.skill-row\s+\.skill-xp-spacer\s*\{[^}]*width:\s*100px;/);
+    expect(content).toMatch(/\.skill-row\s+\.btn-xp-upgrade[\s\S]*?\.skill-row\s+\.skill-xp-spacer\s*\{[^}]*min-width:\s*100px;/);
+    expect(content).toMatch(/\.skill-row\s+\.btn-xp-upgrade\s*\{[^}]*display:\s*inline-flex;/);
+    expect(content).toMatch(/\.skill-row\s+\.skill-xp-spacer\s*\{[^}]*display:\s*inline-block;\s*visibility:\s*hidden;/);
   });
 
   it('styles character name input and border to match the card background so the box is seamless', () => {
