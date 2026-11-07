@@ -571,7 +571,7 @@
           <section class="card list-card skills-card">
             <div class="list-header">
               <h4>Skills & Experience</h4>
-              <button class="btn-secondary btn-add-skill" @click="addSkill">+ Add Skill</button>
+              <button class="btn-secondary btn-add-skill" @click="openAddSkillModal">+ Add Skill</button>
             </div>
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
@@ -594,16 +594,13 @@
                   title="Drag to reorder skill"
                   @click.stop
                 >⋮⋮</span>
-                <div class="skill-main-select">
-                  <select v-model="skill.name" @change="updateCharacter" class="select-official-skill">
-                    <option v-for="offSk in officialSkills" :key="offSk.name" :value="offSk.name">
-                      {{ offSk.name }} ({{ offSk.psa }})
-                    </option>
-                  </select>
-                  <span class="skill-chance-badge" title="Calculated Success Chance">
-                    {{ getSkillSuccessChance(skill) }}%
-                  </span>
+                <div class="skill-item-badge" :title="getSkillTooltip(skill)">
+                  <span class="skill-name">{{ skill.name }}</span>
+                  <span class="skill-psa-tag">({{ getSkillPSA(skill.name) }})</span>
                 </div>
+                <span class="skill-chance-badge" title="Calculated Success Chance">
+                  {{ getSkillSuccessChance(skill) }}%
+                </span>
                 <div class="level-wrap">
                   <label>Lvl:</label>
                   <input
@@ -787,7 +784,7 @@
                 <select
                   v-model="spell.category"
                   @change="updateGrimoire"
-                  class="select-official-skill spell-category-select"
+                  class="spell-category-select"
                   title="Universal Magnitude Category"
                 >
                   <option value="strike">Strike</option>
@@ -1095,6 +1092,84 @@
         </div>
         <div class="modal-actions">
           <button type="button" class="btn-secondary" @click="showEquipmentModal = false">Done</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add Skill Catalog Modal -->
+    <div v-if="showAddSkillModal" class="modal-backdrop" @click.self="showAddSkillModal = false">
+      <div class="modal-card equipment-modal skill-modal">
+        <div class="equipment-modal-header">
+          <h3>Available Skills Catalog</h3>
+          <button class="btn-close-modal" title="Close" @click="showAddSkillModal = false">✕</button>
+        </div>
+        <p class="equipment-modal-desc">
+          Browse official Wayworlds skills and magic/ki traditions. Click <strong>+ Add</strong> to train a skill at Level 1.
+        </p>
+
+        <!-- Category Filter Tabs -->
+        <div class="equipment-category-tabs" role="tablist" aria-label="Skill Categories">
+          <button
+            v-for="cat in skillCategories"
+            :key="cat"
+            type="button"
+            class="tab-btn"
+            :class="{ active: activeSkillCategory === cat }"
+            @click="activeSkillCategory = cat"
+          >
+            {{ cat }} ({{ getSkillCategoryCount(cat) }})
+          </button>
+        </div>
+
+        <div class="equipment-search-bar">
+          <input
+            type="text"
+            v-model="skillSearchQuery"
+            placeholder="Search skills by name, PSA, or attribute..."
+            class="equipment-search-input"
+          />
+          <button
+            v-if="skillSearchQuery"
+            type="button"
+            class="btn-clear-search"
+            @click="skillSearchQuery = ''"
+          >✕</button>
+        </div>
+
+        <div class="equipment-grid skill-catalog-grid">
+          <div
+            v-for="sk in filteredAvailableSkills"
+            :key="sk.name"
+            class="equipment-card skill-catalog-card"
+          >
+            <div class="eq-header">
+              <span class="eq-name">{{ sk.name }}</span>
+              <button
+                v-if="isSkillLearned(sk.name)"
+                type="button"
+                class="btn-learned-skill"
+                disabled
+              >
+                ✓ Trained (Lvl {{ getLearnedSkillLevel(sk.name) }})
+              </button>
+              <button
+                v-else
+                type="button"
+                class="btn-add-eq"
+                @click="addSkillFromModal(sk.name)"
+              >
+                + Add
+              </button>
+            </div>
+            <div class="eq-details">
+              <span class="eq-tag" :class="sk.psa?.toLowerCase()">{{ sk.psa }}</span>
+              <span class="skill-base-stat">Base: {{ sk.baseChance }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button type="button" class="btn-secondary" @click="showAddSkillModal = false">Done</button>
         </div>
       </div>
     </div>
@@ -1412,6 +1487,10 @@ export default {
       activeEquipmentCategory: 'All',
       equipmentCategories: ['All', 'Weapon', 'Ammunition', 'Defense', 'Toolkit', 'Medical', 'Gear', 'Power'],
       equipmentSearchQuery: '',
+      showAddSkillModal: false,
+      skillSearchQuery: '',
+      activeSkillCategory: 'All',
+      skillCategories: ['All', 'Martial', 'Mystic', 'Theurgy'],
       searchInventoryQuery: '',
       recentlyAddedMap: {},
       registeredUsers: [],
@@ -1546,6 +1625,20 @@ export default {
       return this.selectedChar.inventory.filter(item => 
         (item.name && item.name.toLowerCase().includes(q)) ||
         (item.notes && item.notes.toLowerCase().includes(q))
+      );
+    },
+    filteredAvailableSkills() {
+      let list = this.officialSkills || [];
+      if (this.activeSkillCategory && this.activeSkillCategory !== 'All') {
+        list = list.filter((s) => s.psa === this.activeSkillCategory);
+      }
+      if (!this.skillSearchQuery) return list;
+      const q = this.skillSearchQuery.toLowerCase().trim();
+      return list.filter(
+        (s) =>
+          (s.name && s.name.toLowerCase().includes(q)) ||
+          (s.psa && s.psa.toLowerCase().includes(q)) ||
+          (s.baseChance && s.baseChance.toLowerCase().includes(q))
       );
     },
     staminaPercentage() {
@@ -2289,11 +2382,48 @@ export default {
         this.errorMessage = err.message || 'Error deleting character';
       }
     },
-    addSkill() {
-      if (!this.selectedChar.skills) this.selectedChar.skills = [];
-      const defaultSkill = OFFICIAL_SKILLS[0].name;
-      this.selectedChar.skills.push({ name: defaultSkill, level: 1 });
+    openAddSkillModal() {
+      this.skillSearchQuery = '';
+      this.activeSkillCategory = 'All';
+      this.showAddSkillModal = true;
+    },
+    getSkillPSA(skillName) {
+      const match = (this.officialSkills || []).find((s) => s.name === skillName);
+      return match ? match.psa : 'Martial';
+    },
+    getSkillTooltip(skill) {
+      const match = (this.officialSkills || []).find((s) => s.name === skill.name);
+      return match ? `${match.name} (${match.psa}) — Base: ${match.baseChance}` : (skill?.name || '');
+    },
+    getSkillCategoryCount(category) {
+      if (category === 'All') return (this.officialSkills || []).length;
+      return (this.officialSkills || []).filter((s) => s.psa === category).length;
+    },
+    isSkillLearned(skillName) {
+      if (!this.selectedChar || !Array.isArray(this.selectedChar.skills)) return false;
+      return this.selectedChar.skills.some((s) => s && s.name === skillName);
+    },
+    getLearnedSkillLevel(skillName) {
+      if (!this.selectedChar || !Array.isArray(this.selectedChar.skills)) return 1;
+      const s = this.selectedChar.skills.find((sk) => sk && sk.name === skillName);
+      return s ? (s.level || 1) : 1;
+    },
+    addSkillFromModal(skillName) {
+      if (!this.selectedChar) return;
+      if (!Array.isArray(this.selectedChar.skills)) {
+        this.selectedChar.skills = [];
+      }
+      if (this.isSkillLearned(skillName)) return;
+      const offSk = (this.officialSkills || []).find((s) => s.name === skillName);
+      this.selectedChar.skills.push({
+        name: skillName,
+        level: 1,
+        psa: offSk ? offSk.psa : 'Martial',
+      });
       this.updateCharacter();
+    },
+    addSkill() {
+      this.openAddSkillModal();
     },
     removeSkill(index) {
       this.selectedChar.skills.splice(index, 1);
@@ -4272,8 +4402,11 @@ export default {
   max-width: 100%;
 }
 
+.two-column-lists .skills-card,
 .two-column-lists .inventory-card {
   min-height: 360px;
+  display: flex;
+  flex-direction: column;
 }
 
 .list-header {
@@ -4412,46 +4545,43 @@ export default {
   opacity: 0.4;
 }
 
-.skill-main-select {
-  flex: 1;
-  display: flex;
+.skill-row {
+  display: grid;
+  grid-template-columns: 16px 1fr 54px 146px 36px 18px;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  min-height: 28px;
+  padding: 3px 6px;
+  box-sizing: border-box;
+  flex-shrink: 0;
 }
 
-.select-official-skill,
-.select-official-skill option {
-  background-color: #0d1117 !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece !important;
-}
-
-.select-official-skill option {
-  background-image: none !important;
-}
-
-.select-official-skill {
+.skill-item-badge {
   flex: 1;
-  border: 1px solid #30363d !important;
-  border-radius: 4px;
-  padding: 6px 24px 6px 8px !important;
-  padding-right: 24px !important;
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  cursor: default;
+  line-height: 1.35;
+}
+
+.skill-name {
+  font-weight: 600;
   font-size: 0.85rem;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e7681' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-  background-size: 12px 14px !important;
+  color: #cecece;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.select-official-skill:hover {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='14' viewBox='0 0 24 24' fill='none' stroke='%238b949e' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='7 9 12 4 17 9'%3E%3C/polyline%3E%3Cpolyline points='7 15 12 20 17 15'%3E%3C/polyline%3E%3C/svg%3E") !important;
-  border-color: #484f58 !important;
-}
-
-.select-official-skill:focus {
-  outline: none;
-  border-color: #484f58 !important;
-  box-shadow: none !important;
+.skill-psa-tag {
+  font-size: 0.76rem;
+  color: #8b949e;
+  flex-shrink: 0;
 }
 
 .skill-chance-badge {
@@ -4466,7 +4596,9 @@ export default {
   border: 1px solid #484f58 !important;
   box-shadow: none !important;
   letter-spacing: 0.5px;
-  min-width: 46px;
+  width: 54px;
+  min-width: 54px;
+  max-width: 54px;
   text-align: center;
   box-sizing: border-box;
   display: inline-flex;
@@ -5151,6 +5283,27 @@ export default {
   font-size: 13px;
   line-height: 1.4;
   color: var(--text-primary);
+}
+
+.skill-modal {
+  max-width: 620px;
+}
+
+.btn-learned-skill {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.4) !important;
+  color: #34d399 !important;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: default;
+}
+
+.skill-base-stat {
+  font-size: 0.78rem;
+  color: #8b949e;
+  font-style: italic;
 }
 
 .portrait-box {
