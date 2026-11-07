@@ -1382,6 +1382,14 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       }
     });
 
+    it('styles .btn-delta buttons with uniform 70px width and centered alignment', () => {
+      const vuePath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
+      const vueContent = fs.readFileSync(vuePath, 'utf-8');
+      expect(vueContent).toMatch(/\.btn-delta\s*\{[^}]*width:\s*70px;/);
+      expect(vueContent).toMatch(/\.btn-delta\s*\{[^}]*min-width:\s*70px;/);
+      expect(vueContent).toMatch(/\.btn-delta\s*\{[^}]*text-align:\s*center;/);
+    });
+
     it('renders middle section with 2x2 primary attributes left and compact STA/ESS/XP trackers right', async () => {
       setActivePinia(createPinia());
       const auth = useAuthStore();

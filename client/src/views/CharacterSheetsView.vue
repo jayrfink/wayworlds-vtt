@@ -4064,7 +4064,12 @@ export default {
 }
 
 .btn-delta {
-  padding: 3px 8px;
+  width: 70px;
+  min-width: 70px;
+  box-sizing: border-box;
+  text-align: center;
+  justify-content: center;
+  padding: 3px 4px;
   font-size: 0.78rem;
   font-weight: 700;
   border-radius: 4px;
