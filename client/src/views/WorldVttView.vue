@@ -2259,13 +2259,29 @@ onBeforeUnmount(() => {
   font-size: 13px;
   border-radius: 4px;
   text-align: left;
+  color: var(--theme-bright, #cecece);
+  background: #000000;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+  transition: all 0.15s ease-in-out;
+}
+
+.vtt-toolbar button:hover {
+  color: var(--theme-bright-hover, #cecece);
+  background: var(--theme-btn-bg, #161b22);
 }
 
 .vtt-toolbar > button.active {
   background: #000000;
-  color: #cecece;
+  color: var(--theme-bright, #cecece);
   font-weight: 600;
-  border: 1px solid #cecece;
+  border: 1px solid var(--theme-bright, #cecece);
+}
+
+.vtt-toolbar > button.active:hover {
+  background: #000000;
+  color: var(--theme-bright-hover, #cecece);
+  border: 1px solid var(--theme-bright-hover, #cecece);
 }
 
 .fog-eraser-options {
@@ -2288,13 +2304,14 @@ onBeforeUnmount(() => {
   justify-content: center;
   padding: 5px 6px;
   font-size: 12px;
+  color: var(--theme-bright, #cecece);
 }
 
 .vtt-toolbar .fog-shape-btn.selected {
   background: #000000;
-  color: #cecece;
+  color: var(--theme-bright, #cecece);
   font-weight: 600;
-  box-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
+  box-shadow: 0 0 6px var(--theme-glow, rgba(206, 206, 206, 0.4));
 }
 
 .fog-size-label {
@@ -2302,18 +2319,19 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 4px;
   font-size: 12px;
-  color: #cecece;
+  color: var(--theme-bright, #cecece);
 }
 
 .fog-size-slider {
   width: 100%;
-  accent-color: #cecece;
+  accent-color: var(--theme-bright, #cecece);
 }
 
 .vtt-toolbar .fog-cover-btn {
   justify-content: center;
   padding: 5px 6px;
   font-size: 12px;
+  color: var(--theme-bright, #cecece);
 }
 
 .checkbox-label {
@@ -2654,7 +2672,7 @@ onBeforeUnmount(() => {
   transition: color 0.15s ease;
 }
 .initiative-hud-banner .hud-close:hover {
-  color: var(--theme-bright-hover, #ffffff);
+  color: var(--theme-bright-hover, #b5eeff);
 }
 .init-hud-body {
   display: flex;
@@ -2684,13 +2702,14 @@ onBeforeUnmount(() => {
   text-shadow: 0 0 10px rgba(181, 238, 255, 0.7);
 }
 .init-opp-die {
-  background: #400a22;
-  border: 2px solid #c9abb9;
-  color: #c9abb9;
-  box-shadow: 0 0 12px rgba(201, 171, 185, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.1);
+  background: var(--theme-btn-bg, #400a22);
+  border: 2px solid var(--theme-accent, #c9abb9);
+  color: var(--theme-accent, #c9abb9);
+  box-shadow: 0 0 12px var(--theme-glow, rgba(201, 171, 185, 0.4)), inset 0 2px 4px rgba(255, 255, 255, 0.1);
 }
 .init-opp-die .init-val {
-  text-shadow: 0 0 10px rgba(201, 171, 185, 0.7);
+  color: var(--theme-accent, #c9abb9);
+  text-shadow: 0 0 10px var(--theme-glow, rgba(201, 171, 185, 0.7));
 }
 .init-label {
   font-size: 9px;

@@ -8,6 +8,8 @@ import {
   COLOR_PACKAGES,
   clampShadowLuminance,
   generateThemeVariablesFromHex,
+  getRelativeLuminance,
+  parseHexToRgb,
   isCustomColor,
   applyColorPackage,
   getSavedColorPackage,
@@ -36,6 +38,22 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
       expect(vars['--theme-bright']).not.toBe('#000000');
       // Box shadow glow must have adequate alpha
       expect(vars['--theme-glow']).toMatch(/rgba\(/);
+    });
+
+    it('clamps dark colors (e.g. #0f172a, #111827) so letters contrast well with >= 4.5:1 ratio against dark toolbar/black background', () => {
+      const darkColors = ['#0f172a', '#111827', '#000000', '#1a0529', '#051b11'];
+      for (const darkHex of darkColors) {
+        const clamped = clampShadowLuminance(darkHex);
+        const rgb = parseHexToRgb(clamped);
+        const lum = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
+        // Against black (#000000), contrast ratio is (lum + 0.05) / 0.05
+        const contrastAgainstBlack = (lum + 0.05) / 0.05;
+        expect(contrastAgainstBlack).toBeGreaterThanOrEqual(4.5);
+
+        const vars = generateThemeVariablesFromHex(darkHex);
+        expect(vars['--theme-btn-color']).toBe(clamped);
+        expect(vars['--theme-bright']).toBe(clamped);
+      }
     });
 
     it('generates complete set of theme CSS variables from a seed hex', () => {

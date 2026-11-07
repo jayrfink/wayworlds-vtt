@@ -335,6 +335,14 @@ export function hslToHex(h, s, l) {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
+export function getRelativeLuminance(r, g, b) {
+  const sRGB = [r, g, b].map((v) => {
+    const norm = v / 255;
+    return norm <= 0.03928 ? norm / 12.92 : Math.pow((norm + 0.055) / 1.055, 2.4);
+  });
+  return 0.2126 * sRGB[0] + 0.7152 * sRGB[1] + 0.0722 * sRGB[2];
+}
+
 export function clampShadowLuminance(rawHex) {
   const rgb = parseHexToRgb(rawHex);
   const { h, s, l } = rgbToHsl(rgb.r, rgb.g, rgb.b);
@@ -347,8 +355,9 @@ export function clampShadowLuminance(rawHex) {
     return rawHex.trim().toLowerCase();
   }
 
-  // Shadow clamp: ensure lightness is at least 0.38 and at most 0.88 for crisp visibility against dark backdrops
-  const clampedL = Math.max(0.38, Math.min(0.88, l));
+  // When a dark or desaturated color is selected (l < 0.38), clamp lightness to at least 0.60
+  // to ensure crisp visibility and high contrast (>= 4.5:1) against dark backgrounds (#161b22, #000000)
+  let clampedL = Math.max(0.60, Math.min(0.88, l));
 
   // If the user picked a pitch dark or completely desaturated color, ensure minimal visible saturation
   let clampedS = s;
@@ -356,7 +365,18 @@ export function clampShadowLuminance(rawHex) {
     clampedS = 0.2;
   }
 
-  return hslToHex(h, clampedS, clampedL);
+  // Ensure relative luminance is at least 0.22 even for low-luminance hues (like deep blues / purples)
+  let candidateHex = hslToHex(h, clampedS, clampedL);
+  let candRgb = parseHexToRgb(candidateHex);
+  let candLum = getRelativeLuminance(candRgb.r, candRgb.g, candRgb.b);
+  while (candLum < 0.22 && clampedL < 0.85) {
+    clampedL += 0.03;
+    candidateHex = hslToHex(h, clampedS, clampedL);
+    candRgb = parseHexToRgb(candidateHex);
+    candLum = getRelativeLuminance(candRgb.r, candRgb.g, candRgb.b);
+  }
+
+  return candidateHex;
 }
 
 export function generateThemeVariablesFromHex(rawHex) {

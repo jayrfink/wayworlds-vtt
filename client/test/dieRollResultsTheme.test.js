@@ -36,6 +36,15 @@ describe('Die Roll Results use site ColorScheme', () => {
       expect(rpgContent).toMatch(/\.initiative-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.init-opp-die\s*\{[^}]*border:\s*2px solid var\(--theme-accent/);
+      expect(rpgContent).toMatch(/\.init-opp-die\s*\{[^}]*color:\s*var\(--theme-accent/);
+      expect(rpgContent).toMatch(/\.init-opp-die\s*\{[^}]*background:\s*var\(--theme-btn-bg/);
+    });
+
+    it('styles VTT toolbar buttons with high-contrast theme variables', () => {
+      expect(rpgContent).toMatch(/\.vtt-toolbar button\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.vtt-toolbar button:hover\s*\{[^}]*color:\s*var\(--theme-bright-hover/);
+      expect(rpgContent).toMatch(/\.vtt-toolbar > button\.active\s*\{[^}]*color:\s*var\(--theme-bright/);
     });
 
     it('styles d10s button and pop-out with site theme variables', () => {
@@ -73,6 +82,15 @@ describe('Die Roll Results use site ColorScheme', () => {
       expect(worldContent).toMatch(/\.initiative-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.init-opp-die\s*\{[^}]*border:\s*2px solid var\(--theme-accent/);
+      expect(worldContent).toMatch(/\.init-opp-die\s*\{[^}]*color:\s*var\(--theme-accent/);
+      expect(worldContent).toMatch(/\.init-opp-die\s*\{[^}]*background:\s*var\(--theme-btn-bg/);
+    });
+
+    it('styles VTT toolbar buttons with high-contrast theme variables', () => {
+      expect(worldContent).toMatch(/\.vtt-toolbar button\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.vtt-toolbar button:hover\s*\{[^}]*color:\s*var\(--theme-bright-hover/);
+      expect(worldContent).toMatch(/\.vtt-toolbar > button\.active\s*\{[^}]*color:\s*var\(--theme-bright/);
     });
 
     it('styles d10s button and pop-out with site theme variables', () => {
