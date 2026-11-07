@@ -4550,8 +4550,8 @@ export default {
   grid-template-columns: 16px 1fr 54px 146px 36px 18px;
   align-items: center;
   gap: 8px;
-  min-height: 28px;
-  padding: 3px 6px;
+  min-height: 44px;
+  padding: 4px 6px;
   box-sizing: border-box;
   flex-shrink: 0;
 }
@@ -4560,28 +4560,32 @@ export default {
   flex: 1;
   min-width: 0;
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 6px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  column-gap: 6px;
+  row-gap: 2px;
   cursor: default;
-  line-height: 1.35;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
 }
 
 .skill-name {
   font-weight: 600;
   font-size: 0.85rem;
   color: #cecece;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  line-height: 1.25;
 }
 
 .skill-psa-tag {
   font-size: 0.76rem;
   color: #8b949e;
+  white-space: nowrap;
   flex-shrink: 0;
+  line-height: 1.25;
 }
 
 .skill-chance-badge {

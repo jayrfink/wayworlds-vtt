@@ -18,18 +18,23 @@ describe('Skills Text Records, Column Alignment, and Add Skill Modal', () => {
     expect(vueContent).toMatch(/\.two-column-lists\s+\.inventory-card[\s\S]*?min-height:\s*360px/);
   });
 
-  it('styles .skill-row with CSS Grid column alignment and matching height/padding to inventory-row', () => {
+  it('styles .skill-row with CSS Grid column alignment and uniform height/padding', () => {
     expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*display:\s*grid;/);
     expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*grid-template-columns:/);
-    expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*min-height:\s*28px;/);
-    expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*padding:\s*3px\s+6px;/);
+    expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*min-height:\s*44px;/);
+    expect(vueContent).toMatch(/\.skill-row\s*\{[^}]*padding:\s*4px\s+6px;/);
   });
 
-  it('renders skill records as text badges without inline select form fields', () => {
+  it('renders skill records as text badges that wrap cleanly without truncation', () => {
     expect(vueContent).not.toMatch(/<select[^>]*v-model="skill\.name"/);
     expect(vueContent).not.toMatch(/class="select-official-skill/);
     expect(vueContent).toMatch(/class="[^"]*skill-item-badge[^"]*"/);
     expect(vueContent).toMatch(/class="[^"]*skill-name[^"]*"/);
+
+    // Verify wrapping CSS
+    expect(vueContent).toMatch(/\.skill-item-badge\s*\{[^}]*flex-wrap:\s*wrap;/);
+    expect(vueContent).toMatch(/\.skill-name\s*\{[^}]*white-space:\s*normal;/);
+    expect(vueContent).toMatch(/\.skill-psa-tag\s*\{[^}]*white-space:\s*nowrap;/);
   });
 
   it('includes an Add Skill Catalog Modal with category tabs and search filter', () => {
