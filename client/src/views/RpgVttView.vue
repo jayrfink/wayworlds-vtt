@@ -148,10 +148,6 @@
             <button
               class="btn-tool btn-dmg-main"
               :class="{ active: showDmgMenu }"
-              :style="{
-                backgroundColor: `${activeDiceColors.damage}22`,
-                color: activeDiceColors.damage
-              }"
               @click="toggleDmgMenu"
               title="DMG/HEAL/d10s"
             >
@@ -159,20 +155,12 @@
             </button>
             <button
               class="btn-dmg-step"
-              :style="{
-                backgroundColor: `${activeDiceColors.damage}18`,
-                color: activeDiceColors.damage
-              }"
               @click.stop="adjustDamageCount(-1)"
               title="Decrease dice"
               :disabled="damageDiceCount <= 1"
             >−</button>
             <button
               class="btn-dmg-step"
-              :style="{
-                backgroundColor: `${activeDiceColors.damage}18`,
-                color: activeDiceColors.damage
-              }"
               @click.stop="adjustDamageCount(1)"
               title="Increase dice"
               :disabled="damageDiceCount >= 20"
@@ -204,10 +192,6 @@
             <button
               type="button"
               class="btn-roll-dmg-action"
-              :style="{
-                backgroundColor: activeDiceColors.damage,
-                color: getContrastingNumberColor(activeDiceColors.damage)
-              }"
               @click.stop="rollDamage"
             >
               <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/></svg> Roll {{ damageDiceCount }}d10
@@ -2899,22 +2883,20 @@ onBeforeUnmount(() => {
   font-size: 11px;
 }
 .init-pill-player {
-  background: #0b222e;
-  color: #b5eeff;
-  border: 1px solid #b5eeff;
+  background: #161b22;
+  color: var(--text-white, #ffffff);
+  border: 1px solid var(--border);
   padding: 1px 6px;
   border-radius: 3px;
   font-weight: 700;
-  box-shadow: 0 0 6px rgba(181, 238, 255, 0.35);
 }
 .init-pill-opp {
-  background: #400a22;
-  color: #c9abb9;
-  border: 1px solid #c9abb9;
+  background: #161b22;
+  color: var(--text-white, #ffffff);
+  border: 1px solid var(--border);
   padding: 1px 6px;
   border-radius: 3px;
   font-weight: 700;
-  box-shadow: 0 0 6px rgba(201, 171, 185, 0.35);
 }
 
 .modal-error-banner {
@@ -3232,9 +3214,9 @@ onBeforeUnmount(() => {
   flex: 1;
   border-top-right-radius: 0 !important;
   border-bottom-right-radius: 0 !important;
-  background: var(--bg-secondary);
+  background: var(--theme-btn-bg, var(--bg-secondary));
   border: none !important;
-  color: var(--text-primary);
+  color: var(--theme-bright, #38bdf8);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -3242,12 +3224,14 @@ onBeforeUnmount(() => {
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.15s ease;
 }
 
 .btn-dmg-main:hover,
 .btn-dmg-main.active {
   border: none !important;
-  color: #f29249;
+  color: var(--theme-bright-hover, #7dd3fc);
+  box-shadow: 0 0 10px var(--theme-glow, rgba(56, 189, 248, 0.4));
 }
 
 .btn-dmg-step {
@@ -3256,13 +3240,14 @@ onBeforeUnmount(() => {
   justify-content: center;
   width: 22px;
   padding: 0 !important;
-  background: var(--bg-primary);
+  background: var(--theme-btn-bg, var(--bg-primary));
   border: none !important;
-  color: var(--text-primary);
+  color: var(--theme-bright, #38bdf8);
   font-size: 13px !important;
   font-weight: bold;
   cursor: pointer;
   border-radius: 0 !important;
+  transition: all 0.15s ease;
 }
 
 .btn-dmg-step:last-child {
@@ -3271,9 +3256,10 @@ onBeforeUnmount(() => {
 }
 
 .btn-dmg-step:hover:not(:disabled) {
-  background: var(--bg-secondary);
-  color: #f29249;
+  background: var(--theme-btn-bg, var(--bg-secondary));
+  color: var(--theme-bright-hover, #7dd3fc);
   border: none !important;
+  box-shadow: 0 0 8px var(--theme-glow, rgba(56, 189, 248, 0.4));
 }
 
 .btn-dmg-step:disabled {
@@ -3287,9 +3273,9 @@ onBeforeUnmount(() => {
   left: calc(100% + 8px);
   width: 200px;
   background: rgba(22, 27, 34, 0.98);
-  border: 1px solid var(--border);
+  border: 1px solid var(--theme-border-subtle, var(--border));
   border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px var(--theme-glow, rgba(56, 189, 248, 0.2));
   padding: 12px;
   display: flex;
   flex-direction: column;
@@ -3304,7 +3290,7 @@ onBeforeUnmount(() => {
   align-items: center;
   font-size: 13px;
   font-weight: 600;
-  color: #f29249;
+  color: var(--theme-bright, #38bdf8);
 }
 
 .dmg-popover-close {
@@ -3318,7 +3304,7 @@ onBeforeUnmount(() => {
 }
 
 .dmg-popover-close:hover {
-  color: var(--text-primary);
+  color: var(--theme-bright-hover, #7dd3fc);
 }
 
 .dmg-stepper {
@@ -3326,7 +3312,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   background: var(--bg-primary);
-  border: 1px solid var(--border);
+  border: 1px solid var(--theme-border-subtle, var(--border));
   border-radius: 6px;
   padding: 4px;
 }
@@ -3339,16 +3325,18 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-secondary);
+  background: var(--theme-btn-bg, var(--bg-secondary));
   border: none !important;
   border-radius: 4px;
-  color: var(--text-primary);
+  color: var(--theme-bright, #38bdf8);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .stepper-btn:hover:not(:disabled) {
-  background: #f29249;
-  color: #140409;
+  background: var(--theme-btn-bg, var(--bg-secondary));
+  color: var(--theme-bright-hover, #7dd3fc);
+  box-shadow: 0 0 8px var(--theme-glow, rgba(56, 189, 248, 0.4));
   border: none !important;
 }
 
@@ -3360,7 +3348,7 @@ onBeforeUnmount(() => {
 .stepper-val {
   font-size: 15px;
   font-weight: 700;
-  color: #f29249;
+  color: var(--theme-bright, #38bdf8);
   text-align: center;
 }
 
@@ -3380,35 +3368,37 @@ onBeforeUnmount(() => {
   border: none !important;
   color: var(--text-secondary);
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 
 .preset-btn:hover {
   border: none !important;
-  color: #f29249;
+  color: var(--theme-bright-hover, #7dd3fc);
 }
 
 .preset-btn.active {
-  background: rgba(242, 146, 73, 0.2);
+  background: var(--theme-glow-bg, rgba(56, 189, 248, 0.18));
   border: none !important;
-  color: #f29249;
+  color: var(--theme-bright, #38bdf8);
   font-weight: 600;
 }
 
 .btn-roll-dmg-action {
   padding: 8px 10px !important;
-  background: #f29249 !important;
-  color: #140409 !important;
+  background: var(--theme-btn-bg, #0c181e) !important;
+  color: var(--theme-bright, #38bdf8) !important;
+  border: 1px solid var(--theme-btn-border, var(--theme-bright)) !important;
   font-weight: 700 !important;
   border-radius: 6px !important;
-  border: none !important;
   cursor: pointer;
   text-align: center !important;
   justify-content: center !important;
-  transition: filter 0.15s ease;
+  transition: all 0.15s ease;
 }
 
 .btn-roll-dmg-action:hover {
-  filter: brightness(1.15);
+  filter: brightness(1.2);
+  box-shadow: 0 0 12px var(--theme-glow, rgba(56, 189, 248, 0.5));
 }
 
 /* Damage HUD Banner */
@@ -4331,8 +4321,8 @@ onBeforeUnmount(() => {
 .btn-roll-log-pill {
   background: rgba(22, 27, 34, 0.92) !important;
   border: none !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
   padding: 6px 12px;
   font-size: 12px;
   font-weight: 600;
@@ -4345,20 +4335,29 @@ onBeforeUnmount(() => {
 
 .btn-roll-log-pill:hover {
   background: #000000 !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
   border: none !important;
-  box-shadow: 0 0 10px rgba(206, 206, 206, 0.5);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.btn-audio-toggle-pill {
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
+}
+
+.btn-audio-toggle-pill:hover {
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .roll-log-card {
   width: 290px;
   max-height: 290px;
-  background: rgba(22, 27, 34, 0.92);
+  background: rgba(13, 17, 23, 0.95);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -4376,9 +4375,9 @@ onBeforeUnmount(() => {
 .roll-log-title {
   font-size: 12px;
   font-weight: 700;
-  color: #cecece;
+  color: var(--text-white, #ffffff);
   letter-spacing: 0.5px;
-  text-shadow: 0 0 6px rgba(206, 206, 206, 0.4);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
 }
 
 .roll-log-actions {
@@ -4406,8 +4405,8 @@ onBeforeUnmount(() => {
 .btn-roll-log-toggle {
   background: transparent !important;
   border: none !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
   font-size: 11px;
   padding: 2px 4px;
   cursor: pointer;
@@ -4415,9 +4414,9 @@ onBeforeUnmount(() => {
 }
 
 .btn-roll-log-toggle:hover {
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
-  text-shadow: 0 0 6px rgba(206, 206, 206, 0.6);
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
 }
 
 .roll-log-body {
@@ -4450,7 +4449,8 @@ onBeforeUnmount(() => {
 
 .roll-log-empty {
   font-size: 11px;
-  color: #8b949e;
+  color: var(--text-white, #ffffff);
+  opacity: 0.7;
   text-align: center;
   padding: 12px 0;
   font-style: italic;
@@ -4470,21 +4470,22 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: 4px 6px;
-  background: rgba(22, 27, 34, 0.7);
+  background: rgba(22, 27, 34, 0.85);
   border: 1px solid var(--border);
   border-radius: 4px;
+  border-left: 3px solid #ffffff;
 }
 
 .roll-log-item.percentile {
-  border-left: 3px solid #cecece;
+  border-left: 3px solid #ffffff;
 }
 
 .roll-log-item.damage {
-  border-left: 3px solid #f29249;
+  border-left: 3px solid #ffffff;
 }
 
 .roll-log-item.initiative {
-  border-left: 3px solid #b5eeff;
+  border-left: 3px solid #ffffff;
 }
 
 .roll-item-meta {
@@ -4495,7 +4496,8 @@ onBeforeUnmount(() => {
 
 .roll-item-time {
   font-size: 10px;
-  color: #8b949e;
+  color: var(--text-white, #ffffff);
+  opacity: 0.7;
   font-family: monospace;
 }
 
@@ -4504,24 +4506,23 @@ onBeforeUnmount(() => {
   font-weight: 700;
   padding: 1px 4px;
   border-radius: 3px;
-  background: rgba(0, 0, 0, 0.6);
-  color: #cecece;
+  background: #0d1117;
+  color: var(--text-white, #ffffff);
   border: 1px solid var(--border);
-  box-shadow: 0 0 4px rgba(206, 206, 206, 0.25);
 }
 
 .roll-log-item.damage .roll-item-badge {
-  background: #140409;
-  color: #f29249;
-  border-color: rgba(242, 146, 73, 0.5);
-  box-shadow: 0 0 4px rgba(242, 146, 73, 0.25);
+  background: #0d1117;
+  color: var(--text-white, #ffffff);
+  border-color: var(--border);
+  box-shadow: none;
 }
 
 .roll-log-item.initiative .roll-item-badge {
-  background: #0b222e;
-  color: #b5eeff;
-  border-color: rgba(181, 238, 255, 0.5);
-  box-shadow: 0 0 6px rgba(181, 238, 255, 0.35);
+  background: #0d1117;
+  color: var(--text-white, #ffffff);
+  border-color: var(--border);
+  box-shadow: none;
 }
 
 .roll-item-result {
@@ -4533,17 +4534,18 @@ onBeforeUnmount(() => {
 .roll-item-total {
   font-size: 14px;
   font-weight: 800;
-  color: #cecece;
-  text-shadow: 0 0 8px rgba(206, 206, 206, 0.5);
+  color: var(--text-white, #ffffff);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
 .roll-log-item.damage .roll-item-total {
-  color: #f29249;
+  color: var(--text-white, #ffffff);
 }
 
 .roll-item-breakdown {
   font-size: 10px;
-  color: #a0a0a0;
+  color: var(--text-white, #ffffff);
+  opacity: 0.85;
   font-family: monospace;
 }
 

@@ -9,12 +9,14 @@ describe('Die Roll Results use site ColorScheme', () => {
   const worldContent = fs.readFileSync(worldPath, 'utf8');
 
   describe('RpgVttView Die Roll Results', () => {
-    it('does not bind inline styles with activeDiceColors on damage, percentile, or initiative HUD banners', () => {
-      // Banners should use scoped CSS variables, avoiding dynamic inline styles for better performance & contrast
+    it('does not bind inline styles with activeDiceColors on damage, percentile, initiative HUD banners, or d10s buttons', () => {
+      // Banners and buttons should use scoped CSS variables, avoiding dynamic inline styles for better performance & contrast
       expect(rpgContent).not.toMatch(/class="damage-hud-banner"[^>]*:style/);
       expect(rpgContent).not.toMatch(/class="percentile-hud-banner"[^>]*:style/);
       expect(rpgContent).not.toMatch(/class="init-die-box init-player-die"[^>]*:style/);
       expect(rpgContent).not.toMatch(/class="init-die-box init-opp-die"[^>]*:style/);
+      expect(rpgContent).not.toMatch(/class="btn-tool btn-dmg-main"[^>]*:style/);
+      expect(rpgContent).not.toMatch(/class="btn-roll-dmg-action"[^>]*:style/);
     });
 
     it('styles damage-hud-banner with site theme variables', () => {
@@ -35,14 +37,23 @@ describe('Die Roll Results use site ColorScheme', () => {
       expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(rpgContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
     });
+
+    it('styles d10s button and pop-out with site theme variables', () => {
+      expect(rpgContent).toMatch(/\.btn-dmg-main\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.btn-dmg-step\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.btn-roll-dmg-action\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(rpgContent).toMatch(/\.dmg-popover-header\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
   });
 
   describe('WorldVttView Die Roll Results', () => {
-    it('does not bind inline styles with activeDiceColors on damage, percentile, or initiative HUD banners', () => {
+    it('does not bind inline styles with activeDiceColors on damage, percentile, initiative HUD banners, or d10s buttons', () => {
       expect(worldContent).not.toMatch(/class="damage-hud-banner"[^>]*:style/);
       expect(worldContent).not.toMatch(/class="percentile-hud-banner"[^>]*:style/);
       expect(worldContent).not.toMatch(/class="init-die-box init-player-die"[^>]*:style/);
       expect(worldContent).not.toMatch(/class="init-die-box init-opp-die"[^>]*:style/);
+      expect(worldContent).not.toMatch(/class="btn-tool btn-dmg-main"[^>]*:style/);
+      expect(worldContent).not.toMatch(/class="btn-roll-dmg-action"[^>]*:style/);
     });
 
     it('styles damage-hud-banner with site theme variables', () => {
@@ -62,6 +73,13 @@ describe('Die Roll Results use site ColorScheme', () => {
       expect(worldContent).toMatch(/\.initiative-hud-banner\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*border:\s*2px solid var\(--theme-bright/);
       expect(worldContent).toMatch(/\.init-player-die\s*\{[^}]*color:\s*var\(--theme-bright/);
+    });
+
+    it('styles d10s button and pop-out with site theme variables', () => {
+      expect(worldContent).toMatch(/\.btn-dmg-main\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.btn-dmg-step\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.btn-roll-dmg-action\s*\{[^}]*color:\s*var\(--theme-bright/);
+      expect(worldContent).toMatch(/\.dmg-popover-header\s*\{[^}]*color:\s*var\(--theme-bright/);
     });
   });
 });
