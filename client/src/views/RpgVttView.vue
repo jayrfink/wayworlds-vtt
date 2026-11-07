@@ -148,6 +148,10 @@
             <button
               class="btn-tool btn-dmg-main"
               :class="{ active: showDmgMenu }"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}22`,
+                color: activeDiceColors.damage
+              }"
               @click="toggleDmgMenu"
               title="DMG/HEAL/d10s"
             >
@@ -155,12 +159,20 @@
             </button>
             <button
               class="btn-dmg-step"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}18`,
+                color: activeDiceColors.damage
+              }"
               @click.stop="adjustDamageCount(-1)"
               title="Decrease dice"
               :disabled="damageDiceCount <= 1"
             >−</button>
             <button
               class="btn-dmg-step"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}18`,
+                color: activeDiceColors.damage
+              }"
               @click.stop="adjustDamageCount(1)"
               title="Increase dice"
               :disabled="damageDiceCount >= 20"
@@ -189,7 +201,15 @@
                 {{ n }}d10
               </button>
             </div>
-            <button type="button" class="btn-roll-dmg-action" @click.stop="rollDamage">
+            <button
+              type="button"
+              class="btn-roll-dmg-action"
+              :style="{
+                backgroundColor: activeDiceColors.damage,
+                color: getContrastingNumberColor(activeDiceColors.damage)
+              }"
+              @click.stop="rollDamage"
+            >
               <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/></svg> Roll {{ damageDiceCount }}d10
             </button>
             <div v-if="lastDamageRoll" class="dmg-last-roll-card">

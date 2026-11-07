@@ -133,6 +133,10 @@
             <button
               class="btn-tool btn-dmg-main"
               :class="{ active: showDmgMenu }"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}22`,
+                color: activeDiceColors.damage
+              }"
               @click="toggleDmgMenu"
               title="Click to configure and roll damage dice"
             >
@@ -140,6 +144,10 @@
             </button>
             <button
               class="btn-dmg-step"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}18`,
+                color: activeDiceColors.damage
+              }"
               title="Decrease dice count"
               :disabled="damageDiceCount <= 1"
               @click.stop="adjustDamageCount(-1)"
@@ -148,6 +156,10 @@
             </button>
             <button
               class="btn-dmg-step"
+              :style="{
+                backgroundColor: `${activeDiceColors.damage}18`,
+                color: activeDiceColors.damage
+              }"
               title="Increase dice count"
               :disabled="damageDiceCount >= 20"
               @click.stop="adjustDamageCount(1)"
@@ -177,7 +189,14 @@
                 {{ preset }}d10
               </button>
             </div>
-            <button class="btn-roll-dmg-action" @click="rollDamage">
+            <button
+              class="btn-roll-dmg-action"
+              :style="{
+                backgroundColor: activeDiceColors.damage,
+                color: getContrastingNumberColor(activeDiceColors.damage)
+              }"
+              @click="rollDamage"
+            >
               Roll {{ damageDiceCount }}d10 Now
             </button>
             <div v-if="lastDamageRoll" class="dmg-last-roll-card">
