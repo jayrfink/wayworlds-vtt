@@ -4183,6 +4183,7 @@ export default {
 
 .inventory-items-list {
   max-height: 227px;
+  gap: 6px;
 }
 
 .skills-items-list {
@@ -4458,7 +4459,7 @@ export default {
 .inventory-row {
   flex-shrink: 0;
   min-height: 28px;
-  padding: 4px 6px;
+  padding: 3px 6px;
   display: flex;
   align-items: flex-start;
   gap: 8px;
