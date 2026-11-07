@@ -754,7 +754,7 @@
         <form @submit.prevent="submitCreateMap">
           <div class="form-group">
             <label>Map Name *</label>
-            <input type="text" v-model="newMapForm.name" required placeholder="e.g. Starship Bridge" />
+            <input type="text" v-model="newMapForm.name" required placeholder="ex: Forest" />
           </div>
 
           <div class="form-row">
