@@ -114,6 +114,26 @@ describe('safeDiceRoller with executeQueuedDiceRoll', () => {
       expect(summary.total).toBeGreaterThanOrEqual(2);
     });
 
+    it('strips internal groupId property from notation before invoking diceBox.roll to prevent engine crash', async () => {
+      const mockBox = {
+        roll: vi.fn().mockResolvedValue([
+          { sides: 10, theme: 'custom-tens', value: 4, groupId: 0 },
+          { sides: 10, theme: 'custom-ones', value: 7, groupId: 1 }
+        ])
+      };
+      const notationWithGroupId = [
+        { sides: 10, theme: 'custom-tens', qty: 1, groupId: 0 },
+        { sides: 10, theme: 'custom-ones', qty: 1, groupId: 1 }
+      ];
+      const results = await executeQueuedDiceRoll(mockBox, notationWithGroupId);
+      expect(mockBox.roll).toHaveBeenCalledWith([
+        { sides: 10, theme: 'custom-tens', qty: 1 },
+        { sides: 10, theme: 'custom-ones', qty: 1 }
+      ]);
+      expect(results.length).toBe(2);
+      expect(calculatePercentileRoll(results).total).toBe(47);
+    });
+
     it('falls back to synthetic roll and captures results even if 3D diceBox is null', async () => {
       const notation = [
         { sides: 10, theme: 'custom-tens', qty: 1 },

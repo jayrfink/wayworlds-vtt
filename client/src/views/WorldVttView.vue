@@ -326,7 +326,7 @@
             </div>
             <div class="hud-body">
               <span class="hud-total">{{ lastPercentileRoll.total }}</span>
-              <span class="hud-dice">(<span class="hud-tens-val">Tens: {{ lastPercentileRoll.tens }}</span>, <span class="hud-ones-val">Ones: {{ lastPercentileRoll.ones }}</span>)</span>
+              <span class="hud-dice">(<span class="hud-tens-val">Tens: {{ lastPercentileRoll.tens != null ? lastPercentileRoll.tens * 10 : Math.floor(((lastPercentileRoll.total || 0) % 100) / 10) * 10 }}</span>, <span class="hud-ones-val">Ones: {{ lastPercentileRoll.ones != null ? lastPercentileRoll.ones : (lastPercentileRoll.total || 0) % 10 }}</span>)</span>
             </div>
           </div>
         </transition>
@@ -1064,8 +1064,8 @@ async function rollInitiative() {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-init-player', themeColor: activeDiceColors.value.initiativePlayer, qty: 1, groupId: 0 },
-      { sides: 10, theme: 'custom-init-opp', themeColor: activeDiceColors.value.initiativeOpp, qty: 1, groupId: 1 },
+      { sides: 10, theme: 'custom-init-player', themeColor: activeDiceColors.value.initiativePlayer, qty: 1 },
+      { sides: 10, theme: 'custom-init-opp', themeColor: activeDiceColors.value.initiativeOpp, qty: 1 },
     ]);
     const rollSummary = calculateInitiativeRoll(results);
     if (rollSummary.valid) {
@@ -1101,8 +1101,8 @@ async function rollPercentile() {
 
   try {
     const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1, groupId: 0 },
-      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1, groupId: 1 },
+      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
+      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 },
     ]);
     const rollSummary = calculatePercentileRoll(results);
     if (rollSummary.valid) {

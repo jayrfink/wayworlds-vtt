@@ -57,7 +57,12 @@ export async function executeQueuedDiceRoll(diceBox, notation, { timeoutMs = 100
     });
 
     try {
-      const rollPromise = diceBox.roll(notation).catch((err) => {
+      // Clean notation by stripping reserved internal properties (like groupId) before passing to diceBox.roll()
+      const cleanNotation = Array.isArray(notation)
+        ? notation.map(({ groupId, ...rest }) => rest)
+        : notation;
+
+      const rollPromise = diceBox.roll(cleanNotation).catch((err) => {
         console.warn('3D dice roll error or cancelled:', err);
         return { cancelled: true };
       });

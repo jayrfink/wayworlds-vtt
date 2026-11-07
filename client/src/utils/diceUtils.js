@@ -47,10 +47,10 @@ export function calculatePercentileRoll(results) {
     return { total: 0, tens: 0, ones: 0, valid: false };
   }
 
-  // Find tens die (lighter colored die #77d19e, theme 'custom-tens', or group 0)
-  const tensDie = flatResults.find(d => d?.theme === 'custom-tens' || d?.themeColor === '#77d19e' || d?.groupId === 0) || flatResults[0];
-  // Find ones die (darker colored die #22384a, theme 'custom-ones', or group 1)
-  const onesDie = flatResults.find(d => d !== tensDie && (d?.theme === 'custom-ones' || d?.themeColor === '#22384a' || d?.groupId === 1)) ||
+  // Find tens die (group 0, theme 'custom-tens', or lighter color #77d19e)
+  const tensDie = flatResults.find(d => d?.groupId === 0 || d?.theme === 'custom-tens' || d?.themeColor === '#77d19e') || flatResults[0];
+  // Find ones die (group 1, theme 'custom-ones', or darker color #22384a)
+  const onesDie = flatResults.find(d => d !== tensDie && (d?.groupId === 1 || d?.theme === 'custom-ones' || d?.themeColor === '#22384a')) ||
     flatResults.find(d => d !== tensDie) ||
     flatResults[1];
 
@@ -94,20 +94,20 @@ export function calculateInitiativeRoll(results) {
     return { playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false };
   }
 
-  // Find player die: theme 'custom-init-player', themeColor '#0b222e' / '#17304a', or groupId 0
+  // Find player die: groupId 0, theme 'custom-init-player', or themeColor '#0b222e' / '#17304a'
   const playerDie = flat.find(d =>
+    d?.groupId === 0 ||
     d?.theme === 'custom-init-player' ||
     d?.themeColor?.toLowerCase() === '#0b222e' ||
-    d?.themeColor?.toLowerCase() === '#17304a' ||
-    d?.groupId === 0
+    d?.themeColor?.toLowerCase() === '#17304a'
   ) || flat[0];
 
-  // Find opposition die: theme 'custom-init-opp', themeColor '#400a22', or groupId 1
+  // Find opposition die: groupId 1, theme 'custom-init-opp', or themeColor '#400a22'
   const oppDie = flat.find(d =>
     d !== playerDie && (
+      d?.groupId === 1 ||
       d?.theme === 'custom-init-opp' ||
-      d?.themeColor?.toLowerCase() === '#400a22' ||
-      d?.groupId === 1
+      d?.themeColor?.toLowerCase() === '#400a22'
     )
   ) || flat.find(d => d !== playerDie) || flat[1];
 
