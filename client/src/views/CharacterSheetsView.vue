@@ -5205,7 +5205,7 @@ export default {
 }
 
 .notes-section {
-  margin-top: 1.5rem;
+  margin-top: 0;
 }
 
 .notes-section .section-header {
