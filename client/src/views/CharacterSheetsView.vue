@@ -715,42 +715,8 @@
           </section>
         </div>
 
-        <!-- Sheet Mode / Domain Tabs -->
-        <div class="sheet-domain-tabs" role="tablist" aria-label="Character Sheet Sections">
-          <button
-            type="button"
-            role="tab"
-            class="domain-tab-btn"
-            :class="{ active: activeSheetTab === 'grimoire' }"
-            :aria-selected="activeSheetTab === 'grimoire'"
-            @click="activeSheetTab = 'grimoire'"
-          >
-            ✨ Grimoire &amp; Techniques ({{ (selectedChar.grimoire && selectedChar.grimoire.length) || 0 }})
-          </button>
-          <button
-            type="button"
-            role="tab"
-            class="domain-tab-btn"
-            :class="{ active: activeSheetTab === 'forge' }"
-            :aria-selected="activeSheetTab === 'forge'"
-            @click="openForgeApplet"
-          >
-            ⚒️ Custom Equipment &amp; Magic Item Forge (Max Tier {{ maxForgeTier }})
-          </button>
-          <button
-            type="button"
-            role="tab"
-            class="domain-tab-btn"
-            :class="{ active: activeSheetTab === 'notes' }"
-            :aria-selected="activeSheetTab === 'notes'"
-            @click="activeSheetTab = 'notes'"
-          >
-            📜 Notes ({{ (selectedChar.note_panels && selectedChar.note_panels.length) || 0 }})
-          </button>
-        </div>
-
-        <!-- Grimoire & Techniques Tab -->
-        <section class="card grimoire-section" v-show="activeSheetTab === 'grimoire' || activeSheetTab === 'all'">
+        <!-- Grimoire & Martial Techniques -->
+        <section class="card grimoire-section">
           <div class="list-header grimoire-header">
             <div>
               <h4>Grimoire &amp; Martial Techniques</h4>
@@ -5295,38 +5261,6 @@ export default {
 
 .btn-dismiss-error:hover {
   color: #cecece;
-}
-
-.sheet-domain-tabs {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.domain-tab-btn {
-  background-color: #000000;
-  border: 1px solid var(--border-color, #30363d);
-  color: var(--text-secondary, #8b949e);
-  padding: 7px 14px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 0 6px var(--theme-glow, rgba(208, 208, 208, 0.22));
-  transition: all 0.15s ease;
-}
-
-.domain-tab-btn:hover {
-  border-color: var(--theme-bright, #45acba);
-  color: var(--theme-bright-hover, var(--theme-bright, #cecece));
-  box-shadow: var(--theme-glow-subtle);
-}
-
-.domain-tab-btn.active {
-  background-color: var(--theme-surface-active, #05282e);
-  border-color: var(--theme-bright, #45acba);
-  color: var(--theme-bright, #45acba);
-  box-shadow: var(--theme-glow-hover);
 }
 
 .grimoire-section {
