@@ -571,7 +571,7 @@
           <section class="card list-card skills-card">
             <div class="list-header">
               <h4>Skills & Experience</h4>
-              <button class="btn-secondary btn-add-skill" @click="openAddSkillModal">+ Add Skill</button>
+              <button class="btn-secondary btn-add-skill" @click="openAddSkillModal">+ Skill</button>
             </div>
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
@@ -651,9 +651,9 @@
             <div class="list-header">
               <h4>Inventory</h4>
               <div class="list-header-actions">
-                <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Add Equipment</button>
-                <button class="btn-secondary btn-open-forge" @click="openForgeApplet">+ Item Forge</button>
-                <button class="btn-secondary btn-add-custom-item" @click="openCustomItemModal">+ Custom Item</button>
+                <button class="btn-secondary btn-add-equipment" @click="showEquipmentModal = true">+ Equip</button>
+                <button class="btn-secondary btn-open-forge" @click="openForgeApplet">+ Forge</button>
+                <button class="btn-secondary btn-add-custom-item" @click="openCustomItemModal">+ Custom</button>
               </div>
             </div>
             <div class="inventory-search-wrap" style="margin-bottom: 12px;">

@@ -91,9 +91,14 @@ describe('Skills Text Records, Column Alignment, and Add Skill Modal', () => {
       // Verify no select in row
       expect(firstRow.find('select').exists()).toBe(false);
 
-      // Verify + Add Skill button opens modal
+      // Verify shortened button labels
       const addSkillBtn = wrapper.find('.btn-add-skill');
       expect(addSkillBtn.exists()).toBe(true);
+      expect(addSkillBtn.text()).toBe('+ Skill');
+
+      expect(wrapper.find('.btn-add-equipment').text()).toBe('+ Equip');
+      expect(wrapper.find('.btn-open-forge').text()).toBe('+ Forge');
+      expect(wrapper.find('.btn-add-custom-item').text()).toBe('+ Custom');
 
       expect(wrapper.vm.showAddSkillModal).toBe(false);
       await addSkillBtn.trigger('click');
