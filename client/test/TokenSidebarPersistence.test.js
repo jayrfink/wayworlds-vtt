@@ -55,9 +55,10 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       expect(rpgViewSrc).toMatch(/<button[^>]*class="close-btn"[^>]*@click="closeTokenSidebar"/);
     });
 
-    it('unrolls and opens token inspector when a token is selected or clicked', () => {
-      expect(rpgViewSrc).toMatch(/function onTokenSelected\(token\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
-      expect(rpgViewSrc).toMatch(/watch\(selectedTokenId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+    it('does not automatically unhide or unroll token inspector when a token is selected or clicked', () => {
+      expect(rpgViewSrc).not.toMatch(/function onTokenSelected\([^)]*\)\s*\{[^}]*showTokenSidebar\.value\s*=\s*true;/);
+      expect(rpgViewSrc).not.toMatch(/function onTokenSelected\([^)]*\)\s*\{[^}]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+      expect(rpgViewSrc).not.toMatch(/watch\(selectedTokenId,\s*\(newId\)\s*=>/);
     });
 
     it('ensures .vtt-canvas-wrapper allows shrinking and redraws on resize', () => {
@@ -87,9 +88,10 @@ describe('Token Sidebar / Manager State Persistence & Toggle', () => {
       expect(spaceViewSrc).toMatch(/<button[^>]*class="close-btn"[^>]*@click="closeTokenSidebar"/);
     });
 
-    it('unrolls and opens marker inspector when a marker is selected or clicked', () => {
-      expect(spaceViewSrc).toMatch(/function onMarkerSelected\(marker\) \{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
-      expect(spaceViewSrc).toMatch(/watch\(selectedMarkerId,\s*\(newId\)\s*=>\s*\{[\s\S]*showTokenSidebar\.value\s*=\s*true;[\s\S]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+    it('does not automatically unhide or unroll marker inspector when a marker is selected or clicked', () => {
+      expect(spaceViewSrc).not.toMatch(/function onMarkerSelected\([^)]*\)\s*\{[^}]*showTokenSidebar\.value\s*=\s*true;/);
+      expect(spaceViewSrc).not.toMatch(/function onMarkerSelected\([^)]*\)\s*\{[^}]*isTokenSidebarRolledUp\.value\s*=\s*false;/);
+      expect(spaceViewSrc).not.toMatch(/watch\(selectedMarkerId,\s*\(newId\)\s*=>/);
     });
 
     it('ensures .vtt-canvas-wrapper allows shrinking and redraws on resize', () => {

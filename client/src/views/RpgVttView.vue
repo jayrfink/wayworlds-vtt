@@ -1452,12 +1452,6 @@ watch([panX, panY, zoomLevel, activeTool, selectedTokenId, isRollLogOpen, showTo
   persistVttState();
 });
 
-watch(selectedTokenId, (newId) => {
-  if (newId) {
-    showTokenSidebar.value = true;
-    isTokenSidebarRolledUp.value = false;
-  }
-});
 const showCreateMapModal = ref(false);
 const createMapError = ref('');
 const showAddTokenModal = ref(false);
@@ -2044,8 +2038,6 @@ function onTokenSelected(token) {
   }
   selectedTokenId.value = token ? token.id : null;
   if (token) {
-    showTokenSidebar.value = true;
-    isTokenSidebarRolledUp.value = false;
     persistVttState();
   }
 }
@@ -2053,8 +2045,6 @@ function onTokenSelected(token) {
 function onTokenDblClick(token) {
   if (!token) return;
   selectedTokenId.value = token.id;
-  showTokenSidebar.value = true;
-  isTokenSidebarRolledUp.value = false;
   persistVttState();
   if (token.template || token.template_id || token.vehicle_data) {
     openHudTokenId.value = token.id;
@@ -2064,8 +2054,6 @@ function onTokenDblClick(token) {
 function onTokenListDblClick(token) {
   if (!token) return;
   selectedTokenId.value = token.id;
-  showTokenSidebar.value = true;
-  isTokenSidebarRolledUp.value = false;
   persistVttState();
   if (token.template || token.template_id || token.vehicle_data) {
     openHudTokenId.value = token.id;

@@ -4645,13 +4645,14 @@ export default {
 .combat-actions-bar {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   margin: 4px 0 10px 0;
+  padding-left: 2px;
   flex-wrap: wrap;
 }
 
 .btn-combat-action {
-  padding: 4px 12px;
+  padding: 4px 14px;
   font-size: 0.8rem;
   height: 28px;
   box-sizing: border-box;

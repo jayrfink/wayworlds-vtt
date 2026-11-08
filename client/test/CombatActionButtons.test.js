@@ -143,6 +143,14 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     }
   });
 
+  it('styles combat action buttons with padding left of Strike button and padding/gap between buttons', () => {
+    const sheetViewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
+    const sheetContent = fs.readFileSync(sheetViewPath, 'utf8');
+
+    expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?padding-left:\s*2px;/);
+    expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?gap:\s*1[24]px;/);
+  });
+
   it('verifies RpgVttView triggers % dice box animation and HUD when roll originates from sheet', () => {
     const rpgViewPath = path.resolve(__dirname, '../src/views/RpgVttView.vue');
     const rpgContent = fs.readFileSync(rpgViewPath, 'utf8');
