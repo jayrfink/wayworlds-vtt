@@ -2623,8 +2623,9 @@ function setupSocketListeners() {
     }
   });
 
-  socket.on('roll:created', onSocketRollCreated = ({ mode, roll }) => {
+  socket.on('roll:created', onSocketRollCreated = async ({ mode, roll }) => {
     if (mode !== 'rpg') return;
+    const isFromSheet = roll.source === 'sheet' || roll.rollSummary?.source === 'sheet';
     if (roll.username !== authStore.user?.username) {
       playDiceSound({ isRemote: true });
     }
@@ -2634,20 +2635,38 @@ function setupSocketListeners() {
         rollLog.value = rollLog.value.slice(0, 20);
       }
     }
-    // If peer rolled, show floating banner
-    if (roll.userId !== authStore.user?.id) {
+    // If peer rolled or roll came from character sheet (Cast/Strike/Shoot), show floating banner & roll % dice
+    if (roll.userId !== authStore.user?.id || isFromSheet) {
       if (roll.type === 'percentile') {
+        const rollSum = roll.rollSummary || {};
+        const tens = rollSum.tens !== undefined ? rollSum.tens : Math.floor((roll.total === 100 ? 0 : roll.total) / 10);
+        const ones = rollSum.ones !== undefined ? rollSum.ones : (roll.total % 10);
         lastPercentileRoll.value = {
-          ...roll.rollSummary,
+          ...rollSum,
           username: roll.username,
           role: roll.role,
-          total: roll.total
+          total: roll.total,
+          tens,
+          ones,
         };
         showPercentileHud.value = true;
         if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
         percentileHudTimeout = setTimeout(() => {
           showPercentileHud.value = false;
         }, 8000);
+
+        // Animate 3D percentile dice across the RPG VTT canvas
+        try {
+          const diceBox = await getReadyDiceBox();
+          if (diceBox) {
+            await executeQueuedDiceRoll(diceBox, [
+              { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
+              { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
+            ]);
+          }
+        } catch (err) {
+          console.warn('RPG VTT percentile 3D roll error:', err);
+        }
       } else if (roll.type === 'damage') {
         lastDamageRoll.value = {
           ...roll,

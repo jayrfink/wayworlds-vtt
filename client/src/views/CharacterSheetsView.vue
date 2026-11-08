@@ -577,6 +577,49 @@
               <h4>Skills & Experience</h4>
               <button class="btn-secondary btn-add-skill" @click="openAddSkillModal">+ Skill</button>
             </div>
+
+            <!-- Strike & Shoot Combat Action Row (Like Grimoire Cast button) -->
+            <div class="combat-actions-bar">
+              <button
+                type="button"
+                class="btn-xp-upgrade btn-combat-action btn-strike-action"
+                title="Roll Melee Strike attack (% check)"
+                @click="performStrikeRoll"
+              >
+                ⚔️ Strike <span class="combat-action-pct">({{ strikeTotalPct }}%)</span>
+              </button>
+              <button
+                type="button"
+                class="btn-xp-upgrade btn-combat-action btn-shoot-action"
+                title="Roll Ranged Shoot attack (% check)"
+                @click="performShootRoll"
+              >
+                🏹 Shoot <span class="combat-action-pct">({{ shootTotalPct }}%)</span>
+              </button>
+            </div>
+
+            <!-- Strike / Shoot Result Banner -->
+            <div v-if="lastCombatActionResult" class="grimoire-cast-banner combat-action-banner">
+              <div class="cast-banner-main">
+                <span class="cast-banner-title">
+                  {{ lastCombatActionResult.actionType === 'strike' ? '⚔️ Strike' : '🏹 Shoot' }}
+                </span>
+                <span class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
+                <span
+                  class="cast-banner-outcome"
+                  :class="{
+                    'crit': lastCombatActionResult.isCrit,
+                    'fumble': lastCombatActionResult.isFumble,
+                    'success': lastCombatActionResult.success && !lastCombatActionResult.isCrit,
+                    'failure': !lastCombatActionResult.success && !lastCombatActionResult.isFumble
+                  }"
+                >
+                  {{ lastCombatActionResult.outcomeLabel }} (d100={{ lastCombatActionResult.d100Roll }} vs {{ lastCombatActionResult.targetPct }}%)
+                </span>
+              </div>
+              <button type="button" class="btn-close-banner" title="Dismiss" @click="lastCombatActionResult = null">✕</button>
+            </div>
+
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
             </div>
@@ -1417,6 +1460,7 @@ import {
   calcXPCost,
 } from '../constants/characterRules.js';
 import ImageBrowserModal from '../components/ImageBrowserModal.vue';
+import { playDiceSound } from '../services/diceAudio.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { downloadCharacterAscii } from '../utils/characterExport.js';
 import {
@@ -1530,6 +1574,7 @@ export default {
       magicTraditions: MAGIC_TRADITIONS,
       magnitudeTable: UNIVERSAL_MAGNITUDE_TABLE,
       lastCastResult: null,
+      lastCombatActionResult: null,
       showForgeModal: false,
       forgeError: '',
       lastForgeResult: null,
@@ -1697,6 +1742,24 @@ export default {
     derivedMeleeHit() {
       if (!this.selectedChar) return 25;
       return calcMeleeHit(this.selectedChar.str, this.selectedChar.dex);
+    },
+    strikeTotalPct() {
+      if (!this.selectedChar) return 25;
+      const skills = Array.isArray(this.selectedChar.skills) ? this.selectedChar.skills : [];
+      const meleeSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'melee weapons');
+      const bonus = (meleeSkill && typeof meleeSkill.level === 'number' && meleeSkill.level > 0)
+        ? meleeSkill.level * 10
+        : 0;
+      return this.derivedMeleeHit + bonus;
+    },
+    shootTotalPct() {
+      if (!this.selectedChar) return 25;
+      const skills = Array.isArray(this.selectedChar.skills) ? this.selectedChar.skills : [];
+      const rangedSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'ranged weapons');
+      const bonus = (rangedSkill && typeof rangedSkill.level === 'number' && rangedSkill.level > 0)
+        ? rangedSkill.level * 10
+        : 0;
+      return this.derivedRangedHit + bonus;
     },
     maxCarryWeight() {
       if (!this.selectedChar) return 50;
@@ -3033,6 +3096,10 @@ export default {
       await this.updateCharacter();
 
       try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      try {
         await fetch('/api/rolls', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -3040,9 +3107,128 @@ export default {
           body: JSON.stringify({
             mode: 'rpg',
             type: 'percentile',
+            source: 'sheet',
             label: `${this.selectedChar.name}: ${result.spellName} (${result.tradition} T${castTier}, -${cost} ${fuel.toUpperCase()}) - ${outcomeLabel}`,
             total: d100Roll,
             breakdown: `d100=${d100Roll} <= ${targetPct}% | Magnitude ${mag.dice}: ${effectTotal} [${diceList.join(', ')}]`,
+            rollSummary: {
+              ...result,
+              source: 'sheet',
+              characterName: this.selectedChar.name,
+              targetPct,
+              total: d100Roll,
+              tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
+              ones: d100Roll % 10,
+            },
+          }),
+        });
+      } catch {
+        // Ignore roll log network errors in offline/unit test contexts
+      }
+
+      return result;
+    },
+    async performStrikeRoll() {
+      if (!this.selectedChar) return null;
+      const targetPct = this.strikeTotalPct;
+      const skills = Array.isArray(this.selectedChar.skills) ? this.selectedChar.skills : [];
+      const meleeSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'melee weapons');
+      const skillName = meleeSkill ? `Melee Weapons (Lvl ${meleeSkill.level || 0})` : 'Melee Base';
+
+      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
+      const isFumble = d100Roll >= 96 || (d100Roll > targetPct && d100Roll % 11 === 0);
+      const success = !isFumble && d100Roll <= targetPct;
+      const outcomeLabel = isCrit ? 'CRITICAL HIT' : (isFumble ? 'FUMBLE' : (success ? 'HIT' : 'MISS'));
+
+      const result = {
+        actionType: 'strike',
+        characterName: this.selectedChar.name,
+        skillName,
+        targetPct,
+        d100Roll,
+        total: d100Roll,
+        tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
+        ones: d100Roll % 10,
+        success,
+        isCrit,
+        isFumble,
+        outcomeLabel,
+        source: 'sheet',
+      };
+      this.lastCombatActionResult = result;
+
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      try {
+        await fetch('/api/rolls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            mode: 'rpg',
+            type: 'percentile',
+            source: 'sheet',
+            label: `${this.selectedChar.name}: ⚔️ Strike (${targetPct}%) - ${outcomeLabel}`,
+            total: d100Roll,
+            breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
+            rollSummary: result,
+          }),
+        });
+      } catch {
+        // Ignore roll log network errors in offline/unit test contexts
+      }
+
+      return result;
+    },
+    async performShootRoll() {
+      if (!this.selectedChar) return null;
+      const targetPct = this.shootTotalPct;
+      const skills = Array.isArray(this.selectedChar.skills) ? this.selectedChar.skills : [];
+      const rangedSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'ranged weapons');
+      const skillName = rangedSkill ? `Ranged Weapons (Lvl ${rangedSkill.level || 0})` : 'Ranged Base';
+
+      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
+      const isFumble = d100Roll >= 96 || (d100Roll > targetPct && d100Roll % 11 === 0);
+      const success = !isFumble && d100Roll <= targetPct;
+      const outcomeLabel = isCrit ? 'CRITICAL HIT' : (isFumble ? 'FUMBLE' : (success ? 'HIT' : 'MISS'));
+
+      const result = {
+        actionType: 'shoot',
+        characterName: this.selectedChar.name,
+        skillName,
+        targetPct,
+        d100Roll,
+        total: d100Roll,
+        tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
+        ones: d100Roll % 10,
+        success,
+        isCrit,
+        isFumble,
+        outcomeLabel,
+        source: 'sheet',
+      };
+      this.lastCombatActionResult = result;
+
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      try {
+        await fetch('/api/rolls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            mode: 'rpg',
+            type: 'percentile',
+            source: 'sheet',
+            label: `${this.selectedChar.name}: 🏹 Shoot (${targetPct}%) - ${outcomeLabel}`,
+            total: d100Roll,
+            breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
             rollSummary: result,
           }),
         });
@@ -4453,6 +4639,37 @@ export default {
   margin: 0;
   color: #c8c8c8 !important;
   text-shadow: none !important;
+}
+
+/* Strike & Shoot Combat Action Buttons in Skills Card */
+.combat-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 4px 0 10px 0;
+  flex-wrap: wrap;
+}
+
+.btn-combat-action {
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  height: 28px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.combat-action-pct {
+  font-weight: 700;
+  opacity: 0.95;
+  font-size: 0.78rem;
+}
+
+.combat-action-banner {
+  margin-bottom: 10px;
+  padding: 8px 10px;
 }
 
 .empty-list {
