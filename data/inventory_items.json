@@ -1,29 +1,198 @@
 [
-  { "name": "Dagger", "category": "Weapon", "weight_lbs": 1, "damage_dice": "1d10", "properties": "Finesse, Thrown (20/60 ft)" },
-  { "name": "Shortsword", "category": "Weapon", "weight_lbs": 2, "damage_dice": "1d10", "properties": "Finesse, Light" },
-  { "name": "Spear", "category": "Weapon", "weight_lbs": 2, "damage_dice": "1d10", "properties": "Finesse, Light" },
-  { "name": "Longsword", "category": "Weapon", "weight_lbs": 3, "damage_dice": "2d10", "properties": "Versatile (3d10)" },
-  { "name": "BattleAxe", "category": "Weapon", "weight_lbs": 3, "damage_dice": "2d10", "properties": "Versatile (3d10)" },
-  { "name": "Broadsword", "category": "Weapon", "weight_lbs": 3, "damage_dice": "2d10 (1-Handed) / 3d10 (2-Handed)", "properties": "Martial, Versatile (switches between 2d10 and 3d10 when wielded in two hands)" },
-  { "name": "Bastard Sword", "category": "Weapon", "weight_lbs": 4.5, "damage_dice": "2d10 (1-Handed w/ STR 55+) / 3d10 (2-Handed)", "properties": "Martial, Versatile (heavy grip; 2d10 one-handed requires STR 55+, 3d10 two-handed)" },
-  { "name": "Greatsword", "category": "Weapon", "weight_lbs": 6, "damage_dice": "3d10", "properties": "Heavy, Two-Handed" },
-  { "name": "Greataxe", "category": "Weapon", "weight_lbs": 6, "damage_dice": "3d10", "properties": "Heavy, Two-Handed" },
-  { "name": "Shortbow", "category": "Weapon", "weight_lbs": 2, "damage_dice": "1d10", "properties": "Ranged (80/320 ft), Two-Handed" },
-  { "name": "Longbow", "category": "Weapon", "weight_lbs": 2, "damage_dice": "2d10", "properties": "Ranged (150/600 ft), Two-Handed, Heavy" },
-  { "name": "Padded Armor", "category": "Armor", "weight_lbs": 8, "armor_dr": 2, "properties": "-2 any non-magical attack" },
-  { "name": "Leather Armor", "category": "Armor", "weight_lbs": 10, "armor_dr": 4, "properties": "-4 any non magical attack" },
-  { "name": "Hide Armor", "category": "Armor", "weight_lbs": 15, "armor_dr": 4, "properties": "-4 any non magical attack" },
-  { "name": "Studded Leather Armor", "category": "Armor", "weight_lbs": 13, "armor_dr": 5, "properties": "-5 any non magic attack" },
-  { "name": "Chain Mail", "category": "Armor", "weight_lbs": 35, "armor_dr": "half_nonmagical", "properties": "Halves any non magical damage" },
-  { "name": "Chainmail", "category": "Armor", "weight_lbs": 35, "armor_dr": "half_nonmagical", "properties": "Halves any non magical damage" },
-  { "name": "Breastplate", "category": "Armor", "weight_lbs": 20, "armor_dr": "half_nonmagical", "properties": "Halves any non magical damage" },
-  { "name": "Scale Mail", "category": "Armor", "weight_lbs": 30, "armor_dr": "half_nonmagical", "properties": "Halves any non magical damage" },
-  { "name": "Banded Mail", "category": "Armor", "weight_lbs": 35, "armor_dr": "half_nonmagical", "properties": "Halves any non magical damage" },
-  { "name": "Full Plate", "category": "Armor", "weight_lbs": 50, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
-  { "name": "Full Plate Armor", "category": "Armor", "weight_lbs": 50, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
-  { "name": "Mythril Armor", "category": "Armor", "weight_lbs": 25, "armor_dr": "half_all", "attacker_pct_penalty": -10, "properties": "Halves any damage and -10% to attackers roll of any non magical attack" },
-  { "name": "Shield", "category": "Shield", "weight_lbs": 6, "attacker_pct_penalty": -10, "properties": "Shield Deflection (-10% to incoming attacks, stacks with Mastery)" },
-  { "name": "Herbalism Kit", "category": "Kit", "weight_lbs": 3, "properties": "Used with Herbalism & Medicine to heal 2d10 STA during short rests" },
-  { "name": "Medic Kit", "category": "Kit", "weight_lbs": 2, "properties": "Combat field kit to stop bleeding and bind wounds for 1d10 + Skill STA" },
-  { "name": "Artisan Tool Kit", "category": "Kit", "weight_lbs": 5, "properties": "Tradecraft repairs etc" }
+  {
+    "name": "Dagger",
+    "category": "Weapon",
+    "weight_lbs": 1,
+    "damage_dice": "1d10",
+    "properties": "Finesse, Thrown (20/60 ft)"
+  },
+  {
+    "name": "Shortsword",
+    "category": "Weapon",
+    "weight_lbs": 2,
+    "damage_dice": "1d10",
+    "properties": "Finesse, Light"
+  },
+  {
+    "name": "Spear",
+    "category": "Weapon",
+    "weight_lbs": 2,
+    "damage_dice": "1d10",
+    "properties": "Finesse, Light"
+  },
+  {
+    "name": "Longsword",
+    "category": "Weapon",
+    "weight_lbs": 3,
+    "damage_dice": "2d10",
+    "properties": "Versatile (3d10)"
+  },
+  {
+    "name": "BattleAxe",
+    "category": "Weapon",
+    "weight_lbs": 3,
+    "damage_dice": "2d10",
+    "properties": "Versatile (3d10)"
+  },
+  {
+    "name": "Broadsword",
+    "category": "Weapon",
+    "weight_lbs": 3,
+    "damage_dice": "2d10 (1-Handed) / 3d10 (2-Handed)",
+    "properties": "Martial, Versatile (switches between 2d10 and 3d10 when wielded in two hands)"
+  },
+  {
+    "name": "Bastard Sword",
+    "category": "Weapon",
+    "weight_lbs": 4.5,
+    "damage_dice": "2d10 (1-Handed w/ STR 55+) / 3d10 (2-Handed)",
+    "properties": "Martial, Versatile (heavy grip; 2d10 one-handed requires STR 55+, 3d10 two-handed)"
+  },
+  {
+    "name": "Greatsword",
+    "category": "Weapon",
+    "weight_lbs": 6,
+    "damage_dice": "3d10",
+    "properties": "Heavy, Two-Handed"
+  },
+  {
+    "name": "Greataxe",
+    "category": "Weapon",
+    "weight_lbs": 6,
+    "damage_dice": "3d10",
+    "properties": "Heavy, Two-Handed"
+  },
+  {
+    "name": "Shortbow",
+    "category": "Weapon",
+    "weight_lbs": 2,
+    "damage_dice": "1d10",
+    "properties": "Ranged (80/320 ft), Two-Handed"
+  },
+  {
+    "name": "Longbow",
+    "category": "Weapon",
+    "weight_lbs": 2,
+    "damage_dice": "2d10",
+    "properties": "Ranged (150/600 ft), Two-Handed, Heavy"
+  },
+  {
+    "name": "Padded Armor",
+    "category": "Armor",
+    "weight_lbs": 8,
+    "armor_dr": 2,
+    "properties": "-2 any non-magical attack"
+  },
+  {
+    "name": "Leather Armor",
+    "category": "Armor",
+    "weight_lbs": 10,
+    "armor_dr": 4,
+    "properties": "-4 any non magical attack"
+  },
+  {
+    "name": "Hide Armor",
+    "category": "Armor",
+    "weight_lbs": 15,
+    "armor_dr": 4,
+    "properties": "-4 any non magical attack"
+  },
+  {
+    "name": "Studded Leather Armor",
+    "category": "Armor",
+    "weight_lbs": 13,
+    "armor_dr": 5,
+    "properties": "-5 any non magic attack"
+  },
+  {
+    "name": "Chain Mail",
+    "category": "Armor",
+    "weight_lbs": 35,
+    "armor_dr": "half_nonmagical",
+    "properties": "Halves any non magical damage"
+  },
+  {
+    "name": "Chainmail",
+    "category": "Armor",
+    "weight_lbs": 35,
+    "armor_dr": "half_nonmagical",
+    "properties": "Halves any non magical damage"
+  },
+  {
+    "name": "Breastplate",
+    "category": "Armor",
+    "weight_lbs": 20,
+    "armor_dr": "half_nonmagical",
+    "properties": "Halves any non magical damage"
+  },
+  {
+    "name": "Scale Mail",
+    "category": "Armor",
+    "weight_lbs": 30,
+    "armor_dr": "half_nonmagical",
+    "properties": "Halves any non magical damage"
+  },
+  {
+    "name": "Banded Mail",
+    "category": "Armor",
+    "weight_lbs": 35,
+    "armor_dr": "half_nonmagical",
+    "properties": "Halves any non magical damage"
+  },
+  {
+    "name": "Full Plate",
+    "category": "Armor",
+    "weight_lbs": 50,
+    "armor_dr": "half_all",
+    "attacker_pct_penalty": -10,
+    "properties": "Halves any damage and -10% to attackers roll of any non magical attack"
+  },
+  {
+    "name": "Full Plate Armor",
+    "category": "Armor",
+    "weight_lbs": 50,
+    "armor_dr": "half_all",
+    "attacker_pct_penalty": -10,
+    "properties": "Halves any damage and -10% to attackers roll of any non magical attack"
+  },
+  {
+    "name": "Mythril Armor",
+    "category": "Armor",
+    "weight_lbs": 25,
+    "armor_dr": "half_all",
+    "attacker_pct_penalty": -10,
+    "properties": "Halves any damage and -10% to attackers roll of any non magical attack"
+  },
+  {
+    "name": "Shield",
+    "category": "Shield",
+    "weight_lbs": 6,
+    "attacker_pct_penalty": -10,
+    "properties": "Shield Deflection (-10% to incoming attacks, stacks with Mastery)"
+  },
+  {
+    "name": "Herbalism Kit",
+    "category": "Kit",
+    "weight_lbs": 3,
+    "properties": "Used with Herbalism & Medicine to heal 2d10 STA during short rests"
+  },
+  {
+    "name": "Medic Kit",
+    "category": "Kit",
+    "weight_lbs": 2,
+    "properties": "Combat field kit to stop bleeding and bind wounds for 1d10 + Skill STA"
+  },
+  {
+    "name": "Artisan Tool Kit",
+    "category": "Kit",
+    "weight_lbs": 5,
+    "properties": "Tradecraft repairs etc"
+  },
+  {
+    "name": "Quarterstaff",
+    "category": "Weapon",
+    "weight_lbs": 2,
+    "properties": "Pole Arm",
+    "damage_dice": "1d10"
+  }
 ]

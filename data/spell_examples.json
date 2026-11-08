@@ -1,0 +1,211 @@
+[
+  {
+    "spell_id": "sp_arcane_missile",
+    "name": "Arcane Missile",
+    "tradition": "Arcane",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Fires shimmering bolts of pure raw force that unerringly strike a single target for 2d10 damage."
+  },
+  {
+    "spell_id": "sp_arcane_aegis",
+    "name": "Aegis Shield",
+    "tradition": "Arcane",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Self / 1 Round",
+    "description": "Conjures a translucent crystalline ward absorbing 10 Temp Ward STA or granting -2 DR against incoming blows."
+  },
+  {
+    "spell_id": "sp_arcane_fireball",
+    "name": "Fireball",
+    "tradition": "Arcane",
+    "category": "blast",
+    "default_tier": 2,
+    "cost": 4,
+    "fuel": "ess",
+    "range_area": "90 ft Range / 15 ft Cone or Burst",
+    "description": "Detonates a roaring sphere of elemental flame dealing 2d10 damage to all creatures within the blast."
+  },
+  {
+    "spell_id": "sp_blood_lance",
+    "name": "Crimson Lance",
+    "tradition": "Blood",
+    "category": "strike",
+    "default_tier": 2,
+    "cost": 4,
+    "fuel": "sta",
+    "range_area": "90 ft / Single Target",
+    "description": "Crystallizes the caster's own blood into a hardened needle-sharp spear dealing 3d10 piercing damage."
+  },
+  {
+    "spell_id": "sp_blood_siphon",
+    "name": "Sanguine Siphon",
+    "tradition": "Blood",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "sta",
+    "range_area": "Touch / Melee",
+    "description": "Extracts vital essence from living tissue to restore 1d10 STA to the caster or a willing ally."
+  },
+  {
+    "spell_id": "sp_shadow_step",
+    "name": "Shadowstep Strike",
+    "tradition": "Shadow",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Dissolves into darkness and reappears behind a foe, striking with umbral frost for 2d10 damage."
+  },
+  {
+    "spell_id": "sp_shadow_veil",
+    "name": "Shroud of Gloam",
+    "tradition": "Shadow",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Self or 10 ft Area",
+    "description": "Cloaks the target in supernatural shadow, granting +10% Stealth & Defense and dark concealment."
+  },
+  {
+    "spell_id": "sp_demonology_hellfire",
+    "name": "Hellfire Burst",
+    "tradition": "Demonology",
+    "category": "blast",
+    "default_tier": 2,
+    "cost": 4,
+    "fuel": "ess",
+    "range_area": "60 ft Range / 15 ft Burst",
+    "description": "Unleashes brimstone flame from the Nether dealing 2d10 unholy fire damage. May sacrifice 2 STA per 1 ESS."
+  },
+  {
+    "spell_id": "sp_demonology_imp",
+    "name": "Summon Fiend Thrall",
+    "tradition": "Demonology",
+    "category": "hex_summon",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "30 ft / 1 Encounter",
+    "description": "Summons a chittering Tier 1 minor demon thrall bound to harass and flank foes (-10% penalty)."
+  },
+  {
+    "spell_id": "sp_necro_grave_bolt",
+    "name": "Grave Bolt",
+    "tradition": "Necromancy",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Hurls a jet of pale necrotic chill draining the target's warmth for 2d10 damage."
+  },
+  {
+    "spell_id": "sp_necro_bone_armor",
+    "name": "Bone Armor",
+    "tradition": "Necromancy",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Self / 1 Round",
+    "description": "Pulls skeletal shards from earth or graves to form interlocking plates granting 10 Temp Ward STA."
+  },
+  {
+    "spell_id": "sp_eldritch_tendril",
+    "name": "Void Tendril",
+    "tradition": "Eldritch",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Rips a tear in reality through which a writhing aberrant limb crushes the target for 2d10 psychic impact."
+  },
+  {
+    "spell_id": "sp_druidic_roots",
+    "name": "Entangling Roots",
+    "tradition": "Druidic",
+    "category": "hex_summon",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft Range / 10 ft Burst",
+    "description": "Vines and brambles erupt from soil or stone, inflicting -10% Penalty and knocking victims Prone."
+  },
+  {
+    "spell_id": "sp_druidic_mend",
+    "name": "Nature's Mend",
+    "tradition": "Druidic",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Touch / 1 Target",
+    "description": "Channels floral vigor into flesh and bone, restoring 1d10 STA to an injured ally."
+  },
+  {
+    "spell_id": "sp_spiritual_smite",
+    "name": "Radiant Smite",
+    "tradition": "Spiritual",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Invokes divine or ancestral light to scourge corruption dealing 2d10 radiant damage."
+  },
+  {
+    "spell_id": "sp_ki_iron_palm",
+    "name": "Iron Palm Strike",
+    "tradition": "Ki",
+    "category": "strike",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Melee / Close",
+    "description": "Channels internal focus into a concussive shockwave dealing 2d10 kinetic damage with knockback."
+  },
+  {
+    "spell_id": "sp_ki_deflection",
+    "name": "Deflecting Stance",
+    "tradition": "Ki",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "Self / 1 Round",
+    "description": "Flowing posture that parries kinetic forces, granting +10% Defense and -2 incoming damage DR."
+  },
+  {
+    "spell_id": "sp_warg_predator",
+    "name": "Predator's Surge",
+    "tradition": "Warg",
+    "category": "ward_heal",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "sta",
+    "range_area": "Self / 1 Round",
+    "description": "Awakens the primal beast spirit within, granting 10 Temp Ward STA and +10% Melee accuracy."
+  },
+  {
+    "spell_id": "sp_witchcraft_evil_eye",
+    "name": "Evil Eye Curse",
+    "tradition": "Witchcraft",
+    "category": "hex_summon",
+    "default_tier": 1,
+    "cost": 2,
+    "fuel": "ess",
+    "range_area": "60 ft / Single Target",
+    "description": "Fixes a malevolent gaze upon an enemy, imposing a -10% Penalty on all their checks for 1 Round."
+  }
+]

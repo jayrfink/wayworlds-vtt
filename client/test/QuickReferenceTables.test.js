@@ -4,11 +4,19 @@
 import { describe, it, expect } from 'vitest';
 import { createSSRApp } from 'vue';
 import { renderToString } from 'vue/server-renderer';
+import { createPinia, setActivePinia } from 'pinia';
 import QuickReferenceTables from '../src/components/QuickReferenceTables.vue';
+import { useAuthStore } from '../src/stores/auth.js';
 
 describe('QuickReferenceTables.vue', () => {
-  async function renderComponent(props = {}) {
+  async function renderComponent(props = {}, userRole = 'Player') {
+    const pinia = createPinia();
+    setActivePinia(pinia);
+    const auth = useAuthStore();
+    auth.user = { id: 1, username: 'testuser', role: userRole };
+
     const app = createSSRApp(QuickReferenceTables, props);
+    app.use(pinia);
     const html = await renderToString(app);
     return html;
   }
@@ -18,6 +26,7 @@ describe('QuickReferenceTables.vue', () => {
     expect(html).toContain('Ranged Weapon Combat');
     expect(html).toContain('Melee Combat');
     expect(html).toContain('Overland');
+    expect(html).toContain('Spells/Martial Techniques');
     expect(html).toMatch(/Filter rules &(amp;)?\s*tables\.\.\./);
   });
 
@@ -197,6 +206,56 @@ describe('QuickReferenceTables.vue', () => {
 
       expect(html).toContain('Necromancy');
       expect(html).not.toContain('Defense &amp; Shield');
+    });
+  });
+
+  describe('Spells/Martial Techniques Tab', () => {
+    it('renders Universal Magnitude Table, traditions, and pre-scribed examples', async () => {
+      const html = await renderComponent({ initialCategory: 'spells' }, 'Player');
+
+      // Universal Magnitude Table
+      expect(html).toContain('Universal Magnitude Table');
+      expect(html).toContain('Universal Casting Cost:');
+      expect(html).toContain('Strike (Single Target)');
+      expect(html).toContain('Blast / Cleave (Area)');
+      expect(html).toContain('Ward / Heal (Defense &amp; Recovery)');
+      expect(html).toContain('Hex / Control (Debuff &amp; Summon)');
+
+      // Traditions pills
+      expect(html).toContain('The 11 Magic &amp; Ki Traditions');
+      expect(html).toContain('All Traditions');
+      expect(html).toContain('Arcane');
+      expect(html).toContain('Blood');
+      expect(html).toContain('Ki');
+
+      // Examples
+      expect(html).toContain('Arcane Missile');
+      expect(html).toContain('Crimson Lance');
+      expect(html).toContain('Iron Palm Strike');
+
+      // For players, + Add Example button is NOT visible
+      expect(html).not.toContain('+ Add Example');
+    });
+
+    it('renders + Add Example button and editing controls for GameMaster only', async () => {
+      const gmHtml = await renderComponent({ initialCategory: 'spells' }, 'GameMaster');
+      expect(gmHtml).toContain('+ Add Example');
+      expect(gmHtml).toContain('💾 Save');
+      expect(gmHtml).toContain('btn-remove-spell');
+
+      const playerHtml = await renderComponent({ initialCategory: 'spells' }, 'Player');
+      expect(playerHtml).not.toContain('+ Add Example');
+      expect(playerHtml).not.toContain('💾 Save');
+    });
+
+    it('filters spell examples by search query', async () => {
+      const html = await renderComponent({
+        initialCategory: 'spells',
+        initialSearch: 'Crimson Lance',
+      });
+
+      expect(html).toContain('Crimson Lance');
+      expect(html).not.toContain('Arcane Missile');
     });
   });
 

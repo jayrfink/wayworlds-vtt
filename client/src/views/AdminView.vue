@@ -443,7 +443,7 @@
       </div>
     </div>
     <!-- Add Weapon Modal -->
-    <div v-if="showWeaponModal" class="modal-backdrop" @click.self="showWeaponModal = false">
+    <div v-if="showWeaponModal" class="modal-backdrop modal-overlay" @click.self="showWeaponModal = false">
       <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="weapon-modal-title">
         <div class="modal-header">
           <h3 id="weapon-modal-title">Add New Weapon</h3>
@@ -485,7 +485,7 @@
     </div>
 
     <!-- Add Armor / Shield Modal -->
-    <div v-if="showArmorModal" class="modal-backdrop" @click.self="showArmorModal = false">
+    <div v-if="showArmorModal" class="modal-backdrop modal-overlay" @click.self="showArmorModal = false">
       <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="armor-modal-title">
         <div class="modal-header">
           <h3 id="armor-modal-title">Add Armor or Shield</h3>
@@ -540,7 +540,7 @@
     </div>
 
     <!-- Add Gear Modal -->
-    <div v-if="showGearModal" class="modal-backdrop" @click.self="showGearModal = false">
+    <div v-if="showGearModal" class="modal-backdrop modal-overlay" @click.self="showGearModal = false">
       <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="gear-modal-title">
         <div class="modal-header">
           <h3 id="gear-modal-title">Add Gear / Equipment</h3>
@@ -1569,9 +1569,39 @@ defineExpose({
   width: 90%;
   background: var(--bg-secondary, #161b22);
   border: 2px solid var(--border);
-  box-shadow: var(--theme-glow, 0 0 16px rgba(192, 192, 192, 0.4));
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.75), var(--theme-glow, 0 0 16px rgba(192, 192, 192, 0.4));
   border-radius: 8px;
   padding: 20px;
+  position: relative;
+  z-index: 1001;
+}
+
+.modal-close-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 18px;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.modal-close-btn:hover {
+  color: #cecece;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .form-row-2 {
@@ -2008,6 +2038,7 @@ defineExpose({
 }
 
 /* Modal styles */
+.modal-backdrop,
 .modal-overlay {
   position: fixed;
   top: 0;

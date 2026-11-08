@@ -5627,6 +5627,40 @@ export default {
   flex-wrap: wrap;
 }
 
+/* Grimoire form fields blend seamlessly with the card background like character name */
+.grimoire-row input,
+.grimoire-row select {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  border-color: transparent !important;
+  color: #cecece !important;
+  border-radius: 4px;
+  box-shadow: none !important;
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.grimoire-row input:hover,
+.grimoire-row select:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+.grimoire-row input:focus,
+.grimoire-row select:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid var(--theme-bright, #45acba) !important;
+  border-color: var(--theme-bright, #45acba) !important;
+  box-shadow: 0 0 6px var(--theme-glow, rgba(69, 172, 186, 0.4)) !important;
+}
+
+.grimoire-row select option {
+  background: #14171c;
+  color: #cecece;
+}
+
 .grimoire-row .spell-name-input {
   flex: 1 1 160px;
   min-width: 130px;
@@ -5670,6 +5704,7 @@ export default {
   font-size: 0.8rem;
   height: 26px;
   box-sizing: border-box;
+  text-align: center;
 }
 
 .grimoire-row .spell-target-badge {
