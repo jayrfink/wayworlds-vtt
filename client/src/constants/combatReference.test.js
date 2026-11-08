@@ -5,6 +5,7 @@ import {
   ADDITIONAL_RULES_REF,
   ATTRIBUTES_RULES_REF,
   PSA_RULES_REF,
+  ARCHETYPES_RULES_REF,
 } from './combatReference.js';
 
 describe('combatReference', () => {
@@ -116,6 +117,10 @@ describe('combatReference', () => {
       expect(meleeNames).toContain('Greatsword / Greataxe / Maul');
       expect(meleeNames).toContain('Halberd / Glaive / Pike');
 
+      const longsword = MELEE_COMBAT_REF.weapons.find((w) => w.name === 'Broadsword / Longsword');
+      expect(longsword.damage).toBe('2d10 (1H) / 3d10 (2H) + STR Mod');
+      expect(longsword.special).toContain('Versatile (3d10 Two-Handed)');
+
       MELEE_COMBAT_REF.weapons.forEach((w) => {
         expect(w).toHaveProperty('name');
         expect(w).toHaveProperty('damage');
@@ -216,6 +221,19 @@ describe('combatReference', () => {
       });
       expect(PSA_RULES_REF.xpTable[5].cumInPsa).toBe(63);
       expect(PSA_RULES_REF.xpTable[5].cumOutPsa).toBe(126);
+    });
+  });
+
+  describe('ARCHETYPES_RULES_REF', () => {
+    it('configures Druid archetype with Druidic, Herbalism & Lore, and Ranged or Melee Weapons', () => {
+      const druid = ARCHETYPES_RULES_REF.standardArchetypes.find((a) => a.name === 'Druid');
+      expect(druid).toBeDefined();
+      expect(druid.psa).toBe('Theurgy');
+      expect(druid.skills).toEqual([
+        { rank: 1, name: 'Druidic', type: 'Tradition', psa: 'Theurgy', inPsa: true },
+        { rank: 2, name: 'Herbalism & Lore', type: 'Secular Skill', psa: 'Theurgy', inPsa: true },
+        { rank: 3, name: 'Ranged or Melee Weapons', type: 'Secular Skill', psa: 'Martial', inPsa: false },
+      ]);
     });
   });
 });

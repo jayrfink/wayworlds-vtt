@@ -285,9 +285,9 @@ export const MELEE_COMBAT_REF = {
     },
     {
       name: 'Broadsword / Longsword',
-      damage: '1d10+2 + STR Mod',
+      damage: '2d10 (1H) / 3d10 (2H) + STR Mod',
       weight: '3 lbs',
-      special: 'One-Handed, Versatile (2d10-2 Two-Handed), +5% Hit Bonus',
+      special: 'One-Handed (2d10), Versatile (3d10 Two-Handed), +5% Hit Bonus',
     },
     {
       name: 'Battleaxe / Warhammer / Flail',
@@ -878,11 +878,11 @@ export const ARCHETYPES_RULES_REF = {
       name: 'Druid',
       psa: 'Theurgy',
       icon: '🌿',
-      tagline: 'Keeper of primal groves, storm currents, and agile beast-leaps.',
+      tagline: 'Keeper of primal groves, ancient herbal lore, and woodland weapons.',
       skills: [
         { rank: 1, name: 'Druidic', type: 'Tradition', psa: 'Theurgy', inPsa: true },
-        { rank: 2, name: 'Wilderness & Survival', type: 'Secular Skill', psa: 'Theurgy', inPsa: true },
-        { rank: 3, name: 'Athletics & Acrobatics', type: 'Secular Skill', psa: 'Martial', inPsa: false },
+        { rank: 2, name: 'Herbalism & Lore', type: 'Secular Skill', psa: 'Theurgy', inPsa: true },
+        { rank: 3, name: 'Ranged or Melee Weapons', type: 'Secular Skill', psa: 'Martial', inPsa: false },
       ],
     },
     {
