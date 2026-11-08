@@ -259,6 +259,108 @@ describe('QuickReferenceTables.vue', () => {
     });
   });
 
+  describe('Archetypes Tab', () => {
+    it('renders the Archetypes tab button with icon and label', async () => {
+      const html = await renderComponent();
+      expect(html).toContain('Archetypes');
+      expect(html).toContain('🏛️');
+    });
+
+    it('renders the Altered Species Origin Rule alert banner with notes instructions', async () => {
+      const html = await renderComponent({ initialCategory: 'archetypes' });
+      expect(html).toContain('Altered Species Origin Rule');
+      expect(html).toMatch(/record their character(&#39;|')s original baseline species in their.*Character Sheet Notes/);
+      expect(html).toContain('Origin: Dawn Elf');
+      expect(html).toContain('Origin: Frost Urkai');
+      expect(html).toContain('Origin: Weirgoth Dwarf');
+    });
+
+    it('renders all 22 requested archetypes with 3 starting skills (2 In-PSA and 1 Out-of-PSA in order)', async () => {
+      const html = await renderComponent({ initialCategory: 'archetypes' });
+
+      const archetypes = [
+        'Wizard', 'Sorcerer', 'Priest', 'Shaman', 'Witch', 'Druid',
+        'Ranger', 'Warrior', 'Paladin', 'Knight', 'Barbarian', 'Rogue',
+        'Assassin', 'Necromancer', 'Runeward', 'Sword Mage', 'Scout',
+        'Huntsman', 'Martial Artist', 'Demon Hunter', 'Blood Hunter'
+      ];
+
+      for (const name of archetypes) {
+        expect(html).toContain(name);
+      }
+
+      // Check specific skill loadouts and In-PSA / Out-of-PSA cost badges
+      expect(html).toContain('In-PSA (3 XP)');
+      expect(html).toContain('Out-of-PSA (6 XP)');
+
+      // Wizard: Arcane, Lore & Arcana, Defense & Shield
+      expect(html).toContain('Arcane');
+      expect(html).toContain('Lore &amp; Arcana');
+      expect(html).toContain('Defense &amp; Shield');
+
+      // Assassin: Stealth & Secrecy, Shadow, Herbalism & Medicine
+      expect(html).toContain('Stealth &amp; Secrecy');
+      expect(html).toContain('Shadow');
+      expect(html).toContain('Herbalism &amp; Medicine');
+    });
+
+    it('renders Altered Species Archetype examples for Spirit, Undeath, and Lycan', async () => {
+      const html = await renderComponent({ initialCategory: 'archetypes' });
+
+      // Spirit: Warlock, Aasimar / Celestial, Demonic
+      expect(html).toContain('Warlock');
+      expect(html).toContain('Aasimar / Celestial');
+      expect(html).toContain('Demonic');
+
+      // Undeath: Dhampir, Revenant
+      expect(html).toContain('Dhampir');
+      expect(html).toContain('Revenant');
+
+      // Lycan: Wolf, Tiger
+      expect(html).toContain('Wolf');
+      expect(html).toContain('Tiger');
+    });
+
+    it('renders Playable Lineages & Species blurbs with traits and setting lore', async () => {
+      const html = await renderComponent({ initialCategory: 'archetypes' });
+
+      // Lineage Groups
+      expect(html).toContain('The Norn (Elven, Dwarven &amp; Wendhya Lineages)');
+      expect(html).toContain('The Urkai &amp; Goblinoid Clans');
+      expect(html).toContain('The Giants &amp; Primordial Kin');
+      expect(html).toContain('Hybrid &amp; Spirit-Infected Lineages');
+      expect(html).toContain('Altered Species');
+
+      // Specific species blurbs
+      expect(html).toContain('Dawn Elf');
+      expect(html).toContain('Dusk Elf');
+      expect(html).toContain('Sylvan Elf');
+      expect(html).toContain('Weirgoth Dwarf');
+      expect(html).toContain('Vanir Dwarf');
+      expect(html).toContain('Frost Urkai');
+      expect(html).toContain('Giantken / Goliath');
+      expect(html).toContain('Spirits');
+      expect(html).toContain('Undeath');
+      expect(html).toContain('Lycan');
+    });
+
+    it('filters archetypes when search query is entered', async () => {
+      const html = await renderComponent({
+        initialCategory: 'archetypes',
+        initialSearch: 'Necromancer',
+      });
+
+      expect(html).toContain('Necromancer');
+      expect(html).not.toContain('Martial Artist');
+    });
+
+    it('contains no occurrences of the word human in rendered Archetypes tab', async () => {
+      const html = await renderComponent({ initialCategory: 'archetypes' });
+      expect(html.toLowerCase()).not.toMatch(/\bhumans?\b/);
+      expect(html.toLowerCase()).not.toMatch(/\bhumanoid\b/);
+    });
+  });
+
   describe('Search Filter', () => {
     it('filters tables based on search query', async () => {
       const html = await renderComponent({

@@ -24,7 +24,7 @@ The stocking pipeline automatically executes three coordinated steps:
 │   ├── generate_token_ring.js        # Canvas/SVG helper: generates ringed token image asset
 │   └── stock_map.js                  # Database/API helper: instantiates N tokens on active map
 └── templates/
-    ├── sentient_npc_archetypes.json   # Base stat presets for Human, Sathar, Vrusk, etc.
+    ├── sentient_npc_archetypes.json   # Base stat presets for Dawn Elf, Sathar, Vrusk, etc.
     └── creature_archetypes.json      # Base predator and beast chassis
 ```
 

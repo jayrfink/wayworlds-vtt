@@ -67,7 +67,7 @@ describe('Token Damage & Wounded Red Overlay', () => {
 
       expect(
         getTokenDamageOverlayState({
-          name: 'Human Tech',
+          name: 'Mortal Tech',
           conditions: '["Stunned", "Wounded"]',
         })
       ).toBe('bloodied');

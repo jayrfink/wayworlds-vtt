@@ -36,4 +36,8 @@
 ### 4. Hybrid & Spirit-Infected Lineages
 - **Whisperlings:** Mortals transformed by spirit infection, resistant to elemental/umbral energies (`+5 DEX`, `+5 WIL`, `-5 STR`).
 - **Mixlanders:** Adaptable elven amalgams bridging regional traditions (`+5 DEX`, `+5 INT`, `-5 STA`).
-- **Human:** Versatile frontier folk found across the trade roads and border keeps (`+5 INT`, `+5 PRE`).
+
+### 5. Altered Lineages
+- **Spirits:** Entities altered by ethereal resonance, starting with a 45 baseline across all attributes and 20 attribute pool points to redistribute.
+- **Undeath:** Resilient entities altered by necrotic sustainment, immune to disease and poison, with a 45 baseline and 20 attribute pool points.
+- **Lycan:** Beast-shifted predators attuned to primal instincts with heightened speed and senses, starting with a 45 baseline and 20 attribute pool points.

@@ -15,62 +15,48 @@ describe('Shared Rolls & Roll Log Integration', () => {
     expect(rpgContent).toContain("socket.off('roll:cleared', onSocketRollCleared)");
   });
 
-  it('World VTT registers socket listeners for roll:created and roll:cleared', () => {
-    expect(spaceContent).toContain("socket.on('roll:created'");
-    expect(spaceContent).toContain("socket.on('roll:cleared'");
-    expect(spaceContent).toContain("socket.off('roll:created', onSocketRollCreated)");
-    expect(spaceContent).toContain("socket.off('roll:cleared', onSocketRollCleared)");
+  it('World VTT does NOT register socket listeners for roll:created or roll:cleared (dice exclusive to RPG VTT)', () => {
+    expect(spaceContent).not.toContain("socket.on('roll:created'");
+    expect(spaceContent).not.toContain("socket.on('roll:cleared'");
   });
 
-  it('fetches roll history from /api/rolls on mount instead of relying solely on localStorage', () => {
+  it('fetches roll history from /api/rolls?mode=rpg on RPG VTT mount', () => {
     expect(rpgContent).toContain('/api/rolls?mode=rpg');
-    expect(spaceContent).toContain('/api/rolls?mode=world');
+    expect(spaceContent).not.toContain('/api/rolls');
   });
 
-  it('posts rolls to /api/rolls when rolling percentile or damage', () => {
+  it('posts rolls to /api/rolls in RPG VTT when rolling percentile or damage', () => {
     expect(rpgContent).toContain("method: 'POST'");
     expect(rpgContent).toContain("body: JSON.stringify");
     expect(rpgContent).toContain("mode: 'rpg'");
-
-    expect(spaceContent).toContain("method: 'POST'");
-    expect(spaceContent).toContain("body: JSON.stringify");
-    expect(spaceContent).toContain("mode: 'world'");
+    expect(spaceContent).not.toContain("mode: 'world'");
   });
 
-  it('restricts the Clear button to Game Masters', () => {
+  it('restricts the Clear button to Game Masters in RPG VTT', () => {
     expect(rpgContent).toMatch(/v-if="isGm"[^>]*class="btn-roll-log-clear"/);
-    expect(spaceContent).toMatch(/v-if="isGm"[^>]*class="btn-roll-log-clear"/);
   });
 
-  it('renders roller username and role badge in Roll Log HUD', () => {
+  it('renders roller username and role badge in Roll Log HUD in RPG VTT', () => {
     expect(rpgContent).toContain('roll-user-badge');
     expect(rpgContent).toContain('item.username');
-    expect(spaceContent).toContain('roll-user-badge');
-    expect(spaceContent).toContain('item.username');
   });
 
-  it('renders roller username and role badge in floating HUD banners', () => {
+  it('renders roller username and role badge in floating HUD banners in RPG VTT', () => {
     expect(rpgContent).toContain('lastPercentileRoll.username');
     expect(rpgContent).toContain('lastDamageRoll.username');
-    expect(spaceContent).toContain('lastPercentileRoll.username');
-    expect(spaceContent).toContain('lastDamageRoll.username');
   });
 
-  it('uses formatRollTime helper in Roll Log template for both views', () => {
+  it('uses formatRollTime helper in Roll Log template in RPG VTT', () => {
     expect(rpgContent).toContain('formatRollTime(item)');
-    expect(spaceContent).toContain('formatRollTime(item)');
   });
 
-  it('uses lastDamageRoll.dice?.length for breakdown fallback in both views', () => {
+  it('uses lastDamageRoll.dice?.length for breakdown fallback in RPG VTT', () => {
     expect(rpgContent).toContain("lastDamageRoll.dice?.length ? lastDamageRoll.dice.join(' + ') : lastDamageRoll.breakdown");
-    expect(spaceContent).toContain("lastDamageRoll.dice?.length ? lastDamageRoll.dice.join(' + ') : lastDamageRoll.breakdown");
   });
 
-  it('uses consistent &times; HTML entity for HUD banner close buttons', () => {
+  it('uses consistent &times; HTML entity for HUD banner close buttons in RPG VTT', () => {
     const rpgMatches = rpgContent.match(/class="hud-close"[^>]*>&times;<\/button>/g);
     expect(rpgMatches?.length).toBe(3);
-    const spaceMatches = spaceContent.match(/class="hud-close"[^>]*>&times;<\/button>/g);
-    expect(spaceMatches?.length).toBe(3);
   });
 });
 

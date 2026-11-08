@@ -284,18 +284,5 @@
     "warg_eligible": false,
     "trait_name": "Elven Amalgam",
     "trait_description": "A mixed-heritage blend of elven lineages (+5 to two stats, -5 to one stat). Inherits flexibility (+5% to any one secular skill check) and adapts easily to diverse regional magic traditions."
-  },
-  {
-    "lineage_id": "lin_human",
-    "name": "Human",
-    "category": "Foundation Folk",
-    "modifiers": { "str": 0, "sta": 0, "dex": 0, "rs": 0, "int": 5, "log": 0, "per": 0, "ldr": 5 },
-    "baseline_stats": { "str": 50, "sta": 50, "dex": 50, "rs": 50, "int": 55, "log": 50, "per": 50, "ldr": 55 },
-    "movement_ft": 30,
-    "size": "Medium",
-    "token_size": 1,
-    "warg_eligible": false,
-    "trait_name": "Adaptive Versatility",
-    "trait_description": "+5 INT, +5 PRE (LDR) (30 ft base move); gains +5% to any one chosen secular skill check."
   }
 ]

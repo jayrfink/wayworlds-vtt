@@ -417,7 +417,7 @@ Rather than relying on an external CLI agent to stock encounters, **the VTT appl
 
 ### B. Wayworlds Threat Tier 1–5 Benchmarks
 
-The VTT's built-in Adversary Spawner enforces these default mathematical bounds (default humanoid movement speed is **30 ft per Move action**; GMs can freely customize/alter STA, Attack %, and damage on adversary creation):
+The VTT's built-in Adversary Spawner enforces these default mathematical bounds (default mortal movement speed is **30 ft per Move action**; GMs can freely customize/alter STA, Attack %, and damage on adversary creation):
 
 | Threat Tier | Archetype Role | Sentient NPCs (Base Stats, Skill/Cast Tier, STA, ESS) | Beasts, Undead & Monsters (Hit %, STA, Attacks/Dmg, Traits) |
 | :--- | :--- | :--- | :--- |

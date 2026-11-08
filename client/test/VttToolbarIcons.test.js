@@ -65,7 +65,7 @@ describe('VttToolbarIcons Wireframe Lined Shapes', () => {
       }
     });
 
-    it('contains vector wireframe tool-icon SVGs for all toolbar buttons', () => {
+    it('contains vector wireframe tool-icon SVGs for map toolbar buttons and no dice buttons', () => {
       expect(spaceToolbar).toContain('<svg class="tool-icon"');
       // Verify specific icons
       // Move
@@ -78,14 +78,11 @@ describe('VttToolbarIcons Wireframe Lined Shapes', () => {
       expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Clear Ping/);
       // Clear All Pings
       expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Clear All Pings/);
-      // Initiative
-      expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Initiative/);
-      // Roll d%
-      expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Roll d%/);
-      // DMG Die
-      expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*DMG Die/);
-      // Clear Dice
-      expect(spaceToolbar).toMatch(/<svg class="tool-icon"[^>]*>[\s\S]*?<\/svg>\s*Clear Dice/);
+      // Tactical dice buttons are removed from World VTT
+      expect(spaceToolbar).not.toMatch(/Initiative/);
+      expect(spaceToolbar).not.toMatch(/Roll d%/);
+      expect(spaceToolbar).not.toMatch(/DMG Die/);
+      expect(spaceToolbar).not.toMatch(/Clear Dice/);
     });
 
     it('defines .tool-icon CSS rules with dynamic glow drop-shadow', () => {

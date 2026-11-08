@@ -137,7 +137,7 @@ describe('Adversary Database Storage, REST API & Spawner', () => {
 
       const template = generateNpcStats(1, {
         name: 'Pirate Scout',
-        race: 'Human',
+        race: 'Dawn Elf',
       });
 
       // Center of 30x16 is (15, 8)

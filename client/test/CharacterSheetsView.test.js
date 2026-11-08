@@ -533,13 +533,13 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         selectedChar: {
           id: 1,
           name: 'Hero',
-          race: 'Human',
+          race: 'Dawn Elf',
           sta: 50,
           max_stamina: 50,
           current_stamina: 50,
         },
         characters: [
-          { id: 1, name: 'Hero', race: 'Human', sta: 50, max_stamina: 50, current_stamina: 50 }
+          { id: 1, name: 'Hero', race: 'Dawn Elf', sta: 50, max_stamina: 50, current_stamina: 50 }
         ],
         normalizeCharacterData: CharacterSheetsView.methods.normalizeCharacterData,
       };
@@ -567,7 +567,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         selectedChar: {
           id: 1,
           name: 'Hero',
-          race: 'Human',
+          race: 'Dawn Elf',
           sta: 50,
           max_stamina: 50,
           current_stamina: 45,
@@ -836,7 +836,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
     it('provides downloadAsciiSheet method calling export utility', () => {
       expect(typeof CharacterSheetsView.methods.downloadAsciiSheet).toBe('function');
       const spy = vi.spyOn(characterExport, 'downloadCharacterAscii');
-      const testChar = { name: 'Test Scout', race: 'Human', str: 50 };
+      const testChar = { name: 'Test Scout', race: 'Dawn Elf', str: 50 };
       const vm = { selectedChar: testChar };
 
       CharacterSheetsView.methods.downloadAsciiSheet.call(vm);
@@ -1136,7 +1136,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
               user_id: 2,
               owner_username: 'playerAlice',
               name: 'Alice Hero',
-              race: 'Human',
+              race: 'Dawn Elf',
               psa: 'Military',
               current_stamina: 50,
               max_stamina: 50,
@@ -1193,7 +1193,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
               user_id: 2,
               owner_username: 'playerAlice',
               name: 'Alice Hero',
-              race: 'Human',
+              race: 'Dawn Elf',
               psa: 'Military',
               current_stamina: 50,
               max_stamina: 50,
@@ -1514,7 +1514,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
               user_id: 1,
               owner_username: 'gmUser',
               name: 'Commander John',
-              race: 'Human',
+              race: 'Dawn Elf',
               psa: 'Military',
               current_stamina: 50,
               max_stamina: 50,
@@ -1774,7 +1774,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
             json: () => Promise.resolve([{
               id: 1,
               name: 'Skill Specialist',
-              race: 'Human',
+              race: 'Dawn Elf',
               skills: [
                 { name: 'Beam Weapons', level: 2 },
                 { name: 'Technician', level: 1 },
@@ -1898,7 +1898,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
             json: () => Promise.resolve([{
               id: 1,
               name: 'Explorer',
-              race: 'Human',
+              race: 'Dawn Elf',
               skills: [],
               inventory: [
                 { name: 'Chronocom', quantity: 1, weight: 0.1, notes: 'Wrist comm' },

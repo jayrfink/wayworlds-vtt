@@ -618,6 +618,168 @@
         </section>
       </div>
 
+      <!-- ================= ARCHETYPES ================= -->
+      <div v-else-if="activeCategory === 'archetypes'" class="category-panel">
+        <!-- Altered Species Origin Rule Alert Banner -->
+        <div class="archetypes-origin-alert" role="alert">
+          <div class="origin-alert-icon">⚠️</div>
+          <div class="origin-alert-content">
+            <h3 class="origin-alert-title">Altered Species Origin Rule</h3>
+            <p class="origin-alert-text">
+              Players creating an <strong>Altered species</strong> (<em>Spirits</em>, <em>Undeath</em>, or <em>Lycan</em>) <strong>must</strong> record their character's original baseline species in their <strong>Character Sheet Notes</strong> if they know it (e.g., <code>Origin: Dawn Elf</code>, <code>Origin: Frost Urkai</code>, <code>Origin: Weirgoth Dwarf</code>, or <code>Origin: Unknown Mortal</code>).
+            </p>
+          </div>
+        </div>
+
+        <!-- Doctrine / Rule Overview -->
+        <section v-if="filteredArchetypesDoctrine" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Doctrine</span>
+            Starter Skill Loadouts &amp; Priority
+          </h2>
+          <div class="rules-overview-banner">
+            <p>{{ ARCHETYPES_RULES_REF.doctrine }}</p>
+          </div>
+        </section>
+
+        <!-- Standard Starting Archetypes Grid -->
+        <section v-if="filteredStandardArchetypes.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Core Archetypes</span>
+            Standard Starting Archetypes (2 In-PSA, 1 Out-of-PSA)
+          </h2>
+          <div class="archetypes-grid">
+            <div
+              v-for="arch in filteredStandardArchetypes"
+              :key="arch.name"
+              class="archetype-card"
+              :class="arch.psa.toLowerCase()"
+            >
+              <div class="archetype-card-header">
+                <span class="archetype-icon">{{ arch.icon }}</span>
+                <div class="archetype-header-text">
+                  <h3 class="archetype-name">{{ arch.name }}</h3>
+                  <span class="archetype-psa-badge" :class="arch.psa.toLowerCase()">
+                    PSA: {{ arch.psa }}
+                  </span>
+                </div>
+              </div>
+              <p class="archetype-tagline">{{ arch.tagline }}</p>
+
+              <div class="archetype-skills-list">
+                <div class="skills-list-title">Starting Skills (In Order):</div>
+                <div
+                  v-for="sk in arch.skills"
+                  :key="sk.name"
+                  class="archetype-skill-pill"
+                  :class="{ 'in-psa': sk.inPsa, 'out-psa': !sk.inPsa }"
+                >
+                  <span class="skill-rank-badge">#{{ sk.rank }}</span>
+                  <span class="skill-name">{{ sk.name }}</span>
+                  <span class="skill-meta-pill">({{ sk.type }})</span>
+                  <span class="skill-cost-badge" :class="{ 'cost-in': sk.inPsa, 'cost-out': !sk.inPsa }">
+                    {{ sk.inPsa ? 'In-PSA (3 XP)' : 'Out-of-PSA (6 XP)' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Altered Species Archetypes -->
+        <section v-if="filteredAlteredArchetypes.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Altered Archetypes</span>
+            Altered Species Archetype Examples
+          </h2>
+          <div class="archetypes-grid">
+            <div
+              v-for="arch in filteredAlteredArchetypes"
+              :key="`${arch.species}-${arch.archetype}`"
+              class="archetype-card altered-card"
+              :class="arch.psa.toLowerCase()"
+            >
+              <div class="archetype-card-header">
+                <span class="archetype-icon">{{ arch.icon }}</span>
+                <div class="archetype-header-text">
+                  <div class="archetype-species-tag">{{ arch.species }}</div>
+                  <h3 class="archetype-name">{{ arch.archetype }}</h3>
+                  <span class="archetype-psa-badge" :class="arch.psa.toLowerCase()">
+                    PSA: {{ arch.psa }}
+                  </span>
+                </div>
+              </div>
+              <p class="archetype-tagline">{{ arch.tagline }}</p>
+
+              <div class="archetype-skills-list">
+                <div class="skills-list-title">Starting Skills (In Order):</div>
+                <div
+                  v-for="sk in arch.skills"
+                  :key="sk.name"
+                  class="archetype-skill-pill"
+                  :class="{ 'in-psa': sk.inPsa, 'out-psa': !sk.inPsa }"
+                >
+                  <span class="skill-rank-badge">#{{ sk.rank }}</span>
+                  <span class="skill-name">{{ sk.name }}</span>
+                  <span class="skill-meta-pill">({{ sk.type }})</span>
+                  <span class="skill-cost-badge" :class="{ 'cost-in': sk.inPsa, 'cost-out': !sk.inPsa }">
+                    {{ sk.inPsa ? 'In-PSA (3 XP)' : 'Out-of-PSA (6 XP)' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Playable Species & Lineages Blurbs -->
+        <section v-if="filteredPlayableSpecies.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Lore &amp; Setting</span>
+            Playable Lineages &amp; Species
+          </h2>
+          <div class="species-groups-list">
+            <div
+              v-for="group in filteredPlayableSpecies"
+              :key="group.group"
+              class="species-group-card"
+            >
+              <div class="species-group-header">
+                <span class="species-group-icon">{{ group.icon }}</span>
+                <div>
+                  <h3 class="species-group-title">{{ group.group }}</h3>
+                  <p class="species-group-desc">{{ group.description }}</p>
+                </div>
+              </div>
+
+              <div class="table-responsive">
+                <table class="ref-table species-table">
+                  <thead>
+                    <tr>
+                      <th style="width: 22%;">Species / Lineage</th>
+                      <th style="width: 33%;">Attributes &amp; Traits</th>
+                      <th style="width: 45%;">Lore Blurb</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="sp in group.species" :key="sp.name">
+                      <td class="species-name-cell">
+                        <strong>{{ sp.name }}</strong>
+                      </td>
+                      <td class="species-traits-cell">
+                        <code>{{ sp.traits }}</code>
+                      </td>
+                      <td class="species-desc-cell">
+                        {{ sp.description }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
       <!-- ================= SPELLS & MARTIAL TECHNIQUES ================= -->
       <div v-else-if="activeCategory === 'spells'" class="category-panel">
         <!-- Universal Magnitude Table Section -->
@@ -890,6 +1052,8 @@ import {
   ADDITIONAL_RULES_REF,
   ATTRIBUTES_RULES_REF,
   PSA_RULES_REF,
+  ARCHETYPES_RULES_REF,
+  PLAYABLE_SPECIES_REF,
 } from '../constants/combatReference.js';
 import {
   MAGIC_TRADITIONS,
@@ -913,6 +1077,7 @@ const props = defineProps({
 const tabs = [
   { id: 'attributes', label: 'Primary Attributes', icon: '✨' },
   { id: 'psa', label: 'Primary System Areas (PSA)', icon: '🛡️' },
+  { id: 'archetypes', label: 'Archetypes', icon: '🏛️' },
   { id: 'spells', label: 'Spells/Martial Techniques', icon: '🔮' },
   { id: 'ranged', label: 'Ranged Weapon Combat', icon: '🏹' },
   { id: 'melee', label: 'Melee Combat', icon: '⚔️' },
@@ -1094,6 +1259,55 @@ const filteredPsaAreas = computed(() => {
 const filteredPsaSummary = computed(() =>
   PSA_RULES_REF.summaryTable.filter((item) => matchesQuery(item, searchQuery.value))
 );
+
+// ================= ARCHETYPES =================
+const filteredArchetypesDoctrine = computed(() => {
+  if (!searchQuery.value.trim()) return true;
+  return matchesQuery(ARCHETYPES_RULES_REF.doctrine, searchQuery.value) || matchesQuery(ARCHETYPES_RULES_REF.title, searchQuery.value);
+});
+
+const filteredStandardArchetypes = computed(() => {
+  if (!searchQuery.value.trim()) return ARCHETYPES_RULES_REF.standardArchetypes;
+  const q = searchQuery.value.trim().toLowerCase();
+  return ARCHETYPES_RULES_REF.standardArchetypes.filter((arch) => {
+    return (
+      arch.name.toLowerCase().includes(q) ||
+      arch.psa.toLowerCase().includes(q) ||
+      arch.tagline.toLowerCase().includes(q) ||
+      arch.skills.some((s) => s.name.toLowerCase().includes(q) || s.psa.toLowerCase().includes(q) || s.type.toLowerCase().includes(q))
+    );
+  });
+});
+
+const filteredAlteredArchetypes = computed(() => {
+  if (!searchQuery.value.trim()) return ARCHETYPES_RULES_REF.alteredArchetypes;
+  const q = searchQuery.value.trim().toLowerCase();
+  return ARCHETYPES_RULES_REF.alteredArchetypes.filter((arch) => {
+    return (
+      arch.species.toLowerCase().includes(q) ||
+      arch.archetype.toLowerCase().includes(q) ||
+      arch.psa.toLowerCase().includes(q) ||
+      arch.tagline.toLowerCase().includes(q) ||
+      arch.skills.some((s) => s.name.toLowerCase().includes(q) || s.psa.toLowerCase().includes(q) || s.type.toLowerCase().includes(q))
+    );
+  });
+});
+
+const filteredPlayableSpecies = computed(() => {
+  if (!searchQuery.value.trim()) return PLAYABLE_SPECIES_REF;
+  const q = searchQuery.value.trim().toLowerCase();
+  return PLAYABLE_SPECIES_REF
+    .map((grp) => {
+      const groupMatches = grp.group.toLowerCase().includes(q) || grp.description.toLowerCase().includes(q);
+      const matchingSpecies = grp.species.filter((sp) => {
+        return sp.name.toLowerCase().includes(q) || sp.traits.toLowerCase().includes(q) || sp.description.toLowerCase().includes(q);
+      });
+      if (groupMatches) return grp;
+      if (matchingSpecies.length > 0) return { ...grp, species: matchingSpecies };
+      return null;
+    })
+    .filter(Boolean);
+});
 
 // ================= SPELLS & MARTIAL TECHNIQUES =================
 let authStore = null;
@@ -1529,6 +1743,14 @@ const noResults = computed(() => {
       filteredPsaCharacterTiers.value.length === 0 &&
       filteredPsaAreas.value.length === 0 &&
       filteredPsaSummary.value.length === 0
+    );
+  }
+  if (activeCategory.value === 'archetypes') {
+    return (
+      !filteredArchetypesDoctrine.value &&
+      filteredStandardArchetypes.value.length === 0 &&
+      filteredAlteredArchetypes.value.length === 0 &&
+      filteredPlayableSpecies.value.length === 0
     );
   }
   if (activeCategory.value === 'ranged') {
@@ -2829,5 +3051,277 @@ const noResults = computed(() => {
 .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+/* ================= ARCHETYPES STYLES ================= */
+.archetypes-origin-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  background: rgba(230, 162, 60, 0.12);
+  border: 1px solid rgba(230, 162, 60, 0.45);
+  border-left: 4px solid #e6a23c;
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+
+.origin-alert-icon {
+  font-size: 24px;
+  line-height: 1;
+}
+
+.origin-alert-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f39c12;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.origin-alert-text {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #e0e0e0;
+  margin: 0;
+}
+
+.origin-alert-text code {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 12px;
+  color: #ffeaa7;
+}
+
+.archetypes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.archetype-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+
+.archetype-card:hover {
+  border-color: rgba(69, 172, 186, 0.5);
+  transform: translateY(-1px);
+}
+
+.archetype-card.martial {
+  border-left: 3px solid #e74c3c;
+}
+
+.archetype-card.mystic {
+  border-left: 3px solid #9b59b6;
+}
+
+.archetype-card.theurgy {
+  border-left: 3px solid #2ecc71;
+}
+
+.archetype-card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.archetype-icon {
+  font-size: 26px;
+  line-height: 1;
+}
+
+.archetype-header-text {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.archetype-species-tag {
+  width: 100%;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #f39c12;
+}
+
+.archetype-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.archetype-psa-badge {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.archetype-psa-badge.martial {
+  background: rgba(231, 76, 60, 0.15);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+.archetype-psa-badge.mystic {
+  background: rgba(155, 89, 182, 0.15);
+  color: #bb86fc;
+  border: 1px solid rgba(155, 89, 182, 0.4);
+}
+
+.archetype-psa-badge.theurgy {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.4);
+}
+
+.archetype-tagline {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin: 0 0 12px 0;
+  flex-grow: 1;
+}
+
+.archetype-skills-list {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skills-list-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.archetype-skill-pill {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.skill-rank-badge {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  min-width: 18px;
+}
+
+.skill-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  flex: 1;
+}
+
+.skill-meta-pill {
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.skill-cost-badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.skill-cost-badge.cost-in {
+  background: rgba(46, 204, 113, 0.15);
+  color: #2ecc71;
+  border: 1px solid rgba(46, 204, 113, 0.3);
+}
+
+.skill-cost-badge.cost-out {
+  background: rgba(230, 126, 34, 0.15);
+  color: #f39c12;
+  border: 1px solid rgba(230, 126, 34, 0.3);
+}
+
+.species-groups-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.species-group-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+
+.species-group-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.species-group-icon {
+  font-size: 28px;
+  line-height: 1;
+}
+
+.species-group-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 2px 0;
+}
+
+.species-group-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.species-table td {
+  vertical-align: top;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.species-name-cell strong {
+  color: #45acba;
+  font-size: 13px;
+}
+
+.species-traits-cell code {
+  color: #ffeaa7;
+  font-size: 11px;
+}
+
+.species-desc-cell {
+  color: var(--text-secondary);
 }
 </style>

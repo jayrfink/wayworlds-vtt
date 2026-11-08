@@ -383,7 +383,7 @@ describe('Maps & Tokens API & Socket.io', () => {
       await pAgent.post('/api/auth/login').send({ username: 'playerTok', password: 'password123' });
 
       // Player creates a character
-      const charRes = await pAgent.post('/api/characters').send({ name: 'My Hero', race: 'Human' });
+      const charRes = await pAgent.post('/api/characters').send({ name: 'My Hero', race: 'Dawn Elf' });
       expect(charRes.status).toBe(201);
       const charId = charRes.body.id;
 
@@ -588,7 +588,7 @@ describe('Maps & Tokens API & Socket.io', () => {
       const pAgent = request.agent(app);
       await pAgent.post('/api/auth/login').send({ username: 'pilotSpeed', password: 'password123' });
 
-      const char = (await pAgent.post('/api/characters').send({ name: 'Speedster', race: 'Human' })).body;
+      const char = (await pAgent.post('/api/characters').send({ name: 'Speedster', race: 'Dawn Elf' })).body;
       const trackMap = (await agent.post('/api/maps').send({ name: 'Race Track', map_type: 'rpg', is_active: 1 })).body;
 
       // Token creation with negative rotation and out-of-range size
@@ -682,7 +682,7 @@ describe('Maps & Tokens API & Socket.io', () => {
       expect(gmTokensListRes.body.some((t) => t.id === gmTokenRes.body.id)).toBe(true);
 
       // Bug 6: Player attempting to create token with layer: 'gm' or 'adversary' is enforced to 'character'
-      const charSheet = (await playerAgent.post('/api/characters').send({ name: 'Sneaky PC', race: 'Human' })).body;
+      const charSheet = (await playerAgent.post('/api/characters').send({ name: 'Sneaky PC', race: 'Dawn Elf' })).body;
       const playerTokRes = await playerAgent.post('/api/tokens').send({
         map_id: mapId,
         character_id: charSheet.id,
@@ -924,7 +924,7 @@ describe('Maps & Tokens API & Socket.io', () => {
       // 3. Player creates a character sheet
       const charRes = await playerAgent.post('/api/characters').send({
         name: 'Audit Hero',
-        race: 'Human',
+        race: 'Dawn Elf',
         sta: 50,
       });
       const charId = charRes.body.id;

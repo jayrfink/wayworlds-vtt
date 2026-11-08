@@ -114,7 +114,7 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
         {
           id: 101,
           name: 'Custom Paladin',
-          race: 'Humans',
+          race: 'Dawn Elves',
           psa: 'Martial',
           color_theme: '#8b5cf6',
           str: 60,

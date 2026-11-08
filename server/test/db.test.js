@@ -66,7 +66,7 @@ describe('Database', () => {
     try {
       db = createDb(tmpDbPath);
       db.prepare('INSERT INTO users (username, password_hash, role) VALUES (?, ?, ?)').run('gm', 'hash', 'GameMaster');
-      db.prepare('INSERT INTO character_sheets (user_id, name, race, sort_order) VALUES (?, ?, ?, ?)').run(1, 'Alpha', 'Human', 1);
+      db.prepare('INSERT INTO character_sheets (user_id, name, race, sort_order) VALUES (?, ?, ?, ?)').run(1, 'Alpha', 'Dawn Elf', 1);
       db.prepare('INSERT INTO character_sheets (user_id, name, race, sort_order) VALUES (?, ?, ?, ?)').run(1, 'Beta', 'Vrusk', 2);
       db.prepare('INSERT INTO character_sheets (user_id, name, race, sort_order) VALUES (?, ?, ?, ?)').run(1, 'Gamma', 'Yazirian', 3);
 

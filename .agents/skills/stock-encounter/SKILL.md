@@ -66,7 +66,7 @@ node scripts/stock-encounter.js \
 | `--tier <1-5>` | Threat Tier benchmark (1 to 5) | `2` |
 | `--category <npc\|creature>` | Whether to use NPC skill math or creature attack matrices | `'npc'` |
 | `--count <number>` | Number of tokens to spawn | `1` |
-| `--species <string>` | NPC lineage (Frost Urkai, Orcish, Dawn Elves, Weirgoth Dwarves, Human, etc.) | `'Frost Urkai'` |
+| `--species <string>` | NPC lineage (Frost Urkai, Orcish, Dawn Elves, Weirgoth Dwarves, Sylvan Elves, etc.) | `'Frost Urkai'` |
 | `--weapon <string>` | NPC primary weapon (Broadsword, Battleaxe, Longbow, Greatsword, etc.) | Tier default |
 | `--armor <string>` | NPC armor or shield defense (Leather Armor, Chainmail, Full Plate, etc.) | Tier default |
 | `--attacks <string>` | Comma-separated list of creature natural attacks (Bite, Claws, Gore) | `'Bite, Claws'` |

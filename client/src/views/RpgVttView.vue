@@ -2577,6 +2577,7 @@ let onSocketTokenUpdated = null;
 let onSocketTokenDeleted = null;
 let onSocketRollCreated = null;
 let onSocketRollCleared = null;
+const handledRollIds = new Set();
 let onSocketPingUpdated = null;
 let onSocketPingCleared = null;
 let onSocketPingsSync = null;
@@ -2705,6 +2706,14 @@ function setupSocketListeners() {
 
   socket.on('roll:created', onSocketRollCreated = async ({ mode, roll }) => {
     if (mode !== 'rpg') return;
+    if (roll?.id) {
+      if (handledRollIds.has(roll.id)) return;
+      handledRollIds.add(roll.id);
+      if (handledRollIds.size > 100) {
+        const first = handledRollIds.values().next().value;
+        handledRollIds.delete(first);
+      }
+    }
     const isFromSheet = roll.source === 'sheet' || roll.rollSummary?.source === 'sheet';
     if (roll.username !== authStore.user?.username) {
       playDiceSound({ isRemote: true });

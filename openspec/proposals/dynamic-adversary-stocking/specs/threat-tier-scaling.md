@@ -4,7 +4,7 @@
 Star Frontiers: Alpha Dawn does not utilize Challenge Rating (CR) or character class levels. To enable dynamic encounter stocking and automated balancing, this specification defines a **Threat Tier (1 to 5)** benchmark governing adversary statistics, combat skill levels, hit chances, defense equipment, and creature attack formulas.
 
 Adversaries branch into two distinct procedural generation paths:
-1. **Path A: Sentient NPCs** (Human, Vrusk, Dralasite, Yazirian, Sathar, Mechanon)
+1. **Path A: Sentient NPCs** (Dawn Elf, Frost Urkai, Vrusk, Dralasite, Yazirian, Sathar, Mechanon)
 2. **Path B: Alien Creatures & Beasts** (Native frontier fauna, bio-engineered predators, vermin)
 
 ---

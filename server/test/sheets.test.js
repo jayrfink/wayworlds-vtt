@@ -58,14 +58,14 @@ describe('Sheets API & Socket.io', () => {
 
       const createRes = await agent.post('/api/characters').send({
         name: 'Jane',
-        race: 'Human',
+        race: 'Dawn Elf',
       });
       const charId = createRes.body.id;
 
       const getRes = await agent.get(`/api/characters/${charId}`);
       expect(getRes.status).toBe(200);
       expect(getRes.body.name).toBe('Jane');
-      expect(getRes.body.race).toBe('Human');
+      expect(getRes.body.race).toBe('Dawn Elf');
     });
 
     it('returns 404 for non-existent character', async () => {
@@ -196,7 +196,7 @@ describe('Sheets API & Socket.io', () => {
       await agent.post('/api/auth/login').send({ username: 'player1', password: 'password123' });
 
       // Default values when not specified
-      const res1 = await agent.post('/api/characters').send({ name: 'DefaultESS', race: 'Human' });
+      const res1 = await agent.post('/api/characters').send({ name: 'DefaultESS', race: 'Dawn Elf' });
       expect(res1.status).toBe(201);
       expect(res1.body.max_ess).toBe(50);
       expect(res1.body.current_ess).toBe(50);
@@ -252,7 +252,7 @@ describe('Sheets API & Socket.io', () => {
       await agent.post('/api/auth/login').send({ username: 'player1', password: 'password123' });
 
       // Default value when not specified
-      const res1 = await agent.post('/api/characters').send({ name: 'DefaultXP', race: 'Human' });
+      const res1 = await agent.post('/api/characters').send({ name: 'DefaultXP', race: 'Dawn Elf' });
       expect(res1.status).toBe(201);
       expect(res1.body.current_xp).toBe(0);
 
@@ -347,7 +347,7 @@ describe('Sheets API & Socket.io', () => {
 
       const createRes = await agent.post('/api/characters').send({
         name: 'Torg',
-        race: 'Human',
+        race: 'Dawn Elf',
         psa: 'Military',
         str: 50, sta: 50, dex: 50, rs: 50, int_stat: 50, log_stat: 50, per: 50, ldr: 50,
       });
@@ -388,10 +388,10 @@ describe('Sheets API & Socket.io', () => {
       expect(createRes.body.race).toBe('Custom Alien');
 
       const updateRes = await agent.put(`/api/characters/${createRes.body.id}`).send({
-        race: '   Cyber Human   ',
+        race: '   Cyber Elf   ',
       });
       expect(updateRes.status).toBe(200);
-      expect(updateRes.body.race).toBe('Cyber Human');
+      expect(updateRes.body.race).toBe('Cyber Elf');
     });
 
     it('includes owner_username in character sheet responses', async () => {
@@ -399,7 +399,7 @@ describe('Sheets API & Socket.io', () => {
       await gmAgent.post('/api/auth/register').send({ username: 'gmUser', password: 'password123' });
       await gmAgent.post('/api/auth/login').send({ username: 'gmUser', password: 'password123' });
 
-      const res = await gmAgent.post('/api/characters').send({ name: 'Hero', race: 'Human' });
+      const res = await gmAgent.post('/api/characters').send({ name: 'Hero', race: 'Dawn Elf' });
       expect(res.status).toBe(201);
       expect(res.body.owner_username).toBe('gmUser');
 
@@ -443,7 +443,7 @@ describe('Sheets API & Socket.io', () => {
 
       const res = await gmAgent.post('/api/characters').send({
         name: 'GhostChar',
-        race: 'Human',
+        race: 'Dawn Elf',
         user_id: 99999,
       });
       expect(res.status).toBe(400);
@@ -461,7 +461,7 @@ describe('Sheets API & Socket.io', () => {
       const p1Agent = request.agent(app);
       await p1Agent.post('/api/auth/login').send({ username: 'playerOne', password: 'password123' });
 
-      const char = (await p1Agent.post('/api/characters').send({ name: 'P1Char', race: 'Human' })).body;
+      const char = (await p1Agent.post('/api/characters').send({ name: 'P1Char', race: 'Dawn Elf' })).body;
       expect(char.user_id).toBe(p1.id);
 
       // Player attempts to reassign sheet to playerTwo
@@ -485,7 +485,7 @@ describe('Sheets API & Socket.io', () => {
       expect(invalidRaceRes.status).toBe(400);
 
       const missingNameRes = await agent.post('/api/characters').send({
-        race: 'Human',
+        race: 'Dawn Elf',
       });
       expect(missingNameRes.status).toBe(400);
     });
@@ -511,7 +511,7 @@ describe('Sheets API & Socket.io', () => {
       // player1 creates a character
       const p1Char = (await p1Agent.post('/api/characters').send({
         name: 'P1 Char',
-        race: 'Human',
+        race: 'Dawn Elf',
         avatar_url: '/uploads/char1.png',
       })).body;
 
@@ -553,7 +553,7 @@ describe('Sheets API & Socket.io', () => {
 
       const created = (await agent.post('/api/characters').send({
         name: 'Normal Hero',
-        race: 'Human',
+        race: 'Dawn Elf',
         str: 50,
         sta: 50,
       })).body;
@@ -586,7 +586,7 @@ describe('Sheets API & Socket.io', () => {
       await gmAgent.post('/api/auth/register').send({ username: 'gmUser', password: 'password123' });
       await gmAgent.post('/api/auth/login').send({ username: 'gmUser', password: 'password123' });
 
-      const c1 = (await gmAgent.post('/api/characters').send({ name: 'Alpha', race: 'Human' })).body;
+      const c1 = (await gmAgent.post('/api/characters').send({ name: 'Alpha', race: 'Dawn Elf' })).body;
       const c2 = (await gmAgent.post('/api/characters').send({ name: 'Beta', race: 'Vrusk' })).body;
       const c3 = (await gmAgent.post('/api/characters').send({ name: 'Gamma', race: 'Yazirian' })).body;
 
@@ -619,7 +619,7 @@ describe('Sheets API & Socket.io', () => {
         await gmAgent.post('/api/auth/register').send({ username: 'gmRestart', password: 'password123' });
         await gmAgent.post('/api/auth/login').send({ username: 'gmRestart', password: 'password123' });
 
-        const c1 = (await gmAgent.post('/api/characters').send({ name: 'Alpha', race: 'Human' })).body;
+        const c1 = (await gmAgent.post('/api/characters').send({ name: 'Alpha', race: 'Dawn Elf' })).body;
         const c2 = (await gmAgent.post('/api/characters').send({ name: 'Beta', race: 'Vrusk' })).body;
         const c3 = (await gmAgent.post('/api/characters').send({ name: 'Gamma', race: 'Yazirian' })).body;
 
@@ -684,7 +684,7 @@ describe('Sheets API & Socket.io', () => {
       await gmAgent.post('/api/auth/register').send({ username: 'gmAuth', password: 'password123' });
       await gmAgent.post('/api/auth/login').send({ username: 'gmAuth', password: 'password123' });
 
-      const gmChar = (await gmAgent.post('/api/characters').send({ name: 'GM Char', race: 'Human' })).body;
+      const gmChar = (await gmAgent.post('/api/characters').send({ name: 'GM Char', race: 'Dawn Elf' })).body;
 
       // GM creates playerAuth
       await gmAgent.post('/api/auth/register').send({ username: 'playerAuth', password: 'password123', role: 'Player' });
@@ -728,7 +728,7 @@ describe('Sheets API & Socket.io', () => {
 
       const createRes = await agent.post('/api/characters').send({
         name: 'Vaelen',
-        race: 'Human',
+        race: 'Dawn Elf',
         grimoire: initialGrimoire,
       });
       expect(createRes.status).toBe(201);

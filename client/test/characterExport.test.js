@@ -90,13 +90,13 @@ describe('formatCharacterAscii Utility', () => {
   it('handles empty or missing optional fields gracefully without undefined or null output', () => {
     const minimalCharacter = {
       name: 'Nameless Hero',
-      race: 'Human',
+      race: 'Dawn Elf',
     };
 
     const text = formatCharacterAscii(minimalCharacter);
 
     expect(text).toContain('Name:        Nameless Hero');
-    expect(text).toContain('Species:     Human');
+    expect(text).toContain('Species:     Dawn Elf');
     expect(text).toContain('Primary PSA: Martial');
     expect(text).not.toContain('undefined');
     expect(text).not.toContain('null');

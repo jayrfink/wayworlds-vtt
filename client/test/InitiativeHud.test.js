@@ -10,47 +10,10 @@ describe('Initiative Dice & HUD System', () => {
   const rpgContent = fs.readFileSync(rpgPath, 'utf8');
 
   describe('WorldVttView Initiative Integration', () => {
-    it('has Initiative button in toolbar for GM only', () => {
-      expect(spaceContent).toMatch(/v-if="isGm"[^>]*class="btn-tool btn-initiative"/);
-      expect(spaceContent).toMatch(/@click="rollInitiative"/);
-      expect(spaceContent).toMatch(/Initiative/);
-    });
-
-    it('has floating Initiative HUD banner with player and opposition cards and no winner determination', () => {
-      expect(spaceContent).toMatch(/v-if="showInitiativeHud && lastInitiativeRoll"/);
-      expect(spaceContent).toMatch(/class="initiative-hud-banner"/);
-      expect(spaceContent).toMatch(/class="[^"]*init-player-die[^"]*"/);
-      expect(spaceContent).toMatch(/class="[^"]*init-opp-die[^"]*"/);
-      expect(spaceContent).not.toMatch(/class="init-winner-banner"/);
-      expect(spaceContent).toMatch(/class="hud-user-tag"/);
-    });
-
-    it('has roll log pill markup for initiative displaying players and opposition', () => {
-      expect(spaceContent).toMatch(/item\.type === 'initiative'/);
-      expect(spaceContent).toMatch(/class="init-log-pills"/);
-      expect(spaceContent).toMatch(/class="init-pill-player"/);
-      expect(spaceContent).toMatch(/class="init-pill-opp"/);
-      expect(spaceContent).not.toMatch(/init-pill-winner/);
-    });
-
-    it('handles socket roll:created and clearDice for initiative', () => {
-      expect(spaceContent).toMatch(/roll\.type === 'initiative'/);
-      expect(spaceContent).toMatch(/initiativeHudTimeout/);
-      expect(spaceContent).toMatch(/showInitiativeHud\.value = false/);
-    });
-
-    it('defines CSS colors matching user specifications', () => {
-      // Player: body #0b222e, numbers #b5eeff
-      expect(spaceContent).toMatch(/#0b222e/);
-      expect(spaceContent).toMatch(/#b5eeff/);
-      // Opposition: body #400a22, numbers #c9abb9
-      expect(spaceContent).toMatch(/#400a22/);
-      expect(spaceContent).toMatch(/#c9abb9/);
-    });
-
-    it('defines glow effect box-shadow and text-shadow on initiative HUD banner', () => {
-      expect(spaceContent).toMatch(/box-shadow:\s*0\s+0\s+20px\s+rgba\(181,\s*238,\s*255,\s*0\.45\)/);
-      expect(spaceContent).toMatch(/text-shadow:\s*0\s+0\s+10px\s+rgba\(181,\s*238,\s*255,\s*0\.7\)/);
+    it('does not have Initiative button or HUD in World VTT (tactical dice removed from overland world view)', () => {
+      expect(spaceContent).not.toMatch(/@click="rollInitiative"/);
+      expect(spaceContent).not.toMatch(/class="initiative-hud-banner"/);
+      expect(spaceContent).not.toMatch(/<div id="dice-box"/);
     });
   });
 

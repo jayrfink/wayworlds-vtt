@@ -21,60 +21,38 @@ describe('VTT Tabletop Dice Audio Integration', () => {
       );
     });
 
-    it('imports playDiceSound and mute helpers from diceAudio service in WorldVttView', () => {
-      expect(spaceContent).toMatch(
-        /import\s+\{[^}]*playDiceSound[^}]*\}\s+from\s+['"]\.\.\/services\/diceAudio(?:\.js)?['"]/
-      );
-      expect(spaceContent).toMatch(
-        /toggleMute\s+as\s+toggleDiceMute/
-      );
-      expect(spaceContent).toMatch(
-        /isMuted\s+as\s+isDiceMuted/
+    it('does NOT import diceAudio helpers in WorldVttView (dice removed from overland view)', () => {
+      expect(spaceContent).not.toMatch(
+        /from\s+['"]\.\.\/services\/diceAudio(?:\.js)?['"]/
       );
     });
 
-    it('declares isDiceAudioMuted reactive state initialized with isDiceMuted() in both views', () => {
+    it('declares isDiceAudioMuted reactive state initialized with isDiceMuted() in RpgVttView', () => {
       expect(rpgContent).toMatch(/const\s+isDiceAudioMuted\s*=\s*ref\(\s*isDiceMuted\(\)\s*\)/);
-      expect(spaceContent).toMatch(/const\s+isDiceAudioMuted\s*=\s*ref\(\s*isDiceMuted\(\)\s*\)/);
     });
 
-    it('defines toggleAudioMute function updating state and calling toggleDiceMute in both views', () => {
+    it('defines toggleAudioMute function updating state and calling toggleDiceMute in RpgVttView', () => {
       expect(rpgContent).toMatch(
-        /function\s+toggleAudioMute\s*\(\)\s*\{[\s\S]*?toggleDiceMute\(\)[\s\S]*?isDiceAudioMuted\.value/
-      );
-      expect(spaceContent).toMatch(
         /function\s+toggleAudioMute\s*\(\)\s*\{[\s\S]*?toggleDiceMute\(\)[\s\S]*?isDiceAudioMuted\.value/
       );
     });
   });
 
   describe('Local Roll Triggers', () => {
-    it('invokes playDiceSound({ isRemote: false }) in rollPercentile for both views', () => {
+    it('invokes playDiceSound({ isRemote: false }) in rollPercentile for RpgVttView', () => {
       const rpgPercentileFn = rpgContent.slice(
         rpgContent.indexOf('async function rollPercentile'),
         rpgContent.indexOf('async function rollDamage')
       );
       expect(rpgPercentileFn).toMatch(/playDiceSound\(\s*\{\s*isRemote:\s*false\s*\}\s*\)/);
-
-      const spacePercentileFn = spaceContent.slice(
-        spaceContent.indexOf('async function rollPercentile'),
-        spaceContent.indexOf('async function rollDamage')
-      );
-      expect(spacePercentileFn).toMatch(/playDiceSound\(\s*\{\s*isRemote:\s*false\s*\}\s*\)/);
     });
 
-    it('invokes playDiceSound({ isRemote: false }) in rollDamage for both views', () => {
+    it('invokes playDiceSound({ isRemote: false }) in rollDamage for RpgVttView', () => {
       const rpgDamageFn = rpgContent.slice(
         rpgContent.indexOf('async function rollDamage'),
         rpgContent.indexOf('function clearDice')
       );
       expect(rpgDamageFn).toMatch(/playDiceSound\(\s*\{\s*isRemote:\s*false\s*\}\s*\)/);
-
-      const spaceDamageFn = spaceContent.slice(
-        spaceContent.indexOf('async function rollDamage'),
-        spaceContent.indexOf('function clearDice')
-      );
-      expect(spaceDamageFn).toMatch(/playDiceSound\(\s*\{\s*isRemote:\s*false\s*\}\s*\)/);
     });
 
     it('invokes playDiceSound({ isRemote: false }) in adversary attack and damage rolls in RpgVttView', () => {
@@ -102,16 +80,6 @@ describe('VTT Tabletop Dice Audio Integration', () => {
         /if\s*\([^)]*username\s*!==\s*authStore\.user\?\.username[^)]*\)[\s\S]*?playDiceSound\(\s*\{\s*isRemote:\s*true\s*\}\s*\)/
       );
     });
-
-    it('triggers playDiceSound({ isRemote: true }) for remote users in WorldVttView', () => {
-      const spaceSocketBlock = spaceContent.slice(
-        spaceContent.indexOf("socket.on('roll:created'"),
-        spaceContent.indexOf("socket.on('roll:cleared'")
-      );
-      expect(spaceSocketBlock).toMatch(
-        /if\s*\([^)]*username\s*!==\s*authStore\.user\?\.username[^)]*\)[\s\S]*?playDiceSound\(\s*\{\s*isRemote:\s*true\s*\}\s*\)/
-      );
-    });
   });
 
   describe('UI Mute Button in Dice Panel', () => {
@@ -124,17 +92,6 @@ describe('VTT Tabletop Dice Audio Integration', () => {
     it('includes accessibility attributes aria-label and aria-pressed on toggle buttons in RpgVttView', () => {
       expect(rpgContent).toMatch(/:aria-label="isDiceAudioMuted\s*\?\s*['"]Unmute dice audio['"]\s*:\s*['"]Mute dice audio['"]/);
       expect(rpgContent).toMatch(/:aria-pressed="!isDiceAudioMuted"/);
-    });
-
-    it('renders btn-audio-toggle in template with 🔊 / 🔇 icons in WorldVttView', () => {
-      expect(spaceContent).toContain('btn-audio-toggle');
-      expect(spaceContent).toMatch(/class="[^"]*btn-audio-toggle[^"]*"[^>]*@click="toggleAudioMute"/);
-      expect(spaceContent).toMatch(/isDiceAudioMuted\s*\?\s*['"]🔇['"]\s*:\s*['"]🔊['"]/);
-    });
-
-    it('includes accessibility attributes aria-label and aria-pressed on toggle buttons in WorldVttView', () => {
-      expect(spaceContent).toMatch(/:aria-label="isDiceAudioMuted\s*\?\s*['"]Unmute dice audio['"]\s*:\s*['"]Mute dice audio['"]/);
-      expect(spaceContent).toMatch(/:aria-pressed="!isDiceAudioMuted"/);
     });
   });
 

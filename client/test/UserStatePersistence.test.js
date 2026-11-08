@@ -155,7 +155,7 @@ describe('Per-User Tab and View State Persistence', () => {
       saveUserState(303, 'characterSheets', { selectedCharId: 22 });
 
       const mockChars = [
-        { id: 11, name: 'Alpha First', race: 'Human', psa: 'Military' },
+        { id: 11, name: 'Alpha First', race: 'Dawn Elf', psa: 'Military' },
         { id: 22, name: 'Beta Second', race: 'Vrusk', psa: 'Technological' },
         { id: 33, name: 'Gamma Third', race: 'Yazirian', psa: 'Biosocial' },
       ];

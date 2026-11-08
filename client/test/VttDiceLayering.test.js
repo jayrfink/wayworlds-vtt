@@ -46,27 +46,10 @@ describe('VTT Dice and Roll Banners Layering', () => {
   });
 
   describe('World VTT View', () => {
-    it('sets #dice-box z-index higher than all page widgets', () => {
-      const diceZ = extractZIndex(spaceContent, '#dice-box');
-      const rollLogZ = extractZIndex(spaceContent, '.roll-log-hud');
-      const toolbarZ = extractZIndex(spaceContent, '.vtt-toolbar');
-      const popoverZ = extractZIndex(spaceContent, '.dmg-popover');
-
-      expect(diceZ).toBeGreaterThan(rollLogZ);
-      expect(diceZ).toBeGreaterThan(toolbarZ);
-      expect(diceZ).toBeGreaterThan(popoverZ);
-      expect(diceZ).toBe(200);
-    });
-
-    it('sets damage and percentile HUD banners z-index higher than #dice-box', () => {
-      const diceZ = extractZIndex(spaceContent, '#dice-box');
-      const damageHudZ = extractZIndex(spaceContent, '.damage-hud-banner');
-      const percentileHudZ = extractZIndex(spaceContent, '.percentile-hud-banner');
-
-      expect(damageHudZ).toBeGreaterThan(diceZ);
-      expect(percentileHudZ).toBeGreaterThan(diceZ);
-      expect(damageHudZ).toBe(250);
-      expect(percentileHudZ).toBe(250);
+    it('does not have #dice-box or roll HUD banners (dice exclusive to RPG VTT)', () => {
+      expect(spaceContent).not.toContain('<div id="dice-box"');
+      expect(spaceContent).not.toContain('class="damage-hud-banner"');
+      expect(spaceContent).not.toContain('class="percentile-hud-banner"');
     });
   });
 });

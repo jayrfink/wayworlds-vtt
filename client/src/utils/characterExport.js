@@ -1,6 +1,6 @@
 /**
  * Wayworlds Character Sheet ASCII Export Utility
- * Generates human-readable, plain-text character sheets for archival purposes.
+ * Generates formatted plain-text character sheets for archival purposes.
  * Strictly excludes equipment and inventory per player export requirements.
  */
 

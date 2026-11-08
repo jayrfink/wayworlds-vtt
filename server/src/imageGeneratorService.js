@@ -18,7 +18,7 @@ export function buildTokenPrompt({ prompt, name, species, category, weapon, armo
     parts.push(`A vicious predatory beast called ${name || 'Wilderness Stalker'}`);
     if (attacks) parts.push(`with natural attacks: ${attacks}`);
   } else {
-    parts.push(`A Wayworlds ${species || 'humanoid'} warrior called ${name || 'Raider'}`);
+    parts.push(`A Wayworlds ${species || 'adventurer'} warrior called ${name || 'Raider'}`);
     if (weapon) parts.push(`armed with ${weapon}`);
     if (armor) parts.push(`wearing ${armor}`);
   }
@@ -129,7 +129,7 @@ export async function generateAiImage(enhancedPrompt) {
 export async function generateTokenArtFromDescription({
   prompt,
   name = 'Adversary',
-  species = 'Human',
+  species = 'Dawn Elf',
   category = 'npc',
   threat_tier = 2,
   weapon,

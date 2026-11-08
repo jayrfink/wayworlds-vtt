@@ -119,88 +119,6 @@
           <button type="button" class="fog-cover-btn" title="Cover the whole map in fog again" @click="coverAllFog">Cover All</button>
         </div>
 
-        <button v-if="isGm" class="btn-tool btn-initiative" @click="rollInitiative" title="Roll Combat Initiative (Players vs. Opposition 2d10)">
-          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg> Initiative
-        </button>
-
-        <button class="btn-tool" @click="rollPercentile">
-          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><text x="12" y="15" text-anchor="middle" font-size="9" fill="currentColor" stroke="none" font-weight="bold">%</text></svg> Roll d%
-        </button>
-
-        <!-- Damage Dice Roller -->
-        <div class="dmg-roller-wrapper" ref="dmgMenuRef">
-          <div class="dmg-btn-group">
-            <button
-              class="btn-tool btn-dmg-main"
-              :class="{ active: showDmgMenu }"
-              @click="toggleDmgMenu"
-              title="Click to configure and roll damage dice"
-            >
-              <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l2.4 7.4L22 12l-7.6 2.6L12 22l-2.4-7.4L2 12l7.6-2.6z"/></svg> DMG Die: {{ damageDiceCount }}d10
-            </button>
-            <button
-              class="btn-dmg-step"
-              title="Decrease dice count"
-              :disabled="damageDiceCount <= 1"
-              @click.stop="adjustDamageCount(-1)"
-            >
-              -
-            </button>
-            <button
-              class="btn-dmg-step"
-              title="Increase dice count"
-              :disabled="damageDiceCount >= 20"
-              @click.stop="adjustDamageCount(1)"
-            >
-              +
-            </button>
-          </div>
-
-          <div v-if="showDmgMenu" class="dmg-popover">
-            <div class="dmg-popover-header">
-              <span>Damage Pool (d10)</span>
-              <button class="dmg-popover-close" @click="showDmgMenu = false">×</button>
-            </div>
-            <div class="dmg-stepper">
-              <button class="stepper-btn" :disabled="damageDiceCount <= 1" @click="adjustDamageCount(-1)">-</button>
-              <span class="stepper-val">{{ damageDiceCount }}d10</span>
-              <button class="stepper-btn" :disabled="damageDiceCount >= 20" @click="adjustDamageCount(1)">+</button>
-            </div>
-            <div class="dmg-presets">
-              <button
-                v-for="preset in [1, 2, 3, 4, 5, 6, 8, 10, 12, 15]"
-                :key="preset"
-                class="preset-btn"
-                :class="{ active: damageDiceCount === preset }"
-                @click="damageDiceCount = preset"
-              >
-                {{ preset }}d10
-              </button>
-            </div>
-            <button
-              class="btn-roll-dmg-action"
-              @click="rollDamage"
-            >
-              Roll {{ damageDiceCount }}d10 Now
-            </button>
-            <div v-if="lastDamageRoll" class="dmg-last-roll-card">
-              <div class="last-roll-header">Last Roll ({{ lastDamageRoll.count }}d10):</div>
-              <div class="last-roll-result">
-                <span class="last-roll-total">{{ lastDamageRoll.total }}</span>
-                <span class="last-roll-breakdown">[{{ lastDamageRoll.dice.join(', ') }}]</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <button class="btn-tool" @click="clearDice">
-          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v6M14 11v6"/></svg> Clear Dice
-        </button>
-
-        <button class="btn-tool btn-dice-colors" @click="showDiceColorModal = true" title="Configure 3D Dice Colors">
-          <svg class="tool-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l9 5v10l-9 5-9-5V7l9-5z"/><circle cx="12" cy="12" r="3" fill="currentColor"/></svg> Dice Colors
-        </button>
-
         <div class="toolbar-divider"></div>
         <div class="shortcut-tip">
           <span class="key-badge">Space</span> + Drag to Pan
@@ -222,147 +140,6 @@
             <small>Image will be uploaded to a new world map</small>
           </div>
         </div>
-        <!-- Bottom-Left Collapsible Die Roll Log HUD -->
-        <div class="roll-log-hud" :class="{ open: isRollLogOpen }">
-          <div v-if="!isRollLogOpen" class="roll-log-pill-row">
-            <button class="btn-roll-log-pill" @click="isRollLogOpen = true" title="Open Die Roll Log">
-              📜 Roll Log ({{ rollLog.length }}) ▲
-            </button>
-            <button
-              class="btn-audio-toggle btn-audio-toggle-pill"
-              @click="toggleAudioMute"
-              :title="isDiceAudioMuted ? 'Unmute dice audio' : 'Mute dice audio'"
-              :aria-label="isDiceAudioMuted ? 'Unmute dice audio' : 'Mute dice audio'"
-              :aria-pressed="!isDiceAudioMuted"
-            >
-              {{ isDiceAudioMuted ? '🔇' : '🔊' }}
-            </button>
-          </div>
-          <div v-else class="roll-log-card">
-            <div class="roll-log-header">
-              <span class="roll-log-title">📜 Die Roll Log</span>
-              <div class="roll-log-actions">
-                <button
-                  class="btn-audio-toggle"
-                  @click="toggleAudioMute"
-                  :title="isDiceAudioMuted ? 'Unmute dice audio' : 'Mute dice audio'"
-                  :aria-label="isDiceAudioMuted ? 'Unmute dice audio' : 'Mute dice audio'"
-                  :aria-pressed="!isDiceAudioMuted"
-                >
-                  {{ isDiceAudioMuted ? '🔇' : '🔊' }}
-                </button>
-                <button v-if="isGm" class="btn-roll-log-clear" @click="clearRollLog" :disabled="rollLog.length === 0" title="Clear Log (GM Only)">Clear</button>
-                <button class="btn-roll-log-toggle" @click="isRollLogOpen = false" title="Minimize">▼</button>
-              </div>
-            </div>
-            <div class="roll-log-body">
-              <div v-if="rollLog.length === 0" class="roll-log-empty">No rolls recorded yet.</div>
-              <ul v-else class="roll-log-list">
-                <li v-for="item in rollLog" :key="item.id" class="roll-log-item" :class="item.type">
-                  <div class="roll-item-meta">
-                    <span v-if="item.username" class="roll-user-badge" :class="item.role?.toLowerCase()">
-                      {{ item.username }}
-                    </span>
-                    <span class="roll-item-time">{{ formatRollTime(item) }}</span>
-                    <span class="roll-item-badge">{{ item.label }}</span>
-                  </div>
-                  <div class="roll-item-result">
-                    <template v-if="item.type === 'initiative'">
-                      <div class="init-log-pills" v-if="(item.rollSummary || item.roll_summary)?.playerRoll">
-                        <span class="init-pill-player">Players: {{ (item.rollSummary || item.roll_summary).playerRoll }}</span>
-                        <span class="init-pill-opp">Opposition: {{ (item.rollSummary || item.roll_summary).oppRoll }}</span>
-                      </div>
-                      <span v-else class="roll-item-breakdown">{{ item.breakdown }}</span>
-                    </template>
-                    <template v-else>
-                      <span class="roll-item-total">{{ item.total }}</span>
-                      <span class="roll-item-breakdown">{{ item.breakdown }}</span>
-                    </template>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Floating Damage HUD Banner -->
-        <transition name="hud-pop">
-          <div
-            v-if="showDamageHud && lastDamageRoll"
-            class="damage-hud-banner"
-            @click="showDamageHud = false"
-          >
-            <div class="hud-header">
-              <div class="hud-title">
-                <span v-if="lastDamageRoll.username" class="hud-user-tag" :class="lastDamageRoll.role?.toLowerCase()">
-                  {{ lastDamageRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastDamageRoll.username }}
-                </span>
-                💥 Damage Roll ({{ lastDamageRoll.count }}d10)
-              </div>
-              <button class="hud-close" @click.stop="showDamageHud = false">&times;</button>
-            </div>
-            <div class="hud-body">
-              <span class="hud-total">{{ lastDamageRoll.total }}</span>
-              <span class="hud-dice">({{ lastDamageRoll.dice?.length ? lastDamageRoll.dice.join(' + ') : lastDamageRoll.breakdown }})</span>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Floating Percentile HUD Banner -->
-        <transition name="hud-pop">
-          <div
-            v-if="showPercentileHud && lastPercentileRoll"
-            class="percentile-hud-banner"
-            @click="showPercentileHud = false"
-          >
-            <div class="hud-header">
-              <div class="hud-title">
-                <span v-if="lastPercentileRoll.username" class="hud-user-tag" :class="lastPercentileRoll.role?.toLowerCase()">
-                  {{ lastPercentileRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastPercentileRoll.username }}
-                </span>
-                🎲 Percentile Roll (d%)
-              </div>
-              <button class="hud-close" @click.stop="showPercentileHud = false">&times;</button>
-            </div>
-            <div class="hud-body">
-              <span class="hud-total">{{ lastPercentileRoll.total }}</span>
-              <span class="hud-dice">(<span class="hud-tens-val">Tens: {{ lastPercentileRoll.tens != null ? lastPercentileRoll.tens * 10 : Math.floor(((lastPercentileRoll.total || 0) % 100) / 10) * 10 }}</span>, <span class="hud-ones-val">Ones: {{ lastPercentileRoll.ones != null ? lastPercentileRoll.ones : (lastPercentileRoll.total || 0) % 10 }}</span>)</span>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Floating Initiative HUD Banner -->
-        <transition name="hud-pop">
-          <div
-            v-if="showInitiativeHud && lastInitiativeRoll"
-            class="initiative-hud-banner"
-            @click="showInitiativeHud = false"
-          >
-            <div class="hud-header">
-              <div class="hud-title">
-                <span v-if="lastInitiativeRoll.username" class="hud-user-tag" :class="lastInitiativeRoll.role?.toLowerCase()">
-                  {{ lastInitiativeRoll.role === 'GameMaster' ? 'GM' : 'PLAYER' }} {{ lastInitiativeRoll.username }}
-                </span>
-                ⚡ Combat Initiative
-              </div>
-              <button class="hud-close" @click.stop="showInitiativeHud = false">&times;</button>
-            </div>
-            <div class="hud-body init-hud-body">
-              <div class="init-die-box init-player-die">
-                <span class="init-label">PLAYERS</span>
-                <span class="init-val">{{ lastInitiativeRoll.playerRoll }}</span>
-              </div>
-              <span class="init-vs">VS</span>
-              <div class="init-die-box init-opp-die">
-                <span class="init-label">OPPOSITION</span>
-                <span class="init-val">{{ lastInitiativeRoll.oppRoll }}</span>
-              </div>
-            </div>
-          </div>
-        </transition>
-
-        <!-- Dice Box Overlay -->
-        <div id="dice-box" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 200;"></div>
 
         <WorldVttCanvas
           :map="activeMap"
@@ -859,12 +636,6 @@
       :current-image="currentBrowserImage"
       @select="onImageSelected"
     />
-
-    <!-- Dice Colors Configuration Modal -->
-    <DiceColorModal
-      v-model="showDiceColorModal"
-      @change="onDiceColorsChanged"
-    />
   </div>
 </template>
 
@@ -873,26 +644,13 @@ import { ref, reactive, computed, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useRouter } from 'vue-router';
 import WorldVttCanvas from '../components/WorldVttCanvas.vue';
 import ImageBrowserModal from '../components/ImageBrowserModal.vue';
-import DiceColorModal from '../components/DiceColorModal.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { socket } from '../services/socket.js';
-import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll } from '../utils/diceUtils.js';
-import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
-import { diceRollQueue } from '../utils/diceRollQueue.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
-import { playDiceSound, toggleMute as toggleDiceMute, isMuted as isDiceMuted } from '../services/diceAudio.js';
-import { getSavedDiceColors, getContrastingNumberColor } from '../utils/diceColorManager.js';
 
 const router = useRouter();
 const authStore = useAuthStore();
 const isGm = computed(() => authStore.user?.role === 'GameMaster');
-
-const isDiceAudioMuted = ref(isDiceMuted());
-
-function toggleAudioMute() {
-  const muted = toggleDiceMute();
-  isDiceAudioMuted.value = muted;
-}
 
 const initialVttState = getUserState(getSafeUserId(), 'worldVtt', {
   panX: 50,
@@ -900,7 +658,6 @@ const initialVttState = getUserState(getSafeUserId(), 'worldVtt', {
   zoomLevel: 1.0,
   activeTool: 'select',
   selectedMarkerId: null,
-  isRollLogOpen: false,
   showTokenSidebar: true,
   isTokenSidebarRolledUp: false,
 });
@@ -919,267 +676,6 @@ function markerGlyph(type) {
 
 function markerTypeLabel(type) {
   return markerTypeOptions.find((o) => o.value === type)?.label || type;
-}
-
-let diceBoxInstance = null;
-let diceBoxInitPromise = null;
-
-async function initDiceBox() {
-  if (diceBoxInstance) return diceBoxInstance;
-  if (diceBoxInitPromise) return diceBoxInitPromise;
-
-  diceBoxInitPromise = (async () => {
-    try {
-      const { default: DiceBox } = await import('@3d-dice/dice-box');
-      const box = new DiceBox('#dice-box', {
-        assetPath: '/assets/dice-box/',
-        origin: window.location.origin,
-        theme: 'default',
-        themeColor: '#45acba',
-        offscreen: false,
-        scale: 6,
-      });
-      await box.init();
-      diceBoxInstance = box;
-      return box;
-    } catch (err) {
-      diceBoxInitPromise = null;
-      return null;
-    }
-  })();
-
-  return diceBoxInitPromise;
-}
-
-async function getReadyDiceBox() {
-  return diceBoxInstance || (await initDiceBox());
-}
-
-const showDiceColorModal = ref(false);
-const activeDiceColors = ref(getSavedDiceColors());
-
-function onDiceColorsChanged(newColors) {
-  activeDiceColors.value = { ...newColors };
-}
-
-const damageDiceCount = ref(1);
-const showDmgMenu = ref(false);
-const dmgMenuRef = ref(null);
-const lastDamageRoll = ref(null);
-const showDamageHud = ref(false);
-let damageHudTimeout = null;
-
-const lastPercentileRoll = ref(null);
-const showPercentileHud = ref(false);
-let percentileHudTimeout = null;
-
-const lastInitiativeRoll = ref(null);
-const showInitiativeHud = ref(false);
-let initiativeHudTimeout = null;
-
-const rollLog = ref([]);
-const isRollLogOpen = ref(Boolean(initialVttState.isRollLogOpen));
-
-function formatRollTime(item) {
-  if (!item) return '';
-  const raw = item.createdAt || item.timestamp;
-  if (!raw) return '';
-  const dateStr = typeof raw === 'string' && raw.includes(' ') && !raw.includes('T') ? raw.replace(' ', 'T') + 'Z' : raw;
-  const d = new Date(dateStr);
-  return isNaN(d.getTime()) ? String(raw) : d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-}
-
-async function fetchRollLog() {
-  try {
-    const res = await fetch('/api/rolls?mode=world', { credentials: 'include' });
-    if (res.ok) {
-      rollLog.value = await res.json();
-    }
-  } catch (err) {
-    console.error('Failed to fetch World roll log:', err);
-  }
-}
-
-async function sendRollToServer(rollData) {
-  try {
-    const res = await fetch('/api/rolls', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify({
-        mode: 'world',
-        type: rollData.type,
-        label: rollData.label,
-        total: rollData.total,
-        breakdown: rollData.breakdown,
-        rollSummary: rollData.rollSummary,
-      }),
-    });
-    if (res.ok) {
-      const savedRoll = await res.json();
-      if (!rollLog.value.some((r) => r.id === savedRoll.id)) {
-        rollLog.value.unshift(savedRoll);
-        if (rollLog.value.length > 20) {
-          rollLog.value = rollLog.value.slice(0, 20);
-        }
-      }
-    }
-  } catch (err) {
-    console.error('Failed to post roll to server:', err);
-  }
-}
-
-async function clearRollLog() {
-  if (!isGm.value) return;
-  try {
-    const res = await fetch('/api/rolls?mode=world', {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    if (res.ok) {
-      rollLog.value = [];
-      clearDice();
-    }
-  } catch (err) {
-    console.error('Failed to clear World roll log on server:', err);
-  }
-}
-
-function adjustDamageCount(delta) {
-  damageDiceCount.value = Math.max(1, Math.min(20, damageDiceCount.value + delta));
-}
-
-function toggleDmgMenu() {
-  showDmgMenu.value = !showDmgMenu.value;
-}
-
-async function rollInitiative() {
-  if (!isGm.value) return;
-  playDiceSound({ isRemote: false });
-  const diceBox = await getReadyDiceBox();
-  showInitiativeHud.value = false;
-  showPercentileHud.value = false;
-  showDamageHud.value = false;
-  if (initiativeHudTimeout) clearTimeout(initiativeHudTimeout);
-
-  try {
-    const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-init-player', themeColor: activeDiceColors.value.initiativePlayer, qty: 1 },
-      { sides: 10, theme: 'custom-init-opp', themeColor: activeDiceColors.value.initiativeOpp, qty: 1 },
-    ]);
-    const rollSummary = calculateInitiativeRoll(results);
-    if (rollSummary.valid) {
-      lastInitiativeRoll.value = {
-        ...rollSummary,
-        username: authStore.user?.username,
-        role: authStore.user?.role,
-      };
-      showInitiativeHud.value = true;
-      sendRollToServer({
-        type: 'initiative',
-        label: '⚡ Combat Initiative',
-        total: rollSummary.playerRoll,
-        breakdown: `Players: ${rollSummary.playerRoll} vs Opposition: ${rollSummary.oppRoll}`,
-        rollSummary,
-      });
-      initiativeHudTimeout = setTimeout(() => {
-        showInitiativeHud.value = false;
-      }, 9000);
-    }
-  } catch (err) {
-    console.error('Initiative dice roll failed:', err);
-  }
-}
-
-async function rollPercentile() {
-  playDiceSound({ isRemote: false });
-  const diceBox = await getReadyDiceBox();
-  showPercentileHud.value = false;
-  showDamageHud.value = false;
-  showInitiativeHud.value = false;
-  if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
-
-  try {
-    const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
-      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 },
-    ]);
-    const rollSummary = calculatePercentileRoll(results);
-    if (rollSummary.valid) {
-      lastPercentileRoll.value = {
-        ...rollSummary,
-        username: authStore.user?.username,
-        role: authStore.user?.role,
-      };
-      showPercentileHud.value = true;
-      sendRollToServer({
-        type: 'percentile',
-        label: 'd%',
-        total: rollSummary.total,
-        breakdown: `[Tens: ${rollSummary.tens * 10}, Ones: ${rollSummary.ones}]`,
-        rollSummary,
-      });
-      percentileHudTimeout = setTimeout(() => {
-        showPercentileHud.value = false;
-      }, 8000);
-    }
-  } catch (err) {
-    console.error('Percentile dice roll failed:', err);
-  }
-}
-
-async function rollDamage() {
-  playDiceSound({ isRemote: false });
-  const diceBox = await getReadyDiceBox();
-  showDamageHud.value = false;
-  showPercentileHud.value = false;
-  showInitiativeHud.value = false;
-  if (damageHudTimeout) clearTimeout(damageHudTimeout);
-  showDmgMenu.value = false;
-
-  try {
-    const results = await executeQueuedDiceRoll(diceBox, [
-      { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: damageDiceCount.value },
-    ]);
-    const rollSummary = calculateDamageRoll(results);
-    if (rollSummary.count > 0) {
-      lastDamageRoll.value = {
-        ...rollSummary,
-        username: authStore.user?.username,
-        role: authStore.user?.role,
-      };
-      showDamageHud.value = true;
-      sendRollToServer({
-        type: 'damage',
-        label: `${rollSummary.count}d10`,
-        total: rollSummary.total,
-        breakdown: `[${rollSummary.dice.join(', ')}]`,
-        rollSummary,
-      });
-      damageHudTimeout = setTimeout(() => {
-        showDamageHud.value = false;
-      }, 8000);
-    }
-  } catch (err) {
-    console.error('Damage dice roll failed:', err);
-  }
-}
-
-function clearDice() {
-  showDamageHud.value = false;
-  showPercentileHud.value = false;
-  showInitiativeHud.value = false;
-  if (diceBoxInstance) {
-    try {
-      diceBoxInstance.clear();
-    } catch (e) {}
-  }
-}
-
-function onDocClick(e) {
-  if (showDmgMenu.value && dmgMenuRef.value && !dmgMenuRef.value.contains(e.target)) {
-    showDmgMenu.value = false;
-  }
 }
 
 const activeMap = ref(null);
@@ -1282,7 +778,6 @@ function persistVttStateNow() {
     zoomLevel: zoomLevel.value,
     activeTool: activeTool.value,
     selectedMarkerId: selectedMarkerId.value,
-    isRollLogOpen: isRollLogOpen.value,
     showTokenSidebar: showTokenSidebar.value,
     isTokenSidebarRolledUp: isTokenSidebarRolledUp.value,
   });
@@ -1315,7 +810,7 @@ function closeTokenSidebar() {
   persistVttState();
 }
 
-watch([panX, panY, zoomLevel, activeTool, selectedMarkerId, isRollLogOpen, showTokenSidebar, isTokenSidebarRolledUp], () => {
+watch([panX, panY, zoomLevel, activeTool, selectedMarkerId, showTokenSidebar, isTokenSidebarRolledUp], () => {
   persistVttState();
 });
 
@@ -1916,8 +1411,6 @@ let onSocketFogUpdated = null;
 let onSocketMarkerCreated = null;
 let onSocketMarkerUpdated = null;
 let onSocketMarkerDeleted = null;
-let onSocketRollCreated = null;
-let onSocketRollCleared = null;
 let onSocketPingUpdated = null;
 let onSocketPingCleared = null;
 let onSocketPingsSync = null;
@@ -2026,70 +1519,6 @@ function setupSocketListeners() {
       socket.emit('ping:request_sync', { mapId: activeMap.value.id });
     }
   });
-
-  socket.on('roll:created', onSocketRollCreated = ({ mode, roll }) => {
-    if (mode !== 'world') return;
-    if (roll.username !== authStore.user?.username) {
-      playDiceSound({ isRemote: true });
-    }
-    if (!rollLog.value.some((r) => r.id === roll.id)) {
-      rollLog.value.unshift(roll);
-      if (rollLog.value.length > 20) {
-        rollLog.value = rollLog.value.slice(0, 20);
-      }
-    }
-    if (roll.userId !== authStore.user?.id) {
-      if (roll.type === 'percentile') {
-        lastPercentileRoll.value = {
-          ...roll.rollSummary,
-          username: roll.username,
-          role: roll.role,
-          total: roll.total,
-        };
-        showPercentileHud.value = true;
-        if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
-        percentileHudTimeout = setTimeout(() => {
-          showPercentileHud.value = false;
-        }, 8000);
-      } else if (roll.type === 'damage') {
-        lastDamageRoll.value = {
-          ...roll,
-          dice: Array.isArray(roll.rollSummary?.dice) ? roll.rollSummary.dice : [],
-          username: roll.username,
-          role: roll.role,
-          total: roll.total,
-          count: roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1),
-          breakdown: roll.breakdown,
-        };
-        showDamageHud.value = true;
-        if (damageHudTimeout) clearTimeout(damageHudTimeout);
-        damageHudTimeout = setTimeout(() => {
-          showDamageHud.value = false;
-        }, 8000);
-      } else if (roll.type === 'initiative') {
-        lastInitiativeRoll.value = {
-          ...roll.rollSummary,
-          username: roll.username,
-          role: roll.role,
-        };
-        showInitiativeHud.value = true;
-        showPercentileHud.value = false;
-        showDamageHud.value = false;
-        if (initiativeHudTimeout) clearTimeout(initiativeHudTimeout);
-        initiativeHudTimeout = setTimeout(() => {
-          showInitiativeHud.value = false;
-        }, 9000);
-      }
-    }
-  });
-
-  socket.on('roll:cleared', onSocketRollCleared = ({ mode }) => {
-    if (mode === 'world') {
-      rollLog.value = [];
-      showInitiativeHud.value = false;
-      clearDice();
-    }
-  });
 }
 
 function cleanupSocketListeners() {
@@ -2101,8 +1530,6 @@ function cleanupSocketListeners() {
   if (onSocketMarkerCreated) socket.off('world-marker:created', onSocketMarkerCreated);
   if (onSocketMarkerUpdated) socket.off('world-marker:updated', onSocketMarkerUpdated);
   if (onSocketMarkerDeleted) socket.off('world-marker:deleted', onSocketMarkerDeleted);
-  if (onSocketRollCreated) socket.off('roll:created', onSocketRollCreated);
-  if (onSocketRollCleared) socket.off('roll:cleared', onSocketRollCleared);
   if (onSocketPingUpdated) socket.off('ping:updated', onSocketPingUpdated);
   if (onSocketPingCleared) socket.off('ping:cleared', onSocketPingCleared);
   if (onSocketPingsSync) socket.off('pings:sync', onSocketPingsSync);
@@ -2110,14 +1537,11 @@ function cleanupSocketListeners() {
 }
 
 onMounted(() => {
-  fetchRollLog();
   fetchActiveMap();
   if (isGm.value) {
     fetchMapList();
   }
-  initDiceBox();
   setupSocketListeners();
-  document.addEventListener('click', onDocClick);
 });
 
 onBeforeUnmount(() => {
@@ -2127,17 +1551,6 @@ onBeforeUnmount(() => {
   }
   persistVttStateNow();
   cleanupSocketListeners();
-  document.removeEventListener('click', onDocClick);
-  if (damageHudTimeout) clearTimeout(damageHudTimeout);
-  if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
-  if (initiativeHudTimeout) clearTimeout(initiativeHudTimeout);
-  if (diceBoxInstance) {
-    try {
-      diceBoxInstance.clear();
-    } catch (e) {}
-    diceBoxInstance = null;
-    diceBoxInitPromise = null;
-  }
 });
 </script>
 

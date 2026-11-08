@@ -642,7 +642,7 @@ describe('Upload API', () => {
       const charRes = db.prepare(`
         INSERT INTO character_sheets (user_id, name, race, avatar_url)
         VALUES (?, ?, ?, ?)
-      `).run(userId, 'Hero Character', 'Human', oldUrl);
+      `).run(userId, 'Hero Character', 'Dawn Elf', oldUrl);
 
       // 5. world_markers
       const markerRes = db.prepare(`
