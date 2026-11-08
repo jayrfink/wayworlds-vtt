@@ -183,6 +183,11 @@
                       <option value="Whisperling">Whisperling</option>
                       <option value="Mixlander">Mixlander</option>
                     </optgroup>
+                    <optgroup label="Altered">
+                      <option value="Spirits">Spirits</option>
+                      <option value="Undeath">Undeath</option>
+                      <option value="Lycan">Lycan</option>
+                    </optgroup>
                   </select>
                 </div>
                 <div class="psa-select-wrap">
@@ -270,6 +275,13 @@
           <section class="card stats-section">
             <div class="panel-header-simple">
               <span class="tracker-label">PRIMARY ATTRIBUTES</span>
+              <span
+                v-if="alteredAttributePoolRemaining !== null"
+                class="altered-pool-badge"
+                :title="'Altered species attribute redistribution points pool (20 pts total)'"
+              >
+                Pool: {{ alteredAttributePoolRemaining }} pts remaining
+              </span>
             </div>
             <div class="stats-grid">
               <!-- STR / STA -->
@@ -1044,6 +1056,11 @@
                 <option value="Whisperling">Whisperling (+5 DEX, +5 WIL, -5 STR)</option>
                 <option value="Mixlander">Mixlander (+5 DEX, +5 INT, -5 STA)</option>
               </optgroup>
+              <optgroup label="Altered">
+                <option value="Spirits">Spirits (45 Base + 20 Pool)</option>
+                <option value="Undeath">Undeath (45 Base + 20 Pool)</option>
+                <option value="Lycan">Lycan (45 Base + 20 Pool)</option>
+              </optgroup>
             </select>
           </div>
           <div v-if="racesData[newCharForm.race]" class="form-group lineage-preview-box">
@@ -1051,11 +1068,14 @@
               <strong>{{ racesData[newCharForm.race].trait_name }}:</strong> {{ racesData[newCharForm.race].abilities }}
             </div>
             <div class="lineage-preview-stats">
-              <strong>Lineage Adjusted Baseline (from 50):</strong>
+              <strong>Lineage Adjusted Baseline (from {{ racesData[newCharForm.race].baseline || 50 }}):</strong>
               STR {{ newCharForm.str }} / STA {{ newCharForm.sta }} &bull;
               DEX {{ newCharForm.dex }} / RS {{ newCharForm.rs }} &bull;
               INT {{ newCharForm.int }} / HIST/REL {{ newCharForm.log }} &bull;
               WIL {{ newCharForm.per }} / PRE {{ newCharForm.ldr }}
+              <span v-if="racesData[newCharForm.race].attribute_pool" class="attr-pool-badge">
+                &bull; +{{ racesData[newCharForm.race].attribute_pool }} Points to Redistribute
+              </span>
             </div>
           </div>
           <div class="form-group">
@@ -1807,6 +1827,22 @@ export default {
         return { walk: 30, run: 60, glide: 0 };
       }
       return RACES_DATA[this.selectedChar.race].movement;
+    },
+    alteredAttributePoolRemaining() {
+      if (!this.selectedChar || !this.selectedChar.race) return null;
+      const raceData = RACES_DATA[this.selectedChar.race];
+      if (!raceData || raceData.category !== 'Altered' || !raceData.attribute_pool) return null;
+      const currentTotal = Number(this.selectedChar.str || 0) +
+                           Number(this.selectedChar.sta || 0) +
+                           Number(this.selectedChar.dex || 0) +
+                           Number(this.selectedChar.rs || 0) +
+                           Number(this.selectedChar.int || 0) +
+                           Number(this.selectedChar.log || 0) +
+                           Number(this.selectedChar.per || 0) +
+                           Number(this.selectedChar.ldr || 0);
+      const baselineTotal = (raceData.baseline || 45) * 8;
+      const maxTotal = baselineTotal + raceData.attribute_pool;
+      return maxTotal - currentTotal;
     },
   },
   mounted() {
@@ -4089,7 +4125,26 @@ export default {
 }
 
 .panel-header-simple {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 8px;
+}
+
+.altered-pool-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(139, 92, 246, 0.18);
+  border: 1px solid rgba(139, 92, 246, 0.45);
+  color: #c4b5fd;
+  letter-spacing: 0.3px;
+}
+
+.attr-pool-badge {
+  color: #c4b5fd;
+  font-weight: 700;
 }
 
 .tracker-label {

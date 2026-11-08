@@ -84,6 +84,24 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(RACES_DATA['Whisperlings']).toBeDefined();
     expect(RACES_DATA['Mixlanders']).toBeDefined();
 
+    // Altered species grouping: Spirits, Undeath, Lycan
+    expect(RACES_DATA['Spirits']).toBeDefined();
+    expect(RACES_DATA['Undeath']).toBeDefined();
+    expect(RACES_DATA['Lycan']).toBeDefined();
+    expect(RACES_DATA['Spirits'].category).toBe('Altered');
+    expect(RACES_DATA['Undeath'].category).toBe('Altered');
+    expect(RACES_DATA['Lycan'].category).toBe('Altered');
+    expect(RACES_DATA['Spirits'].baseline).toBe(45);
+    expect(RACES_DATA['Undeath'].baseline).toBe(45);
+    expect(RACES_DATA['Lycan'].baseline).toBe(45);
+    expect(RACES_DATA['Spirits'].attribute_pool).toBe(20);
+    expect(RACES_DATA['Undeath'].attribute_pool).toBe(20);
+    expect(RACES_DATA['Lycan'].attribute_pool).toBe(20);
+
+    const alteredGroup = CARTRIDGE_LINEAGE_GROUPS.find(g => g.label === 'Altered');
+    expect(alteredGroup).toBeDefined();
+    expect(alteredGroup.lineages).toEqual(['Spirits', 'Undeath', 'Lycan']);
+
     // Human and True Giants deleted from setting
     expect(RACES_DATA['Human']).toBeUndefined();
     expect(RACES_DATA['True Giants']).toBeUndefined();
@@ -115,6 +133,23 @@ describe('UlvWylde Cartridge Lineages & Baseline Stats', () => {
     expect(goblin.rs).toBe(55);
     expect(goblin.str).toBe(40);
     expect(goblin.sta).toBe(45);
+  });
+
+  it('computes 45-baseline stat adjustments and 20 redistribution points for Altered species', () => {
+    for (const alteredName of ['Spirits', 'Undeath', 'Lycan']) {
+      const stats = getLineageBaselineStats(alteredName);
+      expect(stats.str).toBe(45);
+      expect(stats.sta).toBe(45);
+      expect(stats.dex).toBe(45);
+      expect(stats.rs).toBe(45);
+      expect(stats.int).toBe(45);
+      expect(stats.log).toBe(45);
+      expect(stats.per).toBe(45);
+      expect(stats.ldr).toBe(45);
+      expect(stats.max_stamina).toBe(45);
+      expect(stats.current_stamina).toBe(45);
+      expect(stats.attribute_pool).toBe(20);
+    }
   });
 });
 

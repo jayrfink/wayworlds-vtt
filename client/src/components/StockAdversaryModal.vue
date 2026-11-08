@@ -252,6 +252,11 @@
                     <option value="Mixlander">Mixlander</option>
                     <option value="Whisperling">Whisperling</option>
                   </optgroup>
+                  <optgroup label="Altered">
+                    <option value="Spirits">Spirits</option>
+                    <option value="Undeath">Undeath</option>
+                    <option value="Lycan">Lycan</option>
+                  </optgroup>
                 </select>
               </div>
               <div class="form-group">

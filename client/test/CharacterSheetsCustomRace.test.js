@@ -198,4 +198,45 @@ describe('CharacterSheetsView - Custom Race', () => {
     expect(wrapper.vm.selectedChar.race).toBe('Saurian');
     expect(wrapper.vm.updateCharacter).toHaveBeenCalledTimes(2);
   });
+
+  it('handles Altered species options (Spirits, Undeath, Lycan) with 45 baseline and 20 redistribution pool', () => {
+    const wrapper = shallowMount(CharacterSheetsView);
+    wrapper.vm.updateCharacter = vi.fn();
+    wrapper.vm.selectedChar = {
+      id: 55,
+      name: 'Altered One',
+      race: 'Dawn Elf',
+    };
+
+    // Switch to Spirits
+    wrapper.vm.selectedRaceCategory = 'Spirits';
+    expect(wrapper.vm.selectedChar.race).toBe('Spirits');
+    expect(wrapper.vm.selectedChar.str).toBe(45);
+    expect(wrapper.vm.selectedChar.sta).toBe(45);
+    expect(wrapper.vm.selectedChar.dex).toBe(45);
+    expect(wrapper.vm.selectedChar.rs).toBe(45);
+    expect(wrapper.vm.selectedChar.int).toBe(45);
+    expect(wrapper.vm.selectedChar.log).toBe(45);
+    expect(wrapper.vm.selectedChar.per).toBe(45);
+    expect(wrapper.vm.selectedChar.ldr).toBe(45);
+    expect(wrapper.vm.selectedChar.max_stamina).toBe(45);
+    expect(wrapper.vm.isCustomRace('Spirits')).toBe(false);
+
+    // Initial pool remaining is 20
+    expect(wrapper.vm.alteredAttributePoolRemaining).toBe(20);
+
+    // Redistribute points: +5 STR, +5 DEX, +10 INT (20 points used)
+    wrapper.vm.selectedChar.str += 5;
+    wrapper.vm.selectedChar.dex += 5;
+    wrapper.vm.selectedChar.int += 10;
+    expect(wrapper.vm.alteredAttributePoolRemaining).toBe(0);
+
+    // Create modal for Undeath sets 45 baseline
+    wrapper.vm.newCharForm = {
+      race: 'Undeath',
+    };
+    wrapper.vm.onCreateRaceChange();
+    expect(wrapper.vm.newCharForm.str).toBe(45);
+    expect(wrapper.vm.newCharForm.max_stamina).toBe(45);
+  });
 });

@@ -246,9 +246,51 @@ export const RACES_DATA = {
     abilities: 'Elven Amalgam: A mixed-heritage blend of elven lineages (+5 to two stats, -5 to one stat). Inherits flexibility (+5% to any one secular skill check) and adapts easily to diverse regional magic traditions (30 ft base move).',
     modSummary: '+5 DEX (55), +5 INT (55), -5 STA (45)',
   },
+  'Spirits': {
+    category: 'Altered',
+    baseline: 45,
+    attribute_pool: 20,
+    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Ethereal Alteration',
+    abilities: 'Ethereal Alteration: Altered entity starting with a 45 baseline across all attributes and 20 points to redistribute. Attuned to spiritual energies and resistant to non-magical kinetic harm (30 ft base move).',
+    modSummary: '45 Baseline in all attributes + 20 Attribute Points Pool to redistribute',
+  },
+  'Undeath': {
+    category: 'Altered',
+    baseline: 45,
+    attribute_pool: 20,
+    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 30, run: 60, glide: 0 },
+    movement_ft: 30,
+    size: 'Medium',
+    warg_eligible: false,
+    trait_name: 'Necrotic Alteration',
+    abilities: 'Necrotic Alteration: Altered entity starting with a 45 baseline across all attributes and 20 points to redistribute. Immune to disease and poison penalties; sustained by necrotic resonance (30 ft base move).',
+    modSummary: '45 Baseline in all attributes + 20 Attribute Points Pool to redistribute',
+  },
+  'Lycan': {
+    category: 'Altered',
+    baseline: 45,
+    attribute_pool: 20,
+    modifiers: { str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0 },
+    movement: { walk: 35, run: 70, glide: 0 },
+    movement_ft: 35,
+    size: 'Medium',
+    warg_eligible: true,
+    trait_name: 'Beast-Shift Alteration',
+    abilities: 'Beast-Shift Alteration: Altered entity starting with a 45 baseline across all attributes and 20 points to redistribute. Eligible for the Warg skill; heightened predatory senses and beastial speed (35 ft base move).',
+    modSummary: '45 Baseline in all attributes + 20 Attribute Points Pool to redistribute',
+  },
   // Backward-compatibility aliases
   get 'Whisperlings'() { return this['Whisperling']; },
   get 'Mixlanders'() { return this['Mixlander']; },
+  get 'Spirit'() { return this['Spirits']; },
+  get 'Undead'() { return this['Undeath']; },
+  get 'Lycans'() { return this['Lycan']; },
 };
 
 export const CARTRIDGE_LINEAGE_GROUPS = [
@@ -293,23 +335,33 @@ export const CARTRIDGE_LINEAGE_GROUPS = [
       'Mixlander',
     ],
   },
+  {
+    label: 'Altered',
+    lineages: [
+      'Spirits',
+      'Undeath',
+      'Lycan',
+    ],
+  },
 ];
 
 /**
- * Compute the 8 baseline ability scores for a given lineage name (applying modifiers to the 50 baseline).
+ * Compute the 8 baseline ability scores for a given lineage name (applying modifiers to the baseline).
  */
 export function getLineageBaselineStats(lineageName) {
-  const mods = RACES_DATA[lineageName]?.modifiers || {
+  const raceObj = RACES_DATA[lineageName];
+  const baseline = (raceObj && typeof raceObj.baseline === 'number') ? raceObj.baseline : 50;
+  const mods = raceObj?.modifiers || {
     str: 0, sta: 0, dex: 0, rs: 0, int: 0, log: 0, per: 0, ldr: 0,
   };
-  const str = 50 + (mods.str || 0);
-  const sta = 50 + (mods.sta || 0);
-  const dex = 50 + (mods.dex || 0);
-  const rs = 50 + (mods.rs || 0);
-  const int = 50 + (mods.int || 0);
-  const log = 50 + (mods.log || 0);
-  const per = 50 + (mods.per || 0);
-  const ldr = 50 + (mods.ldr || 0);
+  const str = baseline + (mods.str || 0);
+  const sta = baseline + (mods.sta || 0);
+  const dex = baseline + (mods.dex || 0);
+  const rs = baseline + (mods.rs || 0);
+  const int = baseline + (mods.int || 0);
+  const log = baseline + (mods.log || 0);
+  const per = baseline + (mods.per || 0);
+  const ldr = baseline + (mods.ldr || 0);
   const max_ess = Math.max(per, log, sta);
   return {
     str,
@@ -324,6 +376,7 @@ export function getLineageBaselineStats(lineageName) {
     current_stamina: sta,
     max_ess,
     current_ess: max_ess,
+    attribute_pool: raceObj?.attribute_pool || 0,
   };
 }
 
