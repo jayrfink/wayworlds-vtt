@@ -106,12 +106,14 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       const strikeBtn = combatBar.find('.btn-strike-action');
       expect(strikeBtn.exists()).toBe(true);
       expect(strikeBtn.text()).toContain('Strike');
+      expect(strikeBtn.text()).not.toContain('⚔️');
       // 30 base + 10 = 40%
       expect(strikeBtn.text()).toContain('(40%)');
 
       const shootBtn = combatBar.find('.btn-shoot-action');
       expect(shootBtn.exists()).toBe(true);
       expect(shootBtn.text()).toContain('Shoot');
+      expect(shootBtn.text()).not.toContain('🏹');
       // 30 base + 20 = 50%
       expect(shootBtn.text()).toContain('(50%)');
 
@@ -124,7 +126,7 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(strikeCall.mode).toBe('rpg');
       expect(strikeCall.type).toBe('percentile');
       expect(strikeCall.source).toBe('sheet');
-      expect(strikeCall.label).toMatch(/Kaelen: ⚔️ Strike \(40%\)/);
+      expect(strikeCall.label).toMatch(/Kaelen: Strike \(40%\)/);
 
       // Verify banner appears
       expect(skillsCard.find('.combat-action-banner').exists()).toBe(true);
@@ -137,12 +139,13 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(shootCall.mode).toBe('rpg');
       expect(shootCall.type).toBe('percentile');
       expect(shootCall.source).toBe('sheet');
-      expect(shootCall.label).toMatch(/Kaelen: 🏹 Shoot \(50%\)/);
+      expect(shootCall.label).toMatch(/Kaelen: Shoot \(50%\)/);
 
       // Verify % Die button is rendered to the right of Shoot button
       const pctBtn = combatBar.find('.btn-percentile-action');
       expect(pctBtn.exists()).toBe(true);
       expect(pctBtn.text()).toContain('% Die');
+      expect(pctBtn.text()).not.toContain('🎲');
 
       // Click % Die and verify POST /api/rolls
       await pctBtn.trigger('click');
@@ -152,7 +155,7 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(pctCall.mode).toBe('rpg');
       expect(pctCall.type).toBe('percentile');
       expect(pctCall.source).toBe('sheet');
-      expect(pctCall.label).toContain('Kaelen: 🎲 % Die (d100)');
+      expect(pctCall.label).toContain('Kaelen: % Die (d100)');
 
       // Verify d10(s) roller is rendered to the right of % Die button
       const d10Group = combatBar.find('.sheet-d10-roller-group');
@@ -161,6 +164,7 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       const d10MainBtn = d10Group.find('.btn-d10-main');
       expect(d10MainBtn.exists()).toBe(true);
       expect(d10MainBtn.text()).toContain('d10s (1d10)');
+      expect(d10MainBtn.text()).not.toContain('💥');
 
       const stepBtns = d10Group.findAll('.btn-d10-step');
       expect(stepBtns.length).toBe(2);
@@ -185,7 +189,7 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(d10Call.mode).toBe('rpg');
       expect(d10Call.type).toBe('damage');
       expect(d10Call.source).toBe('sheet');
-      expect(d10Call.label).toContain('Kaelen: 💥 2d10');
+      expect(d10Call.label).toContain('Kaelen: 2d10');
       expect(d10Call.rollSummary.count).toBe(2);
       expect(d10Call.rollSummary.dice.length).toBe(2);
     } finally {
@@ -193,12 +197,13 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     }
   });
 
-  it('styles combat action buttons with padding left of Strike button and padding/gap between buttons', () => {
+  it('styles combat action buttons with padding left of Strike button and padding/gap between buttons in one row', () => {
     const sheetViewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
     const sheetContent = fs.readFileSync(sheetViewPath, 'utf8');
 
     expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?padding-left:\s*2px;/);
-    expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?gap:\s*1[24]px;/);
+    expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?gap:\s*1[024]px;/);
+    expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?flex-wrap:\s*nowrap;/);
   });
 
   it('styles Strike, Shoot, Cast, +Lvl, % Die, and d10(s) buttons using character selected theme variables with consistent border, shading, and text', () => {

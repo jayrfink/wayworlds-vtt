@@ -598,7 +598,7 @@
                 title="Roll Melee Strike attack (% check)"
                 @click="performStrikeRoll"
               >
-                ⚔️ Strike <span class="combat-action-pct">({{ strikeTotalPct }}%)</span>
+                Strike <span class="combat-action-pct">({{ strikeTotalPct }}%)</span>
               </button>
               <button
                 type="button"
@@ -606,7 +606,7 @@
                 title="Roll Ranged Shoot attack (% check)"
                 @click="performShootRoll"
               >
-                🏹 Shoot <span class="combat-action-pct">({{ shootTotalPct }}%)</span>
+                Shoot <span class="combat-action-pct">({{ shootTotalPct }}%)</span>
               </button>
               <button
                 type="button"
@@ -614,7 +614,7 @@
                 title="Roll percentile dice (d%) on RPG VTT"
                 @click="performPercentileRoll"
               >
-                🎲 % Die
+                % Die
               </button>
               <div class="sheet-d10-roller-group">
                 <button
@@ -623,7 +623,7 @@
                   title="Roll d10 dice on RPG VTT"
                   @click="performD10Roll"
                 >
-                  💥 d10s ({{ sheetD10Count }}d10)
+                  d10s ({{ sheetD10Count }}d10)
                 </button>
                 <button
                   type="button"
@@ -648,12 +648,12 @@
                 <span class="cast-banner-title">
                   {{
                     lastCombatActionResult.actionType === 'strike'
-                      ? '⚔️ Strike'
+                      ? 'Strike'
                       : (lastCombatActionResult.actionType === 'shoot'
-                        ? '🏹 Shoot'
+                        ? 'Shoot'
                         : (lastCombatActionResult.actionType === 'percentile'
-                          ? '🎲 % Die'
-                          : '💥 d10s'))
+                          ? '% Die'
+                          : 'd10s'))
                   }}
                 </span>
                 <span v-if="lastCombatActionResult.skillName" class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
@@ -3256,7 +3256,7 @@ export default {
             mode: 'rpg',
             type: 'percentile',
             source: 'sheet',
-            label: `${this.selectedChar.name}: ⚔️ Strike (${targetPct}%) - ${outcomeLabel}`,
+            label: `${this.selectedChar.name}: Strike (${targetPct}%) - ${outcomeLabel}`,
             total: d100Roll,
             breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
             rollSummary: result,
@@ -3311,7 +3311,7 @@ export default {
             mode: 'rpg',
             type: 'percentile',
             source: 'sheet',
-            label: `${this.selectedChar.name}: 🏹 Shoot (${targetPct}%) - ${outcomeLabel}`,
+            label: `${this.selectedChar.name}: Shoot (${targetPct}%) - ${outcomeLabel}`,
             total: d100Roll,
             breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
             rollSummary: result,
@@ -3356,7 +3356,7 @@ export default {
             mode: 'rpg',
             type: 'percentile',
             source: 'sheet',
-            label: `${this.selectedChar.name}: 🎲 % Die (d100)`,
+            label: `${this.selectedChar.name}: % Die (d100)`,
             total: d100Roll,
             breakdown: `d100=${d100Roll} [Tens: ${tens * 10}, Ones: ${ones}]`,
             rollSummary: result,
@@ -3401,7 +3401,7 @@ export default {
             mode: 'rpg',
             type: 'damage',
             source: 'sheet',
-            label: `${this.selectedChar.name}: 💥 ${count}d10`,
+            label: `${this.selectedChar.name}: ${count}d10`,
             total,
             breakdown: `[${dice.join(', ')}]`,
             rollSummary: result,
@@ -4845,21 +4845,23 @@ export default {
 .combat-actions-bar {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   margin: 4px 0 10px 0;
   padding-left: 2px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .btn-combat-action {
-  padding: 4px 14px;
+  padding: 4px 10px;
   font-size: 0.8rem;
   height: 28px;
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  justify-content: center;
+  gap: 4px;
   cursor: pointer;
+  white-space: nowrap;
 }
 
 .combat-action-pct {
