@@ -43,7 +43,7 @@ describe('Dice Color Management & Modal', () => {
       expect(normalizeHexColor('#FFF')).toBe('#ffffff');
       expect(normalizeHexColor('#77D19E')).toBe('#77d19e');
       expect(normalizeHexColor('#abc')).toBe('#aabbcc');
-      expect(normalizeHexColor('invalid')).toBe('#77d19e');
+      expect(normalizeHexColor('invalid')).toBe('#1c8780');
     });
 
     it('returns default dice colors when nothing is in localStorage', () => {

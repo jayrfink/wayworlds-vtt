@@ -47,10 +47,10 @@ export function calculatePercentileRoll(results) {
     return { total: 0, tens: 0, ones: 0, valid: false };
   }
 
-  // Find tens die (group 0, theme 'custom-tens', or lighter color #77d19e)
-  const tensDie = flatResults.find(d => d?.groupId === 0 || d?.theme === 'custom-tens' || d?.themeColor === '#77d19e') || flatResults[0];
-  // Find ones die (group 1, theme 'custom-ones', or darker color #22384a)
-  const onesDie = flatResults.find(d => d !== tensDie && (d?.groupId === 1 || d?.theme === 'custom-ones' || d?.themeColor === '#22384a')) ||
+  // Find tens die (group 0, theme 'custom-tens', or lighter color #1c8780 / #77d19e)
+  const tensDie = flatResults.find(d => d?.groupId === 0 || d?.theme === 'custom-tens' || d?.themeColor?.toLowerCase() === '#1c8780' || d?.themeColor === '#77d19e') || flatResults[0];
+  // Find ones die (group 1, theme 'custom-ones', or darker color #082b27 / #22384a)
+  const onesDie = flatResults.find(d => d !== tensDie && (d?.groupId === 1 || d?.theme === 'custom-ones' || d?.themeColor?.toLowerCase() === '#082b27' || d?.themeColor === '#22384a')) ||
     flatResults.find(d => d !== tensDie) ||
     flatResults[1];
 
@@ -94,19 +94,21 @@ export function calculateInitiativeRoll(results) {
     return { playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false };
   }
 
-  // Find player die: groupId 0, theme 'custom-init-player', or themeColor '#0b222e' / '#17304a'
+  // Find player die: groupId 0, theme 'custom-init-player', or themeColor '#16425a' / '#0b222e' / '#17304a'
   const playerDie = flat.find(d =>
     d?.groupId === 0 ||
     d?.theme === 'custom-init-player' ||
+    d?.themeColor?.toLowerCase() === '#16425a' ||
     d?.themeColor?.toLowerCase() === '#0b222e' ||
     d?.themeColor?.toLowerCase() === '#17304a'
   ) || flat[0];
 
-  // Find opposition die: groupId 1, theme 'custom-init-opp', or themeColor '#400a22'
+  // Find opposition die: groupId 1, theme 'custom-init-opp', or themeColor '#031016' / '#400a22'
   const oppDie = flat.find(d =>
     d !== playerDie && (
       d?.groupId === 1 ||
       d?.theme === 'custom-init-opp' ||
+      d?.themeColor?.toLowerCase() === '#031016' ||
       d?.themeColor?.toLowerCase() === '#400a22'
     )
   ) || flat.find(d => d !== playerDie) || flat[1];

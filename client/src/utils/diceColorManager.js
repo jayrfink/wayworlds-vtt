@@ -9,11 +9,11 @@
  */
 
 export const DEFAULT_DICE_COLORS = Object.freeze({
-  percentileTens: '#77d19e', // Mint Green
-  percentileOnes: '#38bdf8', // Azure Sky Blue
-  damage: '#e38836',         // Amber / Crimson Fire
-  initiativePlayer: '#0b222e', // Deep Navy Midnight
-  initiativeOpp: '#400a22',    // Dark Wine Crimson
+  percentileTens: '#1c8780', // Teal / Jade
+  percentileOnes: '#082b27', // Dark Forest Teal
+  damage: '#2d0621',         // Deep Wine Purple
+  initiativePlayer: '#16425a', // Ocean Steel Blue
+  initiativeOpp: '#031016',    // Pitch Midnight Black
 });
 
 export const DICE_COLORS_STORAGE_KEY = 'wayworlds_dice_colors';
@@ -34,7 +34,7 @@ export function isValidHexColor(val) {
  * @returns {string}
  */
 export function normalizeHexColor(hex) {
-  if (!isValidHexColor(hex)) return '#77d19e';
+  if (!isValidHexColor(hex)) return '#1c8780';
   const clean = hex.trim().toLowerCase();
   if (clean.length === 4) {
     return `#${clean[1]}${clean[1]}${clean[2]}${clean[2]}${clean[3]}${clean[3]}`;
@@ -53,7 +53,7 @@ export function parseHexToRgb(hex) {
     clean = clean.split('').map((c) => c + c).join('');
   }
   const num = parseInt(clean, 16);
-  if (isNaN(num)) return { r: 119, g: 209, b: 158 };
+  if (isNaN(num)) return { r: 28, g: 135, b: 128 };
   return {
     r: (num >> 16) & 255,
     g: (num >> 8) & 255,
