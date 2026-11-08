@@ -964,7 +964,7 @@ import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
 import { diceRollQueue } from '../utils/diceRollQueue.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { playDiceSound, toggleMute as toggleDiceMute, isMuted as isDiceMuted } from '../services/diceAudio.js';
-import { getSavedDiceColors, getContrastingNumberColor } from '../utils/diceColorManager.js';
+import { getSavedDiceColors, saveDiceColors, getContrastingNumberColor } from '../utils/diceColorManager.js';
 
 
 const authStore = useAuthStore();

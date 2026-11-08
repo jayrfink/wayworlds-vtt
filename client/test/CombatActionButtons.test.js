@@ -240,4 +240,12 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     expect(rpgContent).toContain("theme: 'custom-ones'");
     expect(rpgContent).toContain("theme: 'custom-dmg'");
   });
+
+  it('verifies RpgVttView imports saveDiceColors from diceColorManager.js', () => {
+    const rpgViewPath = path.resolve(__dirname, '../src/views/RpgVttView.vue');
+    const rpgContent = fs.readFileSync(rpgViewPath, 'utf8');
+
+    // Asserts RpgVttView imports saveDiceColors so preference watcher does not throw ReferenceError
+    expect(rpgContent).toMatch(/import\s*\{[^}]*saveDiceColors[^}]*\}\s*from\s*['"]\.\.\/utils\/diceColorManager\.js['"]/);
+  });
 });
