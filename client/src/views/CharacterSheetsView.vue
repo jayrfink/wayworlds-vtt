@@ -227,11 +227,15 @@
                 </div>
               </div>
 
-              <!-- 3rd Row: Tactical Stats (IM, Melee Base Hit, Movement, Encumbrance) -->
+              <!-- 3rd Row: Tactical Stats (IM, Ranged Base Hit, Melee Base Hit, Movement, Encumbrance) -->
               <div class="tactical-bar header-tactical-row">
                 <div class="tactical-stat">
                   <span class="tactical-label">IM</span>
                   <span class="tactical-value">+{{ derivedIM }}</span>
+                </div>
+                <div class="tactical-stat">
+                  <span class="tactical-label">Ranged Base Hit</span>
+                  <span class="tactical-value">{{ derivedRangedHit }}%</span>
                 </div>
                 <div class="tactical-stat">
                   <span class="tactical-label">Melee Base Hit</span>
@@ -1406,6 +1410,7 @@ import {
   validateForgeDamageFormula,
   validateForgedItem,
   calcIM,
+  calcRangedHit,
   calcMeleeHit,
   calcMaxCarry,
   calcUnencumberedMax,
@@ -1684,6 +1689,10 @@ export default {
     derivedIM() {
       if (!this.selectedChar) return 5;
       return calcIM(this.selectedChar.rs);
+    },
+    derivedRangedHit() {
+      if (!this.selectedChar) return 25;
+      return calcRangedHit(this.selectedChar.dex);
     },
     derivedMeleeHit() {
       if (!this.selectedChar) return 25;
@@ -2527,6 +2536,8 @@ export default {
           baseVal = Math.ceil((this.selectedChar.ldr ?? 50) / 2);
         } else if (offSk.baseChance.includes('Melee Base')) {
           baseVal = this.derivedMeleeHit;
+        } else if (offSk.baseChance.includes('Ranged Base')) {
+          baseVal = this.derivedRangedHit;
         }
       }
       const lvl = (typeof skill.level === 'number' && skill.level > 0) ? skill.level : 0;
@@ -3811,7 +3822,7 @@ export default {
 /* Derived Tactical Sub-Stats Bar (3rd row in sheet header) */
 .tactical-bar {
   display: grid;
-  grid-template-columns: repeat(3, 1fr) 2fr;
+  grid-template-columns: repeat(4, 1fr) 2fr;
   gap: 12px;
   align-items: center;
   background: transparent;

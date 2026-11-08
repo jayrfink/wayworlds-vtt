@@ -19,6 +19,7 @@ import {
   calcXPCost,
   calcIM,
   calcPunchDamage,
+  calcRangedHit,
   calcMeleeHit,
   calcMaxCarry,
   calcUnencumberedMax,
@@ -137,6 +138,15 @@ describe('characterRules.js Math Helpers with Nullish Coalescing (0-safe)', () =
     expect(calcPunchDamage(85)).toBe('5');
     expect(calcPunchDamage(undefined)).toBe('3');
     expect(calcPunchDamage(null)).toBe('3');
+  });
+
+  it('calcRangedHit correctly calculates ceil(dex / 2) and handles 0 or undefined', () => {
+    expect(calcRangedHit(0)).toBe(0);
+    expect(calcRangedHit(50)).toBe(25);
+    expect(calcRangedHit(55)).toBe(28); // Math.ceil(55 / 2) = 28
+    expect(calcRangedHit(60)).toBe(30);
+    expect(calcRangedHit(undefined)).toBe(25);
+    expect(calcRangedHit(null)).toBe(25);
   });
 
   it('calcMeleeHit correctly handles 0 for str or dex without resetting to 50', () => {

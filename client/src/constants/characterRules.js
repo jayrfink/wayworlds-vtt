@@ -789,6 +789,14 @@ export function calcPunchDamage(str) {
 }
 
 /**
+ * Calculate base ranged hit % = ceil(DEX / 2).
+ */
+export function calcRangedHit(dex) {
+  const d = dex ?? 50;
+  return Math.ceil(d / 2);
+}
+
+/**
  * Calculate base melee hit % = Higher of ceil(STR / 2) or ceil(DEX / 2).
  */
 export function calcMeleeHit(str, dex) {

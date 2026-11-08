@@ -1573,6 +1573,59 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
         global.fetch = origFetch;
       }
     });
+
+    it('renders tactical bar with Ranged Base Hit between IM and Melee Base Hit', async () => {
+      setActivePinia(createPinia());
+      const auth = useAuthStore();
+      auth.user = { id: 1, username: 'gmUser', role: 'GameMaster' };
+
+      const origFetch = global.fetch;
+      global.fetch = vi.fn().mockImplementation((url) => {
+        if (url === '/api/characters') {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve([{
+              id: 1,
+              user_id: 1,
+              owner_username: 'gmUser',
+              name: 'Archer Val',
+              race: 'Dawn Elf',
+              psa: 'Martial',
+              dex: 60,
+              rs: 50,
+              str: 40,
+              sta: 45,
+              current_stamina: 45,
+              max_stamina: 45,
+              current_xp: 0,
+            }]),
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+      });
+
+      try {
+        const wrapper = mount(CharacterSheetsView, {
+          global: { stubs: { ImageBrowserModal: true } },
+        });
+        await flushPromises();
+
+        const tacticalBar = wrapper.find('.header-tactical-row');
+        expect(tacticalBar.exists()).toBe(true);
+
+        const labels = tacticalBar.findAll('.tactical-label').map(l => l.text());
+        expect(labels[0]).toBe('IM');
+        expect(labels[1]).toBe('Ranged Base Hit');
+        expect(labels[2]).toBe('Melee Base Hit');
+
+        const values = tacticalBar.findAll('.tactical-value').map(v => v.text());
+        expect(values[0]).toBe('+5');
+        expect(values[1]).toBe('30%'); // ceil(60/2) = 30%
+        expect(values[2]).toBe('30%'); // max(ceil(40/2)=20, ceil(60/2)=30) = 30%
+      } finally {
+        global.fetch = origFetch;
+      }
+    });
   });
 
   describe('Species Traits & Abilities Banner Presentation', () => {
