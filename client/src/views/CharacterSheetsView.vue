@@ -795,7 +795,7 @@
                 >⋮⋮</span>
                 <div class="inventory-item-badge" :title="getInventoryItemTooltip(item)">
                   <span class="inventory-item-name">{{ item.name }}</span>
-                  <span v-if="item.notes" class="inventory-item-traits">— {{ item.notes }}</span>
+                  <span v-if="getInventoryItemAttributes(item)" class="inventory-item-traits">— {{ getInventoryItemAttributes(item) }}</span>
                 </div>
                 <div class="level-wrap inventory-qty-wrap">
                   <label>Qty:</label>
@@ -1462,6 +1462,17 @@
               />
             </div>
           </div>
+          <div class="form-row">
+            <div class="form-group" style="flex: 1;">
+              <label>Weapon Damage Dice (Optional)</label>
+              <input
+                type="text"
+                v-model="customItemForm.damage_dice"
+                class="forge-name-input"
+                placeholder="e.g. 2d10 (1H) / 3d10 (2H), 1d10+2"
+              />
+            </div>
+          </div>
           <div class="form-row" style="display: flex; gap: 12px;">
             <div class="form-group" style="flex: 1;">
               <label>Weight (lbs)</label>
@@ -1567,6 +1578,100 @@ export function parseCharacterNotePanels(notes) {
     ];
   }
   return [];
+}
+
+export function resolveWeaponDamage(item, equipmentList = []) {
+  if (!item) return '';
+  if (item.damage_dice) return String(item.damage_dice).trim();
+  if (item.damage) return String(item.damage).trim();
+
+  if (item.notes) {
+    const match = item.notes.match(/damage[:\s]+([^|•,;]+)/i);
+    if (match && match[1]) {
+      return match[1].trim();
+    }
+  }
+
+  const itemName = (item.name || '').toLowerCase().trim();
+  if (!itemName) return '';
+
+  if (Array.isArray(equipmentList)) {
+    const eqMatch = equipmentList.find((eq) => {
+      const eqName = (eq.name || '').toLowerCase().trim();
+      return eqName === itemName || eqName.includes(itemName) || itemName.includes(eqName);
+    });
+    if (eqMatch && (eqMatch.category === 'Weapon' || eqMatch.damage_dice)) {
+      if (eqMatch.damage_dice) return String(eqMatch.damage_dice).trim();
+    }
+  }
+
+  const CANONICAL_WEAPON_DAMAGE = {
+    'dagger': '1d10',
+    'dagger / kunai': '1d10',
+    'shortsword': '1d10',
+    'shortsword / scimitar': '1d10',
+    'rapier': '1d10',
+    'handaxe': '1d10',
+    'handaxe / sickle': '1d10',
+    'sickle': '1d10',
+    'spear': '1d10',
+    'spear / quarterstaff': '2d10',
+    'quarterstaff': '1d10',
+    'longsword': '2d10 (1H) / 3d10 (2H)',
+    'broadsword': '2d10 (1H) / 3d10 (2H)',
+    'broadsword / longsword': '2d10 (1H) / 3d10 (2H)',
+    'battleaxe': '2d10 (1H) / 3d10 (2H)',
+    'battleaxe / warhammer / mace': '2d10 (1H) / 3d10 (2H)',
+    'battleaxe / warhammer / flail': '2d10 (1H) / 3d10 (2H)',
+    'warhammer': '2d10 (1H) / 3d10 (2H)',
+    'mace': '2d10 (1H) / 3d10 (2H)',
+    'flail': '2d10 (1H) / 3d10 (2H)',
+    'bastard sword': '2d10 (1H w/ STR 55+) / 3d10 (2H)',
+    'greatsword': '3d10',
+    'greataxe': '3d10',
+    'greatsword / greataxe / maul': '3d10',
+    'maul': '3d10',
+    'halberd': '3d10',
+    'halberd / glaive / pike': '3d10',
+    'glaive': '3d10',
+    'pike': '3d10',
+    'shortbow': '1d10',
+    'longbow': '2d10',
+    'light crossbow': '2d10',
+    'heavy crossbow': '3d10',
+    'crossbow': '2d10',
+    'sling': '1d10',
+    'javelin': '1d10',
+    'javelin / thrown spear': '1d10',
+    'unarmed strike': '1d5',
+  };
+
+  for (const [k, dmg] of Object.entries(CANONICAL_WEAPON_DAMAGE)) {
+    if (itemName === k || itemName.includes(k) || k.includes(itemName)) {
+      return dmg;
+    }
+  }
+
+  return '';
+}
+
+export function formatInventoryItemAttributes(item, equipmentList = []) {
+  if (!item) return '';
+  const notes = (item.notes || '').trim();
+  const dmg = resolveWeaponDamage(item, equipmentList);
+
+  if (!dmg) {
+    return notes;
+  }
+
+  if (/damage[:\s]/i.test(notes)) {
+    return notes;
+  }
+
+  if (notes) {
+    return `Damage: ${dmg} • ${notes}`;
+  }
+  return `Damage: ${dmg}`;
 }
 
 export default {
@@ -2737,11 +2842,19 @@ export default {
     addEquipment(item) {
       if (!this.selectedChar) return;
       if (!this.selectedChar.inventory) this.selectedChar.inventory = [];
+      const baseNotes = item.capabilities || item.properties || '';
+      let notes = baseNotes;
+      const dmg = item.damage_dice || (item.damage ? item.damage : '');
+      if (dmg && !baseNotes.toLowerCase().includes('damage')) {
+        notes = baseNotes ? `Damage: ${dmg} • ${baseNotes}` : `Damage: ${dmg}`;
+      }
       this.selectedChar.inventory.push({
         name: item.name,
         quantity: 1,
         weight: Number(item.weight ?? item.weight_lbs) || 0,
-        notes: item.capabilities || item.properties || ''
+        damage_dice: dmg || '',
+        category: item.category || '',
+        notes
       });
       this.updateCharacter();
       this.recentlyAddedMap = { ...this.recentlyAddedMap, [item.name]: true };
@@ -2755,6 +2868,7 @@ export default {
       this.customItemForm = {
         name: '',
         notes: '',
+        damage_dice: '',
         weight: 1.0,
         quantity: 1,
       };
@@ -2767,9 +2881,16 @@ export default {
       if (!Array.isArray(this.selectedChar.inventory)) {
         this.selectedChar.inventory = [];
       }
+      const rawNotes = (this.customItemForm.notes || '').trim();
+      const dmg = (this.customItemForm.damage_dice || '').trim();
+      let finalNotes = rawNotes;
+      if (dmg && !rawNotes.toLowerCase().includes('damage')) {
+        finalNotes = rawNotes ? `Damage: ${dmg} • ${rawNotes}` : `Damage: ${dmg}`;
+      }
       this.selectedChar.inventory.push({
         name,
-        notes: (this.customItemForm.notes || '').trim(),
+        damage_dice: dmg,
+        notes: finalNotes,
         weight: Math.max(0, Number(this.customItemForm.weight) || 0),
         quantity: Math.max(1, Number(this.customItemForm.quantity) || 1),
       });
@@ -2782,16 +2903,29 @@ export default {
         this.selectedChar.inventory = [];
       }
       if (customItem && typeof customItem === 'object' && customItem.name && typeof customItem.name === 'string') {
+        const rawNotes = customItem.notes || '';
+        const dmg = customItem.damage_dice || customItem.damage || '';
+        let finalNotes = rawNotes;
+        if (dmg && !rawNotes.toLowerCase().includes('damage')) {
+          finalNotes = rawNotes ? `Damage: ${dmg} • ${rawNotes}` : `Damage: ${dmg}`;
+        }
         this.selectedChar.inventory.push({
           name: customItem.name,
+          damage_dice: dmg,
           quantity: Math.max(1, Number(customItem.quantity) || 1),
           weight: Math.max(0, Number(customItem.weight) || 0),
-          notes: customItem.notes || '',
+          notes: finalNotes,
         });
         this.updateCharacter();
         return;
       }
       this.openCustomItemModal();
+    },
+    getWeaponDamage(item) {
+      return resolveWeaponDamage(item, this.equipmentList);
+    },
+    getInventoryItemAttributes(item) {
+      return formatInventoryItemAttributes(item, this.equipmentList);
     },
     getInventoryItemTooltip(item) {
       if (!item) return '';
@@ -2799,8 +2933,11 @@ export default {
       if (item.weight !== undefined && item.weight !== null && item.weight !== '') {
         parts.push(`(${item.weight} lbs)`);
       }
-      if (item.notes) {
-        parts.push(`— ${item.notes}`);
+      const attr = typeof this.getInventoryItemAttributes === 'function'
+        ? this.getInventoryItemAttributes(item)
+        : formatInventoryItemAttributes(item, this.equipmentList);
+      if (attr) {
+        parts.push(`— ${attr}`);
       }
       return parts.join(' ');
     },

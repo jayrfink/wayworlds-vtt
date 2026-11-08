@@ -2538,6 +2538,82 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       expect(wrapper.vm.newCharForm.sta).toBe(65); // Ogre +15 STA
     });
   });
+
+  describe('Weapon Damage Display in Character Sheet Inventory Attributes', () => {
+    it('displays weapon damage in attributes for weapons with or without existing notes', () => {
+      const vm = {
+        equipmentList: [
+          { name: 'Longsword', category: 'Weapon', damage_dice: '2d10 (1H) / 3d10 (2H)' },
+          { name: 'Dagger', category: 'Weapon', damage_dice: '1d10' },
+          { name: 'Padded Armor', category: 'Armor', armor_dr: 2 },
+        ],
+      };
+
+      // 1. Longsword with notes -> Damage prepended
+      const longsword = { name: 'Longsword', notes: 'Versatile (3d10)' };
+      expect(CharacterSheetsView.methods.getInventoryItemAttributes.call(vm, longsword))
+        .toBe('Damage: 2d10 (1H) / 3d10 (2H) • Versatile (3d10)');
+
+      // 2. Dagger without notes -> Damage shown
+      const dagger = { name: 'Dagger' };
+      expect(CharacterSheetsView.methods.getInventoryItemAttributes.call(vm, dagger))
+        .toBe('Damage: 1d10');
+
+      // 3. Item with damage already in notes -> preserved without duplicate
+      const prefilled = { name: 'Spear', notes: 'Damage: 1d10 | Finesse, Light' };
+      expect(CharacterSheetsView.methods.getInventoryItemAttributes.call(vm, prefilled))
+        .toBe('Damage: 1d10 | Finesse, Light');
+
+      // 4. Non-weapon item -> notes returned as-is
+      const armor = { name: 'Padded Armor', notes: '-2 any non-magical attack' };
+      expect(CharacterSheetsView.methods.getInventoryItemAttributes.call(vm, armor))
+        .toBe('-2 any non-magical attack');
+
+      // 5. Tooltip includes attributes with damage
+      expect(CharacterSheetsView.methods.getInventoryItemTooltip.call(vm, longsword))
+        .toBe('Longsword — Damage: 2d10 (1H) / 3d10 (2H) • Versatile (3d10)');
+    });
+
+    it('renders weapon damage in inventory row traits in the DOM', async () => {
+      setActivePinia(createPinia());
+      const wrapper = mount(CharacterSheetsView, {
+        global: {
+          stubs: {
+            ImageBrowserModal: true,
+          },
+        },
+      });
+
+      wrapper.vm.characters = [
+        {
+          id: 1,
+          name: 'Warrior Hero',
+          user_id: 1,
+          inventory: [
+            { name: 'Broadsword / Longsword', quantity: 1, weight: 3, notes: 'Versatile (3d10)' },
+            { name: 'Dagger', quantity: 1, weight: 1, notes: 'Finesse, Thrown' },
+            { name: 'Silk Rope', quantity: 1, weight: 2, notes: '50 ft' },
+          ],
+        },
+      ];
+      wrapper.vm.selectedChar = wrapper.vm.characters[0];
+      await wrapper.vm.$nextTick();
+
+      const traits = wrapper.findAll('.inventory-row .inventory-item-traits');
+      expect(traits.length).toBe(3);
+
+      // Longsword has damage displayed in attributes
+      expect(traits[0].text()).toContain('Damage: 2d10 (1H) / 3d10 (2H)');
+      expect(traits[0].text()).toContain('Versatile (3d10)');
+
+      // Dagger has damage displayed in attributes
+      expect(traits[1].text()).toContain('Damage: 1d10');
+      expect(traits[1].text()).toContain('Finesse, Thrown');
+
+      // Non-weapon maintains its own notes
+      expect(traits[2].text()).toBe('— 50 ft');
+    });
+  });
 });
 
 
