@@ -3930,6 +3930,12 @@ export default {
   font-size: 0.855rem;
 }
 
+.btn-char-color-scheme {
+  font-size: 0.765rem !important;
+  font-weight: 400 !important;
+  padding: 4.5px 12.5px !important;
+}
+
 .select-race,
 .select-psa,
 .select-player,

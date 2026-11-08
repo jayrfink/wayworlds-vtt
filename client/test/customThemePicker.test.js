@@ -2,6 +2,8 @@
  * @vitest-environment happy-dom
  */
 import { describe, it, expect, beforeEach } from 'vitest';
+import fs from 'fs';
+import path from 'path';
 import { mount } from '@vue/test-utils';
 import { createPinia, setActivePinia } from 'pinia';
 import {
@@ -148,6 +150,12 @@ describe('Custom Theme Color Picker & Shadow Clamp', () => {
       const sheetContainer = wrapper.find('.sheet-container');
       expect(sheetContainer.attributes('style')).toContain('--theme-bright: #8b5cf6');
       expect(sheetContainer.attributes('style')).toContain('--theme-btn-bg:');
+    });
+
+    it('styles .btn-char-color-scheme with 10% smaller font-size and padding', () => {
+      const mainCss = fs.readFileSync(path.resolve(__dirname, '../src/main.css'), 'utf8');
+      expect(mainCss).toMatch(/\.btn-char-color-scheme\s*\{[^}]*font-size:\s*0\.765rem/);
+      expect(mainCss).toMatch(/\.btn-char-color-scheme\s*\{[^}]*padding:\s*4\.5px\s+12\.5px/);
     });
   });
 
