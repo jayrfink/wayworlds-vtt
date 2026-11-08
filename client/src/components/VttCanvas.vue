@@ -66,6 +66,10 @@ const props = defineProps({
     type: [Number, String],
     default: null,
   },
+  selectedTokenIds: {
+    type: Array,
+    default: () => [],
+  },
   fogEraser: {
     type: Object,
     default: () => ({ shape: 'circle', size: 3 }),
@@ -77,7 +81,9 @@ const emit = defineEmits([
   'update:panX',
   'update:panY',
   'token-moved',
+  'tokens-moved',
   'token-selected',
+  'tokens-selected',
   'token-dblclick',
   'tokens-updated',
   'map-updated',
@@ -88,6 +94,23 @@ const emit = defineEmits([
 
 const containerRef = ref(null);
 const canvasRef = ref(null);
+
+// Animation loop handle & dirty flag
+let animationFrameId = null;
+let needsRender = false;
+
+function requestRender() {
+  needsRender = true;
+  if (!animationFrameId) {
+    animationFrameId = requestAnimationFrame(() => {
+      animationFrameId = null;
+      if (needsRender) {
+        needsRender = false;
+        drawCanvas();
+      }
+    });
+  }
+}
 
 // Canvas transform & interaction state
 const panX = ref(props.panX);
@@ -177,9 +200,83 @@ const isPanning = ref(false);
 const panStart = { x: 0, y: 0 };
 const isSpacePressed = ref(false);
 
+// Multi-selection state
+const localSelectedTokenIds = ref([]);
+const isMarqueeSelecting = ref(false);
+const marqueeStart = ref({ x: 0, y: 0 });
+const marqueeCurrent = ref({ x: 0, y: 0 });
+const marqueeAdditive = ref(false);
+
 // Dragging token state
 const draggingToken = ref(null);
 const dragCell = ref({ x: 0, y: 0 });
+const dragStartCell = ref({ x: 0, y: 0 });
+const dragTokensList = ref([]);
+const wasGroupClickWithoutShift = ref(false);
+
+watch(
+  () => props.selectedTokenIds,
+  (val) => {
+    if (Array.isArray(val)) {
+      localSelectedTokenIds.value = [...val];
+    }
+    requestRender();
+  },
+  { immediate: true, deep: true }
+);
+
+watch(
+  () => props.selectedTokenId,
+  (val) => {
+    if (val != null) {
+      if (!localSelectedTokenIds.value.includes(val)) {
+        localSelectedTokenIds.value = [val];
+      }
+    } else if (localSelectedTokenIds.value.length <= 1) {
+      localSelectedTokenIds.value = [];
+    }
+    requestRender();
+  },
+  { immediate: true }
+);
+
+function isTokenSelected(tokenId) {
+  return localSelectedTokenIds.value.includes(tokenId) || tokenId === props.selectedTokenId;
+}
+
+function isTokenBeingDragged(tokenId) {
+  if (dragTokensList.value.some((dt) => dt.id === tokenId)) return true;
+  if (draggingToken.value && draggingToken.value.id === tokenId) return true;
+  return false;
+}
+
+function getGroupDeltas(deltaX, deltaY) {
+  if (!dragTokensList.value.length) return { deltaX, deltaY };
+  let minDx = -Infinity;
+  let maxDx = Infinity;
+  let minDy = -Infinity;
+  let maxDy = Infinity;
+
+  for (const dt of dragTokensList.value) {
+    minDx = Math.max(minDx, -dt.origX);
+    maxDx = Math.min(maxDx, mapCols.value - dt.size - dt.origX);
+    minDy = Math.max(minDy, -dt.origY);
+    maxDy = Math.min(maxDy, mapRows.value - dt.size - dt.origY);
+  }
+
+  if (minDx > maxDx) {
+    minDx = -Infinity;
+    maxDx = Infinity;
+  }
+  if (minDy > maxDy) {
+    minDy = -Infinity;
+    maxDy = Infinity;
+  }
+
+  const unifiedDx = Math.max(minDx, Math.min(maxDx, deltaX));
+  const unifiedDy = Math.max(minDy, Math.min(maxDy, deltaY));
+  return { deltaX: unifiedDx, deltaY: unifiedDy };
+}
 
 // Ruler state
 const rulerStart = ref(null);
@@ -335,23 +432,6 @@ function resizeCanvas() {
   requestRender();
 }
 
-// Animation loop handle & dirty flag
-let animationFrameId = null;
-let needsRender = false;
-
-function requestRender() {
-  needsRender = true;
-  if (!animationFrameId) {
-    animationFrameId = requestAnimationFrame(() => {
-      animationFrameId = null;
-      if (needsRender) {
-        needsRender = false;
-        drawCanvas();
-      }
-    });
-  }
-}
-
 function startRenderLoop() {
   requestRender();
 }
@@ -414,13 +494,27 @@ function drawCanvas() {
   // 3. Draw Tokens
   drawTokens(ctx);
 
-  // 4. Draw Dragging Ghost Token (if any)
-  if (draggingToken.value) {
+  // 4. Draw Dragging Ghost Token(s)
+  if (dragTokensList.value.length > 0 && dragCell.value && dragStartCell.value) {
+    const rawDx = dragCell.value.x - dragStartCell.value.x;
+    const rawDy = dragCell.value.y - dragStartCell.value.y;
+    const { deltaX, deltaY } = getGroupDeltas(rawDx, rawDy);
+    for (const dt of dragTokensList.value) {
+      const targetCell = {
+        x: Math.max(0, Math.min(mapCols.value - dt.size, dt.origX + deltaX)),
+        y: Math.max(0, Math.min(mapRows.value - dt.size, dt.origY + deltaY)),
+      };
+      drawGhostToken(ctx, dt.token, targetCell);
+    }
+  } else if (draggingToken.value) {
     drawGhostToken(ctx, draggingToken.value, dragCell.value);
   }
 
   // 4b. Draw Fog of War (above tokens so players cannot see hidden areas)
   drawFogOverlay(ctx, mapW, mapH, dpr);
+
+  // 4c. Draw Marquee Selection (above fog for maximum visibility)
+  drawMarqueeSelection(ctx);
 
   // 5. Draw Tactical Pings
   drawAllPings(ctx, props.pings, performance.now());
@@ -597,6 +691,27 @@ function drawGrid(ctx, mapW, mapH) {
   ctx.stroke();
 }
 
+function drawMarqueeSelection(ctx) {
+  if (!isMarqueeSelecting.value || !marqueeStart.value || !marqueeCurrent.value) return;
+  const minX = Math.min(marqueeStart.value.x, marqueeCurrent.value.x);
+  const maxX = Math.max(marqueeStart.value.x, marqueeCurrent.value.x);
+  const minY = Math.min(marqueeStart.value.y, marqueeCurrent.value.y);
+  const maxY = Math.max(marqueeStart.value.y, marqueeCurrent.value.y);
+  const width = maxX - minX;
+  const height = maxY - minY;
+  if (width < 1 && height < 1) return;
+
+  ctx.save();
+  ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+  ctx.fillRect(minX, minY, width, height);
+
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = Math.max(1, 1.5 / props.zoomLevel);
+  ctx.setLineDash([5 / props.zoomLevel, 3 / props.zoomLevel]);
+  ctx.strokeRect(minX, minY, width, height);
+  ctx.restore();
+}
+
 function drawTokens(ctx) {
   const gSize = gridPx.value;
 
@@ -608,11 +723,11 @@ function drawTokens(ctx) {
   });
 
   sortedTokens.forEach((token) => {
-    if (draggingToken.value && draggingToken.value.id === token.id) {
+    if (isTokenBeingDragged(token.id)) {
       // Skip drawing normal token if being dragged
       return;
     }
-    renderSingleToken(ctx, token, token.x, token.y, gSize, token.id === props.selectedTokenId);
+    renderSingleToken(ctx, token, token.x, token.y, gSize, isTokenSelected(token.id));
   });
 }
 
@@ -978,11 +1093,75 @@ function onMouseDown(e) {
         : null;
 
       if (hitToken) {
-        draggingToken.value = hitToken;
-        dragCell.value = { x: hitToken.x, y: hitToken.y };
-        emit('token-selected', hitToken);
+        const isShift = Boolean(e.shiftKey || e.ctrlKey || e.metaKey);
+        const alreadySelected = localSelectedTokenIds.value.includes(hitToken.id);
+
+        if (isShift) {
+          if (alreadySelected) {
+            localSelectedTokenIds.value = localSelectedTokenIds.value.filter((id) => id !== hitToken.id);
+            const remaining = props.tokens.filter((t) => localSelectedTokenIds.value.includes(t.id));
+            emit('tokens-selected', remaining);
+            emit('token-selected', remaining[0] || null);
+            draggingToken.value = null;
+            dragTokensList.value = [];
+            wasGroupClickWithoutShift.value = false;
+          } else {
+            localSelectedTokenIds.value = [...localSelectedTokenIds.value, hitToken.id];
+            const allSelected = props.tokens.filter((t) => localSelectedTokenIds.value.includes(t.id));
+            emit('tokens-selected', allSelected);
+            emit('token-selected', hitToken);
+
+            draggingToken.value = hitToken;
+            dragStartCell.value = { x: hitToken.x, y: hitToken.y };
+            dragCell.value = { x: hitToken.x, y: hitToken.y };
+            dragTokensList.value = allSelected.map((t) => ({
+              id: t.id,
+              origX: Number(t.x) || 0,
+              origY: Number(t.y) || 0,
+              size: Number(t.size) || 1,
+              token: t,
+            }));
+            wasGroupClickWithoutShift.value = false;
+          }
+        } else {
+          if (alreadySelected) {
+            wasGroupClickWithoutShift.value = localSelectedTokenIds.value.length > 1;
+            emit('token-selected', hitToken);
+            draggingToken.value = hitToken;
+            dragStartCell.value = { x: hitToken.x, y: hitToken.y };
+            dragCell.value = { x: hitToken.x, y: hitToken.y };
+            const allSelected = props.tokens.filter((t) => localSelectedTokenIds.value.includes(t.id));
+            dragTokensList.value = allSelected.map((t) => ({
+              id: t.id,
+              origX: Number(t.x) || 0,
+              origY: Number(t.y) || 0,
+              size: Number(t.size) || 1,
+              token: t,
+            }));
+          } else {
+            wasGroupClickWithoutShift.value = false;
+            localSelectedTokenIds.value = [hitToken.id];
+            emit('tokens-selected', [hitToken]);
+            emit('token-selected', hitToken);
+
+            draggingToken.value = hitToken;
+            dragStartCell.value = { x: hitToken.x, y: hitToken.y };
+            dragCell.value = { x: hitToken.x, y: hitToken.y };
+            dragTokensList.value = [{
+              id: hitToken.id,
+              origX: Number(hitToken.x) || 0,
+              origY: Number(hitToken.y) || 0,
+              size: Number(hitToken.size) || 1,
+              token: hitToken,
+            }];
+          }
+        }
       } else {
-        emit('token-selected', null);
+        const isShift = Boolean(e.shiftKey || e.ctrlKey || e.metaKey);
+        isMarqueeSelecting.value = true;
+        marqueeStart.value = { x: worldPos.x, y: worldPos.y };
+        marqueeCurrent.value = { x: worldPos.x, y: worldPos.y };
+        marqueeAdditive.value = isShift;
       }
       requestRender();
     } else if (cell && props.activeTool === 'measure') {
@@ -1051,6 +1230,12 @@ function onMouseMove(e) {
     return;
   }
 
+  if (isMarqueeSelecting.value) {
+    marqueeCurrent.value = { x: worldPos.x, y: worldPos.y };
+    requestRender();
+    return;
+  }
+
   if (cell && draggingToken.value) {
     dragCell.value = cell;
     requestRender();
@@ -1098,15 +1283,95 @@ function onMouseUp(e) {
     requestRender();
   }
 
-  if (draggingToken.value) {
-    if (dragCell.value.x !== draggingToken.value.x || dragCell.value.y !== draggingToken.value.y) {
-      emit('token-moved', {
-        id: draggingToken.value.id,
-        x: dragCell.value.x,
-        y: dragCell.value.y,
+  if (isMarqueeSelecting.value) {
+    isMarqueeSelecting.value = false;
+    const startX = marqueeStart.value.x;
+    const startY = marqueeStart.value.y;
+    const currX = marqueeCurrent.value.x;
+    const currY = marqueeCurrent.value.y;
+
+    const minX = Math.min(startX, currX);
+    const maxX = Math.max(startX, currX);
+    const minY = Math.min(startY, currY);
+    const maxY = Math.max(startY, currY);
+
+    const dist = Math.hypot(maxX - minX, maxY - minY);
+    if (dist < 4) {
+      if (!marqueeAdditive.value) {
+        localSelectedTokenIds.value = [];
+        emit('tokens-selected', []);
+        emit('token-selected', null);
+      }
+    } else {
+      const gSize = gridPx.value;
+      const hitTokens = props.tokens.filter((t) => {
+        if (t.layer === 'gm' && !props.isGm) return false;
+        const tx = (Number(t.x) || 0) * gSize;
+        const ty = (Number(t.y) || 0) * gSize;
+        const tSize = (Number(t.size) || 1) * gSize;
+        return minX < tx + tSize && maxX > tx && minY < ty + tSize && maxY > ty;
       });
+
+      let nextIds = [];
+      if (marqueeAdditive.value) {
+        nextIds = Array.from(new Set([...localSelectedTokenIds.value, ...hitTokens.map((t) => t.id)]));
+      } else {
+        nextIds = hitTokens.map((t) => t.id);
+      }
+      localSelectedTokenIds.value = nextIds;
+      const selectedObjects = props.tokens.filter((t) => nextIds.includes(t.id));
+      emit('tokens-selected', selectedObjects);
+      emit('token-selected', selectedObjects[0] || null);
     }
+    requestRender();
+  }
+
+  if (draggingToken.value) {
+    const rawDx = dragCell.value.x - dragStartCell.value.x;
+    const rawDy = dragCell.value.y - dragStartCell.value.y;
+
+    if (rawDx !== 0 || rawDy !== 0) {
+      const { deltaX, deltaY } = getGroupDeltas(rawDx, rawDy);
+      const movedTokens = [];
+      const list = dragTokensList.value.length > 0 ? dragTokensList.value : [{
+        id: draggingToken.value.id,
+        origX: Number(draggingToken.value.x) || 0,
+        origY: Number(draggingToken.value.y) || 0,
+        size: Number(draggingToken.value.size) || 1,
+        token: draggingToken.value,
+      }];
+
+      for (const dt of list) {
+        const targetX = Math.max(0, Math.min(mapCols.value - dt.size, dt.origX + deltaX));
+        const targetY = Math.max(0, Math.min(mapRows.value - dt.size, dt.origY + deltaY));
+        if (targetX !== dt.origX || targetY !== dt.origY) {
+          movedTokens.push({
+            id: dt.id,
+            x: targetX,
+            y: targetY,
+          });
+        }
+      }
+
+      if (movedTokens.length > 0) {
+        emit('tokens-moved', movedTokens);
+        if (movedTokens.length === 1) {
+          emit('token-moved', movedTokens[0]);
+        } else {
+          for (const m of movedTokens) {
+            emit('token-moved', m);
+          }
+        }
+      }
+    } else if (wasGroupClickWithoutShift.value && draggingToken.value) {
+      localSelectedTokenIds.value = [draggingToken.value.id];
+      emit('tokens-selected', [draggingToken.value]);
+      emit('token-selected', draggingToken.value);
+    }
+
     draggingToken.value = null;
+    dragTokensList.value = [];
+    wasGroupClickWithoutShift.value = false;
     requestRender();
   }
 }
@@ -1138,6 +1403,14 @@ function onKeyDown(e) {
     e.preventDefault();
     if (!isSpacePressed.value) {
       isSpacePressed.value = true;
+    }
+  }
+  if (e.key === 'Escape' && e.target.tagName !== 'INPUT' && e.target.tagName !== 'TEXTAREA') {
+    if (localSelectedTokenIds.value.length > 0) {
+      localSelectedTokenIds.value = [];
+      emit('tokens-selected', []);
+      emit('token-selected', null);
+      requestRender();
     }
   }
 }

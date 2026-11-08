@@ -393,8 +393,11 @@
           v-model:pan-y="panY"
           :is-gm="isGm"
           :selected-token-id="selectedTokenId"
+          :selected-token-ids="selectedTokenIds"
           @token-moved="onTokenMoved"
+          @tokens-moved="onTokensMoved"
           @token-selected="onTokenSelected"
+          @tokens-selected="onTokensSelected"
           @token-dblclick="onTokenDblClick"
           @tokens-updated="tokens = $event"
           @map-updated="activeMap = $event"
@@ -619,6 +622,9 @@
 
           <!-- Selected Token Details -->
           <div v-if="selectedToken" class="section-box token-inspector">
+            <div v-if="selectedTokenIds.length > 1" class="multi-tokens-badge">
+              <span>👥 Group Selected ({{ selectedTokenIds.length }} tokens)</span>
+            </div>
             <div class="token-title-row">
               <span
                 class="token-color-badge"
@@ -718,8 +724,8 @@
               <li
                 v-for="t in tokens"
                 :key="t.id"
-                :class="{ active: selectedTokenId === t.id, 'token-row-hidden': t.layer === 'gm' }"
-                @click="onTokenSelected(t)"
+                :class="{ active: selectedTokenIds.includes(t.id) || selectedTokenId === t.id, 'token-row-hidden': t.layer === 'gm' }"
+                @click="onTokenListClick($event, t)"
                 @dblclick="onTokenListDblClick(t)"
               >
                 <span class="token-dot" :style="{ backgroundColor: t.color || '#666666' }"></span>
@@ -1281,6 +1287,7 @@ const panY = ref(initialVttState.panY ?? 50);
 const activeTool = ref(initialVttState.activeTool || 'select');
 const zoomLevel = ref(initialVttState.zoomLevel ?? 1.0);
 const selectedTokenId = ref(initialVttState.selectedTokenId ?? null);
+const selectedTokenIds = ref(selectedTokenId.value ? [selectedTokenId.value] : []);
 
 // Tactical Pings State
 const activePings = ref({});
@@ -1994,7 +2001,11 @@ async function submitAddToken() {
 
 let colorDebounceTimer = null;
 
-async function onTokenMoved({ id, x, y }) {
+async function onTokenMoved(payload) {
+  if (Array.isArray(payload)) {
+    return onTokensMoved(payload);
+  }
+  const { id, x, y } = payload;
   if (colorDebounceTimer) {
     clearTimeout(colorDebounceTimer);
     colorDebounceTimer = null;
@@ -2030,6 +2041,54 @@ async function onTokenMoved({ id, x, y }) {
   }
 }
 
+async function onTokensMoved(movedList) {
+  if (!Array.isArray(movedList) || movedList.length === 0) return;
+  if (movedList.length === 1) {
+    return onTokenMoved(movedList[0]);
+  }
+  if (colorDebounceTimer) {
+    clearTimeout(colorDebounceTimer);
+    colorDebounceTimer = null;
+  }
+
+  // 1. Optimistically update local positions immediately
+  for (const item of movedList) {
+    const cur = tokens.value.find((t) => t.id === item.id);
+    if (cur) {
+      cur.x = item.x;
+      cur.y = item.y;
+    }
+  }
+  tokens.value = [...tokens.value];
+
+  // 2. Persist in parallel
+  try {
+    const updatePromises = movedList.map(async (item) => {
+      const cur = tokens.value.find((t) => t.id === item.id);
+      const color = (selectedToken.value && selectedToken.value.id === item.id)
+        ? selectedTokenForm.color
+        : (cur?.color || '#666666');
+      const res = await fetch(`/api/tokens/${item.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ x: item.x, y: item.y, color }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        const idx = tokens.value.findIndex((t) => t.id === item.id);
+        if (idx !== -1) {
+          tokens.value[idx] = updated;
+        }
+      }
+    });
+    await Promise.allSettled(updatePromises);
+    tokens.value = [...tokens.value];
+  } catch (err) {
+    console.error('Failed to move tokens group:', err);
+  }
+}
+
 function onTokenSelected(token) {
   if (colorDebounceTimer) {
     clearTimeout(colorDebounceTimer);
@@ -2037,8 +2096,41 @@ function onTokenSelected(token) {
     updateSelectedToken();
   }
   selectedTokenId.value = token ? token.id : null;
+  selectedTokenIds.value = token ? [token.id] : [];
   if (token) {
     persistVttState();
+  }
+}
+
+function onTokensSelected(tokenList) {
+  if (colorDebounceTimer) {
+    clearTimeout(colorDebounceTimer);
+    colorDebounceTimer = null;
+    updateSelectedToken();
+  }
+  if (!Array.isArray(tokenList) || tokenList.length === 0) {
+    selectedTokenId.value = null;
+    selectedTokenIds.value = [];
+  } else {
+    selectedTokenIds.value = tokenList.map((t) => (typeof t === 'object' && t ? t.id : t));
+    selectedTokenId.value = selectedTokenIds.value[0] || null;
+  }
+  persistVttState();
+}
+
+function onTokenListClick(e, token) {
+  const isShift = Boolean(e && (e.shiftKey || e.ctrlKey || e.metaKey));
+  if (isShift) {
+    if (selectedTokenIds.value.includes(token.id)) {
+      selectedTokenIds.value = selectedTokenIds.value.filter((id) => id !== token.id);
+      selectedTokenId.value = selectedTokenIds.value[0] || null;
+    } else {
+      selectedTokenIds.value = [...selectedTokenIds.value, token.id];
+      selectedTokenId.value = token.id;
+    }
+    persistVttState();
+  } else {
+    onTokenSelected(token);
   }
 }
 
@@ -3772,6 +3864,21 @@ onBeforeUnmount(() => {
 .token-list li.active {
   border-color: var(--accent);
   background: rgba(88, 166, 255, 0.1);
+}
+
+.multi-tokens-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.4);
+  color: #38bdf8;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 8px;
+  letter-spacing: 0.03em;
 }
 
 .token-dot,
