@@ -17,7 +17,7 @@ describe('Database', () => {
     db = createTestDb();
     const columns = db.pragma('table_info(users)');
     const colNames = columns.map(c => c.name);
-    expect(colNames).toEqual(['id', 'username', 'password_hash', 'role', 'created_at']);
+    expect(colNames).toEqual(['id', 'username', 'password_hash', 'role', 'created_at', 'preferences']);
   });
 
   it('defaults role to Player', () => {
@@ -49,7 +49,7 @@ describe('Database', () => {
       const pragma = db.pragma('journal_mode');
       expect(pragma[0].journal_mode).toBe('wal');
       const columns = db.pragma('table_info(users)');
-      expect(columns.length).toBe(5);
+      expect(columns.length).toBe(6);
     } finally {
       if (db) {
         db.close();

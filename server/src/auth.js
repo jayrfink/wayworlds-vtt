@@ -121,6 +121,16 @@ export function purgeUserSessions(req, userId, db, excludeSessionId) {
   }
 }
 
+function parseUserPreferences(raw) {
+  if (!raw) return {};
+  try {
+    const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw;
+    return parsed && typeof parsed === 'object' && !Array.isArray(parsed) ? parsed : {};
+  } catch {
+    return {};
+  }
+}
+
 export function createAuthRouter(db) {
   const router = Router();
 
@@ -220,6 +230,7 @@ export function createAuthRouter(db) {
       }
 
       // Mitigate session fixation by regenerating session on successful login
+      const userPreferences = parseUserPreferences(user.preferences);
       if (req.session && typeof req.session.regenerate === 'function') {
         req.session.regenerate((err) => {
           if (err) {
@@ -233,17 +244,17 @@ export function createAuthRouter(db) {
                 console.error('Session save error:', saveErr);
                 return res.status(500).json({ error: 'Login failed' });
               }
-              res.json({ id: user.id, username: user.username, role: user.role });
+              res.json({ id: user.id, username: user.username, role: user.role, preferences: userPreferences });
             });
           } else {
-            res.json({ id: user.id, username: user.username, role: user.role });
+            res.json({ id: user.id, username: user.username, role: user.role, preferences: userPreferences });
           }
         });
       } else {
         if (req.session) {
           req.session.userId = user.id;
         }
-        res.json({ id: user.id, username: user.username, role: user.role });
+        res.json({ id: user.id, username: user.username, role: user.role, preferences: userPreferences });
       }
     } catch (err) {
       console.error('Login error:', err);
@@ -261,11 +272,56 @@ export function createAuthRouter(db) {
   });
 
   router.get('/me', requireAuth, (req, res) => {
-    const user = db.prepare('SELECT id, username, role FROM users WHERE id = ?').get(req.session.userId);
+    const user = db.prepare('SELECT id, username, role, preferences FROM users WHERE id = ?').get(req.session.userId);
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
     }
-    res.json(user);
+    res.json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      preferences: parseUserPreferences(user.preferences),
+    });
+  });
+
+  router.put('/preferences', requireAuth, (req, res) => {
+    try {
+      const preferences = req.body;
+      if (!preferences || typeof preferences !== 'object' || Array.isArray(preferences)) {
+        return res.status(400).json({ error: 'Preferences must be an object' });
+      }
+
+      const user = db.prepare('SELECT preferences FROM users WHERE id = ?').get(req.session.userId);
+      if (!user) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const current = parseUserPreferences(user.preferences);
+      const merged = { ...current, ...preferences };
+
+      if (preferences.dice_colors !== undefined) {
+        if (preferences.dice_colors === null) {
+          delete merged.dice_colors;
+        } else if (typeof preferences.dice_colors !== 'object' || Array.isArray(preferences.dice_colors)) {
+          return res.status(400).json({ error: 'dice_colors must be an object' });
+        } else {
+          const hexPattern = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+          const sanitizedColors = {};
+          for (const [key, val] of Object.entries(preferences.dice_colors)) {
+            if (typeof val === 'string' && hexPattern.test(val.trim())) {
+              sanitizedColors[key] = val.trim().toLowerCase();
+            }
+          }
+          merged.dice_colors = { ...(current.dice_colors || {}), ...sanitizedColors };
+        }
+      }
+
+      db.prepare('UPDATE users SET preferences = ? WHERE id = ?').run(JSON.stringify(merged), req.session.userId);
+      res.json({ ok: true, preferences: merged });
+    } catch (err) {
+      console.error('Update preferences error:', err);
+      res.status(500).json({ error: 'Failed to update preferences' });
+    }
   });
 
   router.get('/users', requireGM(db), (req, res) => {

@@ -11,14 +11,18 @@ import {
   getSavedDiceColors,
   saveDiceColors,
   resetDiceColors,
+  syncDiceColorsWithUser,
   getContrastingNumberColor,
   getContrastRatio,
 } from '../src/utils/diceColorManager.js';
+import { createPinia, setActivePinia } from 'pinia';
+import { useAuthStore } from '../src/stores/auth.js';
 import DiceColorModal from '../src/components/DiceColorModal.vue';
 
 describe('Dice Color Management & Modal', () => {
   beforeEach(() => {
     localStorage.clear();
+    setActivePinia(createPinia());
   });
 
   describe('diceColorManager utility', () => {
@@ -73,6 +77,36 @@ describe('Dice Color Management & Modal', () => {
       resetDiceColors();
       const loaded = getSavedDiceColors();
       expect(loaded.damage).toBe(DEFAULT_DICE_COLORS.damage);
+    });
+
+    it('syncDiceColorsWithUser synchronizes account dice colors into storage', () => {
+      const userWithColors = {
+        id: 1,
+        username: 'gm',
+        preferences: {
+          dice_colors: {
+            damage: '#9933cc',
+            percentileTens: '#118822',
+          },
+        },
+      };
+
+      const result = syncDiceColorsWithUser(userWithColors);
+      expect(result.damage).toBe('#9933cc');
+      expect(result.percentileTens).toBe('#118822');
+
+      const loaded = getSavedDiceColors();
+      expect(loaded.damage).toBe('#9933cc');
+      expect(loaded.percentileTens).toBe('#118822');
+      expect(loaded.percentileOnes).toBe(DEFAULT_DICE_COLORS.percentileOnes);
+    });
+
+    it('syncDiceColorsWithUser returns existing saved dice colors if user has no preferences', () => {
+      saveDiceColors({ damage: '#ff3311' });
+      const userWithoutColors = { id: 2, username: 'player' };
+
+      const result = syncDiceColorsWithUser(userWithoutColors);
+      expect(result.damage).toBe('#ff3311');
     });
 
     it('automatically calculates readable contrasting number color', () => {
@@ -139,6 +173,34 @@ describe('Dice Color Management & Modal', () => {
       await doneBtn.trigger('click');
       expect(wrapper.emitted('update:modelValue')).toBeTruthy();
       expect(wrapper.emitted('update:modelValue')[0]).toEqual([false]);
+    });
+
+    it('syncs updated colors to authStore.updatePreferences when authenticated', async () => {
+      const auth = useAuthStore();
+      auth.user = { id: 1, username: 'gm', role: 'GameMaster', preferences: {} };
+      let updatedPayload = null;
+      auth.updatePreferences = async (prefs) => {
+        updatedPayload = prefs;
+        return prefs;
+      };
+
+      const wrapper = mount(DiceColorModal, {
+        props: {
+          modelValue: true,
+        },
+      });
+
+      const damageInput = wrapper.findAll('input[type="color"]')[2];
+      await damageInput.setValue('#112233');
+
+      expect(updatedPayload).not.toBeNull();
+      expect(updatedPayload.dice_colors.damage).toBe('#112233');
+
+      // Test reset calls updatePreferences with defaults
+      const resetBtn = wrapper.find('.btn-dice-reset');
+      await resetBtn.trigger('click');
+
+      expect(updatedPayload.dice_colors.damage).toBe(DEFAULT_DICE_COLORS.damage);
     });
   });
 });

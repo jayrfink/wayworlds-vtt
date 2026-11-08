@@ -206,7 +206,7 @@ describe('Auth API', () => {
   });
 
   describe('GET /api/auth/me', () => {
-    it('returns user info when authenticated', async () => {
+    it('returns user info with preferences when authenticated', async () => {
       const agent = request.agent(app);
       await agent
         .post('/api/auth/register')
@@ -218,11 +218,90 @@ describe('Auth API', () => {
       expect(res.status).toBe(200);
       expect(res.body.username).toBe('gm');
       expect(res.body.role).toBe('GameMaster');
+      expect(res.body.preferences).toEqual({});
     });
 
     it('returns 401 when not authenticated', async () => {
       const res = await request(app).get('/api/auth/me');
       expect(res.status).toBe(401);
+    });
+  });
+
+  describe('PUT /api/auth/preferences', () => {
+    it('returns 401 when unauthenticated', async () => {
+      const res = await request(app)
+        .put('/api/auth/preferences')
+        .send({ dice_colors: { damage: '#ff0000' } });
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 400 when body is not a valid JSON object', async () => {
+      const agent = request.agent(app);
+      await agent
+        .post('/api/auth/register')
+        .send({ username: 'gm', password: 'password123' });
+      await agent
+        .post('/api/auth/login')
+        .send({ username: 'gm', password: 'password123' });
+
+      const res = await agent
+        .put('/api/auth/preferences')
+        .send([1, 2, 3]);
+      expect(res.status).toBe(400);
+      expect(res.body.error).toContain('object');
+    });
+
+    it('saves user dice colors and returns them in GET /api/auth/me', async () => {
+      const agent = request.agent(app);
+      await agent
+        .post('/api/auth/register')
+        .send({ username: 'gm', password: 'password123' });
+      await agent
+        .post('/api/auth/login')
+        .send({ username: 'gm', password: 'password123' });
+
+      const customDice = {
+        percentileTens: '#123456',
+        percentileOnes: '#abcdef',
+        damage: '#ff9900',
+        initiativePlayer: '#001122',
+        initiativeOpp: '#334455',
+      };
+
+      const putRes = await agent
+        .put('/api/auth/preferences')
+        .send({ dice_colors: customDice });
+      expect(putRes.status).toBe(200);
+      expect(putRes.body.ok).toBe(true);
+      expect(putRes.body.preferences.dice_colors).toEqual(customDice);
+
+      // Verify GET /api/auth/me returns the updated preferences
+      const meRes = await agent.get('/api/auth/me');
+      expect(meRes.status).toBe(200);
+      expect(meRes.body.preferences.dice_colors).toEqual(customDice);
+    });
+
+    it('merges partial preference updates without overwriting existing settings', async () => {
+      const agent = request.agent(app);
+      await agent
+        .post('/api/auth/register')
+        .send({ username: 'gm', password: 'password123' });
+      await agent
+        .post('/api/auth/login')
+        .send({ username: 'gm', password: 'password123' });
+
+      await agent
+        .put('/api/auth/preferences')
+        .send({ dice_colors: { damage: '#ff0000', percentileTens: '#00ff00' }, custom_theme: 'maroons' });
+
+      const updateRes = await agent
+        .put('/api/auth/preferences')
+        .send({ dice_colors: { damage: '#0000ff' } });
+
+      expect(updateRes.status).toBe(200);
+      expect(updateRes.body.preferences.custom_theme).toBe('maroons');
+      expect(updateRes.body.preferences.dice_colors.percentileTens).toBe('#00ff00');
+      expect(updateRes.body.preferences.dice_colors.damage).toBe('#0000ff');
     });
   });
 

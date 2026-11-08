@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
 import { socket } from '../services/socket.js';
+import { syncDiceColorsWithUser, saveDiceColors } from '../utils/diceColorManager.js';
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref(null);
@@ -27,6 +28,7 @@ export const useAuthStore = defineStore('auth', () => {
       const res = await fetch('/api/auth/me', { credentials: 'include' });
       if (res.ok) {
         user.value = await res.json();
+        syncDiceColorsWithUser(user.value);
         if (socket && !socket.connected) {
           socket.connect();
         }
@@ -51,6 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
       throw new Error(data.error || 'Login failed');
     }
     user.value = await res.json();
+    syncDiceColorsWithUser(user.value);
     if (socket) {
       if (socket.connected) {
         socket.disconnect();
@@ -98,5 +101,25 @@ export const useAuthStore = defineStore('auth', () => {
     return data;
   }
 
-  return { user, checked, requiresSetup, isAuthenticated, fetchUser, login, register, logout, checkSetup, changePassword };
+  async function updatePreferences(partialPreferences) {
+    const res = await fetch('/api/auth/preferences', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(partialPreferences),
+      credentials: 'include',
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      throw new Error(data.error || 'Failed to update preferences');
+    }
+    if (user.value) {
+      user.value.preferences = data.preferences || { ...(user.value.preferences || {}), ...partialPreferences };
+    }
+    if (partialPreferences?.dice_colors) {
+      saveDiceColors(partialPreferences.dice_colors);
+    }
+    return data.preferences;
+  }
+
+  return { user, checked, requiresSetup, isAuthenticated, fetchUser, login, register, logout, checkSetup, changePassword, updatePreferences };
 });

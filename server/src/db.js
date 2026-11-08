@@ -75,7 +75,8 @@ function migrate(db, dataDir = null) {
       username TEXT UNIQUE NOT NULL,
       password_hash TEXT NOT NULL,
       role TEXT NOT NULL DEFAULT 'Player' CHECK(role IN ('Player', 'GameMaster')),
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      preferences TEXT DEFAULT '{}'
     );
 
     CREATE TABLE IF NOT EXISTS character_sheets (
@@ -273,6 +274,11 @@ function migrate(db, dataDir = null) {
     if (cols.includes(from) && !cols.includes(to)) {
       db.exec(`ALTER TABLE ${table} RENAME COLUMN ${from} TO ${to}`);
     }
+  }
+
+  const userCols = db.prepare("PRAGMA table_info(users)").all().map(c => c.name);
+  if (!userCols.includes('preferences')) {
+    db.exec("ALTER TABLE users ADD COLUMN preferences TEXT DEFAULT '{}'");
   }
 
   const mapCols = db.prepare("PRAGMA table_info(maps)").all().map(c => c.name);

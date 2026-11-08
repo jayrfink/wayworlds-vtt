@@ -210,6 +210,7 @@
 
 <script setup>
 import { reactive, watch, onMounted } from 'vue';
+import { useAuthStore } from '../stores/auth.js';
 import {
   DEFAULT_DICE_COLORS,
   getSavedDiceColors,
@@ -228,9 +229,17 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
+let authStore = null;
+try {
+  authStore = useAuthStore();
+} catch {}
+
 const colors = reactive({ ...DEFAULT_DICE_COLORS });
 
 function loadCurrent() {
+  if (authStore?.user?.preferences?.dice_colors) {
+    saveDiceColors(authStore.user.preferences.dice_colors);
+  }
   const saved = getSavedDiceColors();
   Object.assign(colors, saved);
 }
@@ -249,12 +258,18 @@ function updateColor(key, hex) {
   colors[key] = normalizeHexColor(hex);
   saveDiceColors(colors);
   emit('change', { ...colors });
+  if (authStore && authStore.isAuthenticated && typeof authStore.updatePreferences === 'function') {
+    authStore.updatePreferences({ dice_colors: { ...colors } }).catch(() => {});
+  }
 }
 
 function resetToDefaults() {
   resetDiceColors();
   Object.assign(colors, DEFAULT_DICE_COLORS);
   emit('change', { ...colors });
+  if (authStore && authStore.isAuthenticated && typeof authStore.updatePreferences === 'function') {
+    authStore.updatePreferences({ dice_colors: { ...DEFAULT_DICE_COLORS } }).catch(() => {});
+  }
 }
 
 function close() {

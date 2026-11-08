@@ -1025,6 +1025,17 @@ async function getReadyDiceBox() {
 const showDiceColorModal = ref(false);
 const activeDiceColors = ref(getSavedDiceColors());
 
+watch(
+  () => authStore.user?.preferences?.dice_colors,
+  (newDiceColors) => {
+    if (newDiceColors && typeof newDiceColors === 'object') {
+      saveDiceColors(newDiceColors);
+      activeDiceColors.value = getSavedDiceColors();
+    }
+  },
+  { immediate: true, deep: true }
+);
+
 function onDiceColorsChanged(newColors) {
   activeDiceColors.value = { ...newColors };
 }

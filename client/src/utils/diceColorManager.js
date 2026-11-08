@@ -229,7 +229,7 @@ export function getSavedDiceColors(storage = typeof localStorage !== 'undefined'
  * @param {Storage} [storage=localStorage]
  */
 export function saveDiceColors(colors, storage = typeof localStorage !== 'undefined' ? localStorage : null) {
-  if (!storage) return;
+  if (!storage) return { ...DEFAULT_DICE_COLORS };
   try {
     const current = getSavedDiceColors(storage);
     const updated = {
@@ -240,9 +240,24 @@ export function saveDiceColors(colors, storage = typeof localStorage !== 'undefi
       initiativeOpp: isValidHexColor(colors?.initiativeOpp) ? normalizeHexColor(colors.initiativeOpp) : current.initiativeOpp,
     };
     storage.setItem(DICE_COLORS_STORAGE_KEY, JSON.stringify(updated));
+    return updated;
   } catch (e) {
-    // silently catch storage quota or security issues
+    return getSavedDiceColors(storage);
   }
+}
+
+/**
+ * Synchronizes user account dice color preferences with local storage.
+ * If user has saved preferences, writes them to localStorage and returns them.
+ * @param {Object} user User object containing optional preferences.dice_colors
+ * @param {Storage} [storage=localStorage]
+ * @returns {Object} Updated dice colors
+ */
+export function syncDiceColorsWithUser(user, storage = typeof localStorage !== 'undefined' ? localStorage : null) {
+  if (user?.preferences?.dice_colors && typeof user.preferences.dice_colors === 'object') {
+    return saveDiceColors(user.preferences.dice_colors, storage);
+  }
+  return getSavedDiceColors(storage);
 }
 
 /**
