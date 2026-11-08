@@ -138,6 +138,56 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(shootCall.type).toBe('percentile');
       expect(shootCall.source).toBe('sheet');
       expect(shootCall.label).toMatch(/Kaelen: 🏹 Shoot \(50%\)/);
+
+      // Verify % Die button is rendered to the right of Shoot button
+      const pctBtn = combatBar.find('.btn-percentile-action');
+      expect(pctBtn.exists()).toBe(true);
+      expect(pctBtn.text()).toContain('% Die');
+
+      // Click % Die and verify POST /api/rolls
+      await pctBtn.trigger('click');
+      await flushPromises();
+
+      const pctCall = JSON.parse(mockPostRoll.mock.calls[2][1].body);
+      expect(pctCall.mode).toBe('rpg');
+      expect(pctCall.type).toBe('percentile');
+      expect(pctCall.source).toBe('sheet');
+      expect(pctCall.label).toContain('Kaelen: 🎲 % Die (d100)');
+
+      // Verify d10(s) roller is rendered to the right of % Die button
+      const d10Group = combatBar.find('.sheet-d10-roller-group');
+      expect(d10Group.exists()).toBe(true);
+
+      const d10MainBtn = d10Group.find('.btn-d10-main');
+      expect(d10MainBtn.exists()).toBe(true);
+      expect(d10MainBtn.text()).toContain('d10s (1d10)');
+
+      const stepBtns = d10Group.findAll('.btn-d10-step');
+      expect(stepBtns.length).toBe(2);
+      const minusBtn = stepBtns[0];
+      const plusBtn = stepBtns[1];
+      expect(minusBtn.text()).toBe('−');
+      expect(plusBtn.text()).toBe('+');
+
+      // Adjust dice count with stepper
+      await plusBtn.trigger('click');
+      await plusBtn.trigger('click');
+      expect(d10MainBtn.text()).toContain('d10s (3d10)');
+
+      await minusBtn.trigger('click');
+      expect(d10MainBtn.text()).toContain('d10s (2d10)');
+
+      // Click d10(s) button and verify POST /api/rolls
+      await d10MainBtn.trigger('click');
+      await flushPromises();
+
+      const d10Call = JSON.parse(mockPostRoll.mock.calls[3][1].body);
+      expect(d10Call.mode).toBe('rpg');
+      expect(d10Call.type).toBe('damage');
+      expect(d10Call.source).toBe('sheet');
+      expect(d10Call.label).toContain('Kaelen: 💥 2d10');
+      expect(d10Call.rollSummary.count).toBe(2);
+      expect(d10Call.rollSummary.dice.length).toBe(2);
     } finally {
       global.fetch = origFetch;
     }
@@ -151,7 +201,27 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     expect(sheetContent).toMatch(/\.combat-actions-bar\s*\{[\s\S]*?gap:\s*1[24]px;/);
   });
 
-  it('verifies RpgVttView triggers % dice box animation and HUD when roll originates from sheet', () => {
+  it('styles Strike, Shoot, Cast, +Lvl, % Die, and d10(s) buttons using character selected theme variables with consistent border, shading, and text', () => {
+    const sheetViewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
+    const sheetContent = fs.readFileSync(sheetViewPath, 'utf8');
+
+    // Strike, Shoot, % Die, and d10(s) share btn-xp-upgrade and btn-combat-action
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-combat-action btn-strike-action"');
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-combat-action btn-shoot-action"');
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-combat-action btn-percentile-action"');
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-combat-action btn-d10-main"');
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-d10-step"');
+    expect(sheetContent).toContain('class="btn-xp-upgrade btn-cast-spell"');
+
+    // Asserts .btn-xp-upgrade uses character selected theme CSS variables
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?background:\s*linear-gradient\(135deg,\s*var\(--theme-btn-bg/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?border:\s*1px solid var\(--theme-bright/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?box-shadow:\s*0 0 6px var\(--theme-glow/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade:hover\s*\{[\s\S]*?box-shadow:\s*var\(--theme-glow-hover/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade:hover\s*\{[\s\S]*?border-color:\s*var\(--theme-bright-hover/);
+  });
+
+  it('verifies RpgVttView triggers % and d10 dice box animation and HUD when roll originates from sheet', () => {
     const rpgViewPath = path.resolve(__dirname, '../src/views/RpgVttView.vue');
     const rpgContent = fs.readFileSync(rpgViewPath, 'utf8');
 
@@ -160,5 +230,6 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     expect(rpgContent).toContain("executeQueuedDiceRoll(diceBox, [");
     expect(rpgContent).toContain("theme: 'custom-tens'");
     expect(rpgContent).toContain("theme: 'custom-ones'");
+    expect(rpgContent).toContain("theme: 'custom-dmg'");
   });
 });

@@ -590,7 +590,7 @@
               <button class="btn-secondary btn-add-skill" @click="openAddSkillModal">+ Skill</button>
             </div>
 
-            <!-- Strike & Shoot Combat Action Row (Like Grimoire Cast button) -->
+            <!-- Strike, Shoot, % Die & d10(s) Combat Action Row (Like Grimoire Cast button) -->
             <div class="combat-actions-bar">
               <button
                 type="button"
@@ -608,16 +608,58 @@
               >
                 🏹 Shoot <span class="combat-action-pct">({{ shootTotalPct }}%)</span>
               </button>
+              <button
+                type="button"
+                class="btn-xp-upgrade btn-combat-action btn-percentile-action"
+                title="Roll percentile dice (d%) on RPG VTT"
+                @click="performPercentileRoll"
+              >
+                🎲 % Die
+              </button>
+              <div class="sheet-d10-roller-group">
+                <button
+                  type="button"
+                  class="btn-xp-upgrade btn-combat-action btn-d10-main"
+                  title="Roll d10 dice on RPG VTT"
+                  @click="performD10Roll"
+                >
+                  💥 d10s ({{ sheetD10Count }}d10)
+                </button>
+                <button
+                  type="button"
+                  class="btn-xp-upgrade btn-d10-step"
+                  title="Decrease dice"
+                  :disabled="sheetD10Count <= 1"
+                  @click.stop="adjustSheetD10Count(-1)"
+                >−</button>
+                <button
+                  type="button"
+                  class="btn-xp-upgrade btn-d10-step"
+                  title="Increase dice"
+                  :disabled="sheetD10Count >= 20"
+                  @click.stop="adjustSheetD10Count(1)"
+                >+</button>
+              </div>
             </div>
 
-            <!-- Strike / Shoot Result Banner -->
+            <!-- Strike / Shoot / % Die / d10 Result Banner -->
             <div v-if="lastCombatActionResult" class="grimoire-cast-banner combat-action-banner">
               <div class="cast-banner-main">
                 <span class="cast-banner-title">
-                  {{ lastCombatActionResult.actionType === 'strike' ? '⚔️ Strike' : '🏹 Shoot' }}
+                  {{
+                    lastCombatActionResult.actionType === 'strike'
+                      ? '⚔️ Strike'
+                      : (lastCombatActionResult.actionType === 'shoot'
+                        ? '🏹 Shoot'
+                        : (lastCombatActionResult.actionType === 'percentile'
+                          ? '🎲 % Die'
+                          : '💥 d10s'))
+                  }}
                 </span>
-                <span class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
+                <span v-if="lastCombatActionResult.skillName" class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
+                <span v-else-if="lastCombatActionResult.actionType === 'd10'" class="cast-banner-tradition">({{ lastCombatActionResult.count }}d10)</span>
                 <span
+                  v-if="lastCombatActionResult.outcomeLabel"
                   class="cast-banner-outcome"
                   :class="{
                     'crit': lastCombatActionResult.isCrit,
@@ -627,6 +669,12 @@
                   }"
                 >
                   {{ lastCombatActionResult.outcomeLabel }} (d100={{ lastCombatActionResult.d100Roll }} vs {{ lastCombatActionResult.targetPct }}%)
+                </span>
+                <span v-else-if="lastCombatActionResult.actionType === 'percentile'" class="cast-banner-outcome success">
+                  d100 = {{ lastCombatActionResult.d100Roll }} [Tens: {{ lastCombatActionResult.tens * 10 }}, Ones: {{ lastCombatActionResult.ones }}]
+                </span>
+                <span v-else-if="lastCombatActionResult.actionType === 'd10'" class="cast-banner-outcome success">
+                  Total: {{ lastCombatActionResult.total }} [{{ lastCombatActionResult.dice?.join(', ') }}]
                 </span>
               </div>
               <button type="button" class="btn-close-banner" title="Dismiss" @click="lastCombatActionResult = null">✕</button>
@@ -1595,6 +1643,7 @@ export default {
       magnitudeTable: UNIVERSAL_MAGNITUDE_TABLE,
       lastCastResult: null,
       lastCombatActionResult: null,
+      sheetD10Count: 1,
       showForgeModal: false,
       forgeError: '',
       lastForgeResult: null,
@@ -3274,6 +3323,96 @@ export default {
 
       return result;
     },
+    adjustSheetD10Count(delta) {
+      const next = (this.sheetD10Count || 1) + delta;
+      this.sheetD10Count = Math.max(1, Math.min(20, next));
+    },
+    async performPercentileRoll() {
+      if (!this.selectedChar) return null;
+      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      const tens = Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10);
+      const ones = d100Roll % 10;
+      const result = {
+        actionType: 'percentile',
+        characterName: this.selectedChar.name,
+        d100Roll,
+        total: d100Roll,
+        tens,
+        ones,
+        source: 'sheet',
+      };
+      this.lastCombatActionResult = result;
+
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      try {
+        await fetch('/api/rolls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            mode: 'rpg',
+            type: 'percentile',
+            source: 'sheet',
+            label: `${this.selectedChar.name}: 🎲 % Die (d100)`,
+            total: d100Roll,
+            breakdown: `d100=${d100Roll} [Tens: ${tens * 10}, Ones: ${ones}]`,
+            rollSummary: result,
+          }),
+        });
+      } catch {
+        // Ignore roll log network errors in offline/unit test contexts
+      }
+
+      return result;
+    },
+    async performD10Roll() {
+      if (!this.selectedChar) return null;
+      const count = Math.max(1, Math.min(20, this.sheetD10Count || 1));
+      const dice = [];
+      let total = 0;
+      for (let i = 0; i < count; i++) {
+        const val = Math.floor(Math.random() * 10) + 1;
+        dice.push(val);
+        total += val;
+      }
+      const result = {
+        actionType: 'd10',
+        characterName: this.selectedChar.name,
+        count,
+        dice,
+        total,
+        source: 'sheet',
+      };
+      this.lastCombatActionResult = result;
+
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      try {
+        await fetch('/api/rolls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({
+            mode: 'rpg',
+            type: 'damage',
+            source: 'sheet',
+            label: `${this.selectedChar.name}: 💥 ${count}d10`,
+            total,
+            breakdown: `[${dice.join(', ')}]`,
+            rollSummary: result,
+          }),
+        });
+      } catch {
+        // Ignore roll log network errors in offline/unit test contexts
+      }
+
+      return result;
+    },
     openForgeApplet() {
       this.forgeError = '';
       this.lastForgeResult = null;
@@ -4734,6 +4873,43 @@ export default {
   padding: 8px 10px;
 }
 
+/* d10(s) Roller in Skills Card */
+.sheet-d10-roller-group {
+  display: inline-flex;
+  align-items: stretch;
+}
+
+.sheet-d10-roller-group .btn-d10-main {
+  border-top-right-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+  border-right: none !important;
+}
+
+.sheet-d10-roller-group .btn-d10-step {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 28px;
+  padding: 0 !important;
+  font-size: 0.85rem !important;
+  font-weight: 700;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+  line-height: 1;
+}
+
+.sheet-d10-roller-group .btn-d10-step:last-child {
+  border-top-right-radius: 4px !important;
+  border-bottom-right-radius: 4px !important;
+  border-left: none !important;
+}
+
+.sheet-d10-roller-group .btn-d10-step:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .empty-list {
   color: #8b949e;
   font-size: 0.85rem;
@@ -4924,27 +5100,27 @@ export default {
 }
 
 .btn-xp-upgrade {
-  background: linear-gradient(135deg, #065f46 0%, #059669 100%) !important;
-  border: 1px solid #10b981 !important;
-  color: #ecfdf5 !important;
+  background: linear-gradient(135deg, var(--theme-btn-bg, #065f46) 0%, var(--theme-primary, #059669) 100%) !important;
+  border: 1px solid var(--theme-bright, #10b981) !important;
+  color: var(--theme-bright-hover, #ecfdf5) !important;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 6px;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: var(--sci-glow-green) !important;
+  box-shadow: 0 0 6px var(--theme-glow, rgba(16, 185, 129, 0.4)) !important;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
   transition: all 0.15s ease-in-out;
 }
 .btn-xp-upgrade:hover {
-  box-shadow: var(--sci-glow-green-hover) !important;
-  border-color: #34d399 !important;
-  color: #ecfdf5 !important;
+  box-shadow: var(--theme-glow-hover, 0 0 12px rgba(16, 185, 129, 0.7)) !important;
+  border-color: var(--theme-bright-hover, #34d399) !important;
+  color: var(--theme-bright-hover, #ecfdf5) !important;
 }
 .btn-xp-upgrade:active {
   transform: translateY(1px);
-  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6) !important;
+  box-shadow: 0 0 6px var(--theme-bright, rgba(16, 185, 129, 0.6)) !important;
 }
 
 /* Skills Card XP Badges - Uniform fixed width with centered text and blank space padding */

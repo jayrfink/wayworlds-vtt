@@ -2761,13 +2761,14 @@ function setupSocketListeners() {
           console.warn('RPG VTT percentile 3D roll error:', err);
         }
       } else if (roll.type === 'damage') {
+        const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
         lastDamageRoll.value = {
           ...roll,
           dice: Array.isArray(roll.rollSummary?.dice) ? roll.rollSummary.dice : [],
           username: roll.username,
           role: roll.role,
           total: roll.total,
-          count: roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1),
+          count,
           breakdown: roll.breakdown
         };
         showDamageHud.value = true;
@@ -2775,6 +2776,18 @@ function setupSocketListeners() {
         damageHudTimeout = setTimeout(() => {
           showDamageHud.value = false;
         }, 8000);
+
+        // Animate 3D damage dice across the RPG VTT canvas
+        try {
+          const diceBox = await getReadyDiceBox();
+          if (diceBox) {
+            await executeQueuedDiceRoll(diceBox, [
+              { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: count }
+            ]);
+          }
+        } catch (err) {
+          console.warn('RPG VTT damage 3D roll error:', err);
+        }
       } else if (roll.type === 'initiative') {
         lastInitiativeRoll.value = {
           ...roll.rollSummary,
