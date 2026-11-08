@@ -610,5 +610,161 @@ describe('AdminView.vue - Uploads & Assets File Manager', () => {
       expect(source).toMatch(/\.btn-secondary\s*\{[^}]*border:\s*1px\s+solid\s+#cecece/);
     });
   });
+
+  describe('Equipment Management & 50/50 Top Row Layout', () => {
+    it('renders User Mgmt and Equipment Management side by side in admin-top-row', () => {
+      const fs = require('fs');
+      const path = require('path');
+      const source = fs.readFileSync(path.resolve(__dirname, '../src/views/AdminView.vue'), 'utf-8');
+      expect(source).toContain('class="admin-top-row"');
+      expect(source).toContain('class="admin-card user-mgmt-card"');
+      expect(source).toContain('class="admin-card equipment-mgmt-card"');
+      expect(source).toContain('User Mgmt');
+      expect(source).toContain('Equipment Management');
+      expect(source).toContain('+ Add Weapon');
+      expect(source).toContain('+ Add Armor');
+      expect(source).toContain('+ Add Gear');
+    });
+
+    it('manages weapon, armor, and gear creation modals and forms', async () => {
+      const instance = getSetupInstance();
+      expect(instance.showWeaponModal.value).toBe(false);
+      expect(instance.showArmorModal.value).toBe(false);
+      expect(instance.showGearModal.value).toBe(false);
+
+      instance.openAddWeaponModal();
+      expect(instance.showWeaponModal.value).toBe(true);
+      expect(instance.weaponForm.value.name).toBe('');
+
+      instance.openAddArmorModal();
+      expect(instance.showArmorModal.value).toBe(true);
+      expect(instance.armorForm.value.type).toBe('Armor');
+
+      instance.openAddGearModal();
+      expect(instance.showGearModal.value).toBe(true);
+      expect(instance.gearForm.value.weight_lbs).toBe(1);
+    });
+
+    it('saves a new weapon via POST /api/equipment and refreshes list', async () => {
+      const instance = getSetupInstance();
+      instance.weaponForm.value = {
+        name: 'Glaive',
+        weight_lbs: 6,
+        damage_dice: '2d10',
+        properties: 'Reach, Heavy',
+        cost: 25,
+      };
+
+      mockFetch.mockImplementation((url) => {
+        if (url === '/api/equipment') {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              name: 'Glaive',
+              category: 'Weapon',
+              weight_lbs: 6,
+              damage_dice: '2d10',
+              properties: 'Reach, Heavy',
+            }),
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+      });
+
+      await instance.saveWeapon();
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/equipment', expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: 'Glaive',
+          category: 'Weapon',
+          weight_lbs: 6,
+          damage_dice: '2d10',
+          properties: 'Reach, Heavy',
+          cost: 25,
+        }),
+      }));
+      expect(instance.showWeaponModal.value).toBe(false);
+      expect(instance.successMessage.value).toMatch(/Glaive/);
+    });
+
+    it('saves a new armor/shield via POST /api/equipment', async () => {
+      const instance = getSetupInstance();
+      instance.armorForm.value = {
+        name: 'Kite Shield',
+        type: 'Shield',
+        weight_lbs: 7,
+        armor_dr: '',
+        attacker_pct_penalty: -10,
+        properties: 'Kite shield deflection',
+        cost: 15,
+      };
+
+      await instance.saveArmor();
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/equipment', expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          name: 'Kite Shield',
+          category: 'Shield',
+          weight_lbs: 7,
+          armor_dr: '',
+          attacker_pct_penalty: -10,
+          properties: 'Kite shield deflection',
+          cost: 15,
+        }),
+      }));
+      expect(instance.showArmorModal.value).toBe(false);
+    });
+
+    it('deletes an equipment item via DELETE /api/equipment/:name', async () => {
+      const instance = getSetupInstance();
+      window.confirm.mockReturnValue(true);
+
+      mockFetch.mockImplementation((url) => {
+        if (url.startsWith('/api/equipment/')) {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({ success: true, deleted: 'Dagger' }),
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+      });
+
+      await instance.deleteEquipmentItem({ name: 'Dagger' });
+
+      expect(window.confirm).toHaveBeenCalledWith(expect.stringContaining('Dagger'));
+      expect(mockFetch).toHaveBeenCalledWith('/api/equipment/Dagger', expect.objectContaining({
+        method: 'DELETE',
+        credentials: 'include',
+      }));
+      expect(instance.successMessage.value).toMatch(/Dagger/);
+    });
+
+    it('filters equipment list by category and search query', () => {
+      const instance = getSetupInstance();
+      instance.equipmentList.value = [
+        { name: 'Broadsword', category: 'Weapon', weight_lbs: 3, properties: 'Martial' },
+        { name: 'Plate Armor', category: 'Armor', weight_lbs: 45, properties: 'Heavy' },
+        { name: 'Buckler', category: 'Shield', weight_lbs: 3, properties: 'Light shield' },
+        { name: 'Ration Pack', category: 'Gear', weight_lbs: 2, properties: '5 days' },
+      ];
+
+      expect(instance.getEquipmentCategoryCount('All')).toBe(4);
+      expect(instance.getEquipmentCategoryCount('Weapon')).toBe(1);
+      expect(instance.getEquipmentCategoryCount('Armor')).toBe(2); // Plate + Buckler
+      expect(instance.getEquipmentCategoryCount('Gear')).toBe(1);
+
+      instance.activeEquipmentCategory.value = 'Armor';
+      expect(instance.filteredEquipmentList.value.map(i => i.name)).toEqual(['Plate Armor', 'Buckler']);
+
+      instance.equipmentSearchQuery.value = 'Buckler';
+      expect(instance.filteredEquipmentList.value.map(i => i.name)).toEqual(['Buckler']);
+    });
+  });
 });
 

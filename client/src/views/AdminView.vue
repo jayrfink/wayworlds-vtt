@@ -15,112 +15,190 @@
       <button class="alert-close" @click="successMessage = ''">✕</button>
     </div>
 
-    <!-- Create User Card -->
-    <section class="admin-card">
-      <h3>Create New User</h3>
-      <form class="create-user-form" @submit.prevent="createUser">
-        <div class="form-row">
-          <div class="form-group">
-            <label for="new-username">Username</label>
-            <input
-              id="new-username"
-              v-model.trim="newUsername"
-              type="text"
-              required
-              placeholder="Username"
-              autocomplete="off"
-            />
-          </div>
-          <div class="form-group">
-            <label for="new-password">Password</label>
-            <input
-              id="new-password"
-              v-model="newPassword"
-              type="password"
-              minlength="6"
-              required
-              placeholder="Min 6 characters"
-              autocomplete="new-password"
-            />
-          </div>
-          <div class="form-group">
-            <label for="new-role">Role</label>
-            <select id="new-role" v-model="newRole" class="role-select">
-              <option value="Player">Player</option>
-              <option value="GameMaster">GameMaster</option>
-            </select>
-          </div>
-        </div>
-        <div class="form-actions">
-          <button type="submit" class="primary" :disabled="creating">
-            {{ creating ? 'Creating...' : '+ Create User' }}
+    <!-- 50/50 Top Row: User Mgmt & Equipment Management -->
+    <div class="admin-top-row">
+      <!-- 50% Left Card: User Mgmt -->
+      <section class="admin-card user-mgmt-card">
+        <div class="card-header-row">
+          <h3>User Mgmt</h3>
+          <button class="btn-secondary" @click="fetchUsers" :disabled="loading">
+            {{ loading ? 'Refreshing...' : '↻ Refresh' }}
           </button>
         </div>
-      </form>
-    </section>
 
-    <!-- Existing Users Card -->
-    <section class="admin-card">
-      <div class="card-header-row">
-        <h3>Existing Users</h3>
-        <button class="btn-secondary" @click="fetchUsers" :disabled="loading">
-          {{ loading ? 'Refreshing...' : '↻ Refresh' }}
-        </button>
-      </div>
+        <!-- Inline Create User form -->
+        <form class="create-user-form" @submit.prevent="createUser">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="new-username">Username</label>
+              <input
+                id="new-username"
+                v-model.trim="newUsername"
+                type="text"
+                required
+                placeholder="Username"
+                autocomplete="off"
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-password">Password</label>
+              <input
+                id="new-password"
+                v-model="newPassword"
+                type="password"
+                minlength="6"
+                required
+                placeholder="Min 6 chars"
+                autocomplete="new-password"
+              />
+            </div>
+            <div class="form-group">
+              <label for="new-role">Role</label>
+              <select id="new-role" v-model="newRole" class="role-select">
+                <option value="Player">Player</option>
+                <option value="GameMaster">GameMaster</option>
+              </select>
+            </div>
+            <div class="form-group form-actions-inline">
+              <label class="invisible-label">&nbsp;</label>
+              <button type="submit" class="primary btn-create-user" :disabled="creating">
+                {{ creating ? 'Creating...' : '+ Create' }}
+              </button>
+            </div>
+          </div>
+        </form>
 
-      <div v-if="loading && users.length === 0" class="loading-state">
-        Loading users...
-      </div>
-      <div v-else-if="users.length === 0" class="empty-state">
-        No users found.
-      </div>
-      <div v-else class="table-wrapper">
-        <table class="users-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Username</th>
-              <th>Role</th>
-              <th class="actions-header">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="user in users" :key="user.id">
-              <td class="col-id">#{{ user.id }}</td>
-              <td class="col-username">
-                <span class="user-name-text">{{ user.username }}</span>
-                <span v-if="user.id === auth.user?.id" class="current-badge">(You)</span>
-              </td>
-              <td>
-                <span
-                  class="role-badge"
-                  :class="user.role === 'GameMaster' ? 'gm' : 'player'"
-                >
-                  {{ user.role === 'GameMaster' ? 'GM' : 'Player' }}
-                </span>
-              </td>
-              <td class="actions-cell">
-                <button
-                  class="btn-secondary btn-small"
-                  title="Reset password for this user"
-                  @click="resetPassword(user)"
-                >
-                  Reset Password
-                </button>
-                <button
-                  class="btn-danger btn-small"
-                  :title="user.id === auth.user?.id ? 'Cannot delete your own account' : 'Delete user'"
-                  :disabled="user.id === auth.user?.id"
-                  @click="deleteUser(user)"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
+        <div v-if="loading && users.length === 0" class="loading-state">
+          Loading users...
+        </div>
+        <div v-else-if="users.length === 0" class="empty-state">
+          No users found.
+        </div>
+        <div v-else class="table-wrapper user-table-wrapper">
+          <table class="users-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th class="actions-header">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="user in users" :key="user.id">
+                <td class="col-id">#{{ user.id }}</td>
+                <td class="col-username">
+                  <span class="user-name-text">{{ user.username }}</span>
+                  <span v-if="user.id === auth.user?.id" class="current-badge">(You)</span>
+                </td>
+                <td>
+                  <span
+                    class="role-badge"
+                    :class="user.role === 'GameMaster' ? 'gm' : 'player'"
+                  >
+                    {{ user.role === 'GameMaster' ? 'GM' : 'Player' }}
+                  </span>
+                </td>
+                <td class="actions-cell">
+                  <button
+                    class="btn-secondary btn-small"
+                    title="Reset password for this user"
+                    @click="resetPassword(user)"
+                  >
+                    Reset Password
+                  </button>
+                  <button
+                    class="btn-danger btn-small"
+                    :title="user.id === auth.user?.id ? 'Cannot delete your own account' : 'Delete user'"
+                    :disabled="user.id === auth.user?.id"
+                    @click="deleteUser(user)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 50% Right Card: Equipment Management -->
+      <section class="admin-card equipment-mgmt-card">
+        <div class="card-header-row">
+          <h3>Equipment Management</h3>
+          <div class="header-actions">
+            <button class="btn-secondary btn-add-eq" @click="openAddWeaponModal">+ Add Weapon</button>
+            <button class="btn-secondary btn-add-eq" @click="openAddArmorModal">+ Add Armor</button>
+            <button class="btn-secondary btn-add-eq" @click="openAddGearModal">+ Add Gear</button>
+          </div>
+        </div>
+
+        <!-- Filter tabs & search -->
+        <div class="eq-tabs-search-row">
+          <div class="equipment-category-tabs" role="tablist">
+            <button
+              v-for="cat in equipmentCategories"
+              :key="cat"
+              type="button"
+              role="tab"
+              class="cat-tab"
+              :class="{ active: (activeEquipmentCategory || 'All') === cat }"
+              @click="activeEquipmentCategory = cat"
+            >
+              {{ cat }} <span class="cat-count">({{ getEquipmentCategoryCount(cat) }})</span>
+            </button>
+          </div>
+          <input
+            v-model.trim="equipmentSearchQuery"
+            type="text"
+            class="search-input eq-search-input"
+            placeholder="Search catalog..."
+          />
+        </div>
+
+        <div v-if="loadingEquipment && equipmentList.length === 0" class="loading-state">
+          Loading equipment...
+        </div>
+        <div v-else-if="filteredEquipmentList.length === 0" class="empty-state">
+          {{ equipmentSearchQuery ? 'No matching equipment found.' : 'No equipment in catalog.' }}
+        </div>
+        <div v-else class="table-wrapper eq-table-wrapper">
+          <table class="assets-table equipment-table">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Weight</th>
+                <th>Properties / Capabilities</th>
+                <th class="actions-header">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="item in filteredEquipmentList" :key="item.name">
+                <td class="col-name"><strong>{{ item.name }}</strong></td>
+                <td><span class="eq-cat-tag">{{ item.category }}</span></td>
+                <td>{{ item.weight_lbs ?? item.weight ?? 0 }} lbs</td>
+                <td class="col-props">
+                  <span v-if="item.damage_dice" class="stat-pill">{{ item.damage_dice }}</span>
+                  <span v-if="item.armor_dr" class="stat-pill">DR: {{ item.armor_dr }}</span>
+                  <span v-if="item.attacker_pct_penalty" class="stat-pill">{{ item.attacker_pct_penalty }}%</span>
+                  <span>{{ item.properties || item.capabilities || '' }}</span>
+                </td>
+                <td class="actions-cell">
+                  <button
+                    class="btn-danger btn-small"
+                    title="Delete item from catalog"
+                    @click="deleteEquipmentItem(item)"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
 
     <!-- Uploads & Assets Manager Card -->
     <section class="admin-card">
@@ -364,12 +442,145 @@
         </div>
       </div>
     </div>
+    <!-- Add Weapon Modal -->
+    <div v-if="showWeaponModal" class="modal-backdrop" @click.self="showWeaponModal = false">
+      <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="weapon-modal-title">
+        <div class="modal-header">
+          <h3 id="weapon-modal-title">Add New Weapon</h3>
+          <button class="modal-close-btn" @click="showWeaponModal = false">✕</button>
+        </div>
+        <form @submit.prevent="saveWeapon" class="modal-form">
+          <div class="form-group">
+            <label for="wpn-name">Weapon Name *</label>
+            <input id="wpn-name" v-model.trim="weaponForm.name" type="text" required placeholder="e.g. War Pick" autofocus />
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="wpn-weight">Weight (lbs) *</label>
+              <input id="wpn-weight" v-model.number="weaponForm.weight_lbs" type="number" step="0.1" min="0" required />
+            </div>
+            <div class="form-group">
+              <label for="wpn-dice">Damage Dice *</label>
+              <input id="wpn-dice" v-model.trim="weaponForm.damage_dice" type="text" required placeholder="e.g. 2d10 or 1d10" />
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="wpn-cost">Cost (gp)</label>
+              <input id="wpn-cost" v-model.number="weaponForm.cost" type="number" min="0" placeholder="Optional" />
+            </div>
+            <div class="form-group">
+              <label for="wpn-props">Properties / Capabilities</label>
+              <input id="wpn-props" v-model.trim="weaponForm.properties" type="text" placeholder="e.g. Versatile, Heavy, Reach" />
+            </div>
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" @click="showWeaponModal = false">Cancel</button>
+            <button type="submit" class="primary" :disabled="savingEquipment">
+              {{ savingEquipment ? 'Saving...' : 'Add Weapon' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Armor / Shield Modal -->
+    <div v-if="showArmorModal" class="modal-backdrop" @click.self="showArmorModal = false">
+      <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="armor-modal-title">
+        <div class="modal-header">
+          <h3 id="armor-modal-title">Add Armor or Shield</h3>
+          <button class="modal-close-btn" @click="showArmorModal = false">✕</button>
+        </div>
+        <form @submit.prevent="saveArmor" class="modal-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="arm-name">Armor / Shield Name *</label>
+              <input id="arm-name" v-model.trim="armorForm.name" type="text" required placeholder="e.g. Splint Armor or Pavise" autofocus />
+            </div>
+            <div class="form-group">
+              <label for="arm-type">Item Type *</label>
+              <select id="arm-type" v-model="armorForm.type" class="role-select">
+                <option value="Armor">Armor</option>
+                <option value="Shield">Shield</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="arm-weight">Weight (lbs) *</label>
+              <input id="arm-weight" v-model.number="armorForm.weight_lbs" type="number" step="0.1" min="0" required />
+            </div>
+            <div class="form-group">
+              <label for="arm-dr">Armor DR</label>
+              <input id="arm-dr" v-model.trim="armorForm.armor_dr" type="text" placeholder="e.g. 4, half_nonmagical, half_all" />
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="arm-penalty">Attacker % Penalty</label>
+              <input id="arm-penalty" v-model.number="armorForm.attacker_pct_penalty" type="number" placeholder="e.g. -10" />
+            </div>
+            <div class="form-group">
+              <label for="arm-cost">Cost (gp)</label>
+              <input id="arm-cost" v-model.number="armorForm.cost" type="number" min="0" placeholder="Optional" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="arm-props">Properties / Description</label>
+            <input id="arm-props" v-model.trim="armorForm.properties" type="text" placeholder="e.g. -4 any non magical attack" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" @click="showArmorModal = false">Cancel</button>
+            <button type="submit" class="primary" :disabled="savingEquipment">
+              {{ savingEquipment ? 'Saving...' : 'Add Armor' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Add Gear Modal -->
+    <div v-if="showGearModal" class="modal-backdrop" @click.self="showGearModal = false">
+      <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="gear-modal-title">
+        <div class="modal-header">
+          <h3 id="gear-modal-title">Add Gear / Equipment</h3>
+          <button class="modal-close-btn" @click="showGearModal = false">✕</button>
+        </div>
+        <form @submit.prevent="saveGear" class="modal-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="gear-name">Item Name *</label>
+              <input id="gear-name" v-model.trim="gearForm.name" type="text" required placeholder="e.g. Grappling Hook" autofocus />
+            </div>
+            <div class="form-group">
+              <label for="gear-weight">Weight (lbs) *</label>
+              <input id="gear-weight" v-model.number="gearForm.weight_lbs" type="number" step="0.1" min="0" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="gear-cost">Cost (gp)</label>
+            <input id="gear-cost" v-model.number="gearForm.cost" type="number" min="0" placeholder="Optional" />
+          </div>
+          <div class="form-group">
+            <label for="gear-props">Properties / Capabilities *</label>
+            <input id="gear-props" v-model.trim="gearForm.properties" type="text" required placeholder="e.g. Iron hook with 50 ft hemp line" />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" @click="showGearModal = false">Cancel</button>
+            <button type="submit" class="primary" :disabled="savingEquipment">
+              {{ savingEquipment ? 'Saving...' : 'Add Gear' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted, getCurrentInstance } from 'vue';
 import { useAuthStore } from '../stores/auth.js';
+import { socket } from '../services/socket.js';
 
 const auth = useAuthStore();
 
@@ -383,6 +594,44 @@ const successMessage = ref('');
 const newUsername = ref('');
 const newPassword = ref('');
 const newRole = ref('Player');
+
+// Equipment Management state
+const equipmentList = ref([]);
+const loadingEquipment = ref(false);
+const savingEquipment = ref(false);
+const activeEquipmentCategory = ref('All');
+const equipmentCategories = ['All', 'Weapon', 'Armor', 'Gear'];
+const equipmentSearchQuery = ref('');
+
+// Equipment Modals state
+const showWeaponModal = ref(false);
+const showArmorModal = ref(false);
+const showGearModal = ref(false);
+
+const weaponForm = ref({
+  name: '',
+  weight_lbs: 2,
+  damage_dice: '1d10',
+  properties: '',
+  cost: null,
+});
+
+const armorForm = ref({
+  name: '',
+  type: 'Armor',
+  weight_lbs: 10,
+  armor_dr: '',
+  attacker_pct_penalty: null,
+  properties: '',
+  cost: null,
+});
+
+const gearForm = ref({
+  name: '',
+  weight_lbs: 1,
+  properties: '',
+  cost: null,
+});
 
 // Uploads & Assets File Manager state
 const files = ref([]);
@@ -637,6 +886,184 @@ async function deleteUser(user) {
   }
 }
 
+// Equipment Management API & Handlers
+function openAddWeaponModal() {
+  weaponForm.value = { name: '', weight_lbs: 2, damage_dice: '1d10', properties: '', cost: null };
+  showWeaponModal.value = true;
+}
+
+function openAddArmorModal() {
+  armorForm.value = { name: '', type: 'Armor', weight_lbs: 10, armor_dr: '', attacker_pct_penalty: null, properties: '', cost: null };
+  showArmorModal.value = true;
+}
+
+function openAddGearModal() {
+  gearForm.value = { name: '', weight_lbs: 1, properties: '', cost: null };
+  showGearModal.value = true;
+}
+
+async function fetchEquipment() {
+  loadingEquipment.value = true;
+  try {
+    const res = await fetch('/api/equipment', { credentials: 'include' });
+    if (res.ok) {
+      equipmentList.value = await res.json();
+    }
+  } catch (err) {
+    console.error('Error fetching equipment:', err);
+  } finally {
+    loadingEquipment.value = false;
+  }
+}
+
+function getEquipmentCategoryCount(cat) {
+  if (!equipmentList.value) return 0;
+  if (cat === 'All') return equipmentList.value.length;
+  if (cat === 'Weapon') return equipmentList.value.filter(i => i.category === 'Weapon').length;
+  if (cat === 'Armor') return equipmentList.value.filter(i => i.category === 'Armor' || i.category === 'Shield').length;
+  if (cat === 'Gear') return equipmentList.value.filter(i => i.category !== 'Weapon' && i.category !== 'Armor' && i.category !== 'Shield').length;
+  return equipmentList.value.filter(i => i.category === cat).length;
+}
+
+const filteredEquipmentList = computed(() => {
+  if (!equipmentList.value) return [];
+  let list = equipmentList.value;
+  if (activeEquipmentCategory.value && activeEquipmentCategory.value !== 'All') {
+    if (activeEquipmentCategory.value === 'Armor') {
+      list = list.filter(i => i.category === 'Armor' || i.category === 'Shield');
+    } else if (activeEquipmentCategory.value === 'Gear') {
+      list = list.filter(i => i.category !== 'Weapon' && i.category !== 'Armor' && i.category !== 'Shield');
+    } else {
+      list = list.filter(i => i.category === activeEquipmentCategory.value);
+    }
+  }
+  if (!equipmentSearchQuery.value) return list;
+  const q = equipmentSearchQuery.value.toLowerCase().trim();
+  return list.filter(i =>
+    (i.name && i.name.toLowerCase().includes(q)) ||
+    (i.category && i.category.toLowerCase().includes(q)) ||
+    (i.properties && i.properties.toLowerCase().includes(q)) ||
+    (i.capabilities && i.capabilities.toLowerCase().includes(q))
+  );
+});
+
+async function saveWeapon() {
+  if (!weaponForm.value.name || !weaponForm.value.name.trim()) return;
+  savingEquipment.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/equipment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        name: weaponForm.value.name,
+        category: 'Weapon',
+        weight_lbs: weaponForm.value.weight_lbs,
+        damage_dice: weaponForm.value.damage_dice,
+        properties: weaponForm.value.properties,
+        cost: weaponForm.value.cost,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Failed to save weapon');
+    successMessage.value = `Weapon "${data.name}" added to equipment catalog.`;
+    showWeaponModal.value = false;
+    await fetchEquipment();
+  } catch (err) {
+    error.value = err.message || 'Failed to save weapon';
+  } finally {
+    savingEquipment.value = false;
+  }
+}
+
+async function saveArmor() {
+  if (!armorForm.value.name || !armorForm.value.name.trim()) return;
+  savingEquipment.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/equipment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        name: armorForm.value.name,
+        category: armorForm.value.type || 'Armor',
+        weight_lbs: armorForm.value.weight_lbs,
+        armor_dr: armorForm.value.armor_dr,
+        attacker_pct_penalty: armorForm.value.attacker_pct_penalty,
+        properties: armorForm.value.properties,
+        cost: armorForm.value.cost,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Failed to save armor');
+    successMessage.value = `${data.category} "${data.name}" added to equipment catalog.`;
+    showArmorModal.value = false;
+    await fetchEquipment();
+  } catch (err) {
+    error.value = err.message || 'Failed to save armor';
+  } finally {
+    savingEquipment.value = false;
+  }
+}
+
+async function saveGear() {
+  if (!gearForm.value.name || !gearForm.value.name.trim()) return;
+  savingEquipment.value = true;
+  error.value = '';
+  try {
+    const res = await fetch('/api/equipment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        name: gearForm.value.name,
+        category: 'Gear',
+        weight_lbs: gearForm.value.weight_lbs,
+        properties: gearForm.value.properties,
+        cost: gearForm.value.cost,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Failed to save gear');
+    successMessage.value = `Gear item "${data.name}" added to equipment catalog.`;
+    showGearModal.value = false;
+    await fetchEquipment();
+  } catch (err) {
+    error.value = err.message || 'Failed to save gear';
+  } finally {
+    savingEquipment.value = false;
+  }
+}
+
+async function deleteEquipmentItem(item) {
+  if (!window.confirm(`Are you sure you want to delete "${item.name}" from the equipment catalog?`)) {
+    return;
+  }
+  error.value = '';
+  try {
+    const res = await fetch(`/api/equipment/${encodeURIComponent(item.name)}`, {
+      method: 'DELETE',
+      credentials: 'include',
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Failed to delete equipment');
+    successMessage.value = `Item "${item.name}" removed from equipment catalog.`;
+    await fetchEquipment();
+  } catch (err) {
+    error.value = err.message || 'Failed to delete equipment';
+  }
+}
+
+function handleEquipmentUpdated(payload) {
+  if (Array.isArray(payload)) {
+    equipmentList.value = payload;
+  } else {
+    fetchEquipment();
+  }
+}
+
 // Uploads & Assets API functions
 async function fetchFiles() {
   loadingFiles.value = true;
@@ -886,10 +1313,18 @@ function isImageFile(filename) {
   return /\.(png|jpe?g|webp|gif|svg)$/i.test(filename);
 }
 
-onMounted(() => {
-  fetchUsers();
-  fetchFiles();
-});
+if (getCurrentInstance()) {
+  onMounted(() => {
+    fetchUsers();
+    fetchFiles();
+    fetchEquipment();
+    socket.on('equipment:updated', handleEquipmentUpdated);
+  });
+
+  onUnmounted(() => {
+    socket.off('equipment:updated', handleEquipmentUpdated);
+  });
+}
 
 defineExpose({
   // Uploads File Manager state & methods
@@ -946,19 +1381,203 @@ defineExpose({
   deleteUser,
   error,
   successMessage,
+
+  // Equipment Management
+  equipmentList,
+  loadingEquipment,
+  savingEquipment,
+  activeEquipmentCategory,
+  equipmentCategories,
+  equipmentSearchQuery,
+  filteredEquipmentList,
+  showWeaponModal,
+  showArmorModal,
+  showGearModal,
+  weaponForm,
+  armorForm,
+  gearForm,
+  openAddWeaponModal,
+  openAddArmorModal,
+  openAddGearModal,
+  fetchEquipment,
+  getEquipmentCategoryCount,
+  saveWeapon,
+  saveArmor,
+  saveGear,
+  deleteEquipmentItem,
 });
 </script>
 
 <style scoped>
 .admin-container {
   padding: 24px;
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
   height: 100%;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.admin-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+@media (max-width: 1024px) {
+  .admin-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.user-mgmt-card,
+.equipment-mgmt-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.user-mgmt-card .create-user-form {
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+
+.user-mgmt-card .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-end;
+}
+
+.user-mgmt-card .form-group {
+  flex: 1 1 110px;
+  min-width: 100px;
+}
+
+.user-mgmt-card .form-actions-inline {
+  flex: 0 0 auto;
+  min-width: auto;
+}
+
+.user-mgmt-card .btn-create-user {
+  height: 38px;
+  padding: 6px 14px;
+  white-space: nowrap;
+}
+
+.invisible-label {
+  visibility: hidden;
+}
+
+.user-table-wrapper,
+.eq-table-wrapper {
+  max-height: 420px;
+  overflow-y: auto;
+}
+
+.eq-tabs-search-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.equipment-category-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.equipment-category-tabs .cat-tab {
+  background: transparent;
+  border: 1px solid transparent;
+  color: #8b949e;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.equipment-category-tabs .cat-tab:hover {
+  color: #cecece;
+  background: rgba(200, 200, 200, 0.08);
+}
+
+.equipment-category-tabs .cat-tab.active {
+  color: var(--theme-bright, #45acba);
+  background: var(--theme-surface-active, rgba(69, 172, 186, 0.15));
+  border-color: var(--theme-border-subtle, rgba(69, 172, 186, 0.35));
+}
+
+.cat-count {
+  font-size: 0.72rem;
+  opacity: 0.8;
+  margin-left: 2px;
+}
+
+.eq-search-input {
+  flex: 1 1 160px;
+  min-width: 140px;
+  height: 32px;
+  padding: 4px 10px;
+  font-size: 0.82rem;
+  background: #000000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: #cecece;
+}
+
+.eq-cat-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(200, 200, 200, 0.1);
+  color: #cecece;
+  border: 1px solid rgba(200, 200, 200, 0.25);
+}
+
+.col-props {
+  font-size: 0.8rem;
+  color: #8b949e;
+  line-height: 1.35;
+}
+
+.stat-pill {
+  display: inline-block;
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background: var(--theme-surface-active, rgba(56, 189, 248, 0.15));
+  color: var(--theme-bright, #38bdf8);
+  border: 1px solid var(--theme-border-subtle, rgba(56, 189, 248, 0.3));
+  margin-right: 6px;
+}
+
+.admin-eq-modal {
+  max-width: 520px;
+  width: 90%;
+  background: var(--bg-secondary, #161b22);
+  border: 2px solid var(--border);
+  box-shadow: var(--theme-glow, 0 0 16px rgba(192, 192, 192, 0.4));
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.form-row-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
 .admin-header h2 {

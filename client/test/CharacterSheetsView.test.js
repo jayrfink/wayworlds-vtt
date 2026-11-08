@@ -428,34 +428,33 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
 
   describe('Equipment Catalog Category Filtering & Tabs', () => {
     const mockEquipmentList = [
-      { name: 'Laser Pistol', category: 'Weapon', cost: 500, weight: 1, capabilities: 'Damage: 1d10' },
-      { name: 'Heavy Laser', category: 'Weapon', cost: 1000, weight: 15, capabilities: 'Damage: 1d10 to 30d10' },
-      { name: 'ESS Clip (20 ESS)', category: 'Ammunition', cost: 10, weight: 0.1, capabilities: '20 ESS' },
-      { name: 'Skeinsuit', category: 'Defense', cost: 200, weight: 2, capabilities: 'Defends vs kinetic' },
-      { name: 'Techkit', category: 'Toolkit', cost: 500, weight: 5, capabilities: 'Diagnostic toolkit' },
-      { name: 'Stimdose', category: 'Medical', cost: 20, weight: 0.1, capabilities: 'Restores 10 STA' },
-      { name: 'Chronocom', category: 'Gear', cost: 50, weight: 0.5, capabilities: 'Personal communicator' },
-      { name: 'Power Backpack', category: 'Power', cost: 200, weight: 5, capabilities: '100 ESS' },
+      { name: 'Longsword', category: 'Weapon', cost: 15, weight: 3, capabilities: 'Damage: 2d10' },
+      { name: 'Dagger', category: 'Weapon', cost: 2, weight: 1, capabilities: 'Damage: 1d10, Finesse' },
+      { name: 'Chain Mail', category: 'Armor', cost: 75, weight: 35, capabilities: 'Halves non-magical damage' },
+      { name: 'Shield', category: 'Shield', cost: 10, weight: 6, capabilities: '-10% to incoming attacks' },
+      { name: 'Herbalism Kit', category: 'Kit', cost: 25, weight: 3, capabilities: 'Heals 2d10 STA' },
+      { name: 'Rope (50 ft)', category: 'Gear', cost: 1, weight: 10, capabilities: 'Braided hemp rope' },
     ];
 
-    it('calculates category count accurately including All', () => {
+    it('defines equipmentCategories with All, Weapon, Armor, and Gear', () => {
+      const data = CharacterSheetsView.data();
+      expect(data.equipmentCategories).toEqual(['All', 'Weapon', 'Armor', 'Gear']);
+    });
+
+    it('calculates category count accurately including All, Weapon, Armor (with Shields), and Gear', () => {
       const vm = {
         equipmentList: mockEquipmentList,
       };
 
       const getCount = CharacterSheetsView.methods.getCategoryCount;
-      expect(getCount.call(vm, 'All')).toBe(8);
+      expect(getCount.call(vm, 'All')).toBe(6);
       expect(getCount.call(vm, 'Weapon')).toBe(2);
-      expect(getCount.call(vm, 'Ammunition')).toBe(1);
-      expect(getCount.call(vm, 'Defense')).toBe(1);
-      expect(getCount.call(vm, 'Toolkit')).toBe(1);
-      expect(getCount.call(vm, 'Medical')).toBe(1);
-      expect(getCount.call(vm, 'Gear')).toBe(1);
-      expect(getCount.call(vm, 'Power')).toBe(1);
+      expect(getCount.call(vm, 'Armor')).toBe(2); // Chain Mail + Shield
+      expect(getCount.call(vm, 'Gear')).toBe(2);  // Herbalism Kit + Rope
       expect(getCount.call(vm, 'NonExistent')).toBe(0);
     });
 
-    it('filters equipment list by activeEquipmentCategory when category is not All', () => {
+    it('filters equipment list by activeEquipmentCategory (Armor includes shields, Gear includes non-combat items)', () => {
       const vm = {
         equipmentList: mockEquipmentList,
         activeEquipmentCategory: 'Weapon',
@@ -464,31 +463,36 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
 
       let filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
       expect(filtered.length).toBe(2);
-      expect(filtered.map(i => i.name)).toEqual(['Laser Pistol', 'Heavy Laser']);
+      expect(filtered.map(i => i.name)).toEqual(['Longsword', 'Dagger']);
 
-      vm.activeEquipmentCategory = 'Defense';
+      vm.activeEquipmentCategory = 'Armor';
       filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
-      expect(filtered.length).toBe(1);
-      expect(filtered[0].name).toBe('Skeinsuit');
+      expect(filtered.length).toBe(2);
+      expect(filtered.map(i => i.name)).toEqual(['Chain Mail', 'Shield']);
+
+      vm.activeEquipmentCategory = 'Gear';
+      filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
+      expect(filtered.length).toBe(2);
+      expect(filtered.map(i => i.name)).toEqual(['Herbalism Kit', 'Rope (50 ft)']);
 
       vm.activeEquipmentCategory = 'All';
       filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
-      expect(filtered.length).toBe(8);
+      expect(filtered.length).toBe(6);
     });
 
     it('filters by both category and search query simultaneously', () => {
       const vm = {
         equipmentList: mockEquipmentList,
-        activeEquipmentCategory: 'Weapon',
-        equipmentSearchQuery: 'Heavy',
+        activeEquipmentCategory: 'Armor',
+        equipmentSearchQuery: 'Shield',
       };
 
       let filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
       expect(filtered.length).toBe(1);
-      expect(filtered[0].name).toBe('Heavy Laser');
+      expect(filtered[0].name).toBe('Shield');
 
       // Search term does not match anything in active category
-      vm.equipmentSearchQuery = 'Skeinsuit';
+      vm.equipmentSearchQuery = 'Longsword';
       filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
       expect(filtered.length).toBe(0);
 
@@ -496,7 +500,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       vm.activeEquipmentCategory = 'All';
       filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
       expect(filtered.length).toBe(1);
-      expect(filtered[0].name).toBe('Skeinsuit');
+      expect(filtered[0].name).toBe('Longsword');
     });
 
     it('defaults activeEquipmentCategory gracefully if unset on vm', () => {
@@ -506,7 +510,7 @@ describe('CharacterSheetsView - Equipment Catalog & Inventory Logic', () => {
       };
 
       const filtered = CharacterSheetsView.computed.filteredEquipmentList.call(vm);
-      expect(filtered.length).toBe(8);
+      expect(filtered.length).toBe(6);
     });
   });
 

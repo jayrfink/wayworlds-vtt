@@ -7,7 +7,7 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
   let db;
   let server;
   let response;
-  const ALLOWED_CATEGORIES = ['Weapon', 'Armor', 'Shield', 'Kit'];
+  const ALLOWED_CATEGORIES = ['Weapon', 'Armor', 'Shield', 'Kit', 'Gear'];
 
   beforeAll(async () => {
     db = createDb(':memory:');
@@ -127,5 +127,106 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
     const medic = itemMap.get('Medic Kit');
     expect(medic.category).toBe('Kit');
     expect(medic.weight_lbs).toBe(2);
+  });
+
+  describe('GM Equipment Management (POST & DELETE)', () => {
+    let gmAgent;
+    let playerAgent;
+    let testApp;
+    let testDb;
+    let tempFilePath;
+
+    beforeAll(async () => {
+      const fsModule = await import('fs');
+      const osModule = await import('os');
+      const pathModule = await import('path');
+
+      tempFilePath = pathModule.join(osModule.tmpdir(), `test-equipment-${Date.now()}.json`);
+      const canonicalData = fsModule.readFileSync(pathModule.join(__dirname, '../../data/inventory_items.json'), 'utf8');
+      fsModule.writeFileSync(tempFilePath, canonicalData, 'utf8');
+      process.env.EQUIPMENT_JSON_PATH = tempFilePath;
+
+      testDb = createDb(':memory:');
+      const result = createApp(testDb, ':memory:');
+      testApp = result.app;
+
+      gmAgent = request.agent(testApp);
+      playerAgent = request.agent(testApp);
+
+      // Register GM and Player
+      await gmAgent.post('/api/auth/register').send({ username: 'eqgm', password: 'password123', role: 'GameMaster' });
+      await gmAgent.post('/api/auth/login').send({ username: 'eqgm', password: 'password123' });
+
+      await gmAgent.post('/api/auth/register').send({ username: 'eqplayer', password: 'password123', role: 'Player' });
+      await playerAgent.post('/api/auth/login').send({ username: 'eqplayer', password: 'password123' });
+    });
+
+    afterAll(async () => {
+      delete process.env.EQUIPMENT_JSON_PATH;
+      const fsModule = await import('fs');
+      try {
+        if (fsModule.existsSync(tempFilePath)) fsModule.unlinkSync(tempFilePath);
+      } catch {}
+      if (testDb) testDb.close();
+    });
+
+    it('blocks unauthenticated requests to POST /api/equipment', async () => {
+      const res = await request(testApp).post('/api/equipment').send({ name: 'Halberd' });
+      expect([401, 403]).toContain(res.status);
+    });
+
+    it('blocks non-GM players from POST /api/equipment', async () => {
+      const res = await playerAgent.post('/api/equipment').send({ name: 'Halberd', category: 'Weapon' });
+      expect(res.status).toBe(403);
+    });
+
+    it('allows GM to create a new Weapon', async () => {
+      const res = await gmAgent.post('/api/equipment').send({
+        name: 'Halberd',
+        category: 'Weapon',
+        weight_lbs: 6,
+        damage_dice: '2d10',
+        properties: 'Reach, Heavy, Two-Handed',
+        cost: 20
+      });
+      expect(res.status).toBe(201);
+      expect(res.body.name).toBe('Halberd');
+      expect(res.body.category).toBe('Weapon');
+      expect(res.body.weight_lbs).toBe(6);
+      expect(res.body.damage_dice).toBe('2d10');
+    });
+
+    it('prevents creating duplicate items with the same name', async () => {
+      const res = await gmAgent.post('/api/equipment').send({
+        name: 'Halberd',
+        category: 'Weapon'
+      });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/already exists/i);
+    });
+
+    it('allows GM to create a new Armor item', async () => {
+      const res = await gmAgent.post('/api/equipment').send({
+        name: 'Tower Shield',
+        category: 'Shield',
+        weight_lbs: 12,
+        attacker_pct_penalty: -15,
+        properties: 'Massive Pavise Deflection (-15% to incoming attacks)'
+      });
+      expect(res.status).toBe(201);
+      expect(res.body.name).toBe('Tower Shield');
+      expect(res.body.category).toBe('Shield');
+    });
+
+    it('allows GM to delete an equipment item', async () => {
+      const res = await gmAgent.delete(`/api/equipment/${encodeURIComponent('Tower Shield')}`);
+      expect(res.status).toBe(200);
+      expect(res.body.success).toBe(true);
+      expect(res.body.deleted).toBe('Tower Shield');
+
+      // Verify it is gone
+      const getRes = await gmAgent.get('/api/equipment');
+      expect(getRes.body.some(i => i.name === 'Tower Shield')).toBe(false);
+    });
   });
 });

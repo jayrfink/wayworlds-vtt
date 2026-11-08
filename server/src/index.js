@@ -16,6 +16,7 @@ import { createRollRouter } from './rolls.js';
 import { createAdversariesRouter } from './adversaries.js';
 import { createVehiclesRouter } from './vehicles.js';
 import { createGmNotesRouter } from './gmNotes.js';
+import { createEquipmentRouter } from './equipment.js';
 import { registerPingHandlers } from './pings.js';
 import path from 'path';
 import fs from 'fs';
@@ -226,16 +227,7 @@ export function createApp(db, sessionDir, uploadDir) {
   app.use('/api/adversaries', createAdversariesRouter(db, io, uploadsPath));
   app.use('/api/vehicles', createVehiclesRouter(db, io));
   app.use('/api/gm-notes', createGmNotesRouter(db));
-
-// Equipment Route
-app.get('/api/equipment', (req, res) => {
-  try {
-    const data = fs.readFileSync(path.join(__dirname, '../../data/inventory_items.json'), 'utf8');
-    res.json(JSON.parse(data));
-  } catch (err) {
-    res.status(500).json({ error: 'Equipment list not found' });
-  }
-});
+  app.use('/api/equipment', createEquipmentRouter(db, io));
 
   const clientDistPath = path.resolve(__dirname, '../../client/dist');
   if (fs.existsSync(clientDistPath)) {

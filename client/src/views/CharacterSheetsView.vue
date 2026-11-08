@@ -1485,7 +1485,7 @@ export default {
       equipmentList: [],
       showEquipmentModal: false,
       activeEquipmentCategory: 'All',
-      equipmentCategories: ['All', 'Weapon', 'Ammunition', 'Defense', 'Toolkit', 'Medical', 'Gear', 'Power'],
+      equipmentCategories: ['All', 'Weapon', 'Armor', 'Gear'],
       equipmentSearchQuery: '',
       showAddSkillModal: false,
       skillSearchQuery: '',
@@ -1607,7 +1607,13 @@ export default {
       if (!this.equipmentList) return [];
       let list = this.equipmentList;
       if (this.activeEquipmentCategory && this.activeEquipmentCategory !== 'All') {
-        list = list.filter(item => item.category === this.activeEquipmentCategory);
+        if (this.activeEquipmentCategory === 'Armor') {
+          list = list.filter(item => item.category === 'Armor' || item.category === 'Shield');
+        } else if (this.activeEquipmentCategory === 'Gear') {
+          list = list.filter(item => item.category !== 'Weapon' && item.category !== 'Armor' && item.category !== 'Shield');
+        } else {
+          list = list.filter(item => item.category === this.activeEquipmentCategory);
+        }
       }
       if (!this.equipmentSearchQuery) return list;
       const q = this.equipmentSearchQuery.toLowerCase().trim();
@@ -2564,6 +2570,9 @@ export default {
     getCategoryCount(category) {
       if (!this.equipmentList) return 0;
       if (category === 'All') return this.equipmentList.length;
+      if (category === 'Weapon') return this.equipmentList.filter(item => item.category === 'Weapon').length;
+      if (category === 'Armor') return this.equipmentList.filter(item => item.category === 'Armor' || item.category === 'Shield').length;
+      if (category === 'Gear') return this.equipmentList.filter(item => item.category !== 'Weapon' && item.category !== 'Armor' && item.category !== 'Shield').length;
       return this.equipmentList.filter(item => item.category === category).length;
     },
     addEquipment(item) {
@@ -3245,12 +3254,21 @@ export default {
       socket.on('sheet:updated', this.handleSheetUpdated);
       socket.on('sheet:deleted', this.handleSheetDeleted);
       socket.on('sheets:reordered', this.handleSheetsReordered);
+      socket.on('equipment:updated', this.handleEquipmentUpdated);
     },
     removeSocketListeners() {
       socket.off('sheet:created', this.handleSheetCreated);
       socket.off('sheet:updated', this.handleSheetUpdated);
       socket.off('sheet:deleted', this.handleSheetDeleted);
       socket.off('sheets:reordered', this.handleSheetsReordered);
+      socket.off('equipment:updated', this.handleEquipmentUpdated);
+    },
+    handleEquipmentUpdated(updatedList) {
+      if (Array.isArray(updatedList)) {
+        this.equipmentList = updatedList;
+      } else {
+        this.fetchEquipment();
+      }
     },
     handleSheetsReordered(payload) {
       if (payload && payload.type === 'character' && Array.isArray(payload.order)) {
