@@ -2096,7 +2096,11 @@ function onTokenSelected(token) {
     updateSelectedToken();
   }
   selectedTokenId.value = token ? token.id : null;
-  selectedTokenIds.value = token ? [token.id] : [];
+  if (!token) {
+    selectedTokenIds.value = [];
+  } else if (!selectedTokenIds.value.includes(token.id)) {
+    selectedTokenIds.value = [token.id];
+  }
   if (token) {
     persistVttState();
   }

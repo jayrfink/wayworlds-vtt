@@ -309,6 +309,7 @@ describe('QuickReferenceTables.vue', () => {
 
       // Spirit: Warlock, Aasimar / Celestial, Demonic
       expect(html).toContain('Warlock');
+      expect(html).toContain('Pact magic with a patron');
       expect(html).toContain('Aasimar / Celestial');
       expect(html).toContain('Demonic');
 
@@ -334,8 +335,12 @@ describe('QuickReferenceTables.vue', () => {
       // Specific species blurbs
       expect(html).toContain('Dawn Elf');
       expect(html).toContain('Dusk Elf');
+      expect(html).toContain('Underground diaspora of elves');
       expect(html).toContain('Sylvan Elf');
+      expect(html).toContain('Twilight Elf');
+      expect(html).toContain('Small mischievous adventurers');
       expect(html).toContain('Weirgoth Dwarf');
+      expect(html).toContain('Great stone carvers and warriors');
       expect(html).toContain('Vanir Dwarf');
       expect(html).toContain('Frost Urkai');
       expect(html).toContain('Giantken / Goliath');

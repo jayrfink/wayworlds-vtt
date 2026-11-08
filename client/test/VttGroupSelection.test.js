@@ -116,5 +116,10 @@ describe('VttCanvas & RpgVttView Group Selection & Movement', () => {
       expect(vttViewContent).toContain('onTokenListClick($event, t)');
       expect(vttViewContent).toContain('function onTokenListClick(e, token)');
     });
+
+    it('preserves group selectedTokenIds when onTokenSelected receives a token already part of the selection', () => {
+      expect(vttViewContent).toContain('else if (!selectedTokenIds.value.includes(token.id))');
+      expect(vttViewContent).toContain('selectedTokenIds.value = [token.id];');
+    });
   });
 });

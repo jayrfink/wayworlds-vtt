@@ -1080,6 +1080,7 @@ function onMouseDown(e) {
       });
       const hitToken = cell
         ? hitTestOrder.find((t) => {
+            if (t.layer === 'gm' && !props.isGm) return false;
             const tx = Number(t.x) || 0;
             const ty = Number(t.y) || 0;
             const size = Number(t.size) || 1;
@@ -1354,13 +1355,10 @@ function onMouseUp(e) {
       }
 
       if (movedTokens.length > 0) {
-        emit('tokens-moved', movedTokens);
         if (movedTokens.length === 1) {
           emit('token-moved', movedTokens[0]);
         } else {
-          for (const m of movedTokens) {
-            emit('token-moved', m);
-          }
+          emit('tokens-moved', movedTokens);
         }
       }
     } else if (wasGroupClickWithoutShift.value && draggingToken.value) {

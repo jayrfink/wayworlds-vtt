@@ -9,12 +9,12 @@
 
 ### 1. The Norn (Elven, Dwarven & Wendhya Lineages)
 - **Dawn Elves:** Stewards of solar citadels and high arcane sanctuaries (`+5 INT`, `+5 HIST/REL`, `-5 STA`).
-- **Dusk Elves:** Keepers of the gloaming courts and umbral magic (`+5 INT`, `+5 DEX`, `-5 STA`).
+- **Dusk Elves:** Underground diaspora of elves (`+5 INT`, `+5 DEX`, `-5 STA`).
 - **Sylvan Elves:** Swift forest wardens carrying the ancient Warg bloodline (`+5 DEX`, `+5 RS`, `-5 STR`; `35 ft` move).
 - **Wilder Elves:** Feral hunters and skin-changers of the deep wilds (`+5 DEX`, `+5 WIL`, `-5 HIST/REL`).
-- **Twilight Elves:** Veil-seers attuned to spirits and illusions (`+5 DEX`, `+5 WIL`, `-5 STR`).
+- **Twilight Elves:** Small mischievous adventurers (`+5 DEX`, `+5 WIL`, `-5 STR`).
 - **Wendhya:** Spirit-kin mystics who sense supernatural taint and bond with primal beasts (`+5 WIL`, `+5 RS`, `-5 STR`).
-- **Weirgoth Dwarves:** Cavern-dwelling stone-bloods who bond with subterranean beasts (`+5 STA`, `+5 WIL`, `-5 DEX`; `25 ft` move).
+- **Weirgoth Dwarves:** Great stone carvers and warriors (`+5 STA`, `+5 WIL`, `-5 DEX`; `25 ft` move).
 - **Vanir Dwarves:** Master runeforgers whose heavy plate and runic weapons defy hostile magic (`+5 STR`, `+5 STA`, `-5 RS`; `25 ft` move).
 
 ### 2. The Urkai & Goblinoid Clans
