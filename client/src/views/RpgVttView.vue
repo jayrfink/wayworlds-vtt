@@ -3075,7 +3075,8 @@ onBeforeUnmount(() => {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: rgba(22, 27, 34, 0.92);
+  background: rgba(22, 27, 34, 0.80);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   padding: 8px;
   border-radius: var(--radius);
@@ -3093,13 +3094,13 @@ onBeforeUnmount(() => {
   text-align: left;
   border: none !important;
   color: var(--theme-bright, #cecece);
-  background: #000000;
+  background: rgba(0, 0, 0, 0.55);
   transition: all 0.15s ease-in-out;
 }
 
 .vtt-toolbar button:hover {
   color: var(--theme-bright-hover, #cecece);
-  background: var(--theme-btn-bg, #161b22);
+  background: var(--theme-btn-bg, rgba(22, 27, 34, 0.85));
 }
 
 .fog-eraser-options {
@@ -3126,7 +3127,7 @@ onBeforeUnmount(() => {
 }
 
 .vtt-toolbar .fog-shape-btn.selected {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.75);
   color: var(--theme-bright, #cecece);
   font-weight: 600;
   box-shadow: 0 0 6px var(--theme-glow, rgba(206, 206, 206, 0.4));
@@ -3153,7 +3154,7 @@ onBeforeUnmount(() => {
 }
 
 .vtt-toolbar > button.active {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.75);
   color: var(--theme-bright, #cecece);
   font-weight: 600;
   border: none !important;
@@ -3161,7 +3162,7 @@ onBeforeUnmount(() => {
 }
 
 .vtt-toolbar > button.active:hover {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.85);
   color: var(--theme-bright-hover, #cecece);
   border: none !important;
   box-shadow: 0 0 12px var(--theme-glow, rgba(206, 206, 206, 0.6));
@@ -3290,7 +3291,7 @@ onBeforeUnmount(() => {
   top: 0;
   left: calc(100% + 8px);
   width: 200px;
-  background: rgba(22, 27, 34, 0.98);
+  background: rgba(22, 27, 34, 0.85);
   border: 1px solid var(--theme-border-subtle, var(--border));
   border-radius: var(--radius);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 16px var(--theme-glow, rgba(56, 189, 248, 0.2));
@@ -3299,6 +3300,7 @@ onBeforeUnmount(() => {
   flex-direction: column;
   gap: 10px;
   z-index: 100;
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
 }
 

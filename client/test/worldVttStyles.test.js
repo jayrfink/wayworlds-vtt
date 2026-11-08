@@ -17,6 +17,13 @@ describe('World VTT Toolbar and Marker Inspector match RPG VTT Styling', () => {
       expect(worldContent).toMatch(/\.vtt-toolbar\s*\{[^}]*box-shadow:\s*0\s+4px\s+12px\s+rgba\(0,\s*0,\s*0,\s*0\.3\);/);
     });
 
+    it('styles .vtt-toolbar with translucent background and backdrop blur on both VTTs', () => {
+      expect(rpgContent).toMatch(/\.vtt-toolbar\s*\{[^}]*background:\s*rgba\(22,\s*27,\s*34,\s*0\.80?\);/);
+      expect(rpgContent).toMatch(/\.vtt-toolbar\s*\{[^}]*backdrop-filter:\s*blur\(8px\);/);
+      expect(worldContent).toMatch(/\.vtt-toolbar\s*\{[^}]*background:\s*rgba\(22,\s*27,\s*34,\s*0\.80?\);/);
+      expect(worldContent).toMatch(/\.vtt-toolbar\s*\{[^}]*backdrop-filter:\s*blur\(8px\);/);
+    });
+
     it('removes outer borders from .vtt-toolbar button and its active state', () => {
       expect(worldContent).toMatch(/\.vtt-toolbar button\s*\{[^}]*border:\s*none\s*!important;/);
       expect(worldContent).toMatch(/\.vtt-toolbar > button\.active\s*\{[^}]*border:\s*none\s*!important;/);
