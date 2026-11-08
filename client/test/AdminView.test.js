@@ -765,6 +765,63 @@ describe('AdminView.vue - Uploads & Assets File Manager', () => {
       instance.equipmentSearchQuery.value = 'Buckler';
       expect(instance.filteredEquipmentList.value.map(i => i.name)).toEqual(['Buckler']);
     });
+
+    it('opens edit equipment modal and updates equipment via PUT /api/equipment/:name', async () => {
+      const instance = getSetupInstance();
+      const itemToEdit = {
+        name: 'Broadsword',
+        category: 'Weapon',
+        weight_lbs: 3,
+        cost: 50,
+        damage_dice: '2d10 (1H) / 3d10 (2H)',
+        properties: 'Martial, Versatile',
+      };
+
+      instance.openEditEquipmentModal(itemToEdit);
+      expect(instance.showEditEquipmentModal.value).toBe(true);
+      expect(instance.editEquipmentForm.value.name).toBe('Broadsword');
+      expect(instance.editEquipmentForm.value.damage_dice).toBe('2d10 (1H) / 3d10 (2H)');
+
+      // Modify values
+      instance.editEquipmentForm.value.name = 'Masterwork Broadsword';
+      instance.editEquipmentForm.value.cost = 100;
+
+      mockFetch.mockImplementation((url, opts) => {
+        if (url === '/api/equipment/Broadsword' && opts?.method === 'PUT') {
+          return Promise.resolve({
+            ok: true,
+            json: () => Promise.resolve({
+              name: 'Masterwork Broadsword',
+              category: 'Weapon',
+              weight_lbs: 3,
+              cost: 100,
+              damage_dice: '2d10 (1H) / 3d10 (2H)',
+              properties: 'Martial, Versatile',
+            }),
+          });
+        }
+        return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+      });
+
+      await instance.saveEditEquipment();
+
+      expect(mockFetch).toHaveBeenCalledWith('/api/equipment/Broadsword', expect.objectContaining({
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+      }));
+      expect(instance.showEditEquipmentModal.value).toBe(false);
+      expect(instance.successMessage.value).toMatch(/Masterwork Broadsword/);
+    });
+
+    it('constrains asset browser table with assets-table-wrapper for scrollbar after 10 rows', () => {
+      const fs = require('fs');
+      const path = require('path');
+      const source = fs.readFileSync(path.resolve(__dirname, '../src/views/AdminView.vue'), 'utf-8');
+      expect(source).toContain('class="table-wrapper assets-table-wrapper"');
+      expect(source).toMatch(/\.assets-table-wrapper\s*\{[\s\S]*?max-height:\s*520px;/);
+      expect(source).toMatch(/\.assets-table-wrapper\s*\{[\s\S]*?overflow-y:\s*auto;/);
+    });
   });
 });
 

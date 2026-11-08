@@ -225,6 +225,14 @@ describe('CharacterSheetsView - Custom Race', () => {
     // Initial pool remaining is 20
     expect(wrapper.vm.alteredAttributePoolRemaining).toBe(20);
 
+    // Verify template hides badge when remaining points reach 0 or lower
+    const sheetViewPath = path.resolve(__dirname, '../src/views/CharacterSheetsView.vue');
+    const sheetContent = fs.readFileSync(sheetViewPath, 'utf8');
+    expect(sheetContent).toMatch(/v-if="alteredAttributePoolRemaining !== null && alteredAttributePoolRemaining > 0"/);
+    expect(sheetContent).toMatch(/\.altered-pool-badge\s*\{[\s\S]*?background:\s*#000000;/);
+    expect(sheetContent).toMatch(/\.altered-pool-badge\s*\{[\s\S]*?color:\s*#c9c9c9;/);
+    expect(sheetContent).toMatch(/\.altered-pool-badge\s*\{[\s\S]*?border:\s*1px solid rgba\(201,\s*201,\s*201,\s*0\.4\);/);
+
     // Redistribute points: +5 STR, +5 DEX, +10 INT (20 points used)
     wrapper.vm.selectedChar.str += 5;
     wrapper.vm.selectedChar.dex += 5;

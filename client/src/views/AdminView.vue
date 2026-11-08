@@ -186,6 +186,14 @@
                 </td>
                 <td class="actions-cell">
                   <button
+                    class="btn-secondary btn-small"
+                    title="Edit item in catalog"
+                    @click="openEditEquipmentModal(item)"
+                    style="margin-right: 6px;"
+                  >
+                    Edit
+                  </button>
+                  <button
                     class="btn-danger btn-small"
                     title="Delete item from catalog"
                     @click="deleteEquipmentItem(item)"
@@ -262,7 +270,7 @@
       </div>
       <div
         v-else-if="filteredSubfolders.length === 0 && filteredFiles.length === 0 && currentFolder"
-        class="table-wrapper"
+        class="table-wrapper assets-table-wrapper"
       >
         <table class="assets-table tokens-table">
           <thead>
@@ -294,7 +302,7 @@
           </tbody>
         </table>
       </div>
-      <div v-else class="table-wrapper">
+      <div v-else class="table-wrapper assets-table-wrapper">
         <table class="assets-table tokens-table">
           <thead>
             <tr>
@@ -574,6 +582,68 @@
         </form>
       </div>
     </div>
+
+    <!-- Edit Equipment Modal -->
+    <div v-if="showEditEquipmentModal" class="modal-backdrop modal-overlay" @click.self="showEditEquipmentModal = false">
+      <div class="modal-card admin-eq-modal" role="dialog" aria-modal="true" aria-labelledby="edit-eq-modal-title">
+        <div class="modal-header">
+          <h3 id="edit-eq-modal-title">Edit Equipment Item</h3>
+          <button class="modal-close-btn" @click="showEditEquipmentModal = false">✕</button>
+        </div>
+        <form @submit.prevent="saveEditEquipment" class="modal-form">
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="edit-eq-name">Item Name *</label>
+              <input id="edit-eq-name" v-model.trim="editEquipmentForm.name" type="text" required placeholder="Item Name" autofocus />
+            </div>
+            <div class="form-group">
+              <label for="edit-eq-cat">Category *</label>
+              <select id="edit-eq-cat" v-model="editEquipmentForm.category" required>
+                <option value="Weapon">Weapon</option>
+                <option value="Armor">Armor</option>
+                <option value="Shield">Shield</option>
+                <option value="Gear">Gear</option>
+                <option value="Kit">Kit</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-group">
+              <label for="edit-eq-weight">Weight (lbs) *</label>
+              <input id="edit-eq-weight" v-model.number="editEquipmentForm.weight_lbs" type="number" step="0.1" min="0" required />
+            </div>
+            <div class="form-group">
+              <label for="edit-eq-cost">Cost (gp)</label>
+              <input id="edit-eq-cost" v-model.number="editEquipmentForm.cost" type="number" min="0" placeholder="Optional" />
+            </div>
+          </div>
+          <div v-if="editEquipmentForm.category === 'Weapon'" class="form-group">
+            <label for="edit-eq-damage">Damage Dice</label>
+            <input id="edit-eq-damage" v-model.trim="editEquipmentForm.damage_dice" type="text" placeholder="e.g. 2d10 (1H) / 3d10 (2H)" />
+          </div>
+          <div v-if="editEquipmentForm.category === 'Armor' || editEquipmentForm.category === 'Shield'" class="form-row-2">
+            <div class="form-group">
+              <label for="edit-eq-dr">Armor DR</label>
+              <input id="edit-eq-dr" v-model="editEquipmentForm.armor_dr" type="text" placeholder="e.g. 4 or half_nonmagical" />
+            </div>
+            <div class="form-group">
+              <label for="edit-eq-pen">Attacker % Penalty</label>
+              <input id="edit-eq-pen" v-model.number="editEquipmentForm.attacker_pct_penalty" type="number" placeholder="e.g. -10" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="edit-eq-props">Properties / Capabilities</label>
+            <input id="edit-eq-props" v-model.trim="editEquipmentForm.properties" type="text" placeholder="Traits, notes, reach, etc." />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="btn-secondary" @click="showEditEquipmentModal = false">Cancel</button>
+            <button type="submit" class="primary" :disabled="savingEquipment">
+              {{ savingEquipment ? 'Saving...' : 'Save Changes' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -607,6 +677,20 @@ const equipmentSearchQuery = ref('');
 const showWeaponModal = ref(false);
 const showArmorModal = ref(false);
 const showGearModal = ref(false);
+const showEditEquipmentModal = ref(false);
+const editingEquipmentOriginalName = ref('');
+
+const editEquipmentForm = ref({
+  name: '',
+  category: 'Weapon',
+  weight_lbs: 1,
+  cost: null,
+  damage_dice: '',
+  armor_dr: '',
+  attacker_pct_penalty: null,
+  properties: '',
+  capabilities: '',
+});
 
 const weaponForm = ref({
   name: '',
@@ -1037,6 +1121,57 @@ async function saveGear() {
   }
 }
 
+function openEditEquipmentModal(item) {
+  editingEquipmentOriginalName.value = item.name;
+  editEquipmentForm.value = {
+    name: item.name || '',
+    category: item.category || 'Gear',
+    weight_lbs: item.weight_lbs ?? item.weight ?? 0,
+    cost: item.cost ?? null,
+    damage_dice: item.damage_dice || '',
+    armor_dr: item.armor_dr ?? '',
+    attacker_pct_penalty: item.attacker_pct_penalty ?? null,
+    properties: item.properties || item.capabilities || '',
+    capabilities: item.capabilities || '',
+  };
+  showEditEquipmentModal.value = true;
+}
+
+async function saveEditEquipment() {
+  if (!editEquipmentForm.value.name || !editEquipmentForm.value.name.trim()) return;
+  savingEquipment.value = true;
+  error.value = '';
+  try {
+    const origName = editingEquipmentOriginalName.value;
+    const payload = {
+      name: editEquipmentForm.value.name,
+      category: editEquipmentForm.value.category,
+      weight_lbs: editEquipmentForm.value.weight_lbs,
+      cost: editEquipmentForm.value.cost,
+      damage_dice: editEquipmentForm.value.damage_dice,
+      armor_dr: editEquipmentForm.value.armor_dr,
+      attacker_pct_penalty: editEquipmentForm.value.attacker_pct_penalty,
+      properties: editEquipmentForm.value.properties,
+      capabilities: editEquipmentForm.value.capabilities || (editEquipmentForm.value.damage_dice ? `Damage: ${editEquipmentForm.value.damage_dice} | ${editEquipmentForm.value.properties}` : editEquipmentForm.value.properties),
+    };
+    const res = await fetch(`/api/equipment/${encodeURIComponent(origName)}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'Failed to update equipment');
+    successMessage.value = `Equipment "${data.name}" updated successfully.`;
+    showEditEquipmentModal.value = false;
+    await fetchEquipment();
+  } catch (err) {
+    error.value = err.message || 'Failed to update equipment';
+  } finally {
+    savingEquipment.value = false;
+  }
+}
+
 async function deleteEquipmentItem(item) {
   if (!window.confirm(`Are you sure you want to delete "${item.name}" from the equipment catalog?`)) {
     return;
@@ -1393,17 +1528,21 @@ defineExpose({
   showWeaponModal,
   showArmorModal,
   showGearModal,
+  showEditEquipmentModal,
+  editEquipmentForm,
   weaponForm,
   armorForm,
   gearForm,
   openAddWeaponModal,
   openAddArmorModal,
   openAddGearModal,
+  openEditEquipmentModal,
   fetchEquipment,
   getEquipmentCategoryCount,
   saveWeapon,
   saveArmor,
   saveGear,
+  saveEditEquipment,
   deleteEquipmentItem,
 });
 </script>
@@ -1820,6 +1959,20 @@ defineExpose({
 
 .table-wrapper {
   overflow-x: auto;
+}
+
+.assets-table-wrapper {
+  max-height: 520px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.assets-table-wrapper thead th {
+  position: sticky;
+  top: 0;
+  background: var(--bg-card, #161b22);
+  z-index: 2;
+  box-shadow: 0 1px 0 var(--border, #30363d);
 }
 
 .users-table,

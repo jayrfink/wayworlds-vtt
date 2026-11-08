@@ -98,6 +98,105 @@ export function createEquipmentRouter(db, io, customPath = null) {
     }
   });
 
+  // PUT /api/equipment/:name (GM Only)
+  router.put('/:name', requireAuth, requireGM(db), (req, res) => {
+    try {
+      const targetName = decodeURIComponent(req.params.name).trim();
+      const items = readItems();
+      const idx = items.findIndex(i => i.name.toLowerCase() === targetName.toLowerCase());
+
+      if (idx === -1) {
+        return res.status(404).json({ error: 'Equipment item not found' });
+      }
+
+      const {
+        name,
+        category,
+        weight_lbs,
+        properties,
+        capabilities,
+        damage_dice,
+        armor_dr,
+        attacker_pct_penalty,
+        cost,
+      } = req.body;
+
+      if (!name || typeof name !== 'string' || !name.trim()) {
+        return res.status(400).json({ error: 'Item name is required' });
+      }
+
+      const trimmedName = name.trim();
+      const duplicateIdx = items.findIndex(i => i.name.toLowerCase() === trimmedName.toLowerCase());
+      if (duplicateIdx !== -1 && duplicateIdx !== idx) {
+        return res.status(400).json({ error: 'An item with this name already exists' });
+      }
+
+      const validCategories = ['Weapon', 'Armor', 'Shield', 'Gear', 'Kit'];
+      const currentItem = items[idx];
+      const normalizedCat = validCategories.includes(category) ? category : (currentItem.category || 'Gear');
+
+      const updatedItem = {
+        ...currentItem,
+        name: trimmedName,
+        category: normalizedCat,
+        weight_lbs: Number.isFinite(Number(weight_lbs)) ? Math.max(0, Number(weight_lbs)) : (currentItem.weight_lbs ?? 0),
+        properties: typeof properties === 'string' ? properties.trim() : (currentItem.properties || ''),
+      };
+
+      if (capabilities !== undefined) {
+        if (typeof capabilities === 'string' && capabilities.trim()) {
+          updatedItem.capabilities = capabilities.trim();
+        } else {
+          delete updatedItem.capabilities;
+        }
+      }
+
+      if (damage_dice !== undefined) {
+        if (typeof damage_dice === 'string' && damage_dice.trim()) {
+          updatedItem.damage_dice = damage_dice.trim();
+        } else {
+          delete updatedItem.damage_dice;
+        }
+      }
+
+      if (armor_dr !== undefined) {
+        if (armor_dr !== null && armor_dr !== '') {
+          updatedItem.armor_dr = typeof armor_dr === 'number' ? armor_dr : String(armor_dr).trim();
+        } else {
+          delete updatedItem.armor_dr;
+        }
+      }
+
+      if (attacker_pct_penalty !== undefined) {
+        if (attacker_pct_penalty !== null && attacker_pct_penalty !== '') {
+          updatedItem.attacker_pct_penalty = Number(attacker_pct_penalty) || 0;
+        } else {
+          delete updatedItem.attacker_pct_penalty;
+        }
+      }
+
+      if (cost !== undefined) {
+        if (cost !== null && cost !== '') {
+          updatedItem.cost = Number(cost) || 0;
+        } else {
+          delete updatedItem.cost;
+        }
+      }
+
+      items[idx] = updatedItem;
+      writeItems(items);
+
+      if (io) {
+        io.emit('equipment:updated', items);
+      }
+
+      return res.json(updatedItem);
+    } catch (err) {
+      console.error('Error updating equipment:', err);
+      return res.status(500).json({ error: 'Failed to update equipment item' });
+    }
+  });
+
   // DELETE /api/equipment/:name (GM Only)
   router.delete('/:name', requireAuth, requireGM(db), (req, res) => {
     try {

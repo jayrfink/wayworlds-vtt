@@ -218,12 +218,15 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
     expect(sheetContent).toContain('class="btn-xp-upgrade btn-d10-step"');
     expect(sheetContent).toContain('class="btn-xp-upgrade btn-cast-spell"');
 
-    // Asserts .btn-xp-upgrade uses character selected theme CSS variables
-    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?background:\s*linear-gradient\(135deg,\s*var\(--theme-btn-bg/);
-    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?border:\s*1px solid var\(--theme-bright/);
-    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?box-shadow:\s*0 0 6px var\(--theme-glow/);
-    expect(sheetContent).toMatch(/\.btn-xp-upgrade:hover\s*\{[\s\S]*?box-shadow:\s*var\(--theme-glow-hover/);
-    expect(sheetContent).toMatch(/\.btn-xp-upgrade:hover\s*\{[\s\S]*?border-color:\s*var\(--theme-bright-hover/);
+    // Asserts Cast button has no icon
+    expect(sheetContent).not.toMatch(/class="btn-xp-upgrade btn-cast-spell"[^>]*>\s*⚡\s*Cast/);
+
+    // Asserts .btn-xp-upgrade uses flat theme colors modeled after the grimoire damage box
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?background:\s*var\(--theme-surface-active/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?border:\s*1px solid var\(--theme-border-subtle/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?color:\s*var\(--theme-bright/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade\s*\{[\s\S]*?box-shadow:\s*var\(--theme-glow-subtle\)/);
+    expect(sheetContent).toMatch(/\.btn-xp-upgrade:hover\s*\{[\s\S]*?background:\s*var\(--theme-surface-hover/);
   });
 
   it('verifies RpgVttView triggers % and d10 dice box animation and HUD when roll originates from sheet', () => {

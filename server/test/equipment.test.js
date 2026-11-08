@@ -218,6 +218,50 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
       expect(res.body.category).toBe('Shield');
     });
 
+    it('allows GM to update an existing equipment item via PUT', async () => {
+      const res = await gmAgent.put(`/api/equipment/${encodeURIComponent('Halberd')}`).send({
+        name: 'Grand Halberd',
+        category: 'Weapon',
+        weight_lbs: 7,
+        damage_dice: '3d10',
+        properties: 'Polearm, Heavy Reach',
+        cost: 35,
+      });
+      expect(res.status).toBe(200);
+      expect(res.body.name).toBe('Grand Halberd');
+      expect(res.body.damage_dice).toBe('3d10');
+      expect(res.body.weight_lbs).toBe(7);
+      expect(res.body.cost).toBe(35);
+
+      // Verify update persisted
+      const getRes = await gmAgent.get('/api/equipment');
+      const updated = getRes.body.find(i => i.name === 'Grand Halberd');
+      expect(updated).toBeDefined();
+      expect(updated.damage_dice).toBe('3d10');
+    });
+
+    it('blocks non-GM players from PUT /api/equipment/:name', async () => {
+      const res = await playerAgent.put(`/api/equipment/${encodeURIComponent('Grand Halberd')}`).send({
+        name: 'Hacked Halberd',
+      });
+      expect(res.status).toBe(403);
+    });
+
+    it('returns 404 on PUT /api/equipment/:name for nonexistent item', async () => {
+      const res = await gmAgent.put(`/api/equipment/${encodeURIComponent('NonexistentItem')}`).send({
+        name: 'Something',
+      });
+      expect(res.status).toBe(404);
+    });
+
+    it('prevents renaming equipment to an already existing other item', async () => {
+      const res = await gmAgent.put(`/api/equipment/${encodeURIComponent('Grand Halberd')}`).send({
+        name: 'Dagger',
+      });
+      expect(res.status).toBe(400);
+      expect(res.body.error).toMatch(/already exists/i);
+    });
+
     it('allows GM to delete an equipment item', async () => {
       const res = await gmAgent.delete(`/api/equipment/${encodeURIComponent('Tower Shield')}`);
       expect(res.status).toBe(200);

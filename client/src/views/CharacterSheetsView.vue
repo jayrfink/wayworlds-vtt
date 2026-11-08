@@ -276,7 +276,7 @@
             <div class="panel-header-simple">
               <span class="tracker-label">PRIMARY ATTRIBUTES</span>
               <span
-                v-if="alteredAttributePoolRemaining !== null"
+                v-if="alteredAttributePoolRemaining !== null && alteredAttributePoolRemaining > 0"
                 class="altered-pool-badge"
                 :title="'Altered species attribute redistribution points pool (20 pts total)'"
               >
@@ -923,7 +923,7 @@
                   title="Cast / Channel this power"
                   @click="castGrimoireSpell(spell, sIdx)"
                 >
-                  ⚡ Cast
+                  Cast
                 </button>
                 <div class="reorder-actions">
                   <button
@@ -4412,9 +4412,9 @@ export default {
   font-weight: 700;
   padding: 2px 8px;
   border-radius: 4px;
-  background: rgba(139, 92, 246, 0.18);
-  border: 1px solid rgba(139, 92, 246, 0.45);
-  color: #c4b5fd;
+  background: #000000;
+  border: 1px solid rgba(201, 201, 201, 0.4);
+  color: #c9c9c9;
   letter-spacing: 0.3px;
 }
 
@@ -5239,27 +5239,28 @@ export default {
 }
 
 .btn-xp-upgrade {
-  background: linear-gradient(135deg, var(--theme-btn-bg, #065f46) 0%, var(--theme-primary, #059669) 100%) !important;
-  border: 1px solid var(--theme-bright, #10b981) !important;
-  color: var(--theme-bright-hover, #ecfdf5) !important;
+  background: var(--theme-surface-active, rgba(69, 172, 186, 0.12)) !important;
+  border: 1px solid var(--theme-border-subtle, rgba(69, 172, 186, 0.35)) !important;
+  color: var(--theme-bright, #45acba) !important;
   font-size: 0.75rem;
   font-weight: 600;
   padding: 4px 6px;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
-  box-shadow: 0 0 6px var(--theme-glow, rgba(16, 185, 129, 0.4)) !important;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  box-shadow: var(--theme-glow-subtle) !important;
+  text-shadow: none !important;
   transition: all 0.15s ease-in-out;
 }
 .btn-xp-upgrade:hover {
-  box-shadow: var(--theme-glow-hover, 0 0 12px rgba(16, 185, 129, 0.7)) !important;
-  border-color: var(--theme-bright-hover, #34d399) !important;
+  background: var(--theme-surface-hover, rgba(69, 172, 186, 0.22)) !important;
+  box-shadow: var(--theme-glow, 0 0 8px rgba(69, 172, 186, 0.4)) !important;
+  border-color: var(--theme-bright-hover, #ecfdf5) !important;
   color: var(--theme-bright-hover, #ecfdf5) !important;
 }
 .btn-xp-upgrade:active {
   transform: translateY(1px);
-  box-shadow: 0 0 6px var(--theme-bright, rgba(16, 185, 129, 0.6)) !important;
+  box-shadow: var(--theme-glow-subtle) !important;
 }
 
 /* Skills Card XP Badges - Uniform fixed width with centered text and blank space padding */
