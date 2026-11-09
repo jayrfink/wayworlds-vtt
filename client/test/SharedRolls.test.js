@@ -58,6 +58,11 @@ describe('Shared Rolls & Roll Log Integration', () => {
     const rpgMatches = rpgContent.match(/class="hud-close"[^>]*>&times;<\/button>/g);
     expect(rpgMatches?.length).toBe(3);
   });
+
+  it('ensures only the rolling user syncs settled 3D roll results to avoid GM session overwrites', () => {
+    expect(rpgContent).toContain('const isRoller = roll.userId === authStore.user?.id;');
+    expect(rpgContent).not.toContain('const canSyncSettled = roll.userId === authStore.user?.id || isGm.value;');
+  });
 });
 
 describe('formatRollTime helper behavior', () => {

@@ -2702,7 +2702,9 @@ async function executeSheetRollOnVtt(roll) {
     return;
   }
 
-  const canSyncSettled = roll.userId === authStore.user?.id || isGm.value;
+  // Only the roller themselves should update the roll with their 3D dice results.
+  // Other clients (like the GM or peers) merely play the 3D visual animation.
+  const isRoller = roll.userId === authStore.user?.id;
 
   if (roll.type === 'percentile') {
     showPercentileHud.value = false;
@@ -2719,7 +2721,7 @@ async function executeSheetRollOnVtt(roll) {
           { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
         ]);
         const settled = calculatePercentileRoll(results);
-        if (settled.valid && canSyncSettled) {
+        if (settled.valid && isRoller) {
           const updated = applySettledSheetRoll(roll, settled);
           const mergedRoll = {
             ...roll,
@@ -2758,7 +2760,7 @@ async function executeSheetRollOnVtt(roll) {
           { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: count }
         ]);
         const settled = calculateDamageRoll(results);
-        if (settled.count > 0 && canSyncSettled) {
+        if (settled.count > 0 && isRoller) {
           const updated = applySettledSheetRoll(roll, settled);
           const mergedRoll = {
             ...roll,

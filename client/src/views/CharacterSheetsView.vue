@@ -6625,7 +6625,7 @@ export default {
 
 .roll-popup-big-val {
   font-size: 1.15rem;
-  color: #f0f6fc;
+  color: #cecece;
   display: flex;
   align-items: baseline;
   gap: 8px;
@@ -6691,7 +6691,7 @@ export default {
 }
 
 .btn-close-banner:hover {
-  color: #f0f6fc;
+  color: #cecece;
   background: rgba(255, 255, 255, 0.08);
 }
 
