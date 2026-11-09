@@ -63,6 +63,19 @@ describe('Shared Rolls & Roll Log Integration', () => {
     expect(rpgContent).toContain('const isRoller = roll.userId === authStore.user?.id;');
     expect(rpgContent).not.toContain('const canSyncSettled = roll.userId === authStore.user?.id || isGm.value;');
   });
+
+  it('ensures 3D dice physics animation only executes on roller client while remote clients only receive HUD banner', () => {
+    // executeSheetRollOnVtt early exits if not roller so other clients do not roll 3D dice
+    expect(rpgContent).toMatch(/const isRoller = roll\.userId === authStore\.user\?\.id;\s*if \(!isRoller\) \{\s*if \(roll\.type === 'percentile'\) \{\s*showPercentileBannerForRoll\(roll\);/);
+    
+    // onSocketRollCreated computes isMyRoll and does not trigger executeQueuedDiceRoll for remote rolls
+    expect(rpgContent).toContain('const isMyRoll = roll.userId === authStore.user?.id');
+    expect(rpgContent).toContain('playDiceSound({ isRemote: true });');
+    
+    // Ensure socket.on('roll:created') does NOT contain executeQueuedDiceRoll directly
+    const socketBlock = rpgContent.slice(rpgContent.indexOf("socket.on('roll:created'"), rpgContent.indexOf("socket.on('roll:updated'"));
+    expect(socketBlock).not.toContain('executeQueuedDiceRoll');
+  });
 });
 
 describe('formatRollTime helper behavior', () => {

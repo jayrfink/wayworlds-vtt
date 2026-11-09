@@ -2702,9 +2702,17 @@ async function executeSheetRollOnVtt(roll) {
     return;
   }
 
-  // Only the roller themselves should update the roll with their 3D dice results.
-  // Other clients (like the GM or peers) merely play the 3D visual animation.
+  // Only the roller themselves should animate 3D dice and update the roll with their 3D dice results.
+  // Other clients (like the GM or peers) merely display the HUD banner with settled results.
   const isRoller = roll.userId === authStore.user?.id;
+  if (!isRoller) {
+    if (roll.type === 'percentile') {
+      showPercentileBannerForRoll(roll);
+    } else if (roll.type === 'damage') {
+      showDamageBannerForRoll(roll);
+    }
+    return;
+  }
 
   if (roll.type === 'percentile') {
     showPercentileHud.value = false;
@@ -2927,6 +2935,7 @@ function setupSocketListeners() {
       }
     }
     const isFromSheet = roll.source === 'sheet' || roll.rollSummary?.source === 'sheet';
+    const isMyRoll = roll.userId === authStore.user?.id || (roll.username && roll.username === authStore.user?.username);
     if (roll.username !== authStore.user?.username) {
       playDiceSound({ isRemote: true });
     }
@@ -2936,62 +2945,53 @@ function setupSocketListeners() {
         rollLog.value = rollLog.value.slice(0, 20);
       }
     }
-    // If peer rolled or roll came from character sheet (Cast/Strike/Shoot), show floating banner & roll % dice
-    if (roll.userId !== authStore.user?.id || isFromSheet) {
-      if (isFromSheet) {
-        if (roll.rollSummary?.rolledOnVtt3d && roll.userId === authStore.user?.id) {
-          // 3D dice already rolled via BroadcastChannel responder; display settled HUD immediately
+    // 3D physics animation ONLY executes on the roller's own VTT client.
+    // Remote users (peers, GM) ONLY see the result popup / HUD banner.
+    if (isFromSheet) {
+      if (isMyRoll) {
+        if (roll.rollSummary?.rolledOnVtt3d) {
+          // 3D dice already rolled via BroadcastChannel responder on this client; display settled HUD immediately
           if (roll.type === 'percentile') {
             showPercentileBannerForRoll(roll);
           } else if (roll.type === 'damage') {
             showDamageBannerForRoll(roll);
           }
         } else {
+          // My roll from sheet: execute 3D dice animation on my own VTT canvas
           await executeSheetRollOnVtt(roll);
         }
-      } else if (roll.type === 'percentile') {
-        showPercentileBannerForRoll(roll);
-
-        // Animate 3D percentile dice across the RPG VTT canvas
-        try {
-          const diceBox = await getReadyDiceBox();
-          if (diceBox) {
-            await executeQueuedDiceRoll(diceBox, [
-              { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
-              { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
-            ]);
-          }
-        } catch (err) {
-          console.warn('RPG VTT percentile 3D roll error:', err);
+      } else {
+        // Remote sheet roll: show result HUD banner only; do not throw 3D dice on remote screens
+        if (roll.type === 'percentile') {
+          showPercentileBannerForRoll(roll);
+        } else if (roll.type === 'damage') {
+          showDamageBannerForRoll(roll);
         }
-      } else if (roll.type === 'damage') {
-        const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
-        showDamageBannerForRoll(roll);
-
-        // Animate 3D damage dice across the RPG VTT canvas
-        try {
-          const diceBox = await getReadyDiceBox();
-          if (diceBox) {
-            await executeQueuedDiceRoll(diceBox, [
-              { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: count }
-            ]);
-          }
-        } catch (err) {
-          console.warn('RPG VTT damage 3D roll error:', err);
+      }
+    } else {
+      // Non-sheet roll (rolled from VTT toolbar, tokens, combat actions, initiative)
+      if (isMyRoll) {
+        // The roller already executed 3D animation and displayed HUD locally when clicking roll
+      } else {
+        // Remote roll: show result HUD banner on other screens, but DO NOT run 3D dice animation
+        if (roll.type === 'percentile') {
+          showPercentileBannerForRoll(roll);
+        } else if (roll.type === 'damage') {
+          showDamageBannerForRoll(roll);
+        } else if (roll.type === 'initiative') {
+          lastInitiativeRoll.value = {
+            ...roll.rollSummary,
+            username: roll.username,
+            role: roll.role,
+          };
+          showInitiativeHud.value = true;
+          showPercentileHud.value = false;
+          showDamageHud.value = false;
+          if (initiativeHudTimeout) clearTimeout(initiativeHudTimeout);
+          initiativeHudTimeout = setTimeout(() => {
+            showInitiativeHud.value = false;
+          }, 9000);
         }
-      } else if (roll.type === 'initiative') {
-        lastInitiativeRoll.value = {
-          ...roll.rollSummary,
-          username: roll.username,
-          role: roll.role,
-        };
-        showInitiativeHud.value = true;
-        showPercentileHud.value = false;
-        showDamageHud.value = false;
-        if (initiativeHudTimeout) clearTimeout(initiativeHudTimeout);
-        initiativeHudTimeout = setTimeout(() => {
-          showInitiativeHud.value = false;
-        }, 9000);
       }
     }
   });
