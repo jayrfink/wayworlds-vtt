@@ -81,23 +81,74 @@ describe('Adversaries API - Template Delete & Token Update', () => {
 
     expect(patchRes.status).toBe(200);
     expect(patchRes.body.template.template_id).toBe(templateId);
-    expect(patchRes.body.template.token_image_path).toMatch(new RegExp(`^/uploads/tokens/${templateId}\\.png\\?v=\\d+$`));
+    // Shares the original uploaded filename without creating a duplicate $tokenname-t$TIER file
+    expect(patchRes.body.template.token_image_path).toBe(`/uploads/${rawFileName}`);
     expect(patchRes.body.updatedTokensCount).toBe(2);
 
     // Verify map tokens in DB were updated with the new avatar_url
     const activeMapRes = await agent.get('/api/maps/active?type=rpg');
     const mapTokens = activeMapRes.body.tokens.filter((t) => t.template_id === templateId);
     expect(mapTokens).toHaveLength(2);
-    expect(mapTokens[0].avatar_url).toBe(patchRes.body.template.token_image_path);
-    expect(mapTokens[1].avatar_url).toBe(patchRes.body.template.token_image_path);
+    expect(mapTokens[0].avatar_url).toBe(`/uploads/${rawFileName}`);
+    expect(mapTokens[1].avatar_url).toBe(`/uploads/${rawFileName}`);
 
     // Verify socket events emitted
     expect(emitSpy).toHaveBeenCalledWith('adversary:saved', expect.objectContaining({
       template: expect.objectContaining({ template_id: templateId }),
     }));
     expect(emitSpy).toHaveBeenCalledWith('token:updated', expect.objectContaining({
-      token: expect.objectContaining({ template_id: templateId, avatar_url: patchRes.body.template.token_image_path }),
+      token: expect.objectContaining({ template_id: templateId, avatar_url: `/uploads/${rawFileName}` }),
     }));
+  });
+
+  it('POST /api/adversaries/spawn shares original uploaded token filename across tiers without duplicating $tokenname-t$TIER files', async () => {
+    if (!fs.existsSync(DATA_UPLOADS_DIR)) {
+      fs.mkdirSync(DATA_UPLOADS_DIR, { recursive: true });
+    }
+    const sharedFileName = `shared_urkai_token_${Date.now()}.png`;
+    const sharedDiskPath = path.join(DATA_UPLOADS_DIR, sharedFileName);
+    await sharp({
+      create: { width: 64, height: 64, channels: 4, background: { r: 40, g: 120, b: 200, alpha: 1 } },
+    })
+      .png()
+      .toFile(sharedDiskPath);
+    createdFiles.push(sharedDiskPath);
+
+    // Spawn Tier 1 with uploaded token
+    const tier1Res = await agent.post('/api/adversaries/spawn').send({
+      mapId,
+      count: 1,
+      source_image_url: `/uploads/${sharedFileName}`,
+      template: {
+        name: 'Shared Token Raider',
+        category: 'npc',
+        threat_tier: 1,
+        species: 'Frost Urkai',
+      },
+    });
+    expect(tier1Res.status).toBe(201);
+    expect(tier1Res.body.template.template_id).toBe('shared-token-raider-t1');
+    expect(tier1Res.body.template.token_image_path).toBe(`/uploads/${sharedFileName}`);
+    expect(tier1Res.body.tokens[0].avatar_url).toBe(`/uploads/${sharedFileName}`);
+    expect(fs.existsSync(path.join(DATA_UPLOADS_DIR, 'tokens', 'shared-token-raider-t1.png'))).toBe(false);
+
+    // Spawn Tier 3 of the same adversary with the same uploaded token (or inheriting from sibling)
+    const tier3Res = await agent.post('/api/adversaries/spawn').send({
+      mapId,
+      count: 1,
+      source_image_url: `/uploads/${sharedFileName}`,
+      template: {
+        name: 'Shared Token Raider',
+        category: 'npc',
+        threat_tier: 3,
+        species: 'Frost Urkai',
+      },
+    });
+    expect(tier3Res.status).toBe(201);
+    expect(tier3Res.body.template.template_id).toBe('shared-token-raider-t3');
+    expect(tier3Res.body.template.token_image_path).toBe(`/uploads/${sharedFileName}`);
+    expect(tier3Res.body.tokens[0].avatar_url).toBe(`/uploads/${sharedFileName}`);
+    expect(fs.existsSync(path.join(DATA_UPLOADS_DIR, 'tokens', 'shared-token-raider-t3.png'))).toBe(false);
   });
 
   it('PATCH /api/adversaries/:id/token returns 400 when source_image_url file is missing on disk', async () => {

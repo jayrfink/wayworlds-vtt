@@ -3,7 +3,13 @@
     <!-- Header -->
     <div class="hud-header">
       <div class="hud-header-left">
-        <div class="hud-avatar-circle" :style="{ borderColor: tierColor }">
+        <div
+          class="hud-avatar-circle"
+          :class="{ 'gm-clickable': isGm }"
+          :style="{ borderColor: tierColor }"
+          :title="isGm ? 'Click to change token image' : ''"
+          @click="isGm && $emit('change-token', token)"
+        >
           <img v-if="token.avatar_url" :src="token.avatar_url" alt="Token" />
           <span v-else class="hud-avatar-placeholder">👤</span>
         </div>
@@ -15,6 +21,15 @@
         </div>
       </div>
       <div class="hud-header-actions">
+        <button
+          v-if="isGm"
+          type="button"
+          class="btn-hud-change-token"
+          title="Change token image for this adversary & template"
+          @click="$emit('change-token', token)"
+        >
+          🖼️ Token
+        </button>
         <button
           v-if="isGm"
           type="button"
@@ -175,7 +190,7 @@ export default {
       default: false,
     },
   },
-  emits: ['close', 'update:token', 'roll-attack', 'roll-damage'],
+  emits: ['close', 'update:token', 'roll-attack', 'roll-damage', 'change-token'],
   data() {
     return {
       availableConditions: [
@@ -347,8 +362,31 @@ export default {
   transition: all 0.15s ease;
 }
 
-.btn-hud-visibility:hover {
-  background: rgba(16, 185, 129, 0.25);
+.hud-avatar-circle.gm-clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hud-avatar-circle.gm-clickable:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 8px rgba(0, 255, 255, 0.45);
+}
+
+.btn-hud-change-token {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.5);
+  color: #38bdf8;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-hud-change-token:hover {
+  background: rgba(56, 189, 248, 0.28);
+  color: #e0f2fe;
 }
 
 .btn-hud-visibility.is-hidden {

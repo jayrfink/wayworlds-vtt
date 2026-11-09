@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll } from '../src/utils/diceUtils.js';
+import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll, applySettledSheetRoll } from '../src/utils/diceUtils.js';
 
 describe('calculateDamageRoll', () => {
   it('calculates total for a single die', () => {
@@ -260,5 +260,75 @@ describe('calculateInitiativeRoll', () => {
     expect(calculateInitiativeRoll(null)).toEqual({ playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false });
     expect(calculateInitiativeRoll([])).toEqual({ playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false });
     expect(calculateInitiativeRoll([{ value: 5 }])).toEqual({ playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false });
+  });
+});
+
+describe('applySettledSheetRoll', () => {
+  it('updates raw % Die sheet roll to match settled 3D percentile dice', () => {
+    const initialRoll = {
+      id: 501,
+      type: 'percentile',
+      label: 'Kellervo Nyal: % Die (d100)',
+      total: 37,
+      breakdown: 'd100=37 [Tens: 30, Ones: 7]',
+      rollSummary: {
+        actionType: 'percentile',
+        characterName: 'Kellervo Nyal',
+        d100Roll: 37,
+        total: 37,
+        tens: 3,
+        ones: 7,
+        source: 'sheet',
+      },
+    };
+
+    const settled = { total: 84, tens: 8, ones: 4, valid: true };
+    const updated = applySettledSheetRoll(initialRoll, settled);
+
+    expect(updated.total).toBe(84);
+    expect(updated.label).toBe('Kellervo Nyal: % Die (d100)');
+    expect(updated.breakdown).toBe('d100=84 [Tens: 80, Ones: 4]');
+    expect(updated.rollSummary.d100Roll).toBe(84);
+    expect(updated.rollSummary.total).toBe(84);
+    expect(updated.rollSummary.tens).toBe(8);
+    expect(updated.rollSummary.ones).toBe(4);
+    expect(updated.rollSummary.rolledOnVtt3d).toBe(true);
+  });
+
+  it('recomputes Strike / Shoot outcome when 3D percentile dice settle', () => {
+    const initialRoll = {
+      id: 502,
+      type: 'percentile',
+      label: 'Kellervo Nyal: Strike (40%) - MISS',
+      total: 75,
+      breakdown: 'd100=75 <= 40% (MISS)',
+      rollSummary: {
+        actionType: 'strike',
+        characterName: 'Kellervo Nyal',
+        skillName: 'Melee Weapons (Lvl 1)',
+        targetPct: 40,
+        d100Roll: 75,
+        total: 75,
+        tens: 7,
+        ones: 5,
+        success: false,
+        isCrit: false,
+        isFumble: false,
+        outcomeLabel: 'MISS',
+        source: 'sheet',
+      },
+    };
+
+    const settled = { total: 22, tens: 2, ones: 2, valid: true };
+    const updated = applySettledSheetRoll(initialRoll, settled);
+
+    expect(updated.total).toBe(22);
+    expect(updated.label).toBe('Kellervo Nyal: Strike (40%) - CRITICAL HIT');
+    expect(updated.breakdown).toBe('d100=22 <= 40% (CRITICAL HIT)');
+    expect(updated.rollSummary.d100Roll).toBe(22);
+    expect(updated.rollSummary.isCrit).toBe(true);
+    expect(updated.rollSummary.success).toBe(true);
+    expect(updated.rollSummary.outcomeLabel).toBe('CRITICAL HIT');
+    expect(updated.rollSummary.rolledOnVtt3d).toBe(true);
   });
 });

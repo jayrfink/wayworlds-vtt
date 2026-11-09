@@ -414,6 +414,7 @@
           :is-gm="isGm"
           @close="openHudTokenId = null"
           @update:token="onAdversaryTokenUpdate"
+          @change-token="openHudTokenImageBrowser"
           @roll-attack="onAdversaryRollAttack"
           @roll-damage="onAdversaryRollDamage"
         />
@@ -959,9 +960,10 @@ import DeployVehicleModal from '../components/DeployVehicleModal.vue';
 import DiceColorModal from '../components/DiceColorModal.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { socket } from '../services/socket.js';
-import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll } from '../utils/diceUtils.js';
+import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll, applySettledSheetRoll } from '../utils/diceUtils.js';
 import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
 import { diceRollQueue } from '../utils/diceRollQueue.js';
+import { registerVtt3dRollResponder, consumePendingSheetVttRoll } from '../utils/sheetDiceBridge.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
 import { playDiceSound, toggleMute as toggleDiceMute, isMuted as isDiceMuted } from '../services/diceAudio.js';
 import { getSavedDiceColors, saveDiceColors, getContrastingNumberColor } from '../utils/diceColorManager.js';
@@ -1484,6 +1486,7 @@ watch(showDeployVehicleModal, (isOpen) => {
   }
 });
 const adversaryImageSelectedUrl = ref('');
+const adversaryBrowserCurrentImage = ref('');
 const showImageBrowser = ref(false);
 const imageBrowserTarget = ref('token');
 const tokenFileInput = ref(null);
@@ -1546,7 +1549,9 @@ const imageBrowserTitle = computed(() => {
 const currentBrowserImage = computed(() => {
   if (imageBrowserTarget.value === 'active_map') return activeMapForm.background_url;
   if (imageBrowserTarget.value === 'new_map') return newMapForm.background_url;
-  if (imageBrowserTarget.value === 'adversary') return adversaryImageSelectedUrl.value;
+  if (imageBrowserTarget.value === 'adversary' || imageBrowserTarget.value === 'hud_adversary_token') {
+    return adversaryBrowserCurrentImage.value || adversaryImageSelectedUrl.value;
+  }
   return newTokenForm.avatar_url;
 });
 
@@ -1555,9 +1560,17 @@ function openTokenImageBrowser() {
   showImageBrowser.value = true;
 }
 
-function openAdversaryImageBrowser() {
+function openAdversaryImageBrowser(initialUrl = '') {
   adversaryImageSelectedUrl.value = '';
+  adversaryBrowserCurrentImage.value = typeof initialUrl === 'string' && initialUrl ? initialUrl : '/uploads/tokens/placeholder.png';
   imageBrowserTarget.value = 'adversary';
+  showImageBrowser.value = true;
+}
+
+function openHudTokenImageBrowser(token) {
+  adversaryImageSelectedUrl.value = '';
+  adversaryBrowserCurrentImage.value = token?.avatar_url || token?.template?.token_image_path || '/uploads/tokens/placeholder.png';
+  imageBrowserTarget.value = 'hud_adversary_token';
   showImageBrowser.value = true;
 }
 
@@ -1946,7 +1959,7 @@ function clearAvatar() {
   if (tokenFileInput.value) tokenFileInput.value.value = '';
 }
 
-function onImageSelected(url) {
+async function onImageSelected(url) {
   if (imageBrowserTarget.value === 'active_map') {
     activeMapForm.background_url = url;
     updateActiveMapSettings();
@@ -1954,6 +1967,25 @@ function onImageSelected(url) {
     newMapForm.background_url = url;
   } else if (imageBrowserTarget.value === 'adversary') {
     adversaryImageSelectedUrl.value = url;
+  } else if (imageBrowserTarget.value === 'hud_adversary_token') {
+    const hudTok = activeHudToken.value;
+    if (hudTok) {
+      const tplId = hudTok.template_id || hudTok.template?.template_id;
+      if (tplId) {
+        try {
+          await fetch(`/api/adversaries/${encodeURIComponent(tplId)}/token`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ source_image_url: url, apply_all_tiers: true }),
+          });
+        } catch (err) {
+          console.error('Failed to update adversary template token from HUD:', err);
+        }
+      } else {
+        onAdversaryTokenUpdate({ ...hudTok, avatar_url: url });
+      }
+    }
   } else {
     newTokenForm.avatar_url = url;
   }
@@ -2591,12 +2623,175 @@ let onSocketTokenMoved = null;
 let onSocketTokenUpdated = null;
 let onSocketTokenDeleted = null;
 let onSocketRollCreated = null;
+let onSocketRollUpdated = null;
 let onSocketRollCleared = null;
 const handledRollIds = new Set();
 let onSocketPingUpdated = null;
 let onSocketPingCleared = null;
 let onSocketPingsSync = null;
 let onSocketConnect = null;
+let cleanupVtt3dResponder = null;
+let pendingHiddenSheetRoll = null;
+
+async function updateRollOnServer(rollId, updatedPayload) {
+  if (!rollId) return null;
+  try {
+    const res = await fetch(`/api/rolls/${rollId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({
+        label: updatedPayload.label,
+        total: updatedPayload.total,
+        breakdown: updatedPayload.breakdown,
+        rollSummary: updatedPayload.rollSummary,
+      }),
+    });
+    if (res.ok) {
+      return await res.json();
+    }
+  } catch (err) {
+    console.warn('Failed to update settled sheet roll on server:', err);
+  }
+  return null;
+}
+
+function showPercentileBannerForRoll(roll) {
+  const rollSum = roll.rollSummary || {};
+  const tens = rollSum.tens !== undefined ? rollSum.tens : Math.floor((roll.total === 100 ? 0 : roll.total) / 10);
+  const ones = rollSum.ones !== undefined ? rollSum.ones : (roll.total % 10);
+  lastPercentileRoll.value = {
+    ...rollSum,
+    id: roll.id,
+    username: roll.username,
+    role: roll.role,
+    total: roll.total,
+    tens,
+    ones,
+  };
+  showPercentileHud.value = true;
+  if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
+  percentileHudTimeout = setTimeout(() => {
+    showPercentileHud.value = false;
+  }, 8000);
+}
+
+function showDamageBannerForRoll(roll) {
+  const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
+  lastDamageRoll.value = {
+    ...roll,
+    id: roll.id,
+    dice: Array.isArray(roll.rollSummary?.dice) ? roll.rollSummary.dice : [],
+    username: roll.username,
+    role: roll.role,
+    total: roll.total,
+    count,
+    breakdown: roll.breakdown,
+  };
+  showDamageHud.value = true;
+  if (damageHudTimeout) clearTimeout(damageHudTimeout);
+  damageHudTimeout = setTimeout(() => {
+    showDamageHud.value = false;
+  }, 8000);
+}
+
+async function executeSheetRollOnVtt(roll) {
+  if (!roll) return;
+  if (typeof document !== 'undefined' && document.visibilityState === 'hidden') {
+    pendingHiddenSheetRoll = roll;
+    return;
+  }
+
+  const canSyncSettled = roll.userId === authStore.user?.id || isGm.value;
+
+  if (roll.type === 'percentile') {
+    showPercentileHud.value = false;
+    showDamageHud.value = false;
+    showInitiativeHud.value = false;
+    if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
+
+    // Animate 3D percentile dice across the RPG VTT canvas and sync settled result
+    try {
+      const diceBox = await getReadyDiceBox();
+      if (diceBox) {
+        const results = await executeQueuedDiceRoll(diceBox, [
+          { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
+          { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
+        ]);
+        const settled = calculatePercentileRoll(results);
+        if (settled.valid && canSyncSettled) {
+          const updated = applySettledSheetRoll(roll, settled);
+          const mergedRoll = {
+            ...roll,
+            label: updated.label,
+            total: updated.total,
+            breakdown: updated.breakdown,
+            rollSummary: updated.rollSummary,
+          };
+          const idx = rollLog.value.findIndex(r => r.id === roll.id);
+          if (idx !== -1) {
+            rollLog.value[idx] = mergedRoll;
+          } else {
+            rollLog.value.unshift(mergedRoll);
+          }
+          showPercentileBannerForRoll(mergedRoll);
+          await updateRollOnServer(roll.id, updated);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('RPG VTT percentile 3D roll error:', err);
+    }
+    showPercentileBannerForRoll(roll);
+  } else if (roll.type === 'damage') {
+    const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
+    showDamageHud.value = false;
+    showPercentileHud.value = false;
+    showInitiativeHud.value = false;
+    if (damageHudTimeout) clearTimeout(damageHudTimeout);
+
+    // Animate 3D damage dice across the RPG VTT canvas and sync settled result
+    try {
+      const diceBox = await getReadyDiceBox();
+      if (diceBox) {
+        const results = await executeQueuedDiceRoll(diceBox, [
+          { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: count }
+        ]);
+        const settled = calculateDamageRoll(results);
+        if (settled.count > 0 && canSyncSettled) {
+          const updated = applySettledSheetRoll(roll, settled);
+          const mergedRoll = {
+            ...roll,
+            label: updated.label,
+            total: updated.total,
+            breakdown: updated.breakdown,
+            rollSummary: updated.rollSummary,
+          };
+          const idx = rollLog.value.findIndex(r => r.id === roll.id);
+          if (idx !== -1) {
+            rollLog.value[idx] = mergedRoll;
+          } else {
+            rollLog.value.unshift(mergedRoll);
+          }
+          showDamageBannerForRoll(mergedRoll);
+          await updateRollOnServer(roll.id, updated);
+          return;
+        }
+      }
+    } catch (err) {
+      console.warn('RPG VTT damage 3D roll error:', err);
+    }
+    showDamageBannerForRoll(roll);
+  }
+}
+
+function onVisibilityChange() {
+  if (typeof document !== 'undefined' && document.visibilityState === 'visible' && pendingHiddenSheetRoll) {
+    const rollToRun = pendingHiddenSheetRoll;
+    pendingHiddenSheetRoll = null;
+    executeSheetRollOnVtt(rollToRun);
+  }
+}
 
 function setupSocketListeners() {
   socket.on('map:activated', onSocketMapActivated = (payload) => {
@@ -2741,23 +2936,19 @@ function setupSocketListeners() {
     }
     // If peer rolled or roll came from character sheet (Cast/Strike/Shoot), show floating banner & roll % dice
     if (roll.userId !== authStore.user?.id || isFromSheet) {
-      if (roll.type === 'percentile') {
-        const rollSum = roll.rollSummary || {};
-        const tens = rollSum.tens !== undefined ? rollSum.tens : Math.floor((roll.total === 100 ? 0 : roll.total) / 10);
-        const ones = rollSum.ones !== undefined ? rollSum.ones : (roll.total % 10);
-        lastPercentileRoll.value = {
-          ...rollSum,
-          username: roll.username,
-          role: roll.role,
-          total: roll.total,
-          tens,
-          ones,
-        };
-        showPercentileHud.value = true;
-        if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
-        percentileHudTimeout = setTimeout(() => {
-          showPercentileHud.value = false;
-        }, 8000);
+      if (isFromSheet) {
+        if (roll.rollSummary?.rolledOnVtt3d && roll.userId === authStore.user?.id) {
+          // 3D dice already rolled via BroadcastChannel responder; display settled HUD immediately
+          if (roll.type === 'percentile') {
+            showPercentileBannerForRoll(roll);
+          } else if (roll.type === 'damage') {
+            showDamageBannerForRoll(roll);
+          }
+        } else {
+          await executeSheetRollOnVtt(roll);
+        }
+      } else if (roll.type === 'percentile') {
+        showPercentileBannerForRoll(roll);
 
         // Animate 3D percentile dice across the RPG VTT canvas
         try {
@@ -2773,20 +2964,7 @@ function setupSocketListeners() {
         }
       } else if (roll.type === 'damage') {
         const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
-        lastDamageRoll.value = {
-          ...roll,
-          dice: Array.isArray(roll.rollSummary?.dice) ? roll.rollSummary.dice : [],
-          username: roll.username,
-          role: roll.role,
-          total: roll.total,
-          count,
-          breakdown: roll.breakdown
-        };
-        showDamageHud.value = true;
-        if (damageHudTimeout) clearTimeout(damageHudTimeout);
-        damageHudTimeout = setTimeout(() => {
-          showDamageHud.value = false;
-        }, 8000);
+        showDamageBannerForRoll(roll);
 
         // Animate 3D damage dice across the RPG VTT canvas
         try {
@@ -2816,6 +2994,24 @@ function setupSocketListeners() {
     }
   });
 
+  socket.on('roll:updated', onSocketRollUpdated = ({ mode, roll }) => {
+    if (mode !== 'rpg' || !roll?.id) return;
+    const idx = rollLog.value.findIndex(r => r.id === roll.id);
+    if (idx !== -1) {
+      rollLog.value[idx] = roll;
+    } else {
+      rollLog.value.unshift(roll);
+      if (rollLog.value.length > 20) {
+        rollLog.value = rollLog.value.slice(0, 20);
+      }
+    }
+    if (roll.type === 'percentile' && (!lastPercentileRoll.value || lastPercentileRoll.value.id === roll.id || showPercentileHud.value)) {
+      showPercentileBannerForRoll(roll);
+    } else if (roll.type === 'damage' && (!lastDamageRoll.value || lastDamageRoll.value.id === roll.id || showDamageHud.value)) {
+      showDamageBannerForRoll(roll);
+    }
+  });
+
   socket.on('roll:cleared', onSocketRollCleared = ({ mode }) => {
     if (mode === 'rpg') {
       rollLog.value = [];
@@ -2835,6 +3031,7 @@ function cleanupSocketListeners() {
   if (onSocketTokenUpdated) socket.off('token:updated', onSocketTokenUpdated);
   if (onSocketTokenDeleted) socket.off('token:deleted', onSocketTokenDeleted);
   if (onSocketRollCreated) socket.off('roll:created', onSocketRollCreated);
+  if (onSocketRollUpdated) socket.off('roll:updated', onSocketRollUpdated);
   if (onSocketRollCleared) socket.off('roll:cleared', onSocketRollCleared);
   if (onSocketPingUpdated) socket.off('ping:updated', onSocketPingUpdated);
   if (onSocketPingCleared) socket.off('ping:cleared', onSocketPingCleared);
@@ -2851,7 +3048,13 @@ function onKeyDown(e) {
 }
 
 onMounted(() => {
-  fetchRollLog();
+  fetchRollLog().then(() => {
+    const pendingSheetRoll = consumePendingSheetVttRoll();
+    if (pendingSheetRoll) {
+      handledRollIds.add(pendingSheetRoll.id);
+      executeSheetRollOnVtt(pendingSheetRoll);
+    }
+  });
   fetchActiveMap();
   fetchCharacters();
   if (isGm.value) {
@@ -2861,7 +3064,32 @@ onMounted(() => {
   initDiceBox();
 
   setupSocketListeners();
+  cleanupVtt3dResponder = registerVtt3dRollResponder(async ({ type, count }) => {
+    showPercentileHud.value = false;
+    showDamageHud.value = false;
+    showInitiativeHud.value = false;
+    if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
+    if (damageHudTimeout) clearTimeout(damageHudTimeout);
+
+    const diceBox = await getReadyDiceBox();
+    if (!diceBox) return null;
+
+    if (type === 'damage') {
+      const qty = Math.max(1, Math.min(20, Number(count) || 1));
+      const results = await executeQueuedDiceRoll(diceBox, [
+        { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty }
+      ]);
+      return calculateDamageRoll(results);
+    }
+
+    const results = await executeQueuedDiceRoll(diceBox, [
+      { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
+      { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
+    ]);
+    return calculatePercentileRoll(results);
+  });
   document.addEventListener('click', onDocClick);
+  document.addEventListener('visibilitychange', onVisibilityChange);
   window.addEventListener('keydown', onKeyDown);
 });
 
@@ -2877,7 +3105,12 @@ onBeforeUnmount(() => {
     updateSelectedToken();
   }
   cleanupSocketListeners();
+  if (cleanupVtt3dResponder) {
+    cleanupVtt3dResponder();
+    cleanupVtt3dResponder = null;
+  }
   document.removeEventListener('click', onDocClick);
+  document.removeEventListener('visibilitychange', onVisibilityChange);
   window.removeEventListener('keydown', onKeyDown);
   if (damageHudTimeout) clearTimeout(damageHudTimeout);
   if (percentileHudTimeout) clearTimeout(percentileHudTimeout);

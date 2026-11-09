@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { generateTokenRingImage } from './tokenImagePipeline.js';
+import { sanitizeFolder } from './upload.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -124,7 +125,7 @@ export async function generateAiImage(enhancedPrompt) {
 }
 
 /**
- * Generates AI token art, saves raw image, applies circular mask + tier ring
+ * Generates AI token art in the specified folder (defaults to 'tokens') and applies circular mask + tier ring
  */
 export async function generateTokenArtFromDescription({
   prompt,
@@ -135,36 +136,68 @@ export async function generateTokenArtFromDescription({
   weapon,
   armor,
   attacks,
+  folder,
   uploadDir,
 }) {
+  const uploadsDir = uploadDir || path.join(DATA_DIR, 'uploads');
+  let cleanFolder = 'tokens';
+  if (folder !== undefined && folder !== null) {
+    const trimmed = String(folder).trim().replace(/^\/+|\/+$/g, '');
+    if (trimmed === '') {
+      cleanFolder = '';
+    } else {
+      const sanitized = sanitizeFolder(trimmed);
+      if (sanitized === null) {
+        const err = new Error('Invalid folder path');
+        err.status = 400;
+        throw err;
+      }
+      cleanFolder = sanitized;
+    }
+  }
+
   const enhancedPrompt = buildTokenPrompt({ prompt, name, species, category, weapon, armor, attacks });
   const imageBuffer = await generateAiImage(enhancedPrompt);
 
-  const uploadsDir = uploadDir || path.join(DATA_DIR, 'uploads');
-  const tokensUploadDir = path.join(uploadsDir, 'tokens');
-  if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
-  if (!fs.existsSync(tokensUploadDir)) fs.mkdirSync(tokensUploadDir, { recursive: true });
+  const targetDir = cleanFolder ? path.join(uploadsDir, cleanFolder) : uploadsDir;
+  if (!fs.existsSync(targetDir)) {
+    fs.mkdirSync(targetDir, { recursive: true });
+  }
 
   const slug = `${(name || 'adversary').toLowerCase().replace(/[^a-z0-9]+/g, '-')}-${Date.now().toString().slice(-6)}`;
   const rawFileName = `raw_${slug}.jpg`;
-  const rawFilePath = path.join(uploadsDir, rawFileName);
-  fs.writeFileSync(rawFilePath, imageBuffer);
-
+  const rawFilePath = path.join(targetDir, rawFileName);
   const tokenFileName = `token_${slug}.png`;
-  const tokenFilePath = path.join(tokensUploadDir, tokenFileName);
+  const tokenFilePath = path.join(targetDir, tokenFileName);
 
-  await generateTokenRingImage({
-    sourceImagePath: rawFilePath,
-    outputPath: tokenFilePath,
-    threatTier: threat_tier,
-    category,
-    label: name,
-    size: 256,
-  });
+  fs.writeFileSync(rawFilePath, imageBuffer);
+  try {
+    await generateTokenRingImage({
+      sourceImagePath: rawFilePath,
+      outputPath: tokenFilePath,
+      threatTier: threat_tier,
+      category,
+      label: name,
+      size: 256,
+    });
+  } finally {
+    if (fs.existsSync(rawFilePath)) {
+      try {
+        fs.unlinkSync(rawFilePath);
+      } catch {
+        // ignore cleanup error
+      }
+    }
+  }
+
+  const tokenImageUrl = cleanFolder
+    ? `/uploads/${cleanFolder}/${tokenFileName}`
+    : `/uploads/${tokenFileName}`;
 
   return {
-    source_image_url: `/uploads/${rawFileName}`,
-    token_image_url: `/uploads/tokens/${tokenFileName}`,
+    source_image_url: tokenImageUrl,
+    token_image_url: tokenImageUrl,
+    folder: cleanFolder,
     enhanced_prompt: enhancedPrompt,
   };
 }

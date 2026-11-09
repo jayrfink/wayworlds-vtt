@@ -1,6 +1,6 @@
 {
   "name": "ww-vtt-client",
-  "version": "0.14.2",
+  "version": "0.14.4",
   "type": "module",
   "scripts": {
     "dev": "vite",

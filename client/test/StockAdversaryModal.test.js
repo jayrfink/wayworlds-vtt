@@ -64,7 +64,7 @@ describe('StockAdversaryModal Component', () => {
       expect(payload.source_image_url).toBe('/uploads/beast.png');
     });
 
-    it('generates AI token art and sets source_image_url on success', async () => {
+    it('generates AI token art in specified folder and sets source_image_url on success', async () => {
       const originalFetch = global.fetch;
       global.fetch = async (url, options) => {
         expect(url).toBe('/api/adversaries/generate-token-art');
@@ -72,11 +72,13 @@ describe('StockAdversaryModal Component', () => {
         const body = JSON.parse(options.body);
         expect(body.name).toBe('Yazirian Sniper');
         expect(body.prompt).toBe('Yazirian with thermal goggles');
+        expect(body.folder).toBe('tokens/mercenaries');
         return {
           ok: true,
           json: async () => ({
-            token_image_url: '/uploads/tokens/token_yazirian_sniper.png',
-            source_image_url: '/uploads/raw_yazirian_sniper.jpg',
+            token_image_url: '/uploads/tokens/mercenaries/token_yazirian_sniper.png',
+            source_image_url: '/uploads/tokens/mercenaries/token_yazirian_sniper.png',
+            folder: 'tokens/mercenaries',
           }),
         };
       };
@@ -85,6 +87,8 @@ describe('StockAdversaryModal Component', () => {
         const ctx = {
           isGeneratingArt: false,
           errorMessage: null,
+          tokenTargetFolder: 'tokens/mercenaries',
+          availableFolders: ['tokens'],
           customForm: {
             name: 'Yazirian Sniper',
             description: 'Yazirian with thermal goggles',
@@ -99,7 +103,8 @@ describe('StockAdversaryModal Component', () => {
 
         await StockAdversaryModal.methods.generateAiTokenArt.call(ctx);
         expect(ctx.isGeneratingArt).toBe(false);
-        expect(ctx.customForm.source_image_url).toBe('/uploads/tokens/token_yazirian_sniper.png');
+        expect(ctx.customForm.source_image_url).toBe('/uploads/tokens/mercenaries/token_yazirian_sniper.png');
+        expect(ctx.availableFolders).toContain('tokens/mercenaries');
         expect(ctx.errorMessage).toBeNull();
       } finally {
         global.fetch = originalFetch;
@@ -269,7 +274,7 @@ describe('StockAdversaryModal Component', () => {
       expect(ctx.customForm.source_image_url).toBe('');
     });
 
-    it('generates existing template AI token art and updates template token', async () => {
+    it('generates existing template AI token art in specified folder and updates template token', async () => {
       const originalFetch = global.fetch;
       global.fetch = async (url, options) => {
         expect(url).toBe('/api/adversaries/generate-token-art');
@@ -277,10 +282,12 @@ describe('StockAdversaryModal Component', () => {
         const body = JSON.parse(options.body);
         expect(body.name).toBe('Sathar Warrior');
         expect(body.threat_tier).toBe(2);
+        expect(body.folder).toBe('sathar');
         return {
           ok: true,
           json: async () => ({
-            token_image_url: '/uploads/tokens/token_sathar_warrior.png',
+            token_image_url: '/uploads/sathar/token_sathar_warrior.png',
+            folder: 'sathar',
           }),
         };
       };
@@ -292,6 +299,8 @@ describe('StockAdversaryModal Component', () => {
           isGeneratingArt: false,
           errorMessage: null,
           cooldownSeconds: 0,
+          tokenTargetFolder: 'sathar',
+          availableFolders: ['tokens'],
           currentSelectedTemplate: {
             name: 'Sathar Warrior',
             category: 'npc',
@@ -309,7 +318,8 @@ describe('StockAdversaryModal Component', () => {
 
         await StockAdversaryModal.methods.generateExistingTemplateAiArt.call(ctx);
         expect(ctx.isGeneratingArt).toBe(false);
-        expect(updatedWithUrl).toBe('/uploads/tokens/token_sathar_warrior.png');
+        expect(updatedWithUrl).toBe('/uploads/sathar/token_sathar_warrior.png');
+        expect(ctx.availableFolders).toContain('sathar');
         expect(cooldownSet).toBe(45);
         expect(ctx.errorMessage).toBeNull();
       } finally {

@@ -330,15 +330,55 @@ export const MELEE_COMBAT_REF = {
 
 export const ADDITIONAL_RULES_REF = {
   title: 'Additional Rules',
-  description: 'Supplementary mechanics, mounted travel, and situational rules for Wayworlds d100.',
+  description: 'Supplementary mechanics, mounted travel, adventuring gear, and situational rules for Wayworlds d100.',
   mountsAndMovement: [
     {
       subject: 'Horse Movement (Riding Horse)',
       tacticalSpeed: '50 ft / Action (Dash: 100 ft)',
       overlandSpeed: '4 mph (24–32 miles / day); Gallop: 8 mph',
-      capacity: '1 Rider + 250 lbs cargo',
+      capacity: '1 Rider + 250 lbs cargo (45 STA, Natural Hide DR 2)',
       mechanics:
         'Rider shares mount movement without spending own movement actions. Grants +10% Melee Hit bonus vs targets on foot. Mounting or dismounting costs half of base Walk speed. If mount is reduced to 0 STA or knocked prone, rider must pass an Athletics & Acrobatics check or fall Prone in an adjacent 5 ft square, taking 1d10 damage.',
+    },
+    {
+      subject: 'Reinforced Iron-Bound Wagon',
+      tacticalSpeed: '30 ft / Action (Drawn by 2 Draft Beasts)',
+      overlandSpeed: '2.5 mph (18–20 miles / day on roads)',
+      capacity: 'Up to 6 Passengers + 3,300 lbs cargo (120 STA, Wood/Iron DR 5)',
+      mechanics:
+        'Passengers inside gain Hard Cover (+20% defense / -20% to incoming ranged attack rolls). Requires a driver using 1 Action per turn to steer in tactical combat.',
+    },
+  ],
+  adventuringGear: [
+    {
+      name: 'Herbalism Kit',
+      category: 'Kit & Medicine',
+      weight: '3 lbs',
+      effect: 'Used with Herbalism & Medicine to heal 2d10 STA during short rests and brew poultices/antidotes.',
+    },
+    {
+      name: 'Medic Kit',
+      category: 'Kit & Medicine',
+      weight: '2 lbs',
+      effect: 'Combat field kit to stop bleeding and bind wounds for 1d10 + Skill Level STA.',
+    },
+    {
+      name: 'Artisan Tool Kit',
+      category: 'Tradecraft Tools',
+      weight: '5 lbs',
+      effect: 'Required for Tradecraft field repairs, lock-picking, trap disarming, and Item Forge crafting.',
+    },
+    {
+      name: 'Quiver of Arrows (20) / Crossbow Bolt Case (20) / Sling Pouch (20)',
+      category: 'Ammunition',
+      weight: '1–2 lbs',
+      effect: 'Standard ammunition container holding 20 shots for bows, crossbows, or slings.',
+    },
+    {
+      name: 'Adventurer’s Pack (Rope 50 ft, Rations 5 days, Waterskin, Torches ×5, Flint & Steel)',
+      category: 'Field Gear',
+      weight: '10 lbs',
+      effect: 'Standard wilderness expedition kit for overland travel, campfires, and climbing.',
     },
   ],
 };
@@ -816,7 +856,7 @@ export const PSA_RULES_REF = {
 
 export const ARCHETYPES_RULES_REF = {
   title: 'Archetypes & Starter Skill Loadouts',
-  doctrine: 'Each archetype starts with 3 skills: exactly 2 In-PSA skills and 1 Out-of-PSA skill (in priority order). In-PSA skills cost 3 XP/level; Out-of-PSA skills cost 6 XP/level.',
+  doctrine: 'Archetypes are OPTIONAL starting examples—they are not mandatory classes. Players may pick an archetype below for a ready-made 3-skill loadout (2 In-PSA skills and 1 Out-of-PSA skill in priority order), or freely choose their own combination of starting skills and traditions. In-PSA skills cost 3 XP/level; Out-of-PSA skills cost 6 XP/level.',
   alteredSpeciesNote: "Players creating an Altered species (Spirits, Undeath, or Lycan) must put their character's original baseline species in the Character Sheet Notes if they know it (e.g. Origin: Dawn Elf, Origin: Frost Urkai, Origin: Weirgoth Dwarf, or Origin: Unknown Mortal).",
   standardArchetypes: [
     {

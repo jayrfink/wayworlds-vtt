@@ -133,3 +133,133 @@ export function calculateInitiativeRoll(results) {
     valid: true,
   };
 }
+
+/**
+ * Recomputes a Character Sheet roll payload (label, total, breakdown, rollSummary)
+ * using the actual settled 3D dice result from @3d-dice/dice-box on the VTT.
+ *
+ * @param {Object} roll - Existing roll record or draft roll object
+ * @param {Object} settled - Output of calculatePercentileRoll() or calculateDamageRoll()
+ * @returns {{ label: string, total: number, breakdown: string, rollSummary: Object }}
+ */
+export function applySettledSheetRoll(roll, settled) {
+  const prevSummary = { ...(roll?.rollSummary || {}) };
+  const charName = prevSummary.characterName || (typeof roll?.label === 'string' && roll.label.includes(':') ? roll.label.split(':')[0].trim() : 'Character');
+
+  if (roll?.type === 'damage' || prevSummary.actionType === 'd10') {
+    const dice = Array.isArray(settled?.dice) ? settled.dice : (Array.isArray(prevSummary.dice) ? prevSummary.dice : []);
+    const count = settled?.count || dice.length || prevSummary.count || 1;
+    const total = typeof settled?.total === 'number' ? settled.total : dice.reduce((s, v) => s + v, 0);
+    const nextSummary = {
+      ...prevSummary,
+      actionType: 'd10',
+      characterName: charName,
+      count,
+      dice,
+      total,
+      source: 'sheet',
+      rolledOnVtt3d: true,
+    };
+    return {
+      label: `${charName}: ${count}d10`,
+      total,
+      breakdown: `[${dice.join(', ')}]`,
+      rollSummary: nextSummary,
+    };
+  }
+
+  // Percentile roll (raw % Die, Strike, Shoot, or Grimoire Cast)
+  const d100Roll = typeof settled?.total === 'number' && settled.total >= 1 && settled.total <= 100
+    ? settled.total
+    : (Number(roll?.total) || 1);
+  const tens = typeof settled?.tens === 'number'
+    ? settled.tens
+    : Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10);
+  const ones = typeof settled?.ones === 'number'
+    ? settled.ones
+    : (d100Roll % 10);
+
+  const actionType = prevSummary.actionType || (prevSummary.spellName ? 'cast' : 'percentile');
+
+  if (actionType === 'strike' || actionType === 'shoot') {
+    const targetPct = Number(prevSummary.targetPct) || 50;
+    const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
+    const isFumble = d100Roll >= 96 || (d100Roll > targetPct && d100Roll % 11 === 0);
+    const success = !isFumble && d100Roll <= targetPct;
+    const outcomeLabel = isCrit ? 'CRITICAL HIT' : (isFumble ? 'FUMBLE' : (success ? 'HIT' : 'MISS'));
+    const verb = actionType === 'shoot' ? 'Shoot' : 'Strike';
+    const nextSummary = {
+      ...prevSummary,
+      actionType,
+      characterName: charName,
+      targetPct,
+      d100Roll,
+      total: d100Roll,
+      tens,
+      ones,
+      success,
+      isCrit,
+      isFumble,
+      outcomeLabel,
+      source: 'sheet',
+      rolledOnVtt3d: true,
+    };
+    return {
+      label: `${charName}: ${verb} (${targetPct}%) - ${outcomeLabel}`,
+      total: d100Roll,
+      breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
+      rollSummary: nextSummary,
+    };
+  }
+
+  if (prevSummary.spellName) {
+    const targetPct = Number(prevSummary.targetPct) || 50;
+    const isWardHeal = Boolean(prevSummary.isWardHeal || prevSummary.category === 'ward_heal');
+    const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
+    const isFumble = isWardHeal ? false : (d100Roll >= 96);
+    const success = isWardHeal ? true : (!isFumble && d100Roll <= targetPct);
+    const outcomeLabel = isCrit ? 'CRITICAL SUCCESS' : (isFumble ? 'FUMBLE' : (success ? 'SUCCESS' : 'FAILURE'));
+    const nextSummary = {
+      ...prevSummary,
+      characterName: charName,
+      targetPct,
+      d100Roll,
+      total: d100Roll,
+      tens,
+      ones,
+      success,
+      isCrit,
+      isFumble,
+      outcomeLabel,
+      source: 'sheet',
+      rolledOnVtt3d: true,
+    };
+    const fuelStr = String(prevSummary.fuel || 'ess').toUpperCase();
+    const diceArr = Array.isArray(prevSummary.dice) ? prevSummary.dice : [];
+    return {
+      label: `${charName}: ${prevSummary.spellName} (${prevSummary.tradition || 'Arcane'} T${prevSummary.castTier || 1}, -${prevSummary.cost || 0} ${fuelStr}) - ${outcomeLabel}`,
+      total: d100Roll,
+      breakdown: `d100=${d100Roll} <= ${targetPct}% | Magnitude ${prevSummary.diceFormula || '0'}: ${prevSummary.effectTotal || 0} [${diceArr.join(', ')}]`,
+      rollSummary: nextSummary,
+    };
+  }
+
+  // Raw % Die roll from character sheet
+  const nextSummary = {
+    ...prevSummary,
+    actionType: 'percentile',
+    characterName: charName,
+    d100Roll,
+    total: d100Roll,
+    tens,
+    ones,
+    source: 'sheet',
+    rolledOnVtt3d: true,
+  };
+  return {
+    label: `${charName}: % Die (d100)`,
+    total: d100Roll,
+    breakdown: `d100=${d100Roll} [Tens: ${tens * 10}, Ones: ${ones}]`,
+    rollSummary: nextSummary,
+  };
+}

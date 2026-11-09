@@ -64,4 +64,58 @@ describe('imageGeneratorService', () => {
       global.fetch = origFetch;
     }
   });
+
+  it('saves generated AI token art into the specified target folder without leaving raw duplicate files', async () => {
+    const fs = await import('fs');
+    const path = await import('path');
+    const os = await import('os');
+    const sharp = (await import('sharp')).default;
+    const { generateTokenArtFromDescription } = await import('../src/imageGeneratorService.js');
+
+    const tempUploadDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-token-folder-test-'));
+    const origFetch = global.fetch;
+
+    const fakeImageBuffer = await sharp({
+      create: { width: 64, height: 64, channels: 3, background: { r: 100, g: 150, b: 200 } },
+    })
+      .jpeg()
+      .toBuffer();
+
+    global.fetch = async () => ({
+      ok: true,
+      status: 200,
+      arrayBuffer: async () =>
+        fakeImageBuffer.buffer.slice(
+          fakeImageBuffer.byteOffset,
+          fakeImageBuffer.byteOffset + fakeImageBuffer.byteLength
+        ),
+    });
+
+    try {
+      const result = await generateTokenArtFromDescription({
+        prompt: 'Frost Urkai shaman',
+        name: 'Urkai Shaman',
+        species: 'Frost Urkai',
+        category: 'npc',
+        threat_tier: 3,
+        folder: 'tokens/frost-urkai',
+        uploadDir: tempUploadDir,
+      });
+
+      expect(result.folder).toBe('tokens/frost-urkai');
+      expect(result.token_image_url).toMatch(/^\/uploads\/tokens\/frost-urkai\/token_urkai-shaman-\d+\.png$/);
+      expect(result.source_image_url).toBe(result.token_image_url);
+
+      const relTokenPath = result.token_image_url.replace(/^\/uploads\//, '');
+      const fullTokenPath = path.join(tempUploadDir, relTokenPath);
+      expect(fs.existsSync(fullTokenPath)).toBe(true);
+
+      // Ensure no intermediate raw_*.jpg file was left behind in the folder
+      const folderFiles = fs.readdirSync(path.dirname(fullTokenPath));
+      expect(folderFiles.some((f) => f.startsWith('raw_'))).toBe(false);
+    } finally {
+      global.fetch = origFetch;
+      fs.rmSync(tempUploadDir, { recursive: true, force: true });
+    }
+  });
 });

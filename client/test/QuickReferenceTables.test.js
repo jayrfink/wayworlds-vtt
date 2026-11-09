@@ -102,6 +102,10 @@ describe('QuickReferenceTables.vue', () => {
       expect(html).toContain('4 mph (24–32 miles / day); Gallop: 8 mph');
       expect(html).toContain('1 Rider + 250 lbs cargo');
       expect(html).toContain('Rider shares mount movement');
+      expect(html).toContain('Reinforced Iron-Bound Wagon');
+      expect(html).toContain('Adventuring Kits, Tools &amp; Field Gear');
+      expect(html).toContain('Herbalism Kit');
+      expect(html).toContain('Artisan Tool Kit');
     });
   });
 
@@ -228,7 +232,9 @@ describe('QuickReferenceTables.vue', () => {
       expect(html).toContain('Blood');
       expect(html).toContain('Ki');
 
-      // Examples
+      // Examples & Custom Spells note
+      expect(html).toContain('Example Spells &amp; Martial Techniques');
+      expect(html).toContain('Custom Spells &amp; Techniques Welcome:');
       expect(html).toContain('Arcane Missile');
       expect(html).toContain('Crimson Lance');
       expect(html).toContain('Iron Palm Strike');
@@ -289,7 +295,9 @@ describe('QuickReferenceTables.vue', () => {
         expect(html).toContain(name);
       }
 
-      // Check specific skill loadouts and In-PSA / Out-of-PSA cost badges
+      // Check optional archetype note and specific skill loadouts
+      expect(html).toContain('Archetypes Are Not Mandatory:');
+      expect(html).toContain('Archetypes are OPTIONAL starting examples');
       expect(html).toContain('In-PSA (3 XP)');
       expect(html).toContain('Out-of-PSA (6 XP)');
 

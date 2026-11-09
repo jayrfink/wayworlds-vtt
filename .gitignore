@@ -11,3 +11,4 @@ dist/
 __MACOSX/
 scratch/
 *.pdf
+!docs/Wayworlds-Players-Guide.pdf

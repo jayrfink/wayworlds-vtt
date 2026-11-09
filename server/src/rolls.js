@@ -191,6 +191,88 @@ export function createRollRouter(db, io) {
     }
   });
 
+  // PUT /api/rolls/:id (update roll after 3D dice settle)
+  const updateRollHandler = (req, res) => {
+    const rollId = Number(req.params.id);
+    if (!Number.isInteger(rollId) || rollId <= 0) {
+      return res.status(400).json({ error: 'Valid roll id is required' });
+    }
+
+    try {
+      const existing = db.prepare(`
+        SELECT id, mode, user_id AS userId, username, role, type, label, total, breakdown, roll_summary AS rollSummary, created_at AS createdAt
+        FROM roll_logs WHERE id = ?
+      `).get(rollId);
+
+      if (!existing) {
+        return res.status(404).json({ error: 'Roll not found' });
+      }
+
+      if (existing.userId !== req.session?.userId && !isGameMaster(db, req.session?.userId)) {
+        return res.status(403).json({ error: 'Not authorized to update this roll' });
+      }
+
+      const type = existing.type;
+      const total = req.body.total !== undefined ? req.body.total : existing.total;
+      const label = req.body.label !== undefined ? req.body.label : existing.label;
+      const breakdown = req.body.breakdown !== undefined ? req.body.breakdown : existing.breakdown;
+      const rollSummary = req.body.rollSummary !== undefined
+        ? req.body.rollSummary
+        : safeJsonParse(existing.rollSummary, {});
+
+      if (typeof total !== 'number' || Number.isNaN(total) || !Number.isFinite(total)) {
+        return res.status(400).json({ error: 'Invalid roll total: must be a finite number' });
+      }
+      if (type === 'percentile' && (total < 1 || total > 100)) {
+        return res.status(400).json({ error: 'Percentile roll total must be between 1 and 100' });
+      }
+      if (type === 'damage' && (total < 0 || total > 100000)) {
+        return res.status(400).json({ error: 'Damage roll total must be a non-negative finite number' });
+      }
+      if (typeof label !== 'string' || label.trim().length === 0 || label.trim().length > 100) {
+        return res.status(400).json({ error: 'label is required and must be between 1 and 100 characters' });
+      }
+      if (typeof breakdown !== 'string' || breakdown.length > 500) {
+        return res.status(400).json({ error: 'breakdown must be a string up to 500 characters' });
+      }
+
+      const summaryStr = rollSummary ? JSON.stringify(rollSummary) : null;
+      db.prepare(`
+        UPDATE roll_logs
+        SET label = ?, total = ?, breakdown = ?, roll_summary = ?
+        WHERE id = ?
+      `).run(label, total, breakdown, summaryStr, rollId);
+
+      const createdAtIso = toIsoString(existing.createdAt);
+      const rollPayload = {
+        id: existing.id,
+        mode: existing.mode,
+        userId: existing.userId,
+        username: existing.username,
+        role: existing.role,
+        type: existing.type,
+        label,
+        total,
+        breakdown,
+        rollSummary: rollSummary || {},
+        timestamp: createdAtIso,
+        createdAt: createdAtIso
+      };
+
+      if (io) {
+        io.emit('roll:updated', { mode: existing.mode, roll: rollPayload });
+      }
+
+      res.json(rollPayload);
+    } catch (err) {
+      console.error('Failed to update roll:', err);
+      res.status(500).json({ error: 'Failed to update roll' });
+    }
+  };
+
+  router.put('/:id', requireAuth, updateRollHandler);
+  router.patch('/:id', requireAuth, updateRollHandler);
+
   // DELETE /api/rolls?mode=rpg|world (GM only)
   router.delete('/', requireGM(db), (req, res) => {
     const mode = req.query.mode;

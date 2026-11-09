@@ -29,6 +29,13 @@ function resolveUploadDiskPath(urlStr, baseUploadsDir = path.join(DATA_DIR, 'upl
   }
 }
 
+function normalizeUploadUrl(urlStr) {
+  if (!urlStr || typeof urlStr !== 'string') return '';
+  const cleanUrl = urlStr.split('?')[0].replace(/\\/g, '/');
+  if (cleanUrl.startsWith('/uploads/')) return cleanUrl;
+  return '/uploads/' + cleanUrl.replace(/^\/+/, '');
+}
+
 function safeJsonParse(val, fallback) {
   if (!val) return fallback;
   try {
@@ -92,7 +99,7 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
   // POST /api/adversaries/generate-token-art - Generate AI token portrait & masked ring
   router.post('/generate-token-art', requireGM(db), async (req, res) => {
     try {
-      const { prompt, name, species, category, threat_tier, weapon, armor, attacks } = req.body;
+      const { prompt, name, species, category, threat_tier, weapon, armor, attacks, folder } = req.body;
       const result = await generateTokenArtFromDescription({
         prompt,
         name,
@@ -102,6 +109,7 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
         weapon,
         armor,
         attacks,
+        folder,
         uploadDir: effectiveUploadsDir,
       });
       res.json(result);
@@ -251,6 +259,9 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
               armor: templateInput.armor,
             });
           }
+          if (templateInput.token_image_path && !templateObj.token_image_path) {
+            templateObj.token_image_path = templateInput.token_image_path;
+          }
         } else {
           templateObj = { ...templateInput };
         }
@@ -276,38 +287,40 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
         return res.status(400).json({ error: 'Invalid template_id: invalid characters or path traversal rejected' });
       }
 
-      // Handle token image generation / circular masking
-      const tokensUploadDir = path.join(effectiveUploadsDir, 'tokens');
-      if (!fs.existsSync(tokensUploadDir)) {
-        fs.mkdirSync(tokensUploadDir, { recursive: true });
+      // Handle token image assignment or fallback procedural generation.
+      // When an existing uploaded image is chosen (source_image_url or template.token_image_path),
+      // share the original filename directly instead of creating a duplicate $tokenname-t$TIER.png copy.
+      const sourceDiskPath = resolveUploadDiskPath(source_image_url, effectiveUploadsDir);
+      let existingTokenDiskPath = resolveUploadDiskPath(templateObj.token_image_path, effectiveUploadsDir);
+
+      if (!sourceDiskPath && !existingTokenDiskPath && templateObj.name) {
+        const siblingRow = db
+          .prepare(
+            "SELECT token_image_path FROM adversary_templates WHERE LOWER(name) = LOWER(?) AND id != ? AND token_image_path != '' ORDER BY updated_at DESC LIMIT 1"
+          )
+          .get(templateObj.name, rawTemplateId);
+        if (siblingRow?.token_image_path) {
+          const siblingDiskPath = resolveUploadDiskPath(siblingRow.token_image_path, effectiveUploadsDir);
+          if (siblingDiskPath) {
+            templateObj.token_image_path = normalizeUploadUrl(siblingRow.token_image_path);
+            existingTokenDiskPath = siblingDiskPath;
+          }
+        }
       }
 
-      const safeTemplateId = path.basename(rawTemplateId);
-      const tokenFileName = `${safeTemplateId}.png`;
-      const tokenOutputPath = path.join(tokensUploadDir, tokenFileName);
-
-      let sourceDiskPath = resolveUploadDiskPath(source_image_url, effectiveUploadsDir);
-      const existingTokenDiskPath = resolveUploadDiskPath(templateObj.token_image_path, effectiveUploadsDir);
-
       if (sourceDiskPath) {
-        const cleanSource = source_image_url.split('?')[0];
-        if (cleanSource.startsWith('/uploads/tokens/') || cleanSource.startsWith('tokens/')) {
-          if (path.resolve(sourceDiskPath) !== path.resolve(tokenOutputPath)) {
-            fs.copyFileSync(sourceDiskPath, tokenOutputPath);
-          }
-          templateObj.token_image_path = `/uploads/tokens/${tokenFileName}`;
-        } else {
-          await generateTokenRingImage({
-            sourceImagePath: sourceDiskPath,
-            outputPath: tokenOutputPath,
-            threatTier: templateObj.threat_tier,
-            category: templateObj.category,
-            label: templateObj.name,
-            size: 256,
-          });
-          templateObj.token_image_path = `/uploads/tokens/${tokenFileName}`;
+        templateObj.token_image_path = normalizeUploadUrl(source_image_url);
+      } else if (existingTokenDiskPath && templateObj.token_image_path) {
+        templateObj.token_image_path = normalizeUploadUrl(templateObj.token_image_path);
+      } else {
+        const tokensUploadDir = path.join(effectiveUploadsDir, 'tokens');
+        if (!fs.existsSync(tokensUploadDir)) {
+          fs.mkdirSync(tokensUploadDir, { recursive: true });
         }
-      } else if (!existingTokenDiskPath || !fs.existsSync(tokenOutputPath) || !templateObj.token_image_path) {
+        const safeTemplateId = path.basename(rawTemplateId);
+        const tokenFileName = `${safeTemplateId}.png`;
+        const tokenOutputPath = path.join(tokensUploadDir, tokenFileName);
+
         await generateTokenRingImage({
           outputPath: tokenOutputPath,
           threatTier: templateObj.threat_tier,
@@ -354,37 +367,30 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
         return res.status(404).json({ error: 'Adversary template not found' });
       }
 
-      const { source_image_url } = req.body || {};
-      const tokensUploadDir = path.join(effectiveUploadsDir, 'tokens');
-      if (!fs.existsSync(tokensUploadDir)) {
-        fs.mkdirSync(tokensUploadDir, { recursive: true });
-      }
-
-      const safeTemplateId = path.basename(templateId);
-      const tokenFileName = `${safeTemplateId}.png`;
-      const tokenOutputPath = path.join(tokensUploadDir, tokenFileName);
+      const { source_image_url, apply_all_tiers } = req.body || {};
+      let newTokenPath;
 
       if (source_image_url) {
-        const sourceDiskPath = resolveUploadDiskPath(source_image_url, effectiveUploadsDir);
-        if (!sourceDiskPath) {
-          return res.status(400).json({ error: 'Source image file not found on disk' });
-        }
-        const cleanSource = source_image_url.split('?')[0];
-        if (cleanSource.startsWith('/uploads/tokens/') || cleanSource.startsWith('tokens/')) {
-          if (path.resolve(sourceDiskPath) !== path.resolve(tokenOutputPath)) {
-            fs.copyFileSync(sourceDiskPath, tokenOutputPath);
-          }
+        const trimmedUrl = String(source_image_url).trim();
+        if (/^https?:\/\//i.test(trimmedUrl)) {
+          newTokenPath = trimmedUrl;
         } else {
-          await generateTokenRingImage({
-            sourceImagePath: sourceDiskPath,
-            outputPath: tokenOutputPath,
-            threatTier: row.threat_tier,
-            category: row.category,
-            label: row.name,
-            size: 256,
-          });
+          const sourceDiskPath = resolveUploadDiskPath(trimmedUrl, effectiveUploadsDir);
+          if (!sourceDiskPath) {
+            return res.status(400).json({ error: 'Source image file not found on disk' });
+          }
+          // Share the original uploaded filename directly without making a $tokenname-t$TIER duplicate
+          newTokenPath = normalizeUploadUrl(trimmedUrl);
         }
       } else {
+        const tokensUploadDir = path.join(effectiveUploadsDir, 'tokens');
+        if (!fs.existsSync(tokensUploadDir)) {
+          fs.mkdirSync(tokensUploadDir, { recursive: true });
+        }
+        const safeTemplateId = path.basename(templateId);
+        const tokenFileName = `${safeTemplateId}.png`;
+        const tokenOutputPath = path.join(tokensUploadDir, tokenFileName);
+
         await generateTokenRingImage({
           outputPath: tokenOutputPath,
           threatTier: row.threat_tier,
@@ -392,39 +398,59 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
           label: row.name,
           size: 256,
         });
+        newTokenPath = `/uploads/tokens/${tokenFileName}`;
       }
-
-      const newTokenPath = `/uploads/tokens/${tokenFileName}?v=${Date.now()}`;
-      let updateTokensResult;
+      let updateTokensResult = { changes: 0 };
       let updatedRow;
+      let targetTemplateIds = [templateId];
 
       const updateAdversaryTokenTx = db.transaction(() => {
-        db.prepare(`
+        if (apply_all_tiers && row.name) {
+          const matchingRows = db
+            .prepare('SELECT id FROM adversary_templates WHERE id = ? OR LOWER(name) = LOWER(?)')
+            .all(templateId, row.name);
+          targetTemplateIds = matchingRows.map((r) => r.id);
+        }
+
+        const updateTplStmt = db.prepare(`
           UPDATE adversary_templates
           SET token_image_path = ?, updated_at = CURRENT_TIMESTAMP
           WHERE id = ?
-        `).run(newTokenPath, templateId);
-
-        updatedRow = db.prepare('SELECT * FROM adversary_templates WHERE id = ?').get(templateId);
-
-        // Sync any tokens on maps spawned from this template
-        updateTokensResult = db.prepare(`
+        `);
+        const updateTokStmt = db.prepare(`
           UPDATE tokens
           SET avatar_url = ?, updated_at = CURRENT_TIMESTAMP
           WHERE template_id = ?
-        `).run(newTokenPath, templateId);
+        `);
+
+        for (const tid of targetTemplateIds) {
+          updateTplStmt.run(newTokenPath, tid);
+          const tokRes = updateTokStmt.run(newTokenPath, tid);
+          updateTokensResult.changes += tokRes.changes;
+        }
+
+        updatedRow = db.prepare('SELECT * FROM adversary_templates WHERE id = ?').get(templateId);
       });
 
       updateAdversaryTokenTx();
 
       const formattedTemplate = formatAdversary(updatedRow);
+      const updatedTemplates = targetTemplateIds
+        .map((tid) => db.prepare('SELECT * FROM adversary_templates WHERE id = ?').get(tid))
+        .filter(Boolean)
+        .map(formatAdversary);
 
       if (io) {
-        io.emit('adversary:saved', { template: formattedTemplate });
+        for (const tpl of updatedTemplates) {
+          io.emit('adversary:saved', { template: tpl });
+        }
       }
 
       if (io && updateTokensResult.changes > 0) {
-        const affectedTokens = db.prepare('SELECT * FROM tokens WHERE template_id = ?').all(templateId);
+        const placeholders = targetTemplateIds.map(() => '?').join(', ');
+        const affectedTokens = db
+          .prepare(`SELECT * FROM tokens WHERE template_id IN (${placeholders})`)
+          .all(...targetTemplateIds);
         for (const tRow of affectedTokens) {
           io.emit('token:updated', { token: formatToken(tRow, db) });
         }
@@ -432,6 +458,7 @@ export function createAdversariesRouter(db, io, uploadDir = null) {
 
       res.json({
         template: formattedTemplate,
+        updatedTemplates,
         updatedTokensCount: updateTokensResult.changes,
       });
     } catch (err) {

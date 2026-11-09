@@ -324,6 +324,34 @@
             </table>
           </div>
         </section>
+
+        <!-- Adventuring Kits, Tools & Supplies Table -->
+        <section v-if="filteredAdditionalGear.length > 0" class="ref-section">
+          <h2 class="section-title">
+            <span class="title-badge">Equipment &amp; Supplies</span>
+            Adventuring Kits, Tools &amp; Field Gear
+          </h2>
+          <div class="table-responsive">
+            <table class="ref-table">
+              <thead>
+                <tr>
+                  <th style="width: 260px;">Item / Kit</th>
+                  <th style="width: 170px;">Category</th>
+                  <th style="width: 110px;">Weight</th>
+                  <th>Rules &amp; Field Use</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="g in filteredAdditionalGear" :key="g.name">
+                  <td class="col-name font-bold">{{ g.name }}</td>
+                  <td><span class="type-tag">{{ g.category }}</span></td>
+                  <td class="font-mono">{{ g.weight }}</td>
+                  <td class="col-notes">{{ g.effect }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
       </div>
 
       <!-- ================= PRIMARY ATTRIBUTES ================= -->
@@ -634,11 +662,13 @@
         <!-- Doctrine / Rule Overview -->
         <section v-if="filteredArchetypesDoctrine" class="ref-section">
           <h2 class="section-title">
-            <span class="title-badge">Doctrine</span>
-            Starter Skill Loadouts &amp; Priority
+            <span class="title-badge">Optional Templates</span>
+            Archetypes Are Optional — Starter Skill Loadouts &amp; Priority
           </h2>
           <div class="rules-overview-banner">
-            <p>{{ ARCHETYPES_RULES_REF.doctrine }}</p>
+            <p>
+              <strong>Archetypes Are Not Mandatory:</strong> {{ ARCHETYPES_RULES_REF.doctrine }}
+            </p>
           </div>
         </section>
 
@@ -865,10 +895,10 @@
             <div>
               <h2 class="section-title">
                 <span class="title-badge">Grimoire Examples</span>
-                Spells &amp; Martial Techniques
+                Example Spells &amp; Martial Techniques
               </h2>
               <p class="section-subtitle">
-                Canonical examples for players to use, adapt, or scribe into their character sheets.
+                These spells and martial techniques are <strong>EXAMPLES only</strong>—players can freely invent and scribe their own custom spells and techniques on their Character Sheet as long as they are reasonable and follow the Universal Magnitude Table.
               </p>
             </div>
             <div class="section-actions">
@@ -881,6 +911,13 @@
               >
                 + Add Example
               </button>
+            </div>
+          </div>
+
+          <div class="rules-note-banner">
+            <span class="note-icon">💡</span>
+            <div class="note-text">
+              <strong>Custom Spells &amp; Techniques Welcome:</strong> The list below provides ready-to-use <strong>examples</strong> for inspiration. You are not limited to this list—use <code>+ Write Spell / Technique</code> on your Character Sheet to create your own spells or martial techniques, choosing any reasonable name, flavor, Tradition, Category (<em>Strike</em>, <em>Blast / Cleave</em>, <em>Ward / Heal</em>, or <em>Hex / Control</em>), and Cast Tier (<code>0–6</code>) from the Universal Magnitude Table.
             </div>
           </div>
 
@@ -1165,6 +1202,9 @@ const filteredMeleeModifiers = computed(() =>
 // Filtered Additional Rules items
 const filteredAdditionalMounts = computed(() =>
   ADDITIONAL_RULES_REF.mountsAndMovement.filter((item) => matchesQuery(item, searchQuery.value))
+);
+const filteredAdditionalGear = computed(() =>
+  (ADDITIONAL_RULES_REF.adventuringGear || []).filter((item) => matchesQuery(item, searchQuery.value))
 );
 
 // Filtered Primary Attributes items
@@ -1771,7 +1811,7 @@ const noResults = computed(() => {
     );
   }
   if (activeCategory.value === 'overland' || activeCategory.value === 'additional') {
-    return filteredAdditionalMounts.value.length === 0;
+    return filteredAdditionalMounts.value.length === 0 && filteredAdditionalGear.value.length === 0;
   }
   return false;
 });

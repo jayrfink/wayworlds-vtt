@@ -124,6 +124,114 @@
         :data-color-pkg="characterSheetColorPkg"
         :style="characterSheetCustomStyles"
       >
+        <!-- Floating Roll Result Pop-up HUD (Auto-closes on timer) -->
+        <transition name="hud-pop">
+          <div
+            v-if="lastCombatActionResult || lastCastResult"
+            class="sheet-roll-popup-hud grimoire-cast-banner"
+            :class="{
+              'combat-action-banner': !!lastCombatActionResult,
+              'outcome-crit': (lastCombatActionResult && lastCombatActionResult.isCrit) || (lastCastResult && lastCastResult.isCrit),
+              'outcome-fumble': (lastCombatActionResult && lastCombatActionResult.isFumble) || (lastCastResult && lastCastResult.isFumble),
+              'outcome-success': (lastCombatActionResult && (lastCombatActionResult.success || lastCombatActionResult.actionType === 'percentile' || lastCombatActionResult.actionType === 'd10')) || (lastCastResult && lastCastResult.success),
+              'outcome-failure': (lastCombatActionResult && lastCombatActionResult.outcomeLabel && !lastCombatActionResult.success) || (lastCastResult && !lastCastResult.success)
+            }"
+            role="status"
+            aria-live="polite"
+            @click="dismissSheetRollPopup"
+          >
+            <template v-if="lastCombatActionResult">
+              <div class="roll-popup-header">
+                <div class="cast-banner-main">
+                  <span class="cast-banner-title">
+                    {{
+                      lastCombatActionResult.actionType === 'strike'
+                        ? 'Strike'
+                        : (lastCombatActionResult.actionType === 'shoot'
+                          ? 'Shoot'
+                          : (lastCombatActionResult.actionType === 'percentile'
+                            ? '% Die'
+                            : 'd10s'))
+                    }}
+                  </span>
+                  <span v-if="lastCombatActionResult.skillName" class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
+                  <span v-else-if="lastCombatActionResult.actionType === 'd10'" class="cast-banner-tradition">({{ lastCombatActionResult.count }}d10)</span>
+                </div>
+                <button type="button" class="btn-close-banner" title="Dismiss" @click.stop="dismissSheetRollPopup">✕</button>
+              </div>
+
+              <div class="roll-popup-body">
+                <template v-if="lastCombatActionResult.outcomeLabel">
+                  <div class="roll-popup-big-val">
+                    d100 = <strong>{{ lastCombatActionResult.d100Roll }}</strong>
+                    <span class="roll-popup-vs">vs {{ lastCombatActionResult.targetPct }}%</span>
+                  </div>
+                  <span
+                    class="cast-banner-outcome roll-popup-outcome-badge"
+                    :class="{
+                      'crit': lastCombatActionResult.isCrit,
+                      'fumble': lastCombatActionResult.isFumble,
+                      'success': lastCombatActionResult.success && !lastCombatActionResult.isCrit,
+                      'failure': !lastCombatActionResult.success && !lastCombatActionResult.isFumble
+                    }"
+                  >
+                    {{ lastCombatActionResult.outcomeLabel }} — {{ lastCombatActionResult.success ? 'SUCCESS' : 'FAILURE' }} (d100={{ lastCombatActionResult.d100Roll }} vs {{ lastCombatActionResult.targetPct }}%)
+                  </span>
+                </template>
+                <template v-else-if="lastCombatActionResult.actionType === 'percentile'">
+                  <div class="roll-popup-big-val">
+                    d100 = <strong>{{ lastCombatActionResult.d100Roll }}</strong>
+                  </div>
+                  <span class="cast-banner-outcome roll-popup-outcome-badge success">
+                    d100 = {{ lastCombatActionResult.d100Roll }} [Tens: {{ lastCombatActionResult.tens * 10 }}, Ones: {{ lastCombatActionResult.ones }}]
+                  </span>
+                </template>
+                <template v-else-if="lastCombatActionResult.actionType === 'd10'">
+                  <div class="roll-popup-big-val">
+                    Total: <strong>{{ lastCombatActionResult.total }}</strong>
+                  </div>
+                  <span class="cast-banner-outcome roll-popup-outcome-badge success">
+                    Total: {{ lastCombatActionResult.total }} [{{ lastCombatActionResult.dice?.join(', ') }}]
+                  </span>
+                </template>
+              </div>
+            </template>
+
+            <template v-else-if="lastCastResult">
+              <div class="roll-popup-header">
+                <div class="cast-banner-main">
+                  <strong class="cast-banner-title">{{ lastCastResult.spellName }}</strong>
+                  <span class="cast-tradition-tag">{{ lastCastResult.tradition }} • Tier {{ lastCastResult.castTier }}</span>
+                  <span class="cast-cost-tag">-{{ lastCastResult.cost }} {{ lastCastResult.fuel.toUpperCase() }}</span>
+                </div>
+                <button type="button" class="btn-close-banner btn-dismiss-cast" title="Dismiss" @click.stop="dismissSheetRollPopup">✕</button>
+              </div>
+
+              <div class="roll-popup-body cast-banner-rolls">
+                <div class="roll-popup-big-val">
+                  d100 = <strong>{{ lastCastResult.d100Roll }}</strong>
+                  <span class="roll-popup-vs">vs {{ lastCastResult.targetPct }}%</span>
+                </div>
+                <span
+                  class="cast-check-pill cast-banner-outcome roll-popup-outcome-badge"
+                  :class="{
+                    crit: lastCastResult.isCrit,
+                    fumble: lastCastResult.isFumble,
+                    success: lastCastResult.success && !lastCastResult.isCrit,
+                    fail: !lastCastResult.success,
+                    failure: !lastCastResult.success && !lastCastResult.isFumble
+                  }"
+                >
+                  {{ lastCastResult.outcomeLabel }} (d100: {{ lastCastResult.d100Roll }} vs {{ lastCastResult.targetPct }}%)
+                </span>
+                <span class="cast-effect-pill">
+                  Magnitude ({{ lastCastResult.diceFormula }}): <strong>{{ lastCastResult.effectTotal }}</strong> — {{ lastCastResult.summary }}
+                </span>
+              </div>
+            </template>
+          </div>
+        </transition>
+
         <!-- Header Info -->
         <header class="sheet-header">
           <div class="header-main">
@@ -642,44 +750,6 @@
               </div>
             </div>
 
-            <!-- Strike / Shoot / % Die / d10 Result Banner -->
-            <div v-if="lastCombatActionResult" class="grimoire-cast-banner combat-action-banner">
-              <div class="cast-banner-main">
-                <span class="cast-banner-title">
-                  {{
-                    lastCombatActionResult.actionType === 'strike'
-                      ? 'Strike'
-                      : (lastCombatActionResult.actionType === 'shoot'
-                        ? 'Shoot'
-                        : (lastCombatActionResult.actionType === 'percentile'
-                          ? '% Die'
-                          : 'd10s'))
-                  }}
-                </span>
-                <span v-if="lastCombatActionResult.skillName" class="cast-banner-tradition">({{ lastCombatActionResult.skillName }})</span>
-                <span v-else-if="lastCombatActionResult.actionType === 'd10'" class="cast-banner-tradition">({{ lastCombatActionResult.count }}d10)</span>
-                <span
-                  v-if="lastCombatActionResult.outcomeLabel"
-                  class="cast-banner-outcome"
-                  :class="{
-                    'crit': lastCombatActionResult.isCrit,
-                    'fumble': lastCombatActionResult.isFumble,
-                    'success': lastCombatActionResult.success && !lastCombatActionResult.isCrit,
-                    'failure': !lastCombatActionResult.success && !lastCombatActionResult.isFumble
-                  }"
-                >
-                  {{ lastCombatActionResult.outcomeLabel }} (d100={{ lastCombatActionResult.d100Roll }} vs {{ lastCombatActionResult.targetPct }}%)
-                </span>
-                <span v-else-if="lastCombatActionResult.actionType === 'percentile'" class="cast-banner-outcome success">
-                  d100 = {{ lastCombatActionResult.d100Roll }} [Tens: {{ lastCombatActionResult.tens * 10 }}, Ones: {{ lastCombatActionResult.ones }}]
-                </span>
-                <span v-else-if="lastCombatActionResult.actionType === 'd10'" class="cast-banner-outcome success">
-                  Total: {{ lastCombatActionResult.total }} [{{ lastCombatActionResult.dice?.join(', ') }}]
-                </span>
-              </div>
-              <button type="button" class="btn-close-banner" title="Dismiss" @click="lastCombatActionResult = null">✕</button>
-            </div>
-
             <div v-if="!selectedChar.skills || selectedChar.skills.length === 0" class="empty-list">
               No skills added.
             </div>
@@ -838,23 +908,6 @@
             </div>
             <div class="list-header-actions">
               <button type="button" class="btn-secondary btn-add-spell" @click="addGrimoireEntry">+ Write Spell / Technique</button>
-            </div>
-          </div>
-
-          <div v-if="lastCastResult" class="grimoire-cast-banner">
-            <div class="cast-banner-main">
-              <strong>{{ lastCastResult.spellName }}</strong>
-              <span class="cast-tradition-tag">{{ lastCastResult.tradition }} • Tier {{ lastCastResult.castTier }}</span>
-              <span class="cast-cost-tag">-{{ lastCastResult.cost }} {{ lastCastResult.fuel.toUpperCase() }}</span>
-            </div>
-            <div class="cast-banner-rolls">
-              <span class="cast-check-pill" :class="{ success: lastCastResult.success, fail: !lastCastResult.success }">
-                d100: {{ lastCastResult.d100Roll }} vs {{ lastCastResult.targetPct }}% ({{ lastCastResult.outcomeLabel }})
-              </span>
-              <span class="cast-effect-pill">
-                Magnitude ({{ lastCastResult.diceFormula }}): <strong>{{ lastCastResult.effectTotal }}</strong> — {{ lastCastResult.summary }}
-              </span>
-              <button type="button" class="btn-dismiss-cast" @click="lastCastResult = null">✕</button>
             </div>
           </div>
 
@@ -1515,6 +1568,7 @@
 <script>
 import { socket } from '../services/socket.js';
 import { useAuthStore } from '../stores/auth.js';
+import { requestVtt3dRoll, savePendingSheetVttRoll } from '../utils/sheetDiceBridge.js';
 import {
   RACES_DATA,
   getLineageBaselineStats,
@@ -1748,6 +1802,8 @@ export default {
       magnitudeTable: UNIVERSAL_MAGNITUDE_TABLE,
       lastCastResult: null,
       lastCombatActionResult: null,
+      lastSheetRollId: null,
+      sheetRollPopupTimer: null,
       sheetD10Count: 1,
       showForgeModal: false,
       forgeError: '',
@@ -2019,6 +2075,10 @@ export default {
     if (this._scrollSaveTimer) {
       clearTimeout(this._scrollSaveTimer);
       this._scrollSaveTimer = null;
+    }
+    if (this.sheetRollPopupTimer) {
+      clearTimeout(this.sheetRollPopupTimer);
+      this.sheetRollPopupTimer = null;
     }
     this.saveScrollPositions();
     this.removeSocketListeners();
@@ -3272,7 +3332,17 @@ export default {
 
       const targetPct = this.getSpellTargetPct(spell);
       const isWardHeal = spell?.category === 'ward_heal';
-      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      const { d100Roll, tens, ones, rolledOnVtt3d } = typeof this.rollSheetPercentile3d === 'function'
+        ? await this.rollSheetPercentile3d()
+        : (() => {
+            const r = Math.floor(Math.random() * 100) + 1;
+            return {
+              d100Roll: r,
+              tens: Math.floor((r === 100 ? 0 : r) / 10),
+              ones: r % 10,
+              rolledOnVtt3d: false,
+            };
+          })();
       const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
       const isFumble = isWardHeal ? false : (d100Roll >= 96);
       const success = isWardHeal ? true : (!isFumble && d100Roll <= targetPct);
@@ -3304,16 +3374,25 @@ export default {
         fuel,
         targetPct,
         d100Roll,
+        total: d100Roll,
+        tens,
+        ones,
         success,
         isCrit,
         isFumble,
+        isWardHeal,
         outcomeLabel,
         diceFormula: mag.dice,
         dice: diceList,
         effectTotal,
         summary: mag.summary,
+        rolledOnVtt3d,
       };
+      this.lastCombatActionResult = null;
       this.lastCastResult = result;
+      if (typeof this.scheduleSheetRollPopupClose === 'function') {
+        this.scheduleSheetRollPopupClose();
+      }
 
       await this.updateCharacter();
 
@@ -3321,34 +3400,111 @@ export default {
         playDiceSound({ isRemote: false });
       } catch {}
 
-      try {
-        await fetch('/api/rolls', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            mode: 'rpg',
-            type: 'percentile',
+      if (typeof this.postSheetRollToServer === 'function') {
+        await this.postSheetRollToServer({
+          mode: 'rpg',
+          type: 'percentile',
+          source: 'sheet',
+          label: `${this.selectedChar.name}: ${result.spellName} (${result.tradition} T${castTier}, -${cost} ${fuel.toUpperCase()}) - ${outcomeLabel}`,
+          total: d100Roll,
+          breakdown: `d100=${d100Roll} <= ${targetPct}% | Magnitude ${mag.dice}: ${effectTotal} [${diceList.join(', ')}]`,
+          rollSummary: {
+            ...result,
             source: 'sheet',
-            label: `${this.selectedChar.name}: ${result.spellName} (${result.tradition} T${castTier}, -${cost} ${fuel.toUpperCase()}) - ${outcomeLabel}`,
+            characterName: this.selectedChar.name,
+            targetPct,
             total: d100Roll,
-            breakdown: `d100=${d100Roll} <= ${targetPct}% | Magnitude ${mag.dice}: ${effectTotal} [${diceList.join(', ')}]`,
-            rollSummary: {
-              ...result,
-              source: 'sheet',
-              characterName: this.selectedChar.name,
-              targetPct,
-              total: d100Roll,
-              tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
-              ones: d100Roll % 10,
-            },
-          }),
-        });
-      } catch {
-        // Ignore roll log network errors in offline/unit test contexts
+            tens,
+            ones,
+            rolledOnVtt3d,
+          },
+        }, rolledOnVtt3d);
       }
 
       return result;
+    },
+    scheduleSheetRollPopupClose(durationMs = 8000) {
+      if (this.sheetRollPopupTimer) {
+        clearTimeout(this.sheetRollPopupTimer);
+      }
+      this.sheetRollPopupTimer = setTimeout(() => {
+        this.lastCombatActionResult = null;
+        this.lastCastResult = null;
+        this.sheetRollPopupTimer = null;
+      }, durationMs);
+    },
+    dismissSheetRollPopup() {
+      if (this.sheetRollPopupTimer) {
+        clearTimeout(this.sheetRollPopupTimer);
+        this.sheetRollPopupTimer = null;
+      }
+      this.lastCombatActionResult = null;
+      this.lastCastResult = null;
+    },
+    async rollSheetPercentile3d() {
+      const settled = await requestVtt3dRoll({ type: 'percentile' });
+      if (settled && settled.valid && settled.total >= 1 && settled.total <= 100) {
+        return {
+          d100Roll: settled.total,
+          tens: settled.tens,
+          ones: settled.ones,
+          rolledOnVtt3d: true,
+        };
+      }
+      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      const tens = Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10);
+      const ones = d100Roll % 10;
+      return {
+        d100Roll,
+        tens,
+        ones,
+        rolledOnVtt3d: false,
+      };
+    },
+    async rollSheetDamage3d(count) {
+      const settled = await requestVtt3dRoll({ type: 'damage', count });
+      if (settled && Array.isArray(settled.dice) && settled.dice.length > 0) {
+        return {
+          dice: settled.dice,
+          total: settled.total,
+          count: settled.count || settled.dice.length,
+          rolledOnVtt3d: true,
+        };
+      }
+      const dice = [];
+      let total = 0;
+      for (let i = 0; i < count; i++) {
+        const val = Math.floor(Math.random() * 10) + 1;
+        dice.push(val);
+        total += val;
+      }
+      return {
+        dice,
+        total,
+        count,
+        rolledOnVtt3d: false,
+      };
+    },
+    async postSheetRollToServer(payload, rolledOnVtt3d) {
+      try {
+        const res = await fetch('/api/rolls', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify(payload),
+        });
+        if (res && res.ok && typeof res.json === 'function') {
+          const saved = await res.json();
+          if (saved && saved.id) {
+            this.lastSheetRollId = saved.id;
+            if (!rolledOnVtt3d) {
+              savePendingSheetVttRoll(saved);
+            }
+          }
+        }
+      } catch {
+        // Ignore roll log network errors in offline/unit test contexts
+      }
     },
     async performStrikeRoll() {
       if (!this.selectedChar) return null;
@@ -3357,7 +3513,11 @@ export default {
       const meleeSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'melee weapons');
       const skillName = meleeSkill ? `Melee Weapons (Lvl ${meleeSkill.level || 0})` : 'Melee Base';
 
-      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      const { d100Roll, tens, ones, rolledOnVtt3d } = await this.rollSheetPercentile3d();
       const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
       const isFumble = d100Roll >= 96 || (d100Roll > targetPct && d100Roll % 11 === 0);
       const success = !isFumble && d100Roll <= targetPct;
@@ -3370,38 +3530,30 @@ export default {
         targetPct,
         d100Roll,
         total: d100Roll,
-        tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
-        ones: d100Roll % 10,
+        tens,
+        ones,
         success,
         isCrit,
         isFumble,
         outcomeLabel,
         source: 'sheet',
+        rolledOnVtt3d,
       };
+      this.lastCastResult = null;
       this.lastCombatActionResult = result;
-
-      try {
-        playDiceSound({ isRemote: false });
-      } catch {}
-
-      try {
-        await fetch('/api/rolls', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            mode: 'rpg',
-            type: 'percentile',
-            source: 'sheet',
-            label: `${this.selectedChar.name}: Strike (${targetPct}%) - ${outcomeLabel}`,
-            total: d100Roll,
-            breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
-            rollSummary: result,
-          }),
-        });
-      } catch {
-        // Ignore roll log network errors in offline/unit test contexts
+      if (typeof this.scheduleSheetRollPopupClose === 'function') {
+        this.scheduleSheetRollPopupClose();
       }
+
+      await this.postSheetRollToServer({
+        mode: 'rpg',
+        type: 'percentile',
+        source: 'sheet',
+        label: `${this.selectedChar.name}: Strike (${targetPct}%) - ${outcomeLabel}`,
+        total: d100Roll,
+        breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
+        rollSummary: result,
+      }, rolledOnVtt3d);
 
       return result;
     },
@@ -3412,7 +3564,11 @@ export default {
       const rangedSkill = skills.find(s => s && s.name && s.name.trim().toLowerCase() === 'ranged weapons');
       const skillName = rangedSkill ? `Ranged Weapons (Lvl ${rangedSkill.level || 0})` : 'Ranged Base';
 
-      const d100Roll = Math.floor(Math.random() * 100) + 1;
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      const { d100Roll, tens, ones, rolledOnVtt3d } = await this.rollSheetPercentile3d();
       const isCrit = d100Roll <= 5 || (d100Roll <= targetPct && d100Roll % 11 === 0);
       const isFumble = d100Roll >= 96 || (d100Roll > targetPct && d100Roll % 11 === 0);
       const success = !isFumble && d100Roll <= targetPct;
@@ -3425,38 +3581,30 @@ export default {
         targetPct,
         d100Roll,
         total: d100Roll,
-        tens: Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10),
-        ones: d100Roll % 10,
+        tens,
+        ones,
         success,
         isCrit,
         isFumble,
         outcomeLabel,
         source: 'sheet',
+        rolledOnVtt3d,
       };
+      this.lastCastResult = null;
       this.lastCombatActionResult = result;
-
-      try {
-        playDiceSound({ isRemote: false });
-      } catch {}
-
-      try {
-        await fetch('/api/rolls', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            mode: 'rpg',
-            type: 'percentile',
-            source: 'sheet',
-            label: `${this.selectedChar.name}: Shoot (${targetPct}%) - ${outcomeLabel}`,
-            total: d100Roll,
-            breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
-            rollSummary: result,
-          }),
-        });
-      } catch {
-        // Ignore roll log network errors in offline/unit test contexts
+      if (typeof this.scheduleSheetRollPopupClose === 'function') {
+        this.scheduleSheetRollPopupClose();
       }
+
+      await this.postSheetRollToServer({
+        mode: 'rpg',
+        type: 'percentile',
+        source: 'sheet',
+        label: `${this.selectedChar.name}: Shoot (${targetPct}%) - ${outcomeLabel}`,
+        total: d100Roll,
+        breakdown: `d100=${d100Roll} <= ${targetPct}% (${outcomeLabel})`,
+        rollSummary: result,
+      }, rolledOnVtt3d);
 
       return result;
     },
@@ -3466,9 +3614,11 @@ export default {
     },
     async performPercentileRoll() {
       if (!this.selectedChar) return null;
-      const d100Roll = Math.floor(Math.random() * 100) + 1;
-      const tens = Math.floor((d100Roll === 100 ? 0 : d100Roll) / 10);
-      const ones = d100Roll % 10;
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      const { d100Roll, tens, ones, rolledOnVtt3d } = await this.rollSheetPercentile3d();
       const result = {
         actionType: 'percentile',
         characterName: this.selectedChar.name,
@@ -3477,44 +3627,34 @@ export default {
         tens,
         ones,
         source: 'sheet',
+        rolledOnVtt3d,
       };
+      this.lastCastResult = null;
       this.lastCombatActionResult = result;
-
-      try {
-        playDiceSound({ isRemote: false });
-      } catch {}
-
-      try {
-        await fetch('/api/rolls', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            mode: 'rpg',
-            type: 'percentile',
-            source: 'sheet',
-            label: `${this.selectedChar.name}: % Die (d100)`,
-            total: d100Roll,
-            breakdown: `d100=${d100Roll} [Tens: ${tens * 10}, Ones: ${ones}]`,
-            rollSummary: result,
-          }),
-        });
-      } catch {
-        // Ignore roll log network errors in offline/unit test contexts
+      if (typeof this.scheduleSheetRollPopupClose === 'function') {
+        this.scheduleSheetRollPopupClose();
       }
+
+      await this.postSheetRollToServer({
+        mode: 'rpg',
+        type: 'percentile',
+        source: 'sheet',
+        label: `${this.selectedChar.name}: % Die (d100)`,
+        total: d100Roll,
+        breakdown: `d100=${d100Roll} [Tens: ${tens * 10}, Ones: ${ones}]`,
+        rollSummary: result,
+      }, rolledOnVtt3d);
 
       return result;
     },
     async performD10Roll() {
       if (!this.selectedChar) return null;
       const count = Math.max(1, Math.min(20, this.sheetD10Count || 1));
-      const dice = [];
-      let total = 0;
-      for (let i = 0; i < count; i++) {
-        const val = Math.floor(Math.random() * 10) + 1;
-        dice.push(val);
-        total += val;
-      }
+      try {
+        playDiceSound({ isRemote: false });
+      } catch {}
+
+      const { dice, total, rolledOnVtt3d } = await this.rollSheetDamage3d(count);
       const result = {
         actionType: 'd10',
         characterName: this.selectedChar.name,
@@ -3522,31 +3662,23 @@ export default {
         dice,
         total,
         source: 'sheet',
+        rolledOnVtt3d,
       };
+      this.lastCastResult = null;
       this.lastCombatActionResult = result;
-
-      try {
-        playDiceSound({ isRemote: false });
-      } catch {}
-
-      try {
-        await fetch('/api/rolls', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({
-            mode: 'rpg',
-            type: 'damage',
-            source: 'sheet',
-            label: `${this.selectedChar.name}: ${count}d10`,
-            total,
-            breakdown: `[${dice.join(', ')}]`,
-            rollSummary: result,
-          }),
-        });
-      } catch {
-        // Ignore roll log network errors in offline/unit test contexts
+      if (typeof this.scheduleSheetRollPopupClose === 'function') {
+        this.scheduleSheetRollPopupClose();
       }
+
+      await this.postSheetRollToServer({
+        mode: 'rpg',
+        type: 'damage',
+        source: 'sheet',
+        label: `${this.selectedChar.name}: ${count}d10`,
+        total,
+        breakdown: `[${dice.join(', ')}]`,
+        rollSummary: result,
+      }, rolledOnVtt3d);
 
       return result;
     },
@@ -3764,6 +3896,7 @@ export default {
       socket.on('sheet:deleted', this.handleSheetDeleted);
       socket.on('sheets:reordered', this.handleSheetsReordered);
       socket.on('equipment:updated', this.handleEquipmentUpdated);
+      socket.on('roll:updated', this.handleRollUpdated);
     },
     removeSocketListeners() {
       socket.off('sheet:created', this.handleSheetCreated);
@@ -3771,6 +3904,37 @@ export default {
       socket.off('sheet:deleted', this.handleSheetDeleted);
       socket.off('sheets:reordered', this.handleSheetsReordered);
       socket.off('equipment:updated', this.handleEquipmentUpdated);
+      socket.off('roll:updated', this.handleRollUpdated);
+    },
+    handleRollUpdated(payload) {
+      const roll = payload?.roll;
+      if (!roll || payload?.mode !== 'rpg') return;
+      const summary = roll.rollSummary || {};
+      const matchesLastId = this.lastSheetRollId && roll.id === this.lastSheetRollId;
+      const matchesChar = this.selectedChar && summary.characterName === this.selectedChar.name && summary.source === 'sheet';
+      if (!matchesLastId && !matchesChar) return;
+
+      if (summary.spellName && this.lastCastResult) {
+        this.lastCastResult = {
+          ...this.lastCastResult,
+          ...summary,
+          d100Roll: summary.d100Roll ?? roll.total,
+          total: roll.total,
+        };
+        if (typeof this.scheduleSheetRollPopupClose === 'function') {
+          this.scheduleSheetRollPopupClose();
+        }
+      } else if (this.lastCombatActionResult) {
+        this.lastCombatActionResult = {
+          ...this.lastCombatActionResult,
+          ...summary,
+          d100Roll: summary.d100Roll ?? roll.total,
+          total: roll.total,
+        };
+        if (typeof this.scheduleSheetRollPopupClose === 'function') {
+          this.scheduleSheetRollPopupClose();
+        }
+      }
     },
     handleEquipmentUpdated(updatedList) {
       if (Array.isArray(updatedList)) {
@@ -6402,6 +6566,144 @@ export default {
   flex-direction: column;
   gap: 6px;
   color: #cecece;
+}
+
+.sheet-roll-popup-hud {
+  position: fixed;
+  top: 72px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1200;
+  min-width: 340px;
+  max-width: min(92vw, 560px);
+  background: rgba(13, 17, 23, 0.96);
+  border: 2px solid var(--theme-bright, #45acba);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.8), 0 0 18px rgba(69, 172, 186, 0.25);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+
+.sheet-roll-popup-hud.outcome-crit {
+  border-color: #facc15;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85), 0 0 22px rgba(250, 204, 21, 0.35);
+}
+
+.sheet-roll-popup-hud.outcome-fumble {
+  border-color: #ef4444;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85), 0 0 22px rgba(239, 68, 68, 0.35);
+}
+
+.sheet-roll-popup-hud.outcome-success:not(.outcome-crit) {
+  border-color: #34d399;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85), 0 0 20px rgba(52, 211, 153, 0.3);
+}
+
+.sheet-roll-popup-hud.outcome-failure:not(.outcome-fumble) {
+  border-color: #f87171;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.85), 0 0 20px rgba(248, 113, 113, 0.3);
+}
+
+.roll-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 6px;
+}
+
+.roll-popup-body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roll-popup-big-val {
+  font-size: 1.15rem;
+  color: #f0f6fc;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.roll-popup-big-val strong {
+  font-size: 1.4rem;
+  color: var(--theme-bright, #45acba);
+}
+
+.roll-popup-vs {
+  font-size: 0.88rem;
+  color: #8b949e;
+}
+
+.roll-popup-outcome-badge {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.roll-popup-outcome-badge.crit {
+  color: #fde047;
+  background: rgba(250, 204, 21, 0.14);
+  border-color: rgba(250, 204, 21, 0.5);
+}
+
+.roll-popup-outcome-badge.fumble {
+  color: #fca5a5;
+  background: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.55);
+}
+
+.roll-popup-outcome-badge.success {
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.14);
+  border-color: rgba(52, 211, 153, 0.45);
+}
+
+.roll-popup-outcome-badge.failure,
+.roll-popup-outcome-badge.fail {
+  color: #f87171;
+  background: rgba(248, 113, 113, 0.14);
+  border-color: rgba(248, 113, 113, 0.45);
+}
+
+.btn-close-banner {
+  background: transparent;
+  border: none;
+  color: #8b949e;
+  font-size: 0.95rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+.btn-close-banner:hover {
+  color: #f0f6fc;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.hud-pop-enter-active,
+.hud-pop-leave-active {
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.hud-pop-enter-from,
+.hud-pop-leave-to {
+  opacity: 0;
+  transform: translate(-50%, -10px) scale(0.96);
 }
 
 .cast-banner-main,

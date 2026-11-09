@@ -8,6 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import CharacterSheetsView from '../src/views/CharacterSheetsView.vue';
 import { useAuthStore } from '../src/stores/auth.js';
+import { registerVtt3dRollResponder } from '../src/utils/sheetDiceBridge.js';
 
 describe('Skills Card Strike & Shoot Action Buttons', () => {
   let pinia;
@@ -128,8 +129,11 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
       expect(strikeCall.source).toBe('sheet');
       expect(strikeCall.label).toMatch(/Kaelen: Strike \(40%\)/);
 
-      // Verify banner appears
-      expect(skillsCard.find('.combat-action-banner').exists()).toBe(true);
+      // Verify floating pop-up HUD appears (and does NOT insert inline inside .skills-card)
+      expect(skillsCard.find('.combat-action-banner').exists()).toBe(false);
+      const popupHud = wrapper.find('.sheet-roll-popup-hud.combat-action-banner');
+      expect(popupHud.exists()).toBe(true);
+      expect(popupHud.text()).toMatch(/SUCCESS|FAILURE/);
 
       // Click Shoot and verify POST /api/rolls
       await shootBtn.trigger('click');
@@ -247,5 +251,103 @@ describe('Skills Card Strike & Shoot Action Buttons', () => {
 
     // Asserts RpgVttView imports saveDiceColors so preference watcher does not throw ReferenceError
     expect(rpgContent).toMatch(/import\s*\{[^}]*saveDiceColors[^}]*\}\s*from\s*['"]\.\.\/utils\/diceColorManager\.js['"]/);
+  });
+
+  it('uses settled 3D VTT dice values when VTT responder is active and updates sheet banner on roll:updated', async () => {
+    const origFetch = global.fetch;
+    const mockPostRoll = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () => Promise.resolve({ id: 777 }),
+    });
+
+    global.fetch = vi.fn().mockImplementation((url, options) => {
+      if (url === '/api/characters') {
+        return Promise.resolve({
+          ok: true,
+          json: () => Promise.resolve([{
+            id: 1,
+            user_id: 1,
+            name: 'Kellervo Nyal',
+            race: 'Dawn Elf',
+            psa: 'Martial',
+            str: 50,
+            dex: 60,
+            rs: 50,
+            current_stamina: 45,
+            max_stamina: 45,
+            skills: [{ name: 'Melee Weapons', level: 1 }],
+          }]),
+        });
+      }
+      if (url === '/api/rolls' && options?.method === 'POST') {
+        return mockPostRoll(url, options);
+      }
+      return Promise.resolve({ ok: true, json: () => Promise.resolve([]) });
+    });
+
+    const cleanupResponder = registerVtt3dRollResponder(async () => ({
+      total: 73,
+      tens: 7,
+      ones: 3,
+      valid: true,
+    }));
+
+    try {
+      const wrapper = mount(CharacterSheetsView, {
+        global: { stubs: { ImageBrowserModal: true } },
+      });
+      await flushPromises();
+
+      const pctBtn = wrapper.find('.btn-percentile-action');
+      await pctBtn.trigger('click');
+      await flushPromises();
+
+      // Sheet banner displays exact settled 3D roll (73, Tens: 70, Ones: 3)
+      const banner = wrapper.find('.combat-action-banner');
+      expect(banner.exists()).toBe(true);
+      expect(banner.text()).toContain('d100 = 73 [Tens: 70, Ones: 3]');
+
+      // POST /api/rolls payload has exact settled 3D roll
+      const pctCall = JSON.parse(mockPostRoll.mock.calls[0][1].body);
+      expect(pctCall.total).toBe(73);
+      expect(pctCall.breakdown).toBe('d100=73 [Tens: 70, Ones: 3]');
+      expect(pctCall.rollSummary.tens).toBe(7);
+      expect(pctCall.rollSummary.ones).toBe(3);
+      expect(pctCall.rollSummary.rolledOnVtt3d).toBe(true);
+
+      // Verify handleRollUpdated also updates the sheet banner when VTT settles asynchronously
+      wrapper.vm.handleRollUpdated({
+        mode: 'rpg',
+        roll: {
+          id: 777,
+          type: 'percentile',
+          total: 91,
+          rollSummary: {
+            actionType: 'percentile',
+            characterName: 'Kellervo Nyal',
+            d100Roll: 91,
+            total: 91,
+            tens: 9,
+            ones: 1,
+            source: 'sheet',
+            rolledOnVtt3d: true,
+          },
+        },
+      });
+      await flushPromises();
+      expect(wrapper.find('.combat-action-banner').text()).toContain('d100 = 91 [Tens: 90, Ones: 1]');
+
+      // Verify auto-close timer dismisses the floating pop-up HUD after 8 seconds
+      vi.useFakeTimers();
+      wrapper.vm.scheduleSheetRollPopupClose(8000);
+      expect(wrapper.find('.sheet-roll-popup-hud').exists()).toBe(true);
+      vi.advanceTimersByTime(8000);
+      await flushPromises();
+      expect(wrapper.find('.sheet-roll-popup-hud').exists()).toBe(false);
+    } finally {
+      vi.useRealTimers();
+      cleanupResponder();
+      global.fetch = origFetch;
+    }
   });
 });
