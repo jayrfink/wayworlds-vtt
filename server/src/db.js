@@ -2,6 +2,7 @@ import Database from 'better-sqlite3';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { seedOracle } from '../db/seeds/oracle_ulvwylde_seed.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_DATA_DIR = path.join(__dirname, '../../data');
@@ -261,7 +262,54 @@ function migrate(db, dataDir = null) {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (session_id) REFERENCES gm_sessions(id) ON DELETE CASCADE
     );
+
+    CREATE TABLE IF NOT EXISTS oracle_environments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL UNIQUE,
+      description TEXT
+    );
+
+    CREATE TABLE IF NOT EXISTS oracle_arcs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      environment_id INTEGER NOT NULL,
+      title TEXT NOT NULL,
+      synopsis TEXT,
+      is_custom INTEGER DEFAULT 0,
+      FOREIGN KEY (environment_id) REFERENCES oracle_environments(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS oracle_fragments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      environment_id INTEGER NOT NULL,
+      arc_id INTEGER NULL,
+      category TEXT NOT NULL CHECK(category IN ('scene_template', 'location', 'npc', 'threat', 'action_trigger', 'sensory_detail', 'twist', 'tradition_hook')),
+      resolution_weight TEXT DEFAULT 'any' CHECK(resolution_weight IN ('any', 'success', 'failure', 'bypass')),
+      text_value TEXT NOT NULL,
+      FOREIGN KEY (environment_id) REFERENCES oracle_environments(id) ON DELETE CASCADE,
+      FOREIGN KEY (arc_id) REFERENCES oracle_arcs(id) ON DELETE CASCADE
+    );
+
+    CREATE TABLE IF NOT EXISTS oracle_session_logs (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      environment_id INTEGER,
+      arc_id INTEGER NULL,
+      source TEXT NOT NULL CHECK(source IN ('engine', 'twist', 'gm_manual')),
+      context_type TEXT,
+      text_content TEXT NOT NULL,
+      created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (environment_id) REFERENCES oracle_environments(id) ON DELETE SET NULL,
+      FOREIGN KEY (arc_id) REFERENCES oracle_arcs(id) ON DELETE SET NULL
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_oracle_arcs_env ON oracle_arcs(environment_id);
+    CREATE INDEX IF NOT EXISTS idx_oracle_fragments_env_arc ON oracle_fragments(environment_id, arc_id, category);
+    CREATE INDEX IF NOT EXISTS idx_oracle_session_logs_created ON oracle_session_logs(created_at DESC);
   `);
+
+  const envCount = db.prepare('SELECT COUNT(*) as count FROM oracle_environments').get()?.count || 0;
+  if (envCount === 0) {
+    seedOracle(db);
+  }
 
   // Rename legacy SEU columns to ESS on existing databases (preserves data).
   for (const [table, from, to] of [

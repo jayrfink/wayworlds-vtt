@@ -32,6 +32,10 @@
         <button v-if="isGm" class="btn-gm btn-deploy-vehicle" @click="showDeployVehicleModal = true" title="Deploy Mount(s) on Active Map">
           Mount(s)
         </button>
+        <!-- GM Narrative Oracle & Arc Engine Button -->
+        <button v-if="isGm" class="btn-gm btn-oracle" @click="showOracleDrawer = !showOracleDrawer" title="GM Narrative Oracle & Arc Engine">
+          🔮 Narrative Oracle
+        </button>
       </div>
     </header>
 
@@ -933,6 +937,16 @@
       @deploy="onDeployVehicle"
     />
 
+    <!-- GM Narrative Oracle & Arc Engine Drawer -->
+    <GmOracleDrawer
+      v-if="isGm"
+      :open="showOracleDrawer"
+      :is-gm="isGm"
+      :socket="socket"
+      @close="showOracleDrawer = false"
+      @shared-to-chat="onOracleSharedToChat"
+    />
+
     <!-- Image Browser Modal -->
     <ImageBrowserModal
       v-model="showImageBrowser"
@@ -957,6 +971,7 @@ import AdversaryTokenHud from '../components/AdversaryTokenHud.vue';
 import StockAdversaryModal from '../components/StockAdversaryModal.vue';
 import VehicleTokenHud from '../components/VehicleTokenHud.vue';
 import DeployVehicleModal from '../components/DeployVehicleModal.vue';
+import GmOracleDrawer from '../components/oracle/GmOracleDrawer.vue';
 import DiceColorModal from '../components/DiceColorModal.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { socket } from '../services/socket.js';
@@ -1450,6 +1465,31 @@ function persistVttState() {
 }
 
 const showGmDrawer = ref(false);
+const showOracleDrawer = ref(false);
+
+function onOracleSharedToChat(shared) {
+  if (shared?.text) {
+    const oracleEntry = {
+      id: 'oracle_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      mode: 'rpg',
+      username: shared.sender || 'Game Master',
+      role: 'GameMaster',
+      type: 'initiative',
+      label: 'Oracle Chronicle',
+      total: 0,
+      breakdown: shared.text,
+      rollSummary: {
+        title: 'Oracle Chronicle',
+        text: shared.text,
+      },
+      createdAt: shared.timestamp || new Date().toISOString(),
+    };
+    rollLog.value.unshift(oracleEntry);
+    if (rollLog.value.length > 20) {
+      rollLog.value = rollLog.value.slice(0, 20);
+    }
+  }
+}
 const showTokenSidebar = ref(initialVttState.showTokenSidebar ?? true);
 const isTokenSidebarRolledUp = ref(Boolean(initialVttState.isTokenSidebarRolledUp));
 
@@ -2630,6 +2670,7 @@ let onSocketPingUpdated = null;
 let onSocketPingCleared = null;
 let onSocketPingsSync = null;
 let onSocketConnect = null;
+let onSocketOraclePublicMessage = null;
 let cleanupVtt3dResponder = null;
 let pendingHiddenSheetRoll = null;
 
@@ -3020,6 +3061,30 @@ function setupSocketListeners() {
       clearDice();
     }
   });
+
+  socket.on('oracle:public_message', onSocketOraclePublicMessage = (payload) => {
+    if (payload?.text) {
+      const oracleEntry = {
+        id: 'oracle_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        mode: 'rpg',
+        username: payload.sender || 'Game Master',
+        role: 'GameMaster',
+        type: 'initiative',
+        label: 'Oracle Chronicle',
+        total: 0,
+        breakdown: payload.text,
+        rollSummary: {
+          title: 'Oracle Chronicle',
+          text: payload.text,
+        },
+        createdAt: payload.timestamp || new Date().toISOString(),
+      };
+      rollLog.value.unshift(oracleEntry);
+      if (rollLog.value.length > 20) {
+        rollLog.value = rollLog.value.slice(0, 20);
+      }
+    }
+  });
 }
 
 function cleanupSocketListeners() {
@@ -3039,6 +3104,7 @@ function cleanupSocketListeners() {
   if (onSocketPingCleared) socket.off('ping:cleared', onSocketPingCleared);
   if (onSocketPingsSync) socket.off('pings:sync', onSocketPingsSync);
   if (onSocketConnect) socket.off('connect', onSocketConnect);
+  if (onSocketOraclePublicMessage) socket.off('oracle:public_message', onSocketOraclePublicMessage);
 }
 
 function onKeyDown(e) {

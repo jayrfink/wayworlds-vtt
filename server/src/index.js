@@ -18,6 +18,7 @@ import { createVehiclesRouter } from './vehicles.js';
 import { createGmNotesRouter } from './gmNotes.js';
 import { createEquipmentRouter } from './equipment.js';
 import { createSpellsRouter } from './spells.js';
+import { createOracleRouter } from '../routes/oracleRoutes.js';
 import { registerPingHandlers } from './pings.js';
 import path from 'path';
 import fs from 'fs';
@@ -230,6 +231,7 @@ export function createApp(db, sessionDir, uploadDir) {
   app.use('/api/gm-notes', createGmNotesRouter(db));
   app.use('/api/equipment', createEquipmentRouter(db, io));
   app.use('/api/spells', createSpellsRouter(db, io));
+  app.use('/api/oracle', createOracleRouter(db, io));
 
   const clientDistPath = path.resolve(__dirname, '../../client/dist');
   if (fs.existsSync(clientDistPath)) {
