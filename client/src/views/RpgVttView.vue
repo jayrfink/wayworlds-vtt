@@ -34,7 +34,7 @@
         </button>
         <!-- GM Narrative Oracle & Arc Engine Button -->
         <button v-if="isGm" class="btn-gm btn-oracle" @click="showOracleDrawer = !showOracleDrawer" title="GM Narrative Oracle & Arc Engine">
-          🔮 Narrative Oracle
+          Narrative Oracle
         </button>
       </div>
     </header>
