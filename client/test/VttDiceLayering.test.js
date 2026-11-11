@@ -43,6 +43,24 @@ describe('VTT Dice and Roll Banners Layering', () => {
       expect(damageHudZ).toBe(250);
       expect(percentileHudZ).toBe(250);
     });
+
+    it('guarantees pointer-events: none !important on #dice-box, canvas, and children to keep VTT responsive', () => {
+      expect(rpgContent).toContain('pointer-events: none !important;');
+      expect(rpgContent).toMatch(/#dice-box[^\{]*\{[^}]*pointer-events:\s*none\s*!important;/s);
+    });
+
+    it('ensures clearDice resets HUDs, aborts active roll, and clears queue immediately', () => {
+      const clearDiceFnMatch = rpgContent.match(/async function clearDice\(\)\s*\{([\s\S]*?)\n\}/);
+      expect(clearDiceFnMatch).toBeTruthy();
+      const fnBody = clearDiceFnMatch[1];
+      expect(fnBody).toContain('abortCurrentRoll()');
+      expect(fnBody).toContain('diceRollQueue.clear()');
+      expect(fnBody).toContain('showPercentileHud.value = false');
+      expect(fnBody).toContain('showDamageHud.value = false');
+      expect(fnBody).toContain('showInitiativeHud.value = false');
+      // Must NOT await getReadyDiceBox() just to clear
+      expect(fnBody).not.toContain('await getReadyDiceBox()');
+    });
   });
 
   describe('World VTT View', () => {

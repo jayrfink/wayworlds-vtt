@@ -2,6 +2,7 @@ services:
   ww-vtt-dev:
     build: .
     container_name: ww-vtt-dev
+    stop_grace_period: 2s
     volumes:
       - ${HOME}/wayworlds-vtt:${HOME}/wayworlds-vtt
       - ww_server_node_modules:${HOME}/wayworlds-vtt/server/node_modules

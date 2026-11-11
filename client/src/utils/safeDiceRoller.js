@@ -28,6 +28,18 @@ export function generateSyntheticRoll(notation) {
   });
 }
 
+let activeRollAborter = null;
+
+/**
+ * Aborts any currently animating 3D dice roll, immediately clearing physics meshes.
+ */
+export function abortCurrentRoll() {
+  if (typeof activeRollAborter === 'function') {
+    activeRollAborter();
+    activeRollAborter = null;
+  }
+}
+
 /**
  * Executes a 3D dice roll through the serializing DiceRollQueue.
  *
@@ -40,10 +52,10 @@ export function generateSyntheticRoll(notation) {
  * @param {Object} diceBox - DiceBox instance (or null)
  * @param {Array} notation - Array of dice descriptors
  * @param {Object} options
- * @param {number} [options.timeoutMs=10000] - Max time to wait for 3D physics settling
+ * @param {number} [options.timeoutMs=4000] - Max time to wait for 3D physics settling
  * @returns {Promise<Array>} Array of settled die results
  */
-export async function executeQueuedDiceRoll(diceBox, notation, { timeoutMs = 10000 } = {}) {
+export async function executeQueuedDiceRoll(diceBox, notation, { timeoutMs = 4000 } = {}) {
   return diceRollQueue.enqueue(async () => {
     if (!diceBox || typeof diceBox.roll !== 'function') {
       return generateSyntheticRoll(notation);
@@ -56,6 +68,14 @@ export async function executeQueuedDiceRoll(diceBox, notation, { timeoutMs = 100
       }, timeoutMs);
     });
 
+    let abortResolve;
+    const abortPromise = new Promise((resolve) => {
+      abortResolve = resolve;
+    });
+    activeRollAborter = () => {
+      abortResolve({ cancelled: true });
+    };
+
     try {
       // Clean notation by stripping reserved internal properties (like groupId) before passing to diceBox.roll()
       const cleanNotation = Array.isArray(notation)
@@ -67,15 +87,34 @@ export async function executeQueuedDiceRoll(diceBox, notation, { timeoutMs = 100
         return { cancelled: true };
       });
 
-      const res = await Promise.race([rollPromise, timeoutPromise]);
+      const res = await Promise.race([rollPromise, timeoutPromise, abortPromise]);
       clearTimeout(timer);
+      activeRollAborter = null;
 
       if (res && !res.timedOut && !res.cancelled && Array.isArray(res) && res.length > 0) {
         return res;
       }
+
+      // If timed out or cancelled, clear diceBox so stuck meshes do not linger
+      if (res?.timedOut || res?.cancelled) {
+        try {
+          if (typeof diceBox.clear === 'function') {
+            diceBox.clear();
+          }
+        } catch (e) {
+          console.warn('Failed to clear diceBox on timeout/cancel:', e);
+        }
+      }
+
       return generateSyntheticRoll(notation);
     } catch (err) {
       clearTimeout(timer);
+      activeRollAborter = null;
+      try {
+        if (typeof diceBox.clear === 'function') {
+          diceBox.clear();
+        }
+      } catch (e) {}
       console.warn('executeQueuedDiceRoll fallback:', err);
       return generateSyntheticRoll(notation);
     }

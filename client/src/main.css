@@ -1224,8 +1224,15 @@ input[type="file"]::-webkit-file-upload-button:hover {
 }
 
 /* Dice Box Overlays */
+#dice-box,
+#dice-box *,
+#dice-canvas,
+.dice-box-canvas {
+  pointer-events: none !important;
+}
+
 #dice-box canvas {
   width: 100% !important;
   height: 100% !important;
-  pointer-events: none;
+  pointer-events: none !important;
 }

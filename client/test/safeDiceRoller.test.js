@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateSyntheticRoll, executeQueuedDiceRoll } from '../src/utils/safeDiceRoller.js';
+import { generateSyntheticRoll, executeQueuedDiceRoll, abortCurrentRoll } from '../src/utils/safeDiceRoller.js';
 import { diceRollQueue } from '../src/utils/diceRollQueue.js';
 import { calculatePercentileRoll, calculateDamageRoll, calculateInitiativeRoll } from '../src/utils/diceUtils.js';
 
@@ -143,6 +143,41 @@ describe('safeDiceRoller with executeQueuedDiceRoll', () => {
       expect(results.length).toBe(2);
       const summary = calculatePercentileRoll(results);
       expect(summary.valid).toBe(true);
+    });
+
+    it('clears diceBox when roll times out so stuck dice do not remain on screen', async () => {
+      const mockBox = {
+        roll: vi.fn().mockImplementation(() => new Promise(() => {})),
+        clear: vi.fn()
+      };
+      const notation = [
+        { sides: 10, theme: 'custom-dmg', qty: 1 }
+      ];
+
+      const results = await executeQueuedDiceRoll(mockBox, notation, { timeoutMs: 25 });
+      expect(results.length).toBe(1);
+      expect(mockBox.clear).toHaveBeenCalledTimes(1);
+    });
+
+    it('aborts active roll immediately and clears diceBox when abortCurrentRoll is called', async () => {
+      const mockBox = {
+        roll: vi.fn().mockImplementation(() => new Promise(() => {})),
+        clear: vi.fn()
+      };
+      const notation = [
+        { sides: 10, theme: 'custom-tens', qty: 1 },
+        { sides: 10, theme: 'custom-ones', qty: 1 }
+      ];
+
+      const rollPromise = executeQueuedDiceRoll(mockBox, notation, { timeoutMs: 5000 });
+      // Call abortCurrentRoll after 10ms
+      setTimeout(() => {
+        abortCurrentRoll();
+      }, 10);
+
+      const results = await rollPromise;
+      expect(results.length).toBe(2);
+      expect(mockBox.clear).toHaveBeenCalledTimes(1);
     });
   });
 });

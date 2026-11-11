@@ -976,7 +976,7 @@ import DiceColorModal from '../components/DiceColorModal.vue';
 import { useAuthStore } from '../stores/auth.js';
 import { socket } from '../services/socket.js';
 import { calculateDamageRoll, calculatePercentileRoll, calculateInitiativeRoll, applySettledSheetRoll } from '../utils/diceUtils.js';
-import { executeQueuedDiceRoll } from '../utils/safeDiceRoller.js';
+import { executeQueuedDiceRoll, abortCurrentRoll } from '../utils/safeDiceRoller.js';
 import { diceRollQueue } from '../utils/diceRollQueue.js';
 import { registerVtt3dRollResponder, consumePendingSheetVttRoll } from '../utils/sheetDiceBridge.js';
 import { getUserState, saveUserState, getSafeUserId } from '../utils/userState.js';
@@ -1271,14 +1271,7 @@ async function rollDamage() {
 }
 
 async function clearDice() {
-  const diceBox = await getReadyDiceBox();
-  if (diceBox) {
-    try {
-      diceBox.clear();
-    } catch (err) {
-      console.warn('Failed to clear dice box:', err);
-    }
-  }
+  // 1. Immediately reset HUD states and timers synchronously
   showPercentileHud.value = false;
   showDamageHud.value = false;
   showInitiativeHud.value = false;
@@ -1295,6 +1288,30 @@ async function clearDice() {
     initiativeHudTimeout = null;
   }
   showDmgMenu.value = false;
+
+  // 2. Abort any active in-flight roll animation and clear the queue
+  abortCurrentRoll();
+  diceRollQueue.clear();
+
+  // 3. Clear existing diceBox instance without awaiting asynchronous re-initialization
+  if (diceBoxInstance) {
+    try {
+      diceBoxInstance.clear();
+    } catch (err) {
+      console.warn('Failed to clear dice box:', err);
+    }
+  }
+
+  // 4. Force-clear the visual canvas element if present so no frozen dice meshes remain
+  const canvas = diceBoxInstance?.canvas || document.querySelector('#dice-canvas') || document.querySelector('#dice-box canvas');
+  if (canvas && typeof canvas.getContext === 'function') {
+    try {
+      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (gl) {
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      }
+    } catch (e) {}
+  }
 }
 
 function onDocClick(e) {
@@ -3212,6 +3229,14 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+/* 3D Dice Layering & Pointer Pass-Through */
+#dice-box,
+#dice-box :deep(*),
+#dice-canvas,
+.dice-box-canvas {
+  pointer-events: none !important;
+}
+
 /* Initiative Floating HUD */
 .initiative-hud-banner {
   position: absolute;

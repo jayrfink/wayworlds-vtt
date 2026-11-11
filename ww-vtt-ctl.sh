@@ -317,7 +317,7 @@ stop_all() {
     stop_backend || true
     stop_frontend || true
     log_info "Stopping container '${CONTAINER_NAME}' via docker compose down..."
-    (cd "$DIR" && docker compose down)
+    (cd "$DIR" && docker compose down -t 2)
     log_success "All servers and container stopped."
   else
     log_info "Container '${CONTAINER_NAME}' is already stopped."
