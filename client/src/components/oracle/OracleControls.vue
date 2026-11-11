@@ -207,7 +207,7 @@ function submitManualLog() {
 
 <style scoped>
 .oracle-controls-deck {
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.25);
   border-bottom: 1px solid #28303f;
   padding: 14px 16px;
   display: flex;
@@ -252,7 +252,7 @@ function submitManualLog() {
 
 .directive-input {
   width: 100%;
-  background: #0d0f12;
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid #2d3748;
   border-radius: 5px;
   color: #fbd38d;
@@ -296,7 +296,7 @@ function submitManualLog() {
 .toggle-btn {
   flex: 1;
   min-width: 80px;
-  background: #0d0f12;
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid #2d3748;
   border-radius: 4px;
   padding: 5px 8px;
@@ -344,7 +344,7 @@ function submitManualLog() {
 }
 
 .context-btn {
-  background: #0d0f12;
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid #28303f;
   border-radius: 5px;
   padding: 7px 10px;
@@ -426,7 +426,7 @@ function submitManualLog() {
 
 .manual-notes-textarea {
   width: 100%;
-  background: #0d0f12;
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid #2d3748;
   border-radius: 5px;
   color: #e2e8f0;

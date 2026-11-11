@@ -359,7 +359,7 @@ function close() {
 }
 
 .modal-card {
-  background: rgba(20, 23, 29, 0.88);
+  background: rgba(20, 23, 29, 0.70);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border: 1px solid #2d3748;

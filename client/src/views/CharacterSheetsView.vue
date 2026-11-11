@@ -4003,13 +4003,11 @@ export default {
   --bg-panel: rgba(18, 22, 28, 0.78);
   background-color: #0d0f12;
   background-image: 
-    linear-gradient(to bottom, rgba(13, 15, 18, 0.78), rgba(13, 15, 18, 0.90)),
-    linear-gradient(var(--theme-bright, #45acba), var(--theme-bright, #45acba)),
+    linear-gradient(to bottom, rgba(13, 15, 18, 0.75), rgba(13, 15, 18, 0.88)),
     url('/uploads/pc-sheet-bg/bw-forested.webp');
-  background-blend-mode: normal, color, normal;
-  background-size: cover, cover, cover;
-  background-position: center, center, center;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: cover, cover;
+  background-position: center, center;
+  background-repeat: no-repeat, no-repeat;
   background-attachment: fixed;
   color: var(--text-primary, #cecece);
   overflow: hidden;

@@ -2442,10 +2442,13 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   width: 360px;
-  background: var(--bg-secondary);
+  background: rgba(22, 27, 34, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
+  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.4);
 }
 
 .drawer-header,
@@ -2454,6 +2457,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid var(--border);
 }
 
@@ -2477,7 +2481,9 @@ onBeforeUnmount(() => {
 .token-sidebar {
   width: 320px;
   flex-shrink: 0;
-  background: var(--bg-secondary);
+  background: rgba(22, 27, 34, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -2491,11 +2497,15 @@ onBeforeUnmount(() => {
   width: 320px;
   height: auto;
   z-index: 10;
+  background: rgba(22, 27, 34, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
 }
 
 .token-sidebar .sidebar-header {
+  background: rgba(0, 0, 0, 0.35);
   user-select: none;
 }
 
@@ -2517,7 +2527,9 @@ onBeforeUnmount(() => {
 }
 
 .section-box {
-  background: var(--bg-tertiary);
+  background: rgba(0, 0, 0, 0.35);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
@@ -2548,7 +2560,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;

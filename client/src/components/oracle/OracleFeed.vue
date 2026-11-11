@@ -239,7 +239,7 @@ function shareToPublicChat(log) {
 }
 
 .feed-card {
-  background: #161920;
+  background: rgba(0, 0, 0, 0.40);
   border-radius: 6px;
   border: 1px solid #28303f;
   padding: 12px 14px;
@@ -269,7 +269,7 @@ function shareToPublicChat(log) {
 .card-twist {
   border: 1px solid #853146;
   border-left: 4px solid #e53e3e;
-  background: #1f090f;
+  background: rgba(31, 9, 15, 0.65);
   box-shadow: 0 0 10px rgba(133, 49, 70, 0.25);
 }
 

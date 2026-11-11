@@ -4024,7 +4024,7 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   width: 360px;
-  background: rgba(22, 27, 34, 0.82);
+  background: rgba(22, 27, 34, 0.55);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
@@ -4039,7 +4039,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
-  background: rgba(0, 0, 0, 0.40);
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid var(--border);
 }
 
@@ -4065,7 +4065,7 @@ onBeforeUnmount(() => {
 .token-sidebar {
   width: 320px;
   flex-shrink: 0;
-  background: rgba(22, 27, 34, 0.82);
+  background: rgba(22, 27, 34, 0.55);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
@@ -4081,7 +4081,7 @@ onBeforeUnmount(() => {
   width: 320px;
   height: auto;
   z-index: 10;
-  background: rgba(22, 27, 34, 0.85);
+  background: rgba(22, 27, 34, 0.55);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
@@ -4089,7 +4089,7 @@ onBeforeUnmount(() => {
 }
 
 .token-sidebar .sidebar-header {
-  background: rgba(0, 0, 0, 0.40);
+  background: rgba(0, 0, 0, 0.35);
   user-select: none;
 }
 
@@ -4111,7 +4111,7 @@ onBeforeUnmount(() => {
 }
 
 .section-box {
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.35);
   -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
   border: 1px solid var(--border);
@@ -4144,7 +4144,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
-  background: rgba(0, 0, 0, 0.50);
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
@@ -4596,7 +4596,7 @@ onBeforeUnmount(() => {
 }
 
 .size-select {
-  background: rgba(0, 0, 0, 0.55) !important;
+  background: rgba(0, 0, 0, 0.40) !important;
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border) !important;

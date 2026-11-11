@@ -337,11 +337,11 @@ defineExpose({
   width: 520px;
   max-width: 95vw;
   height: 100vh;
-  background: rgba(13, 15, 18, 0.85);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
+  background: rgba(13, 15, 18, 0.55);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-left: 1px solid #28303f;
-  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.7);
+  box-shadow: -6px 0 24px rgba(0, 0, 0, 0.5);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -364,7 +364,7 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid #232936;
 }
 
@@ -407,7 +407,7 @@ defineExpose({
   align-items: flex-end;
   gap: 10px;
   padding: 10px 16px;
-  background: rgba(0, 0, 0, 0.35);
+  background: rgba(0, 0, 0, 0.25);
   border-bottom: 1px solid #232936;
   flex-wrap: wrap;
 }
@@ -429,7 +429,7 @@ defineExpose({
 }
 
 .selector-dropdown {
-  background: #0d0f12;
+  background: rgba(0, 0, 0, 0.40);
   border: 1px solid #2d3748;
   border-radius: 4px;
   color: #4fd1c5;
