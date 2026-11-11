@@ -10,13 +10,13 @@ describe('Die Roll Logs use white text and dark backgrounds without dice colors'
 
   describe('RpgVttView Die Roll Log', () => {
     it('styles .roll-log-card with dark background, blur, border, and shadow', () => {
-      expect(rpgContent).toMatch(/\.roll-log-card\s*\{[^}]*background:\s*rgba\(13,\s*17,\s*23,\s*0\.95\);/);
+      expect(rpgContent).toMatch(/\.roll-log-card\s*\{[^}]*background:\s*rgba\((?:13,\s*17,\s*23,\s*0\.95|22,\s*27,\s*34,\s*0\.80)\);/);
       expect(rpgContent).toMatch(/\.roll-log-card\s*\{[^}]*backdrop-filter:\s*blur\(8px\);/);
       expect(rpgContent).toMatch(/\.roll-log-card\s*\{[^}]*border:\s*1px solid var\(--border\);/);
     });
 
     it('styles .roll-log-header with dark background and border-bottom', () => {
-      expect(rpgContent).toMatch(/\.roll-log-header\s*\{[^}]*background:\s*rgba\(13,\s*17,\s*23,\s*0\.85\);/);
+      expect(rpgContent).toMatch(/\.roll-log-header\s*\{[^}]*background:\s*rgba\((?:13,\s*17,\s*23,\s*0\.85|0,\s*0,\s*0,\s*0\.40)\);/);
       expect(rpgContent).toMatch(/\.roll-log-header\s*\{[^}]*border-bottom:\s*1px solid var\(--border\);/);
     });
 
@@ -33,7 +33,7 @@ describe('Die Roll Logs use white text and dark backgrounds without dice colors'
     });
 
     it('styles .roll-log-item and badges with dark background and white text, without dice colors', () => {
-      expect(rpgContent).toMatch(/\.roll-log-item\s*\{[^}]*background:\s*rgba\(22,\s*27,\s*34,\s*0\.85\);/);
+      expect(rpgContent).toMatch(/\.roll-log-item\s*\{[^}]*background:\s*rgba\((?:22,\s*27,\s*34,\s*0\.85|0,\s*0,\s*0,\s*0\.50)\);/);
       expect(rpgContent).toMatch(/\.roll-log-item\.percentile\s*\{[^}]*border-left:\s*3px solid #ffffff;/);
       expect(rpgContent).toMatch(/\.roll-log-item\.damage\s*\{[^}]*border-left:\s*3px solid #ffffff;/);
       expect(rpgContent).toMatch(/\.roll-item-badge\s*\{[^}]*color:\s*var\(--text-white,\s*#ffffff\);[^}]*border:\s*1px solid var\(--border\);/);

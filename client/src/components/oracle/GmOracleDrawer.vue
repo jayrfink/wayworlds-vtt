@@ -337,7 +337,9 @@ defineExpose({
   width: 520px;
   max-width: 95vw;
   height: 100vh;
-  background: #0d0f12;
+  background: rgba(13, 15, 18, 0.85);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-left: 1px solid #28303f;
   box-shadow: -6px 0 24px rgba(0, 0, 0, 0.7);
   display: flex;
@@ -362,7 +364,7 @@ defineExpose({
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px;
-  background: #101318;
+  background: rgba(0, 0, 0, 0.45);
   border-bottom: 1px solid #232936;
 }
 
@@ -378,7 +380,7 @@ defineExpose({
 
 .branding-title {
   margin: 0;
-  font-family: var(--font-modesto, 'Modesto Expanded', serif);
+  font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', 'Modesto Poster', 'Nodesto', 'Consolas', 'Roboto', sans-serif);
   font-size: 16px;
   letter-spacing: 0.06em;
   color: #fff;
@@ -405,7 +407,7 @@ defineExpose({
   align-items: flex-end;
   gap: 10px;
   padding: 10px 16px;
-  background: #14171d;
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid #232936;
   flex-wrap: wrap;
 }

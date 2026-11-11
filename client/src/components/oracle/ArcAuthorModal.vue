@@ -359,7 +359,9 @@ function close() {
 }
 
 .modal-card {
-  background: #14171d;
+  background: rgba(20, 23, 29, 0.88);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid #2d3748;
   border-radius: 8px;
   width: 560px;
@@ -377,7 +379,7 @@ function close() {
   justify-content: space-between;
   padding: 14px 18px;
   border-bottom: 1px solid #232936;
-  background: #101318;
+  background: rgba(0, 0, 0, 0.40);
 }
 
 .header-title-row {
@@ -392,7 +394,7 @@ function close() {
 
 .header-title-row h3 {
   margin: 0;
-  font-family: var(--font-modesto, 'Modesto Expanded', serif);
+  font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', 'Modesto Poster', 'Nodesto', 'Consolas', 'Roboto', sans-serif);
   font-size: 16px;
   letter-spacing: 0.05em;
   color: #fff;

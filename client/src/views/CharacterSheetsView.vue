@@ -1,5 +1,5 @@
 <template>
-  <div class="sheets-layout">
+  <div class="sheets-layout" :style="characterSheetCustomStyles">
     <!-- Edge Toggle Button (when sidebar is hidden to the left) -->
     <button
       v-if="isSidebarCollapsedLeft"
@@ -4000,7 +4000,17 @@ export default {
   position: relative;
   display: flex;
   height: 100%;
-  background: var(--bg-main, #0d0f12);
+  --bg-panel: rgba(18, 22, 28, 0.78);
+  background-color: #0d0f12;
+  background-image: 
+    linear-gradient(to bottom, rgba(13, 15, 18, 0.78), rgba(13, 15, 18, 0.90)),
+    linear-gradient(var(--theme-bright, #45acba), var(--theme-bright, #45acba)),
+    url('/uploads/pc-sheet-bg/bw-forested.webp');
+  background-blend-mode: normal, color, normal;
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-attachment: fixed;
   color: var(--text-primary, #cecece);
   overflow: hidden;
 }
@@ -4009,8 +4019,10 @@ export default {
 .sidebar {
   width: 280px;
   min-width: 280px;
-  background: #161b22;
-  border-right: 1px solid #30363d;
+  background: rgba(18, 22, 29, 0.75);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-right: 1px solid rgba(48, 54, 61, 0.65);
   display: flex;
   flex-direction: column;
   flex-shrink: 0;
@@ -4028,7 +4040,7 @@ export default {
 .sidebar.sidebar-rolled-up {
   height: auto;
   align-self: flex-start;
-  border-bottom: 1px solid #30363d;
+  border-bottom: 1px solid rgba(48, 54, 61, 0.65);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
@@ -4048,7 +4060,8 @@ export default {
 
 .sidebar-header {
   padding: 12px 14px;
-  border-bottom: 1px solid #30363d;
+  background: rgba(0, 0, 0, 0.35);
+  border-bottom: 1px solid rgba(48, 54, 61, 0.65);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -4316,7 +4329,9 @@ export default {
 }
 
 .card {
-  background: var(--bg-panel, #14171c);
+  background: rgba(18, 22, 28, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border-color, #30363d);
   box-shadow: 0 0 8px var(--theme-glow, rgba(208, 208, 208, 0.22)), 0 0 12px var(--theme-glow, rgba(208, 208, 208, 0.12));
   border-radius: 6px;
@@ -4325,7 +4340,9 @@ export default {
 
 /* Header */
 .sheet-header {
-  background: var(--bg-panel, #14171c);
+  background: rgba(18, 22, 28, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border-color, #30363d);
   box-shadow: 0 0 8px var(--theme-glow, rgba(208, 208, 208, 0.22)), 0 0 12px var(--theme-glow, rgba(208, 208, 208, 0.12));
   border-radius: 6px;
@@ -4383,6 +4400,7 @@ export default {
   border-radius: 4px;
   box-shadow: none !important;
   cursor: text;
+  transition: border-color 0.15s ease;
 }
 
 .input-name:hover,
@@ -4390,8 +4408,8 @@ export default {
   outline: none;
   background: var(--bg-panel, #14171c) !important;
   background-color: var(--bg-panel, #14171c) !important;
-  border: 1px solid var(--bg-panel, #14171c) !important;
-  border-color: var(--bg-panel, #14171c) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
   box-shadow: none !important;
 }
 
@@ -4414,39 +4432,44 @@ export default {
 
 .select-race,
 .select-psa,
-.select-player,
+.select-player {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--theme-bright, #cecece) !important;
+  -webkit-text-fill-color: var(--theme-bright, #cecece) !important;
+  font-weight: 700;
+  font-size: 0.855rem;
+  padding: 4px 6px !important;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease-in-out;
+}
+
 .select-race option,
 .select-psa option,
 .select-player option {
-  background-color: #000000 !important;
-  color: #c9c9c9 !important;
-  -webkit-text-fill-color: #c9c9c9;
-  background-image: none !important;
-}
-
-.select-race,
-.select-psa,
-.select-player {
-  border: 1px solid rgba(201, 201, 201, 0.4) !important;
-  border-radius: 4px;
-  padding: 5px 26px 5px 9px !important;
-  padding-right: 26px !important;
-  font-size: 0.855rem;
+  background-color: #0d1117 !important;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece !important;
 }
 
 .select-race:hover:not(:disabled),
 .select-psa:hover:not(:disabled),
 .select-player:hover:not(:disabled) {
-  border-color: #c9c9c9 !important;
-  box-shadow: 0 0 6px rgba(201, 201, 201, 0.35);
+  border-color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.15);
 }
 
 .select-race:focus,
 .select-psa:focus,
 .select-player:focus {
   outline: none;
-  border-color: #c9c9c9 !important;
-  box-shadow: 0 0 8px rgba(201, 201, 201, 0.5);
+  border-color: var(--theme-bright, #cecece) !important;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.25);
 }
 
 .player-badge-wrap {
@@ -5733,7 +5756,9 @@ export default {
 }
 
 .modal-card {
-  background: #161b22;
+  background: rgba(22, 27, 34, 0.88);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid #30363d;
   box-shadow: 0 0 8px var(--theme-glow, rgba(208, 208, 208, 0.22)), 0 0 12px var(--theme-glow, rgba(208, 208, 208, 0.12));
   border-radius: 8px;

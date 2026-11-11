@@ -207,7 +207,7 @@ function submitManualLog() {
 
 <style scoped>
 .oracle-controls-deck {
-  background: #14171d;
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid #28303f;
   padding: 14px 16px;
   display: flex;
@@ -392,7 +392,7 @@ function submitManualLog() {
   border: 1px solid #e53e3e;
   border-radius: 5px;
   padding: 9px 14px;
-  font-family: var(--font-modesto, 'Modesto Expanded', serif);
+  font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', 'Modesto Poster', 'Nodesto', 'Consolas', 'Roboto', sans-serif);
   font-size: 14px;
   letter-spacing: 0.05em;
   color: #fff;

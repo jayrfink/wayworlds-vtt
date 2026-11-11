@@ -156,7 +156,7 @@ function shareToPublicChat(log) {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #0d0f12;
+  background: transparent;
   color: #e2e8f0;
   overflow: hidden;
 }
@@ -166,7 +166,7 @@ function shareToPublicChat(log) {
   align-items: center;
   justify-content: space-between;
   padding: 10px 14px;
-  background: #14171d;
+  background: rgba(0, 0, 0, 0.35);
   border-bottom: 1px solid #232936;
 }
 
@@ -178,7 +178,7 @@ function shareToPublicChat(log) {
 
 .feed-title h4 {
   margin: 0;
-  font-family: var(--font-modesto, 'Modesto Expanded', serif);
+  font-family: var(--font-family-header, 'Modesto Condensed', 'Modesto', 'Modesto Poster', 'Nodesto', 'Consolas', 'Roboto', sans-serif);
   font-size: 15px;
   letter-spacing: 0.05em;
   color: #e2e8f0;

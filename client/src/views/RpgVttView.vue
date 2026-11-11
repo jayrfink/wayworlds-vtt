@@ -4024,7 +4024,9 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   width: 360px;
-  background: var(--bg-secondary);
+  background: rgba(22, 27, 34, 0.82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -4037,6 +4039,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.40);
   border-bottom: 1px solid var(--border);
 }
 
@@ -4062,7 +4065,9 @@ onBeforeUnmount(() => {
 .token-sidebar {
   width: 320px;
   flex-shrink: 0;
-  background: var(--bg-secondary);
+  background: rgba(22, 27, 34, 0.82);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
@@ -4076,11 +4081,15 @@ onBeforeUnmount(() => {
   width: 320px;
   height: auto;
   z-index: 10;
+  background: rgba(22, 27, 34, 0.85);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--border);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.65);
 }
 
 .token-sidebar .sidebar-header {
+  background: rgba(0, 0, 0, 0.40);
   user-select: none;
 }
 
@@ -4102,7 +4111,9 @@ onBeforeUnmount(() => {
 }
 
 .section-box {
-  background: var(--bg-tertiary);
+  background: rgba(0, 0, 0, 0.45);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
@@ -4133,7 +4144,7 @@ onBeforeUnmount(() => {
   align-items: center;
   justify-content: space-between;
   padding: 8px 10px;
-  background: var(--bg-secondary);
+  background: rgba(0, 0, 0, 0.50);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
@@ -4203,7 +4214,9 @@ onBeforeUnmount(() => {
 
 /* Modals */
 .modal-card {
-  background: var(--bg-secondary);
+  background: rgba(22, 27, 34, 0.88);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 24px;
@@ -4582,20 +4595,23 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 10px rgba(248, 81, 73, 0.45);
 }
 
-.size-select,
-.size-select option {
-  background-color: #000000 !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
-}
-
 .size-select {
-  border: 1px solid #cecece !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border) !important;
   border-radius: var(--radius);
   padding: 6px 10px;
   font-size: 13px;
   font-weight: 500;
   width: 100%;
+  color: #cecece !important;
+  -webkit-text-fill-color: #cecece;
+}
+
+.size-select option {
+  background-color: #0d1117;
+  color: #cecece;
 }
 
 .size-select:focus {
@@ -4702,15 +4718,16 @@ onBeforeUnmount(() => {
 }
 
 .btn-audio-toggle-pill {
-  background: rgba(22, 27, 34, 0.92) !important;
+  background: rgba(22, 27, 34, 0.80) !important;
   border: none !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
   padding: 6px 10px;
   font-size: 12px;
   font-weight: 600;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
@@ -4718,14 +4735,14 @@ onBeforeUnmount(() => {
 
 .btn-audio-toggle-pill:hover {
   background: #000000 !important;
-  color: #cecece !important;
-  -webkit-text-fill-color: #cecece;
+  color: var(--text-white, #ffffff) !important;
+  -webkit-text-fill-color: var(--text-white, #ffffff);
   border: none !important;
-  box-shadow: 0 0 10px rgba(206, 206, 206, 0.5);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 .btn-roll-log-pill {
-  background: rgba(22, 27, 34, 0.92) !important;
+  background: rgba(22, 27, 34, 0.80) !important;
   border: none !important;
   color: var(--text-white, #ffffff) !important;
   -webkit-text-fill-color: var(--text-white, #ffffff);
@@ -4733,7 +4750,8 @@ onBeforeUnmount(() => {
   font-size: 12px;
   font-weight: 600;
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   cursor: pointer;
   transition: all 0.15s ease-in-out;
@@ -4747,23 +4765,15 @@ onBeforeUnmount(() => {
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
-.btn-audio-toggle-pill {
-  color: var(--text-white, #ffffff) !important;
-  -webkit-text-fill-color: var(--text-white, #ffffff);
-}
-
-.btn-audio-toggle-pill:hover {
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
-}
-
 .roll-log-card {
   width: 290px;
   max-height: 290px;
-  background: rgba(13, 17, 23, 0.95);
+  background: rgba(22, 27, 34, 0.80);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -4774,7 +4784,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
-  background: rgba(13, 17, 23, 0.85);
+  background: rgba(0, 0, 0, 0.40);
   border-bottom: 1px solid var(--border);
 }
 
@@ -4876,7 +4886,7 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   align-items: center;
   padding: 4px 6px;
-  background: rgba(22, 27, 34, 0.85);
+  background: rgba(0, 0, 0, 0.50);
   border: 1px solid var(--border);
   border-radius: 4px;
   border-left: 3px solid #ffffff;
