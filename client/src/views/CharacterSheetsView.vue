@@ -4001,9 +4001,9 @@ export default {
   display: flex;
   height: 100%;
   --bg-panel: rgba(18, 20, 24, 0.78);
-  background-color: #0c0c0c;
+  background-color: #141414;
   background-image: 
-    linear-gradient(to bottom, rgba(10, 10, 10, 0.78), rgba(12, 12, 12, 0.90)),
+    linear-gradient(to bottom, rgba(10, 10, 10, 0.47), rgba(12, 12, 12, 0.54)),
     url('/uploads/pc-sheet-bg/bw-forested.webp');
   background-size: cover, cover;
   background-position: center, center;
