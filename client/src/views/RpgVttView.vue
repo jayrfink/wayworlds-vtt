@@ -2761,83 +2761,10 @@ async function executeSheetRollOnVtt(roll) {
     return;
   }
 
+  // Display settled HUD banner for this sheet roll without altering or overwriting settled values
   if (roll.type === 'percentile') {
-    showPercentileHud.value = false;
-    showDamageHud.value = false;
-    showInitiativeHud.value = false;
-    if (percentileHudTimeout) clearTimeout(percentileHudTimeout);
-
-    // Animate 3D percentile dice across the RPG VTT canvas and sync settled result
-    try {
-      const diceBox = await getReadyDiceBox();
-      if (diceBox) {
-        const results = await executeQueuedDiceRoll(diceBox, [
-          { sides: 10, theme: 'custom-tens', themeColor: activeDiceColors.value.percentileTens, qty: 1 },
-          { sides: 10, theme: 'custom-ones', themeColor: activeDiceColors.value.percentileOnes, qty: 1 }
-        ]);
-        const settled = calculatePercentileRoll(results);
-        if (settled.valid && isRoller) {
-          const updated = applySettledSheetRoll(roll, settled);
-          const mergedRoll = {
-            ...roll,
-            label: updated.label,
-            total: updated.total,
-            breakdown: updated.breakdown,
-            rollSummary: updated.rollSummary,
-          };
-          const idx = rollLog.value.findIndex(r => r.id === roll.id);
-          if (idx !== -1) {
-            rollLog.value[idx] = mergedRoll;
-          } else {
-            rollLog.value.unshift(mergedRoll);
-          }
-          showPercentileBannerForRoll(mergedRoll);
-          await updateRollOnServer(roll.id, updated);
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('RPG VTT percentile 3D roll error:', err);
-    }
     showPercentileBannerForRoll(roll);
   } else if (roll.type === 'damage') {
-    const count = roll.rollSummary?.count || (roll.label ? parseInt(roll.label) : 1) || 1;
-    showDamageHud.value = false;
-    showPercentileHud.value = false;
-    showInitiativeHud.value = false;
-    if (damageHudTimeout) clearTimeout(damageHudTimeout);
-
-    // Animate 3D damage dice across the RPG VTT canvas and sync settled result
-    try {
-      const diceBox = await getReadyDiceBox();
-      if (diceBox) {
-        const results = await executeQueuedDiceRoll(diceBox, [
-          { sides: 10, theme: 'custom-dmg', themeColor: activeDiceColors.value.damage, qty: count }
-        ]);
-        const settled = calculateDamageRoll(results);
-        if (settled.count > 0 && isRoller) {
-          const updated = applySettledSheetRoll(roll, settled);
-          const mergedRoll = {
-            ...roll,
-            label: updated.label,
-            total: updated.total,
-            breakdown: updated.breakdown,
-            rollSummary: updated.rollSummary,
-          };
-          const idx = rollLog.value.findIndex(r => r.id === roll.id);
-          if (idx !== -1) {
-            rollLog.value[idx] = mergedRoll;
-          } else {
-            rollLog.value.unshift(mergedRoll);
-          }
-          showDamageBannerForRoll(mergedRoll);
-          await updateRollOnServer(roll.id, updated);
-          return;
-        }
-      }
-    } catch (err) {
-      console.warn('RPG VTT damage 3D roll error:', err);
-    }
     showDamageBannerForRoll(roll);
   }
 }

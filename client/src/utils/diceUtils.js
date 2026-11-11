@@ -47,12 +47,24 @@ export function calculatePercentileRoll(results) {
     return { total: 0, tens: 0, ones: 0, valid: false };
   }
 
-  // Find tens die (group 0, theme 'custom-tens', or lighter color #1c8780 / #77d19e)
-  const tensDie = flatResults.find(d => d?.groupId === 0 || d?.theme === 'custom-tens' || d?.themeColor?.toLowerCase() === '#1c8780' || d?.themeColor === '#77d19e') || flatResults[0];
-  // Find ones die (group 1, theme 'custom-ones', or darker color #082b27 / #22384a)
-  const onesDie = flatResults.find(d => d !== tensDie && (d?.groupId === 1 || d?.theme === 'custom-ones' || d?.themeColor?.toLowerCase() === '#082b27' || d?.themeColor === '#22384a')) ||
-    flatResults.find(d => d !== tensDie) ||
-    flatResults[1];
+  // Find tens die: check theme 'custom-tens', known tens colors, groupId 0, or lowest groupId
+  let tensDie = flatResults.find(d => d?.theme === 'custom-tens' || d?.groupId === 0 || d?.themeColor?.toLowerCase() === '#1c8780' || d?.themeColor === '#77d19e');
+  let onesDie = flatResults.find(d => d !== tensDie && (d?.theme === 'custom-ones' || d?.groupId === 1 || d?.themeColor?.toLowerCase() === '#082b27' || d?.themeColor === '#22384a'));
+
+  if (!tensDie && !onesDie && flatResults.length >= 2) {
+    if (typeof flatResults[0]?.groupId === 'number' && typeof flatResults[1]?.groupId === 'number' && flatResults[0].groupId !== flatResults[1].groupId) {
+      if (flatResults[0].groupId < flatResults[1].groupId) {
+        tensDie = flatResults[0];
+        onesDie = flatResults[1];
+      } else {
+        tensDie = flatResults[1];
+        onesDie = flatResults[0];
+      }
+    }
+  }
+
+  if (!tensDie) tensDie = flatResults[0];
+  if (!onesDie) onesDie = flatResults.find(d => d !== tensDie) || flatResults[1];
 
   const tensRaw = Number(tensDie?.value) || 0;
   const onesRaw = Number(onesDie?.value) || 0;
@@ -94,24 +106,39 @@ export function calculateInitiativeRoll(results) {
     return { playerRoll: 0, oppRoll: 0, winner: 'tie', valid: false };
   }
 
-  // Find player die: groupId 0, theme 'custom-init-player', or themeColor '#16425a' / '#0b222e' / '#17304a'
-  const playerDie = flat.find(d =>
-    d?.groupId === 0 ||
+  // Find player die: theme 'custom-init-player', groupId 0, or player colors
+  let playerDie = flat.find(d =>
     d?.theme === 'custom-init-player' ||
+    d?.groupId === 0 ||
     d?.themeColor?.toLowerCase() === '#16425a' ||
     d?.themeColor?.toLowerCase() === '#0b222e' ||
     d?.themeColor?.toLowerCase() === '#17304a'
-  ) || flat[0];
+  );
 
-  // Find opposition die: groupId 1, theme 'custom-init-opp', or themeColor '#031016' / '#400a22'
-  const oppDie = flat.find(d =>
+  // Find opposition die: theme 'custom-init-opp', groupId 1, or opposition colors
+  let oppDie = flat.find(d =>
     d !== playerDie && (
-      d?.groupId === 1 ||
       d?.theme === 'custom-init-opp' ||
+      d?.groupId === 1 ||
       d?.themeColor?.toLowerCase() === '#031016' ||
       d?.themeColor?.toLowerCase() === '#400a22'
     )
-  ) || flat.find(d => d !== playerDie) || flat[1];
+  );
+
+  if (!playerDie && !oppDie && flat.length >= 2) {
+    if (typeof flat[0]?.groupId === 'number' && typeof flat[1]?.groupId === 'number' && flat[0].groupId !== flat[1].groupId) {
+      if (flat[0].groupId < flat[1].groupId) {
+        playerDie = flat[0];
+        oppDie = flat[1];
+      } else {
+        playerDie = flat[1];
+        oppDie = flat[0];
+      }
+    }
+  }
+
+  if (!playerDie) playerDie = flat[0];
+  if (!oppDie) oppDie = flat.find(d => d !== playerDie) || flat[1];
 
   const rawPlayer = Number(playerDie?.value) || 0;
   const rawOpp = Number(oppDie?.value) || 0;

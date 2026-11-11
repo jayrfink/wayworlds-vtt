@@ -149,6 +149,20 @@ describe('calculatePercentileRoll', () => {
     });
   });
 
+  it('identifies tens and ones using arbitrary ascending groupIds even if reversed and with custom colors', () => {
+    const raw = [
+      { value: 7, groupId: 5, themeColor: '#abcdef' },
+      { value: 3, groupId: 4, themeColor: '#123456' }
+    ];
+    const result = calculatePercentileRoll(raw);
+    expect(result).toEqual({
+      total: 37,
+      tens: 3,
+      ones: 7,
+      valid: true
+    });
+  });
+
   it('handles nested group arrays from dice-box', () => {
     const raw = [
       [{ value: 6, themeColor: '#77d19e' }],

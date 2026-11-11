@@ -44,7 +44,7 @@ function markVttResponderActive(active) {
  * @param {{ ackTimeoutMs?: number, rollTimeoutMs?: number }} [timeouts]
  * @returns {Promise<Object|null>} Settled roll summary ({ total, tens, ones, valid } or { total, dice, count }) or null
  */
-export async function requestVtt3dRoll(options, { ackTimeoutMs = 120, rollTimeoutMs = 11000 } = {}) {
+export async function requestVtt3dRoll(options, { ackTimeoutMs = 1000, rollTimeoutMs = 12000 } = {}) {
   const payload = {
     type: options?.type || 'percentile',
     count: options?.count || 1,
