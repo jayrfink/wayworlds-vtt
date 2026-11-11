@@ -60,6 +60,8 @@ describe('VTT Dice and Roll Banners Layering', () => {
       expect(fnBody).toContain('showInitiativeHud.value = false');
       // Must NOT await getReadyDiceBox() just to clear
       expect(fnBody).not.toContain('await getReadyDiceBox()');
+      // Must NOT perform raw WebGL buffer clears which cause whiteouts
+      expect(fnBody).not.toContain('gl.clear');
     });
   });
 

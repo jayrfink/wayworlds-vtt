@@ -1301,17 +1301,6 @@ async function clearDice() {
       console.warn('Failed to clear dice box:', err);
     }
   }
-
-  // 4. Force-clear the visual canvas element if present so no frozen dice meshes remain
-  const canvas = diceBoxInstance?.canvas || document.querySelector('#dice-canvas') || document.querySelector('#dice-box canvas');
-  if (canvas && typeof canvas.getContext === 'function') {
-    try {
-      const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      if (gl) {
-        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-      }
-    } catch (e) {}
-  }
 }
 
 function onDocClick(e) {
