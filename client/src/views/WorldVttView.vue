@@ -2422,7 +2422,6 @@ onBeforeUnmount(() => {
   height: 100%;
 }
 
-.drawer-backdrop,
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -2436,19 +2435,32 @@ onBeforeUnmount(() => {
   justify-content: center;
 }
 
+.drawer-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .gm-drawer {
   position: absolute;
   top: 0;
   right: 0;
   bottom: 0;
   width: 360px;
-  background: rgba(22, 27, 34, 0.55);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: rgba(22, 27, 34, 0.80);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .drawer-header,
