@@ -2491,15 +2491,19 @@ onBeforeUnmount(() => {
 }
 
 .token-sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
   width: 320px;
-  flex-shrink: 0;
+  height: 100%;
   background: rgba(22, 27, 34, 0.64);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  z-index: 5;
+  z-index: 10;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
@@ -2507,6 +2511,7 @@ onBeforeUnmount(() => {
   position: absolute;
   right: 0;
   top: 0;
+  bottom: auto;
   width: 320px;
   height: auto;
   z-index: 10;
