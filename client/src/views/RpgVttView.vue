@@ -4036,7 +4036,7 @@ onBeforeUnmount(() => {
   right: 0;
   bottom: 0;
   width: 360px;
-  background: rgba(22, 27, 34, 0.80);
+  background: rgba(22, 27, 34, 0.64);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-left: 1px solid var(--border);
@@ -4077,7 +4077,7 @@ onBeforeUnmount(() => {
 .token-sidebar {
   width: 320px;
   flex-shrink: 0;
-  background: rgba(22, 27, 34, 0.80);
+  background: rgba(22, 27, 34, 0.64);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-left: 1px solid var(--border);
@@ -4094,7 +4094,7 @@ onBeforeUnmount(() => {
   width: 320px;
   height: auto;
   z-index: 10;
-  background: rgba(22, 27, 34, 0.80);
+  background: rgba(22, 27, 34, 0.64);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--border);
