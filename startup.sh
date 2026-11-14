@@ -6,4 +6,4 @@ if ! command -v openspec &> /dev/null; then
   npm install -g @fission-ai/openspec
 fi
 
-agy --conversation=56fff995-ef1c-41a2-ac76-fa27c1572dff
+agy -c
