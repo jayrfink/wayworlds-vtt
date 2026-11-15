@@ -4515,9 +4515,9 @@ export default {
 }
 
 .btn-char-color-scheme {
-  font-size: 0.765rem !important;
+  font-size: 0.6885rem !important;
   font-weight: 400 !important;
-  padding: 4.5px 12.5px !important;
+  padding: 4.05px 11.25px !important;
 }
 
 .bg-picker-modal {
