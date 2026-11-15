@@ -1021,7 +1021,13 @@ async function initDiceBox() {
         assetPath: '/assets/dice-box/',
         theme: 'default',
         scale: 5,
-        offscreen: false
+        offscreen: false,
+        spinForce: 15,
+        throwForce: 7,
+        startingHeight: 11,
+        angularDamping: 0.2,
+        linearDamping: 0.25,
+        restitution: 0.3
       });
       await box.init();
       diceBoxInstance = box;
