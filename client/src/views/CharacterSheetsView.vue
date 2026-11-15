@@ -2539,6 +2539,19 @@ export default {
     },
     openBgPicker() {
       this.showBgModal = true;
+      this.fetchSheetBackgrounds();
+    },
+    async fetchSheetBackgrounds() {
+      try {
+        const res = await fetch('/api/upload/pc-sheet-bg', { credentials: 'include' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (Array.isArray(data.backgrounds) && data.backgrounds.length > 0) {
+          this.availableSheetBackgrounds = data.backgrounds;
+        }
+      } catch {
+        // Keep default SHEET_BACKGROUNDS fallback
+      }
     },
     selectSheetBackground(bgUrl) {
       if (!this.selectedChar) return;

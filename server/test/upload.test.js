@@ -3,6 +3,7 @@ import request from 'supertest';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';
+import sharp from 'sharp';
 import { createTestDb } from '../src/db.js';
 import { createApp } from '../src/index.js';
 import { sanitizeUploadPath } from '../src/upload.js';
@@ -924,6 +925,85 @@ describe('Upload API', () => {
       expect(res.status).toBe(200);
       expect(res.headers['content-security-policy']).toBe("default-src 'none'; style-src 'unsafe-inline'; sandbox");
       expect(res.headers['x-content-type-options']).toBe('nosniff');
+    });
+  });
+
+  describe('PC Sheet Background Optimization & Listing', () => {
+    it('optimizes and converts images uploaded to pc-sheet-bg into WebP (max width 1920) and lists them', async () => {
+      const gmAgent = request.agent(app);
+      await gmAgent.post('/api/auth/register').send({ username: 'gmBgOpt', password: 'password123' });
+      await gmAgent.post('/api/auth/login').send({ username: 'gmBgOpt', password: 'password123' });
+
+      const widePngBuffer = await sharp({
+        create: { width: 2400, height: 1200, channels: 3, background: { r: 40, g: 70, b: 110 } },
+      })
+        .png()
+        .toBuffer();
+
+      const uploadRes = await gmAgent
+        .post('/api/upload')
+        .field('folder', 'pc-sheet-bg')
+        .attach('file', widePngBuffer, 'arcane-citadel.png');
+
+      expect(uploadRes.status).toBe(200);
+      expect(uploadRes.body.url).toBe('/uploads/pc-sheet-bg/arcane-citadel.webp');
+
+      const optimizedPath = path.join(tempUploadDir, 'pc-sheet-bg', 'arcane-citadel.webp');
+      expect(fs.existsSync(optimizedPath)).toBe(true);
+      const meta = await sharp(optimizedPath).metadata();
+      expect(meta.format).toBe('webp');
+      expect(meta.width).toBe(1920);
+
+      const listRes = await gmAgent.get('/api/upload/pc-sheet-bg');
+      expect(listRes.status).toBe(200);
+      expect(listRes.body.backgrounds).toEqual([
+        {
+          id: 'arcane-citadel',
+          label: 'Arcane Citadel',
+          url: '/uploads/pc-sheet-bg/arcane-citadel.webp',
+        },
+      ]);
+    });
+
+    it('auto-optimizes manually placed raster images in pc-sheet-bg and deduplicates .jpg/.webp pairs', async () => {
+      const gmAgent = request.agent(app);
+      await gmAgent.post('/api/auth/register').send({ username: 'gmBgScan', password: 'password123' });
+      await gmAgent.post('/api/auth/login').send({ username: 'gmBgScan', password: 'password123' });
+
+      const bgDir = path.join(tempUploadDir, 'pc-sheet-bg');
+      fs.mkdirSync(bgDir, { recursive: true });
+
+      const jpgBuffer = await sharp({
+        create: { width: 800, height: 400, channels: 3, background: { r: 120, g: 30, b: 30 } },
+      })
+        .jpeg()
+        .toBuffer();
+      fs.writeFileSync(path.join(bgDir, 'obsidian-keep.jpg'), jpgBuffer);
+
+      const webpBuffer = await sharp({
+        create: { width: 800, height: 400, channels: 3, background: { r: 20, g: 20, b: 20 } },
+      })
+        .webp()
+        .toBuffer();
+      fs.writeFileSync(path.join(bgDir, 'bw-forested.webp'), webpBuffer);
+      fs.writeFileSync(path.join(bgDir, 'bw-forested.jpg'), jpgBuffer);
+      fs.writeFileSync(path.join(bgDir, 'bw-forested-mtn.webp'), webpBuffer);
+
+      const listRes = await gmAgent.get('/api/upload/pc-sheet-bg');
+      expect(listRes.status).toBe(200);
+      expect(fs.existsSync(path.join(bgDir, 'obsidian-keep.webp'))).toBe(true);
+      expect(listRes.body.backgrounds).toEqual([
+        {
+          id: 'bw-forested',
+          label: 'Forested (Original)',
+          url: '/uploads/pc-sheet-bg/bw-forested.webp',
+        },
+        {
+          id: 'obsidian-keep',
+          label: 'Obsidian Keep',
+          url: '/uploads/pc-sheet-bg/obsidian-keep.webp',
+        },
+      ]);
     });
   });
 });

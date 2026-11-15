@@ -3,11 +3,138 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import sharp from 'sharp';
 import { requireAuth, requireGM } from './middleware.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DEFAULT_UPLOADS_DIR = path.resolve(__dirname, '../../data/uploads');
 const VALID_IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.gif', '.webp', '.svg']);
+const SHEET_BG_FOLDER = 'pc-sheet-bg';
+const RASTER_OPTIMIZE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp']);
+const EXCLUDED_SHEET_BG_BASES = new Set(['bw-forested-mtn']);
+const SHEET_BG_CURATED_LABELS = {
+  'bw-forested': 'Forested (Original)',
+  dragon1: 'Dragon',
+  'snow-mtn': 'Snow Mountain',
+};
+const SHEET_BG_ORDER = ['bw-forested', 'dragon1', 'snow-mtn'];
+
+export function formatSheetBgLabel(baseName) {
+  if (SHEET_BG_CURATED_LABELS[baseName]) {
+    return SHEET_BG_CURATED_LABELS[baseName];
+  }
+  const spaced = String(baseName || '')
+    .replace(/[-_]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!spaced) return 'Custom Background';
+  return spaced.replace(/\b\w/g, (ch) => ch.toUpperCase());
+}
+
+export async function optimizeSheetBgImage(sourcePath, targetDir, originalName, { removeSource = true } = {}) {
+  const ext = path.extname(sourcePath).toLowerCase();
+  if (!RASTER_OPTIMIZE_EXTENSIONS.has(ext)) {
+    return sourcePath;
+  }
+
+  const rawBase = path.parse(originalName || path.basename(sourcePath)).name;
+  const cleanBase = rawBase
+    .replace(/[^a-zA-Z0-9_-]+/g, '-')
+    .replace(/^-+|-+$/g, '') || `sheet-bg-${Date.now()}`;
+
+  let finalPath = path.join(targetDir, `${cleanBase}.webp`);
+  if (removeSource && finalPath !== sourcePath && fs.existsSync(finalPath)) {
+    finalPath = path.join(targetDir, `${cleanBase}-${Date.now()}.webp`);
+  }
+
+  const tempOutPath = path.join(targetDir, `.${cleanBase}-${Date.now()}-${Math.round(Math.random() * 1e6)}.tmp.webp`);
+  try {
+    await sharp(sourcePath)
+      .rotate()
+      .resize({ width: 1920, withoutEnlargement: true })
+      .webp({ quality: 82 })
+      .toFile(tempOutPath);
+
+    fs.renameSync(tempOutPath, finalPath);
+    if (removeSource && sourcePath !== finalPath && fs.existsSync(sourcePath)) {
+      fs.unlinkSync(sourcePath);
+    }
+    return finalPath;
+  } catch (err) {
+    if (fs.existsSync(tempOutPath)) {
+      try {
+        fs.unlinkSync(tempOutPath);
+      } catch {
+        // ignore cleanup error
+      }
+    }
+    throw err;
+  }
+}
+
+export async function listSheetBackgrounds(uploadDir) {
+  const bgDir = path.join(uploadDir, SHEET_BG_FOLDER);
+  if (!fs.existsSync(bgDir)) {
+    return [];
+  }
+
+  let entries = fs.readdirSync(bgDir, { withFileTypes: true });
+  const existingWebpBases = new Set(
+    entries
+      .filter((e) => e.isFile() && !e.name.startsWith('.') && path.extname(e.name).toLowerCase() === '.webp')
+      .map((e) => path.parse(e.name).name)
+  );
+
+  let optimizedAny = false;
+  for (const entry of entries) {
+    if (!entry.isFile() || entry.name.startsWith('.')) continue;
+    const ext = path.extname(entry.name).toLowerCase();
+    const baseName = path.parse(entry.name).name;
+    if (EXCLUDED_SHEET_BG_BASES.has(baseName)) continue;
+    if (RASTER_OPTIMIZE_EXTENSIONS.has(ext) && ext !== '.webp' && !existingWebpBases.has(baseName)) {
+      try {
+        await optimizeSheetBgImage(path.join(bgDir, entry.name), bgDir, entry.name, { removeSource: false });
+        existingWebpBases.add(baseName);
+        optimizedAny = true;
+      } catch {
+        // Ignore unprocessable image files and continue scanning
+      }
+    }
+  }
+
+  if (optimizedAny) {
+    entries = fs.readdirSync(bgDir, { withFileTypes: true });
+  }
+
+  const byBase = new Map();
+  for (const entry of entries) {
+    if (!entry.isFile() || entry.name.startsWith('.')) continue;
+    const ext = path.extname(entry.name).toLowerCase();
+    if (!VALID_IMAGE_EXTENSIONS.has(ext)) continue;
+    const baseName = path.parse(entry.name).name;
+    if (EXCLUDED_SHEET_BG_BASES.has(baseName)) continue;
+
+    const existing = byBase.get(baseName);
+    if (!existing || (ext === '.webp' && existing.ext !== '.webp')) {
+      byBase.set(baseName, { name: entry.name, ext });
+    }
+  }
+
+  return Array.from(byBase.entries())
+    .map(([baseName, fileInfo]) => ({
+      id: baseName,
+      label: formatSheetBgLabel(baseName),
+      url: `/uploads/${SHEET_BG_FOLDER}/${fileInfo.name}`,
+    }))
+    .sort((a, b) => {
+      const idxA = SHEET_BG_ORDER.indexOf(a.id);
+      const idxB = SHEET_BG_ORDER.indexOf(b.id);
+      if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+      if (idxA !== -1) return -1;
+      if (idxB !== -1) return 1;
+      return a.label.localeCompare(b.label);
+    });
+}
 
 const ASSET_TABLE_COLUMNS = [
   ['adversary_templates', 'token_image_path'],
@@ -204,8 +331,17 @@ export function createUploadRouter(customUploadDir, db, io) {
     }
   });
 
+  router.get('/pc-sheet-bg', async (_req, res) => {
+    try {
+      const backgrounds = await listSheetBackgrounds(uploadDir);
+      res.json({ backgrounds });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  });
+
   router.post('/', gmGuard, (req, res) => {
-    upload.single('file')(req, res, (err) => {
+    upload.single('file')(req, res, async (err) => {
       if (err) {
         return res.status(400).json({ error: err.message });
       }
@@ -264,6 +400,13 @@ export function createUploadRouter(customUploadDir, db, io) {
         if (file.path !== targetPath) {
           fs.renameSync(file.path, targetPath);
           file.path = targetPath;
+        }
+        if (targetSubfolder.toLowerCase() === SHEET_BG_FOLDER) {
+          try {
+            file.path = await optimizeSheetBgImage(file.path, targetDir, file.originalname, { removeSource: true });
+          } catch (optErr) {
+            console.warn('[upload] Could not optimize pc-sheet-bg image:', optErr.message);
+          }
         }
       } catch (folderErr) {
         if (fs.existsSync(file.path)) fs.unlinkSync(file.path);
