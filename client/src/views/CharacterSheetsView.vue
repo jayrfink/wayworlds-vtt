@@ -5255,8 +5255,14 @@ export default {
   margin-bottom: 0;
   padding: 10px 14px;
   border-radius: 6px;
-  background: rgba(200, 200, 200, 0.04) !important;
-  border: 1px solid rgba(200, 200, 200, 0.2) !important;
+  background: linear-gradient(
+      var(--theme-glow-bg, rgba(200, 200, 200, 0.12)),
+      var(--theme-glow-bg, rgba(200, 200, 200, 0.12))
+    ),
+    rgba(14, 17, 22, 0.84) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--border-color, rgba(200, 200, 200, 0.25)) !important;
   display: flex;
   flex-direction: column;
   gap: 6px;
