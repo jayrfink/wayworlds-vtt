@@ -595,6 +595,8 @@ function buildChapters({ ref, rules, spells, inventoryItems, vehicles, lore, man
     if (it.category === 'Shield') return `${it.attacker_pct_penalty || -10}% to incoming attack rolls`;
     if (it.armor_dr === 'half_all') return `Halves all damage & ${it.attacker_pct_penalty || -10}% to non-magic attacker roll`;
     if (it.armor_dr === 'half_nonmagical') return 'Halves non-magical damage';
+    if (it.armor_dr === 'quarter_nonmagical') return 'Reduces non-magical damage by 1/4';
+    if (it.armor_dr === 'quarter_nonmagical_plus_2') return 'Reduces non-magical damage by 1/4 and 2 pts';
     if (typeof it.armor_dr === 'number') return `-${it.armor_dr} DR vs non-magical attacks`;
     return it.properties || '—';
   };

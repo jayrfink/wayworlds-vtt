@@ -89,9 +89,9 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
 
     const leather = itemMap.get('Leather Armor');
     expect(leather.category).toBe('Armor');
-    expect(leather.armor_dr).toBe(4);
+    expect(leather.armor_dr).toBe('quarter_nonmagical');
     expect(leather.weight_lbs).toBe(10);
-    expect(leather.properties).toBe('-4 any non magical attack');
+    expect(leather.properties).toBe('Reduces non-magical damage by 1/4');
 
     const hide = itemMap.get('Hide Armor');
     expect(hide.category).toBe('Armor');
@@ -100,8 +100,8 @@ describe('GET /api/equipment - Wayworlds Fantasy Equipment Catalog', () => {
 
     const studded = itemMap.get('Studded Leather Armor');
     expect(studded.category).toBe('Armor');
-    expect(studded.armor_dr).toBe(5);
-    expect(studded.properties).toBe('-5 any non magic attack');
+    expect(studded.armor_dr).toBe('quarter_nonmagical_plus_2');
+    expect(studded.properties).toBe('Reduces non-magical damage by 1/4 and 2 pts');
 
     const chain = itemMap.get('Chain Mail');
     expect(chain.category).toBe('Armor');

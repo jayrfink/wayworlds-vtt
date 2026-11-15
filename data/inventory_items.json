@@ -98,8 +98,8 @@
     "name": "Leather Armor",
     "category": "Armor",
     "weight_lbs": 10,
-    "armor_dr": 4,
-    "properties": "-4 any non magical attack"
+    "armor_dr": "quarter_nonmagical",
+    "properties": "Reduces non-magical damage by 1/4"
   },
   {
     "name": "Hide Armor",
@@ -112,8 +112,8 @@
     "name": "Studded Leather Armor",
     "category": "Armor",
     "weight_lbs": 13,
-    "armor_dr": 5,
-    "properties": "-5 any non magic attack"
+    "armor_dr": "quarter_nonmagical_plus_2",
+    "properties": "Reduces non-magical damage by 1/4 and 2 pts"
   },
   {
     "name": "Chain Mail",

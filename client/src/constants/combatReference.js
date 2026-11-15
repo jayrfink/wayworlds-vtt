@@ -179,16 +179,22 @@ export const RANGED_COMBAT_REF = {
       notes: 'Light quilted linen/wool armor (8 lbs). Absorbs 2 damage from any non-magical attack.',
     },
     {
-      name: 'Leather Armor / Hide Armor',
+      name: 'Leather Armor',
+      type: 'Light Armor',
+      protection: 'Reduces non-magical damage by 1/4',
+      notes: 'Cured boiled leather (10 lbs). Reduces incoming non-magical attack damage by 1/4.',
+    },
+    {
+      name: 'Hide Armor',
       type: 'Light Armor',
       protection: '-4 any non-magical attack',
-      notes: 'Cured boiled leather or thick beast pelts (10–15 lbs). Absorbs 4 damage from any non-magical attack.',
+      notes: 'Thick beast pelts (15 lbs). Absorbs 4 damage from any non-magical attack.',
     },
     {
       name: 'Studded Leather Armor',
       type: 'Light Armor',
-      protection: '-5 any non-magical attack',
-      notes: 'Reinforced leather lined with metal rivets (13 lbs). Absorbs 5 damage from any non-magic attack.',
+      protection: 'Reduces non-magical damage by 1/4 and 2 pts',
+      notes: 'Reinforced leather lined with metal rivets (13 lbs). Reduces incoming non-magical attack damage by 1/4 and an additional 2 points.',
     },
     {
       name: 'Chain Mail / Breastplate / Scale Mail / Banded Mail',

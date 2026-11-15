@@ -331,8 +331,9 @@ Wayworlds seeds its standard equipment catalog from the **CC-BY-4.0 5e SRD** (pr
 To keep combat fast, Armor provides **Damage Reduction (DR)** or **Damage Halving**, while Shields actively reduce the attacker's hit percentage:
 
 * **-2 any non-magical attack:** **Padded Armor** (`8 lbs`).
-* **-4 any non-magical attack:** **Leather Armor** (`10 lbs`), **Hide Armor** (`15 lbs`).
-* **-5 any non-magical attack:** **Studded Leather Armor** (`13 lbs`).
+* **-4 any non-magical attack:** **Hide Armor** (`15 lbs`).
+* **Reduces non-magical damage by 1/4:** **Leather Armor** (`10 lbs`).
+* **Reduces non-magical damage by 1/4 and 2 pts:** **Studded Leather Armor** (`13 lbs`).
 * **Halves any non-magical damage:** **Chain Mail** (`35 lbs`), **Breastplate** (`20 lbs`), **Scale Mail** (`30 lbs`), **Banded Mail** (`35 lbs`).
 * **Halves any damage and -10% to attackers roll of any non-magical attack:** **Mythril Armor** (`25 lbs`), **Full Plate Armor / Full Plate** (`50 lbs`).
 * **Shields (`6 lbs` — Torpedo-Style Attacker % Penalty):** Equipping a shield directly reduces incoming melee and ranged attackers' target hit percentage:
