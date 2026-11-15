@@ -338,6 +338,16 @@
                     @change="onCharCustomColorChange"
                   />
                 </div>
+                <div class="char-bg-wrap">
+                  <button
+                    type="button"
+                    class="btn-color-scheme btn-char-color-scheme"
+                    @click="openBgPicker"
+                    title="Click to choose character sheet background"
+                  >
+                    Background
+                  </button>
+                </div>
               </div>
 
               <!-- 3rd Row: Tactical Stats (IM, Ranged Base Hit, Melee Base Hit, Movement, Encumbrance) -->
@@ -1555,6 +1565,33 @@
       </div>
     </div>
 
+    <!-- Background Picker Modal -->
+    <div v-if="showBgModal" class="modal-backdrop" @click.self="showBgModal = false">
+      <div class="modal-card bg-picker-modal">
+        <div class="equipment-modal-header">
+          <h3>Choose Sheet Background</h3>
+          <button type="button" class="btn-close-modal" @click="showBgModal = false" aria-label="Close">×</button>
+        </div>
+        <p class="equipment-modal-desc">Select a background image for this character sheet.</p>
+        <div class="bg-picker-list">
+          <button
+            v-for="bg in availableSheetBackgrounds"
+            :key="bg.id"
+            type="button"
+            class="bg-picker-item"
+            :class="{ active: currentSheetBgUrl === bg.url }"
+            @click="selectSheetBackground(bg.url)"
+          >
+            <img :src="bg.url" :alt="bg.label" class="bg-picker-thumb" />
+            <div class="bg-picker-info">
+              <span class="bg-picker-label">{{ bg.label }}</span>
+              <span v-if="currentSheetBgUrl === bg.url" class="bg-picker-active-tag">Active</span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- Image Browser Modal -->
     <ImageBrowserModal
       v-model="showImageBrowser"
@@ -1728,6 +1765,14 @@ export function formatInventoryItemAttributes(item, equipmentList = []) {
   return `Damage: ${dmg}`;
 }
 
+export const DEFAULT_SHEET_BG = '/uploads/pc-sheet-bg/bw-forested.webp';
+
+export const SHEET_BACKGROUNDS = [
+  { id: 'bw-forested', label: 'Forested (Original)', url: '/uploads/pc-sheet-bg/bw-forested.webp' },
+  { id: 'dragon1', label: 'Dragon', url: '/uploads/pc-sheet-bg/dragon1.webp' },
+  { id: 'snow-mtn', label: 'Snow Mountain', url: '/uploads/pc-sheet-bg/snow-mtn.webp' },
+];
+
 export default {
   name: 'CharacterSheetsView',
   components: {
@@ -1753,6 +1798,8 @@ export default {
       draggedNotePanelIndex: null,
       dragOverNotePanelIndex: null,
       showCreateModal: false,
+      showBgModal: false,
+      availableSheetBackgrounds: SHEET_BACKGROUNDS,
       showImageBrowser: false,
       imageBrowserTarget: 'char',
       colorPackages: COLOR_PACKAGES,
@@ -1776,6 +1823,7 @@ export default {
         customRaceName: '',
         psa: 'Martial',
         color_theme: '',
+        sheet_bg: '',
         avatar_url: '',
         user_id: null,
         str: 50,
@@ -1848,12 +1896,20 @@ export default {
     characterSheetColorPkg() {
       return (this.selectedChar && this.selectedChar.color_theme) || null;
     },
+    currentSheetBgUrl() {
+      return (this.selectedChar && this.selectedChar.sheet_bg) || DEFAULT_SHEET_BG;
+    },
     characterSheetCustomStyles() {
       if (!this.selectedChar) return {};
       const hex = this.selectedChar.color_theme
         ? resolveColorToHex(this.selectedChar.color_theme)
         : (this.charCustomHex || DEFAULT_CUSTOM_COLOR);
-      return generateThemeVariablesFromHex(hex);
+      const vars = generateThemeVariablesFromHex(hex);
+      const bgUrl = this.currentSheetBgUrl;
+      return {
+        ...vars,
+        backgroundImage: `linear-gradient(to bottom, rgba(10, 10, 10, 0.47), rgba(12, 12, 12, 0.54)), url('${bgUrl}')`,
+      };
     },
     characterTier() {
       return this.getCharTier(this.selectedChar);
@@ -2202,6 +2258,11 @@ export default {
       } else {
         c.color_theme = c.color_theme || '';
       }
+      if (!c.sheet_bg && c.id && typeof localStorage !== 'undefined') {
+        c.sheet_bg = localStorage.getItem(`wayworlds_char_bg_${c.id}`) || '';
+      } else {
+        c.sheet_bg = c.sheet_bg || '';
+      }
       if (Array.isArray(c.note_panels)) {
         c.note_panels = parseCharacterNotePanels(c.note_panels);
       } else {
@@ -2476,6 +2537,22 @@ export default {
       this.selectedChar.color_theme = hex;
       this.onCharThemeChange();
     },
+    openBgPicker() {
+      this.showBgModal = true;
+    },
+    selectSheetBackground(bgUrl) {
+      if (!this.selectedChar) return;
+      this.selectedChar.sheet_bg = bgUrl === DEFAULT_SHEET_BG ? '' : bgUrl;
+      if (this.selectedChar.id && typeof localStorage !== 'undefined') {
+        if (this.selectedChar.sheet_bg) {
+          localStorage.setItem(`wayworlds_char_bg_${this.selectedChar.id}`, this.selectedChar.sheet_bg);
+        } else {
+          localStorage.removeItem(`wayworlds_char_bg_${this.selectedChar.id}`);
+        }
+      }
+      this.showBgModal = false;
+      this.updateCharacter();
+    },
     async updateCharacter() {
       if (!this.selectedChar || !this.selectedChar.id) return;
       this.errorMessage = '';
@@ -2486,6 +2563,7 @@ export default {
         const payload = {
           ...this.selectedChar,
           color_theme: this.selectedChar.color_theme || '',
+          sheet_bg: this.selectedChar.sheet_bg || '',
           int_stat: this.selectedChar.int,
           log_stat: this.selectedChar.log,
           sta: this.selectedChar.sta ?? this.selectedChar.max_stamina ?? 50,
@@ -4414,6 +4492,7 @@ export default {
 .race-select-wrap,
 .psa-select-wrap,
 .char-theme-wrap,
+.char-bg-wrap,
 .player-select-wrap {
   display: flex;
   align-items: center;
@@ -4426,6 +4505,76 @@ export default {
   font-size: 0.765rem !important;
   font-weight: 400 !important;
   padding: 4.5px 12.5px !important;
+}
+
+.bg-picker-modal {
+  max-width: 520px;
+  width: 92vw;
+}
+
+.bg-picker-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.bg-picker-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 6px;
+  color: var(--sheet-text, #f0f0f0);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.bg-picker-item:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.bg-picker-item.active {
+  border-color: var(--accent, #d4af37);
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.bg-picker-thumb {
+  width: 120px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.bg-picker-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: 8px;
+}
+
+.bg-picker-label {
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.bg-picker-active-tag {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(212, 175, 55, 0.22);
+  color: var(--accent, #f2d06b);
 }
 
 .select-race,

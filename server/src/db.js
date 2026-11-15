@@ -106,6 +106,7 @@ function migrate(db, dataDir = null) {
       inventory TEXT DEFAULT '[]',
       grimoire TEXT DEFAULT '[]',
       color_theme TEXT DEFAULT '',
+      sheet_bg TEXT DEFAULT '',
       notes TEXT DEFAULT '',
       avatar_url TEXT DEFAULT '',
       sort_order INTEGER NOT NULL DEFAULT 0,
@@ -373,6 +374,9 @@ if (!mapCols.includes('map_type')) {
   }
   if (!charCols.includes('color_theme')) {
     db.exec("ALTER TABLE character_sheets ADD COLUMN color_theme TEXT DEFAULT ''");
+  }
+  if (!charCols.includes('sheet_bg')) {
+    db.exec("ALTER TABLE character_sheets ADD COLUMN sheet_bg TEXT DEFAULT ''");
   }
 
   const charTableInfo = db.prepare("SELECT sql FROM sqlite_master WHERE type='table' AND name='character_sheets'").get();
